@@ -13,7 +13,7 @@ export default resolver.pipe(
     if (!user) throw new NotFoundError()
 
     try {
-      await authenticateUser(user!.username, currentPassword)
+      await authenticateUser(user.username, currentPassword)
     } catch (error: any) {
       if (error instanceof AuthenticationError) {
         throw new Error("Invalid Password")
