@@ -42,7 +42,7 @@ export default resolver.pipe(resolver.zod(ResetPassword), async ({ password, tok
   await db.session.deleteMany({ where: { userId: user.id } })
 
   // 7. Now log the user in with the new credentials
-  await login({ email: user.email, password }, ctx)
+  await login({ username: user.username, password }, ctx)
 
   return true
 })
