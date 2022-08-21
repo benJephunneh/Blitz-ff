@@ -29,9 +29,9 @@ const UserInfo = () => {
           Logout
         </button>
         <div>
-          User id: <code>{currentUser.id}</code>
+          User: <code>{currentUser.username}</code>
           <br />
-          User role: <code>{currentUser.role}</code>
+          Role: <code>{currentUser.role}</code>
         </div>
       </>
     )
