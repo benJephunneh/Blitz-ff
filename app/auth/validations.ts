@@ -22,7 +22,7 @@ export const Signup = z.object({
 
 export const Login = z.object({
   username,
-  password: z.string(),
+  password,
 })
 
 export const ForgotPassword = z.object({
@@ -31,7 +31,7 @@ export const ForgotPassword = z.object({
 
 export const ResetPassword = z
   .object({
-    password: password,
+    password,
     passwordConfirmation: password,
     token: z.string(),
   })
