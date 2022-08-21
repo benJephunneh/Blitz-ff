@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+export const username = z.string()
+
 export const email = z
   .string()
   .email()
@@ -12,13 +14,15 @@ export const password = z
   .transform((str) => str.trim())
 
 export const Signup = z.object({
+  username,
   email,
   password,
+  role: z.string(),
 })
 
 export const Login = z.object({
-  email,
-  password: z.string(),
+  username,
+  password,
 })
 
 export const ForgotPassword = z.object({
@@ -27,7 +31,7 @@ export const ForgotPassword = z.object({
 
 export const ResetPassword = z
   .object({
-    password: password,
+    password,
     passwordConfirmation: password,
     token: z.string(),
   })
