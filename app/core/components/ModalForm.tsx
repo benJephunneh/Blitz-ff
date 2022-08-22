@@ -54,35 +54,35 @@ const ModalForm: FormComponent<ModalFormProps> = ({
         initialValues={initialValues}
         validate={validateZodSchema(schema)}
         onSubmit={onSubmit}
-        render={({ handleSubmit, submitting, submitError }) => (
-          <form onSubmit={handleSubmit} {...props}>
+        render={(form) => (
+          <form onSubmit={form.handleSubmit} {...props}>
             <ModalContent>
               <ModalHeader>{title}</ModalHeader>
               <ModalCloseButton />
 
               <ModalBody>
-                {submitError && (
+                {form.submitError && (
                   <Alert status="error" mb={6}>
                     <AlertIcon />
-                    {Array.isArray(submitError) ? (
+                    {Array.isArray(form.submitError) ? (
                       <UnorderedList>
-                        {submitError.map((error, i) => (
+                        {form.submitError.map((error, i) => (
                           <ListItem key={i}>{error}</ListItem>
                         ))}
                       </UnorderedList>
                     ) : (
-                      submitError
+                      form.submitError
                     )}
                   </Alert>
                 )}
 
                 {/* Form fields supplied as children are rendered here */}
-                <Stack spacing={4}>{render(children!)}</Stack>
+                <Stack spacing={4}>{render(form)}</Stack>
               </ModalBody>
 
               <ModalFooter>
                 <HStack>
-                  <Button isLoading={submitting} type="submit">
+                  <Button isLoading={form.submitting} type="submit">
                     {submitText}
                   </Button>
                   <Button onClick={onClose}>Cancel</Button>
