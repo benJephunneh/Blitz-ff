@@ -6,23 +6,31 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
 import logo from "public/logo.png"
 import { useMutation } from "@blitzjs/rpc"
-import { Routes, BlitzPage } from "@blitzjs/next"
+import { Routes, BlitzPage, useRouterQuery } from "@blitzjs/next"
+import { Box, Button, Container, HStack, Text } from "@chakra-ui/react"
+import { useRouter } from "next/router"
+import ModalForm from "app/core/components/ModalForm"
+import NewUserForm from "app/auth/components/NewUserForm"
+import { useState } from "react"
+import { FaPlus } from "react-icons/fa"
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
   const [logoutMutation] = useMutation(logout)
+  const router = useRouter()
+
+  const [addingUser, setAddingUser] = useState(false)
 
   if (currentUser) {
     return (
       <>
-        <button
-          className="button small"
+        <Button
           onClick={async () => {
             await logoutMutation()
           }}
         >
           Logout
-        </button>
+        </Button>
         <div>
           User: <code>{currentUser.username}</code>
           <br />
@@ -33,16 +41,27 @@ const UserInfo = () => {
   } else {
     return (
       <>
-        <Link href={Routes.SignupPage()}>
-          <a className="button small">
-            <strong>Sign Up</strong>
-          </a>
-        </Link>
-        <Link href={Routes.LoginPage()}>
-          <a className="button small">
-            <strong>Login</strong>
-          </a>
-        </Link>
+        <NewUserForm
+          isOpen={addingUser}
+          onClose={() => setAddingUser(false)}
+          onSuccess={async (user) => {
+            await router.push(Routes.ProfilePage({ username: user.username }))
+          }}
+        />
+        <HStack spacing={2}>
+          <Button
+            onClick={() => setAddingUser(true)}
+            leftIcon={<FaPlus />}
+            borderStyle="dashed"
+            colorScheme="blackAlpha"
+            color="#009a4c"
+          >
+            Sign up
+          </Button>
+          <Button onClick={() => router.push(Routes.LoginPage())}>
+            <Text as="a">Login</Text>
+          </Button>
+        </HStack>
       </>
     )
   }
@@ -51,8 +70,8 @@ const UserInfo = () => {
 const Home: BlitzPage = () => {
   return (
     <Layout title="Home">
-      <div className="container">
-        <main>
+      <Container>
+        <Box as="main">
           <div className="logo">
             <Image src={`${logo.src}`} alt="blitzjs" width="256px" height="118px" layout="fixed" />
           </div>
@@ -117,7 +136,7 @@ const Home: BlitzPage = () => {
               Discord Community
             </a>
           </div>
-        </main>
+        </Box>
 
         <footer>
           <a
@@ -128,7 +147,7 @@ const Home: BlitzPage = () => {
             Powered by Blitz.js
           </a>
         </footer>
-      </div>
+      </Container>
     </Layout>
   )
 }
