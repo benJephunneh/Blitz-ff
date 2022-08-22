@@ -13,13 +13,16 @@ import ModalForm from "app/core/components/ModalForm"
 import NewUserForm from "app/auth/components/NewUserForm"
 import { useState } from "react"
 import { FaPlus } from "react-icons/fa"
+import UserModalForm from "app/auth/components/UserModalForm"
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
   const [logoutMutation] = useMutation(logout)
   const router = useRouter()
 
+  const [modalOpen, setModalOpen] = useState(false)
   const [addingUser, setAddingUser] = useState(false)
+  const [submitText, setSubmitText] = useState("")
 
   if (currentUser) {
     return (
@@ -41,24 +44,39 @@ const UserInfo = () => {
   } else {
     return (
       <>
-        <NewUserForm
-          isOpen={addingUser}
-          onClose={() => setAddingUser(false)}
+        <UserModalForm
+          isNew={addingUser}
+          isOpen={modalOpen}
+          submitText={submitText}
+          onClose={() => setModalOpen(false)}
           onSuccess={async (user) => {
-            await router.push(Routes.ProfilePage({ username: user.username }))
+            addingUser
+              ? await router.push(Routes.ProfilePage({ username: user.username }))
+              : await router.push(Routes.Home())
           }}
         />
         <HStack spacing={2}>
           <Button
-            onClick={() => setAddingUser(true)}
+            onClick={() => {
+              setAddingUser(true)
+              setModalOpen(true)
+              setSubmitText("Create")
+            }}
             leftIcon={<FaPlus />}
+            variant="outline"
             borderStyle="dashed"
-            colorScheme="blackAlpha"
             color="#009a4c"
+            bg="transparent"
           >
             Sign up
           </Button>
-          <Button onClick={() => router.push(Routes.LoginPage())}>
+          <Button
+            onClick={() => {
+              setAddingUser(false)
+              setModalOpen(true)
+              setSubmitText("Log in")
+            }}
+          >
             <Text as="a">Login</Text>
           </Button>
         </HStack>

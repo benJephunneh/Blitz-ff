@@ -5,32 +5,58 @@ import ModalForm, { FORM_ERROR } from "app/core/components/ModalForm"
 import { PromiseReturnType } from "blitz"
 import { FC } from "react"
 import signup from "../mutations/signup"
-import { Signup } from "../validations"
+import { Signup, Login } from "../validations"
 import { FaLock } from "react-icons/fa"
 import LabeledSelectField from "app/core/components/LabeledSelectField"
+import login from "../mutations/login"
 
-type NewUserFormProps = {
+type UserModalFormProps = {
   isNew: boolean
   isOpen: boolean
+  submitText: string
   onClose: () => void
   onSuccess?: (user: PromiseReturnType<typeof signup>) => void
 }
 
-const NewUserForm: FC<NewUserFormProps> = ({ isNew, isOpen, onClose, onSuccess }) => {
+const UserModalForm: FC<UserModalFormProps> = ({
+  isNew,
+  isOpen,
+  submitText,
+  onClose,
+  onSuccess,
+}) => {
   const [signupMutation] = useMutation(signup)
+  const [loginMutation] = useMutation(login)
 
   return (
     <ModalForm
       isOpen={isOpen}
       onClose={onClose}
       size="lg"
-      schema={Signup}
+      schema={isNew ? Signup : Login}
       title="Create new user"
-      submitText="Create"
-      initialValues={{ username: "", password: "", email: "", role: "Admin" }}
+      submitText={submitText}
+      initialValues={
+        isNew
+          ? {
+              username: "",
+              password: "",
+              email: "",
+              role: "Admin",
+            }
+          : {
+              username: "",
+              password: "",
+            }
+      }
       onSubmit={async (values) => {
         try {
-          const user = await signupMutation(values)
+          let user
+          if (isNew) {
+            user = await signupMutation(values)
+          } else {
+            user = await loginMutation(values)
+          }
           onSuccess?.(user)
         } catch (error) {
           if (error.code === "P2002" && error.meta?.target?.includes("username")) {
@@ -62,4 +88,4 @@ const NewUserForm: FC<NewUserFormProps> = ({ isNew, isOpen, onClose, onSuccess }
   )
 }
 
-export default NewUserForm
+export default UserModalForm

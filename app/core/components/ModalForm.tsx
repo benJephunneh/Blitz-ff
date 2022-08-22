@@ -3,8 +3,11 @@ import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form
 import { z } from "zod"
 import { validateZodSchema } from "blitz"
 import {
+  Alert,
+  AlertIcon,
   Button,
   HStack,
+  ListItem,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,6 +16,8 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps,
+  Stack,
+  UnorderedList,
 } from "@chakra-ui/react"
 import { FormComponent } from "./FormComponent"
 export { FORM_ERROR } from "final-form"
@@ -56,25 +61,28 @@ const ModalForm: FormComponent<ModalFormProps> = ({
               <ModalCloseButton />
 
               <ModalBody>
-                {/* Form fields supplied as children are rendered here */}
-                {children}
-
                 {submitError && (
-                  <div role="alert" style={{ color: "red" }}>
-                    {submitError}
-                  </div>
+                  <Alert status="error" mb={6}>
+                    <AlertIcon />
+                    {Array.isArray(submitError) ? (
+                      <UnorderedList>
+                        {submitError.map((error, i) => (
+                          <ListItem key={i}>{error}</ListItem>
+                        ))}
+                      </UnorderedList>
+                    ) : (
+                      submitError
+                    )}
+                  </Alert>
                 )}
 
-                {submitText && (
-                  <button type="submit" disabled={submitting}>
-                    {submitText}
-                  </button>
-                )}
+                {/* Form fields supplied as children are rendered here */}
+                <Stack spacing={4}>{render(children!)}</Stack>
               </ModalBody>
 
               <ModalFooter>
                 <HStack>
-                  <Button colorScheme="#009a4c" isLoading={submitting} type="submit">
+                  <Button isLoading={submitting} type="submit">
                     {submitText}
                   </Button>
                   <Button onClick={onClose}>Cancel</Button>
