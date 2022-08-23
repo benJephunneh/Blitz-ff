@@ -54,7 +54,7 @@ const UserInfo = () => {
           submitText="Log in"
           onClose={() => setLoginModalOpen(false)}
           onSuccess={async () => {
-            await router.push(Routes.Home())
+            await router.push(Routes.Dashboard())
           }}
         />
 
