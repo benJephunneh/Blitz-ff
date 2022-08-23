@@ -6,23 +6,20 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
 import logo from "public/logo.png"
 import { useMutation } from "@blitzjs/rpc"
-import { Routes, BlitzPage, useRouterQuery } from "@blitzjs/next"
+import { Routes, BlitzPage } from "@blitzjs/next"
 import { Box, Button, Container, HStack, Text } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import ModalForm from "app/core/components/ModalForm"
-import NewUserForm from "app/auth/components/NewUserForm"
+import NewUserModalForm from "app/auth/components/NewUserModalForm"
 import { useState } from "react"
 import { FaPlus } from "react-icons/fa"
-import UserModalForm from "app/auth/components/UserModalForm"
+import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
-  const [logoutMutation] = useMutation(logout)
   const router = useRouter()
-
-  const [modalOpen, setModalOpen] = useState(false)
-  const [addingUser, setAddingUser] = useState(false)
-  const [submitText, setSubmitText] = useState("")
+  const [logoutMutation] = useMutation(logout)
+  const [signupModalOpen, setSignupModalOpen] = useState(false)
+  const [loginModalOpen, setLoginModalOpen] = useState(false)
 
   if (currentUser) {
     return (
@@ -44,40 +41,43 @@ const UserInfo = () => {
   } else {
     return (
       <>
-        <UserModalForm
-          isNew={addingUser}
-          isOpen={modalOpen}
-          submitText={submitText}
-          onClose={() => setModalOpen(false)}
+        <NewUserModalForm
+          isOpen={signupModalOpen}
+          submitText="Create"
+          onClose={() => setSignupModalOpen(false)}
           onSuccess={async (user) => {
-            addingUser
-              ? await router.push(Routes.ProfilePage({ username: user.username }))
-              : await router.push(Routes.Home())
+            await router.push(Routes.ProfilePage({ username: user.username }))
           }}
         />
+        <LoginUserModalForm
+          isOpen={loginModalOpen}
+          submitText="Log in"
+          onClose={() => setLoginModalOpen(false)}
+          onSuccess={async () => {
+            await router.push(Routes.Home())
+          }}
+        />
+
         <HStack spacing={2}>
           <Button
             onClick={() => {
-              setAddingUser(true)
-              setModalOpen(true)
-              setSubmitText("Create")
+              setLoginModalOpen(true)
             }}
-            leftIcon={<FaPlus />}
-            variant="outline"
-            borderStyle="dashed"
             color="#009a4c"
-            bg="transparent"
           >
-            Sign up
+            Login
           </Button>
           <Button
             onClick={() => {
-              setAddingUser(false)
-              setModalOpen(true)
-              setSubmitText("Log in")
+              setSignupModalOpen(true)
             }}
+            variant="outline"
+            leftIcon={<FaPlus />}
+            borderStyle="dashed"
+            borderColor="blackAlpha.400"
+            color="#009a4c"
           >
-            <Text as="a">Login</Text>
+            Sign up
           </Button>
         </HStack>
       </>

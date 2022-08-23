@@ -5,58 +5,37 @@ import ModalForm, { FORM_ERROR } from "app/core/components/ModalForm"
 import { PromiseReturnType } from "blitz"
 import { FC } from "react"
 import signup from "../mutations/signup"
-import { Signup, Login } from "../validations"
+import { Signup } from "../validations"
 import { FaLock } from "react-icons/fa"
 import LabeledSelectField from "app/core/components/LabeledSelectField"
-import login from "../mutations/login"
 
-type UserModalFormProps = {
-  isNew: boolean
+type NewUserModalFormProps = {
   isOpen: boolean
   submitText: string
   onClose: () => void
   onSuccess?: (user: PromiseReturnType<typeof signup>) => void
 }
 
-const UserModalForm: FC<UserModalFormProps> = ({
-  isNew,
+const NewUserModalForm: FC<NewUserModalFormProps> = ({
   isOpen,
   submitText,
   onClose,
   onSuccess,
 }) => {
   const [signupMutation] = useMutation(signup)
-  const [loginMutation] = useMutation(login)
 
   return (
     <ModalForm
       isOpen={isOpen}
       onClose={onClose}
       size="lg"
-      schema={isNew ? Signup : Login}
+      schema={Signup}
       title="Create new user"
       submitText={submitText}
-      initialValues={
-        isNew
-          ? {
-              username: "",
-              password: "",
-              email: "",
-              role: "Admin",
-            }
-          : {
-              username: "",
-              password: "",
-            }
-      }
+      initialValues={{ username: "", password: "", email: "", role: "Admin" }}
       onSubmit={async (values) => {
         try {
-          let user
-          if (isNew) {
-            user = await signupMutation(values)
-          } else {
-            user = await loginMutation(values)
-          }
+          const user = await signupMutation(values)
           onSuccess?.(user)
         } catch (error) {
           if (error.code === "P2002" && error.meta?.target?.includes("username")) {
@@ -72,20 +51,16 @@ const UserModalForm: FC<UserModalFormProps> = ({
         <>
           <LabeledTextField name="username" label="Username" />
           <LabeledTextField name="password" label="Password" type="password" />
-          {isNew && (
-            <>
-              <LabeledTextField name="email" label="Email" type="email" />
-              <LabeledSelectField name="role" label="Role" defaultValue="Admin">
-                <option value="Owner">Owner</option>
-                <option value="Admin">Admin</option>
-                <option value="Tech">Tech</option>
-              </LabeledSelectField>
-            </>
-          )}
+          <LabeledTextField name="email" label="Email" type="email" />
+          <LabeledSelectField name="role" label="Role" defaultValue="Admin">
+            <option value="Owner">Owner</option>
+            <option value="Admin">Admin</option>
+            <option value="Tech">Tech</option>
+          </LabeledSelectField>
         </>
       )}
     />
   )
 }
 
-export default UserModalForm
+export default NewUserModalForm
