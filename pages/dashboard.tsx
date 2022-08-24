@@ -5,7 +5,6 @@ import {
   Button,
   Code,
   Container,
-  DrawerFooter,
   Flex,
   Heading,
   HStack,
@@ -50,6 +49,7 @@ const Dashboard: BlitzPage = () => {
 
   return (
     <Flex>
+      {/*
       <Box bg={useColorModeValue("gray.50", "gray.800")}>
         <Container as="main" maxWidth="container.sm" textAlign="center" py={{ base: 12, md: 20 }}>
           <Heading size="2xl" mb={2}>
@@ -64,24 +64,23 @@ const Dashboard: BlitzPage = () => {
       <Container as="main" py={{ base: 12, md: 20 }}>
         <UserInfo />
       </Container>
+      */}
 
-      <DrawerFooter>
-        <Suspense>
-          <HStack spacing={2}>
-            <Button onClick={() => router.push("https://github.com/benJephunneh/dev-ff")}>
-              Github: dev-ff
-            </Button>
-            <Button onClick={() => router.push("https://www.apalacheeseptic.com")}>
-              Apalachee Backhoe
-            </Button>
-          </HStack>
-        </Suspense>
-      </DrawerFooter>
+      <footer>
+        <HStack spacing={2}>
+          <Button onClick={() => router.push("https://github.com/benJephunneh/dev-ff")}>
+            Github: dev-ff
+          </Button>
+          <Button onClick={() => router.push("https://www.apalacheeseptic.com")}>
+            Apalachee Backhoe
+          </Button>
+        </HStack>
+      </footer>
     </Flex>
   )
 }
 
-Dashboard.suppressFirstRenderFlicker = true
+// Dashboard.suppressFirstRenderFlicker = true
 Dashboard.authenticate = { redirectTo: Routes.Home() }
 Dashboard.getLayout = (page) => (
   <SidebarLayout title="Dashboard" description="Home page for ABST staff">

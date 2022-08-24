@@ -1,75 +1,115 @@
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
+
 import Image from "next/image"
 import Link from "next/link"
-import Layout from "app/core/layouts/Layout"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import logout from "app/auth/mutations/logout"
-import logo from "public/logo.png"
-import { useMutation } from "@blitzjs/rpc"
-import { Routes, BlitzPage } from "@blitzjs/next"
-import { Box, Button, Container, HStack, Text } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import NewUserModalForm from "app/auth/components/NewUserModalForm"
-import { useState } from "react"
+
+import { BlitzPage } from "@blitzjs/next"
+import { useMutation } from "@blitzjs/rpc"
+
+import { Box, Button, ButtonGroup, Container, HStack, useDisclosure } from "@chakra-ui/react"
 import { FaPlus } from "react-icons/fa"
+
 import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
+import NewUserModalForm from "app/auth/components/NewUserModalForm"
+import login from "app/auth/mutations/login"
+import logout from "app/auth/mutations/logout"
+import signup from "app/auth/mutations/signup"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import Layout from "app/core/layouts/Layout"
+import logo from "public/logo.png"
+import { FC } from "react"
+import { User } from "@prisma/client"
+import { useEffect } from "react"
+import { useReducer } from "react"
+import { UseDisclosureProps } from "@chakra-ui/react"
+
+function UserAction(choice: string, { isOpen, onClose }) {
+  switch (choice) {
+    case "Login":
+      return {
+        modalForm: <NewUserModalForm isOpen={isOpen!} onClose={onClose!} />,
+      }
+    case "Signup":
+      return {
+        modalForm: <LoginUserModalForm isOpen={isOpen!} onClose={onClose!} />,
+      }
+    default:
+      return {}
+  }
+}
+
+type UserInfoProps = {
+  currentUser: User | null
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
+  onToggle?: () => void
+  userAction: () => void
+}
 
 const UserInfo = () => {
-  const currentUser = useCurrentUser()
   const router = useRouter()
+  const [loginMutation] = useMutation(login)
+  const [signupMutation] = useMutation(signup)
   const [logoutMutation] = useMutation(logout)
-  const [signupModalOpen, setSignupModalOpen] = useState(false)
-  const [loginModalOpen, setLoginModalOpen] = useState(false)
+
+  const [signingUp, setSigningUp] = useState(false)
+  const [loggingIn, setLoggingIn] = useState(false)
+  const currentUser = useCurrentUser()
+
+  // const { getDisclosureProps: getSignupDisclosureProps, getButtonProps: getSignupButtonProps } = useDisclosure({ id: 'signup' })
+  // const signupDisclosureProps = getSignupDisclosureProps()
+  // const signupButtonProps = getSignupButtonProps()
+
+  // const { getDisclosureProps: getLoginDisclosureProps, getButtonProps: getLoginButtonProps } = useDisclosure({ id: 'login' })
+  // const loginDisclosureProps = getLoginDisclosureProps()
+  // const loginButtonProps = getLoginButtonProps()
+
+  // const { isOpen: signupIsOpen, onToggle: signupToggle, onClose: signupOnClose } = useDisclosure({ id: 'signup' })
+  // const { isOpen: loginIsOpen, onToggle: loginToggle, onClose: loginOnClose } = useDisclosure({ id: 'login' })
 
   if (currentUser) {
     return (
       <>
-        <Button
-          onClick={async () => {
-            await logoutMutation()
-          }}
-        >
-          Logout
-        </Button>
-        <div>
-          User: <code>{currentUser.username}</code>
-          <br />
-          Role: <code>{currentUser.role}</code>
-        </div>
+        <HStack spacing={2}>
+          <Button
+            onClick={async () => {
+              await logoutMutation()
+                .then(() => setSigningUp(false))
+                .then(() => setLoggingIn(false))
+            }}
+          >
+            Logout
+          </Button>
+          <div>
+            User: <code>{currentUser.username}</code>
+            <br />
+            Role: <code>{currentUser.role}</code>
+          </div>
+        </HStack>
       </>
     )
   } else {
     return (
       <>
         <NewUserModalForm
-          isOpen={signupModalOpen}
-          submitText="Create"
-          onClose={() => setSignupModalOpen(false)}
-          onSuccess={async (user) => {
-            await router.push(Routes.ProfilePage({ username: user.username }))
+          isOpen={signingUp}
+          onClose={() => {
+            setSigningUp(false)
           }}
         />
         <LoginUserModalForm
-          isOpen={loginModalOpen}
-          submitText="Log in"
-          onClose={() => setLoginModalOpen(false)}
-          onSuccess={async () => {
-            await router.push(Routes.Dashboard())
+          isOpen={loggingIn}
+          onClose={() => {
+            setLoggingIn(false)
           }}
         />
 
         <HStack spacing={2}>
           <Button
             onClick={() => {
-              setLoginModalOpen(true)
-            }}
-            color="#009a4c"
-          >
-            Login
-          </Button>
-          <Button
-            onClick={() => {
-              setSignupModalOpen(true)
+              setSigningUp(true)
             }}
             variant="outline"
             leftIcon={<FaPlus />}
@@ -79,15 +119,23 @@ const UserInfo = () => {
           >
             Sign up
           </Button>
+          <Button
+            onClick={() => {
+              setLoggingIn(true)
+            }}
+            color="#009a4c"
+          >
+            Login
+          </Button>
         </HStack>
       </>
     )
   }
 }
 
-const Home: BlitzPage = () => {
+const NewHome: BlitzPage = () => {
   return (
-    <Layout title="Home">
+    <>
       <Container>
         <Box as="main">
           <div className="logo">
@@ -96,11 +144,11 @@ const Home: BlitzPage = () => {
           <p>
             <strong>Congrats!</strong> Your app is ready, including user sign-up and log-in.
           </p>
-          <div className="buttons" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-            <Suspense fallback="Loading...">
+          <Container my={2}>
+            <Suspense>
               <UserInfo />
             </Suspense>
-          </div>
+          </Container>
           <p>
             <strong>
               To add a new model to your app, <br />
@@ -166,8 +214,12 @@ const Home: BlitzPage = () => {
           </a>
         </footer>
       </Container>
-    </Layout>
+    </>
   )
 }
 
-export default Home
+NewHome.suppressFirstRenderFlicker = true
+// NewHome.redirectAuthenticatedTo = Routes.Dashboard()
+NewHome.getLayout = (page) => <Layout>{page}</Layout>
+
+export default NewHome

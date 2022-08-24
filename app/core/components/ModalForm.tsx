@@ -1,7 +1,12 @@
 import { ReactNode, PropsWithoutRef } from "react"
-import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form"
-import { z } from "zod"
-import { validateZodSchema } from "blitz"
+import {
+  Form as FinalForm,
+  FormProps as FinalFormProps,
+  FormProps,
+  FormRenderProps,
+} from "react-final-form"
+import { TypeOf, z } from "zod"
+import { PromiseReturnType, validateZodSchema } from "blitz"
 import {
   Alert,
   AlertIcon,
@@ -18,38 +23,45 @@ import {
   ModalProps,
   Stack,
   UnorderedList,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { FormComponent } from "./FormComponent"
+import login from "app/auth/mutations/login"
+import signup from "app/auth/mutations/signup"
 export { FORM_ERROR } from "final-form"
 
-export interface ModalFormProps
-  extends Omit<PropsWithoutRef<JSX.IntrinsicElements["form"]>, "onSubmit"> {
-  /** All your form fields */
-  children?: ReactNode
-  /** Text to display in the submit button */
-  submitText?: string
-  size?: ModalProps["size"]
-  title: string
+type ModalFormProps = {
   isOpen: boolean
   onClose: () => void
+  size?: ModalProps["size"]
+  title: string
+  submitText: string
+  /** All your form fields */
+  // children?: ReactNode
+  /** Text to display in the submit button */
+  // onSubmit: FinalFormProps<z.infer<S>>['onSubmit']
+  // initialValues?: FinalFormProps<z.infer<S>>['initialValues']
+  // schema?: S
+  // render: (props: FormRenderProps<TypeOf<S>>) => JSX.Element
 }
 
 const ModalForm: FormComponent<ModalFormProps> = ({
-  schema,
-  initialValues,
-  onSubmit,
-  render,
-  submitText,
   isOpen,
   onClose,
   size,
   title,
+  submitText,
+
+  schema,
+  initialValues,
+  onSubmit,
+  render,
   children,
   ...props
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside">
-      <ModalOverlay />
+    <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside" isCentered>
+      <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px) invert(100%)" />
       <FinalForm
         initialValues={initialValues}
         validate={validateZodSchema(schema)}
@@ -58,8 +70,6 @@ const ModalForm: FormComponent<ModalFormProps> = ({
           <form onSubmit={form.handleSubmit} {...props}>
             <ModalContent>
               <ModalHeader>{title}</ModalHeader>
-              <ModalCloseButton />
-
               <ModalBody>
                 {form.submitError && (
                   <Alert status="error" mb={6}>
