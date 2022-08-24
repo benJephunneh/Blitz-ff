@@ -4,10 +4,11 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
 
-import { BlitzPage } from "@blitzjs/next"
+import { BlitzPage, Routes } from "@blitzjs/next"
 import { useMutation } from "@blitzjs/rpc"
+import { User } from "@prisma/client"
 
-import { Box, Button, ButtonGroup, Container, HStack, useDisclosure } from "@chakra-ui/react"
+import { Box, Button, Container, HStack } from "@chakra-ui/react"
 import { FaPlus } from "react-icons/fa"
 
 import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
@@ -18,40 +19,11 @@ import signup from "app/auth/mutations/signup"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
 import logo from "public/logo.png"
-import { FC } from "react"
-import { User } from "@prisma/client"
-import { useEffect } from "react"
-import { useReducer } from "react"
-import { UseDisclosureProps } from "@chakra-ui/react"
-
-function UserAction(choice: string, { isOpen, onClose }) {
-  switch (choice) {
-    case "Login":
-      return {
-        modalForm: <NewUserModalForm isOpen={isOpen!} onClose={onClose!} />,
-      }
-    case "Signup":
-      return {
-        modalForm: <LoginUserModalForm isOpen={isOpen!} onClose={onClose!} />,
-      }
-    default:
-      return {}
-  }
-}
-
-type UserInfoProps = {
-  currentUser: User | null
-  isOpen: boolean
-  onOpen: () => void
-  onClose: () => void
-  onToggle?: () => void
-  userAction: () => void
-}
 
 const UserInfo = () => {
   const router = useRouter()
-  const [loginMutation] = useMutation(login)
-  const [signupMutation] = useMutation(signup)
+  // const [loginMutation] = useMutation(login)
+  // const [signupMutation] = useMutation(signup)
   const [logoutMutation] = useMutation(logout)
 
   const [signingUp, setSigningUp] = useState(false)
@@ -219,7 +191,7 @@ const NewHome: BlitzPage = () => {
 }
 
 NewHome.suppressFirstRenderFlicker = true
-// NewHome.redirectAuthenticatedTo = Routes.Dashboard()
+NewHome.redirectAuthenticatedTo = Routes.Dashboard()
 NewHome.getLayout = (page) => <Layout>{page}</Layout>
 
 export default NewHome
