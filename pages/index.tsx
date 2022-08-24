@@ -105,7 +105,7 @@ const UserInfo = () => {
   }
 }
 
-const NewHome: BlitzPage = () => {
+const Home: BlitzPage = () => {
   return (
     <>
       <Container>
@@ -190,8 +190,8 @@ const NewHome: BlitzPage = () => {
   )
 }
 
-NewHome.suppressFirstRenderFlicker = true
-NewHome.redirectAuthenticatedTo = Routes.Dashboard()
-NewHome.getLayout = (page) => <Layout>{page}</Layout>
+Home.suppressFirstRenderFlicker = true
+Home.redirectAuthenticatedTo = Routes.Dashboard()
+Home.getLayout = (page) => <Layout>{page}</Layout>
 
-export default NewHome
+export default Home
