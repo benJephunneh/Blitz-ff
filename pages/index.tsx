@@ -2,33 +2,25 @@ import { Suspense, useState } from "react"
 
 import Image from "next/image"
 import Link from "next/link"
-import { useRouter } from "next/router"
 
 import { BlitzPage, Routes } from "@blitzjs/next"
-import { useMutation } from "@blitzjs/rpc"
-import { User } from "@prisma/client"
 
 import { Box, Button, Container, HStack } from "@chakra-ui/react"
 import { FaPlus } from "react-icons/fa"
 
 import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
 import NewUserModalForm from "app/auth/components/NewUserModalForm"
-import login from "app/auth/mutations/login"
-import logout from "app/auth/mutations/logout"
-import signup from "app/auth/mutations/signup"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
 import logo from "public/logo.png"
 
 const UserInfo = () => {
-  const router = useRouter()
+  // const router = useRouter()
   // const [loginMutation] = useMutation(login)
   // const [signupMutation] = useMutation(signup)
-  const [logoutMutation] = useMutation(logout)
+  // const [logoutMutation] = useMutation(logout)
 
   const [signingUp, setSigningUp] = useState(false)
   const [loggingIn, setLoggingIn] = useState(false)
-  const currentUser = useCurrentUser()
 
   // const { getDisclosureProps: getSignupDisclosureProps, getButtonProps: getSignupButtonProps } = useDisclosure({ id: 'signup' })
   // const signupDisclosureProps = getSignupDisclosureProps()
@@ -41,68 +33,67 @@ const UserInfo = () => {
   // const { isOpen: signupIsOpen, onToggle: signupToggle, onClose: signupOnClose } = useDisclosure({ id: 'signup' })
   // const { isOpen: loginIsOpen, onToggle: loginToggle, onClose: loginOnClose } = useDisclosure({ id: 'login' })
 
-  if (currentUser) {
-    return (
-      <>
-        <HStack spacing={2}>
-          <Button
-            onClick={async () => {
-              await logoutMutation()
-                .then(() => setSigningUp(false))
-                .then(() => setLoggingIn(false))
-            }}
-          >
-            Logout
-          </Button>
-          <div>
-            User: <code>{currentUser.username}</code>
-            <br />
-            Role: <code>{currentUser.role}</code>
-          </div>
-        </HStack>
-      </>
-    )
-  } else {
-    return (
-      <>
-        <NewUserModalForm
-          isOpen={signingUp}
-          onClose={() => {
-            setSigningUp(false)
-          }}
-        />
-        <LoginUserModalForm
-          isOpen={loggingIn}
-          onClose={() => {
-            setLoggingIn(false)
-          }}
-        />
+  // if (currentUser) {
+  //   return (
+  //     <>
+  //       <HStack spacing={2}>
+  //         <Button
+  //           onClick={async () => {
+  //             await logoutMutation()
+  //               .then(() => setSigningUp(false))
+  //               .then(() => setLoggingIn(false))
+  //           }}
+  //         >
+  //           Logout
+  //         </Button>
+  //         <div>
+  //           User: <code>{currentUser.username}</code>
+  //           <br />
+  //           Role: <code>{currentUser.role}</code>
+  //         </div>
+  //       </HStack>
+  //     </>
+  //   )
+  // } else {
+  return (
+    <>
+      <NewUserModalForm
+        isOpen={signingUp}
+        onClose={() => {
+          setSigningUp(false)
+        }}
+      />
+      <LoginUserModalForm
+        isOpen={loggingIn}
+        onClose={() => {
+          setLoggingIn(false)
+        }}
+      />
 
-        <HStack spacing={2}>
-          <Button
-            onClick={() => {
-              setSigningUp(true)
-            }}
-            variant="outline"
-            leftIcon={<FaPlus />}
-            borderStyle="dashed"
-            borderColor="blackAlpha.400"
-            color="#009a4c"
-          >
-            Sign up
-          </Button>
-          <Button
-            onClick={() => {
-              setLoggingIn(true)
-            }}
-            color="#009a4c"
-          >
-            Login
-          </Button>
-        </HStack>
-      </>
-    )
-  }
+      <HStack spacing={2}>
+        <Button
+          onClick={() => {
+            setSigningUp(true)
+          }}
+          variant="outline"
+          leftIcon={<FaPlus />}
+          borderStyle="dashed"
+          borderColor="blackAlpha.400"
+          color="#009a4c"
+        >
+          Sign up
+        </Button>
+        <Button
+          onClick={() => {
+            setLoggingIn(true)
+          }}
+          color="#009a4c"
+        >
+          Login
+        </Button>
+      </HStack>
+    </>
+  )
 }
 
 const Home: BlitzPage = () => {
