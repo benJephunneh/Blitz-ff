@@ -14,11 +14,12 @@ const SidebarLayout: BlitzLayout<SidebarLayoutProps> = ({
   description,
   children,
 }) => {
+  console.log(`${title}`)
   return (
     <>
       <PageTitle title={title} />
 
-      <Container as="main" minW="full" px={0} bg="gray.100">
+      <Container as="main" minW="full" minH='full' pt={4} px={0} bg="gray.100">
         <Grid
           templateAreas={`"sidebar children"`}
           templateColumns={"1fr 4fr"}

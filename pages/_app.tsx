@@ -32,13 +32,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
       <ErrorBoundary FallbackComponent={RootErrorFallback}>
-        <Suspense fallback={<LayoutLoader />}>
-          {getLayout(
-            <Suspense fallback={<PageLoader />}>
-              <Component {...pageProps} />
-            </Suspense>
-          )}
-        </Suspense>
+        {getLayout(
+          <Component {...pageProps} />
+        )}
       </ErrorBoundary>
     </ChakraProvider>
   )

@@ -91,6 +91,9 @@ const Navigation = () => {
           <NavigationItem route={Routes.Dashboard()} icon={FcHome}>
             Home
           </NavigationItem>
+          <NavigationItem route={Routes.CustomersPage()} icon={FcHome}>
+            Customers
+          </NavigationItem>
         </NavigationSection>
       </Stack>
     </Box>
