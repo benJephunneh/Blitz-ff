@@ -17,12 +17,12 @@ type NavigationItemProps = {
 const NavigationItem: FC<NavigationItemProps> = ({ route, icon, children }) => {
   const router = useRouter()
   const [isActive, setIsActive] = useState(false)
-  if (router.pathname === route.pathname) {
+  if (!isActive && router.pathname === route.pathname) {
     setIsActive(true)
   }
 
   const bgColor = useColorModeValue("gray.50", "gray.700")
-  const activeBgColor = useColorModeValue("green.500", "gray.900")
+  const activeBgColor = useColorModeValue("gray.50", "gray.900")
   const activeColor = useColorModeValue("blue.400", "cyan.400")
 
   return (
@@ -88,7 +88,7 @@ const Navigation = () => {
     <Box as="aside">
       <Stack as="aside" spacing={4}>
         <NavigationSection title="Apalachee">
-          <NavigationItem route={Routes.Home()} icon={FcHome}>
+          <NavigationItem route={Routes.Dashboard()} icon={FcHome}>
             Home
           </NavigationItem>
         </NavigationSection>

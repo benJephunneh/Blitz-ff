@@ -11,7 +11,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
-import SideBarLayout from "app/core/layouts/SideBarLayout"
+import SidebarLayout from "app/core/layouts/SidebarLayout"
 import { useRouter } from "next/router"
 import { FC, Suspense } from "react"
 import { User } from "db"
@@ -84,8 +84,9 @@ const Dashboard: BlitzPage = () => {
 Dashboard.suppressFirstRenderFlicker = true
 Dashboard.authenticate = { redirectTo: Routes.Home() }
 Dashboard.getLayout = (page) => (
-  <SideBarLayout title="Dashboard" description="Home page for ABST staff">
+  <SidebarLayout title="Dashboard" description="Home page for ABST staff">
     {page}
-  </SideBarLayout>
+  </SidebarLayout>
 )
+
 export default Dashboard

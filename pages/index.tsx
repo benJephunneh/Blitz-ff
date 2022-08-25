@@ -10,8 +10,8 @@ import { FaPlus } from "react-icons/fa"
 
 import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
 import NewUserModalForm from "app/auth/components/NewUserModalForm"
-import Layout from "app/core/layouts/Layout"
 import logo from "public/logo.png"
+import Layout from "app/core/layouts/Layout"
 
 const UserInfo = () => {
   // const router = useRouter()
@@ -183,6 +183,6 @@ const Home: BlitzPage = () => {
 
 Home.suppressFirstRenderFlicker = true
 Home.redirectAuthenticatedTo = Routes.Dashboard()
-Home.getLayout = (page) => <Layout>{page}</Layout>
+Home.getLayout = (page) => <Layout title="ABST">{page}</Layout>
 
 export default Home
