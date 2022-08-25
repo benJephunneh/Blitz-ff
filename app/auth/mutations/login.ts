@@ -18,7 +18,7 @@ export const authenticateUser = async (rawUsername: string, rawPassword: string)
     await db.user.update({ where: { id: user.id }, data: { hashedPassword: improvedHash } })
   }
 
-  const { hashedPassword, ...rest } = user
+  const { hashedPassword, createdAt, updatedAt, ...rest } = user
   return rest
 }
 
