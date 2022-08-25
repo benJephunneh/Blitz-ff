@@ -6,6 +6,7 @@ import { RouteUrlObject } from "blitz"
 import { Box, Heading, HStack, Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import { IconType } from "react-icons"
 import { FcHome } from "react-icons/fc"
+import { useState } from "react"
 
 type NavigationItemProps = {
   route: RouteUrlObject
@@ -15,10 +16,13 @@ type NavigationItemProps = {
 
 const NavigationItem: FC<NavigationItemProps> = ({ route, icon, children }) => {
   const router = useRouter()
-  const isActive = router.pathname === route.pathname
+  const [isActive, setIsActive] = useState(false)
+  if (router.pathname === route.pathname) {
+    setIsActive(true)
+  }
 
   const bgColor = useColorModeValue("gray.50", "gray.700")
-  const activeBgColor = useColorModeValue("gray.50", "gray.900")
+  const activeBgColor = useColorModeValue("green.500", "gray.900")
   const activeColor = useColorModeValue("blue.400", "cyan.400")
 
   return (
@@ -65,22 +69,24 @@ const NavigationExternalItem: FC<NavigationExternalItemProps> = ({ href, icon, c
   )
 }
 
-const NavigationSection: FC<{ title: string; children?: ReactNode }> = ({ title, children }) => {
+const NavigationSection: FC<{ title?: string; children: ReactNode }> = ({ title, children }) => {
   return (
     <Stack as="section" spacing={2}>
-      <Heading fontSize="xs" textTransform="uppercase" pl={3} pb={2} color="gray.500">
-        {title}
-      </Heading>
+      {title && (
+        <Heading fontSize="xs" textTransform="uppercase" pl={3} pb={2} color="gray.500">
+          {title}
+        </Heading>
+      )}
 
       {children}
     </Stack>
   )
 }
 
-const Navigation: FC = () => {
+const Navigation = () => {
   return (
     <Box as="aside">
-      <Stack as="aside" spacing={8}>
+      <Stack as="aside" spacing={4}>
         <NavigationSection title="Apalachee">
           <NavigationItem route={Routes.Home()} icon={FcHome}>
             Home

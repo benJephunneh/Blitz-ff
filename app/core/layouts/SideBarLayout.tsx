@@ -1,38 +1,37 @@
 import { BlitzLayout } from "@blitzjs/next"
-import { Container, Grid, GridItem, Heading } from "@chakra-ui/react"
+import { Container, Grid, GridItem } from "@chakra-ui/react"
 import Head from "next/head"
-import { Suspense } from "react"
 import Navigation from "../components/Navigation"
 
-type SidebarLayoutProps = {
+type SideBarLayoutProps = {
   title?: string
   description?: string
 }
 
-const SidebarLayout: BlitzLayout<SidebarLayoutProps> = ({ title, description, children }) => {
+const SideBarLayout: BlitzLayout<SideBarLayoutProps> = ({ title, description, children }) => {
   return (
-    // <>
-    <Suspense
-      fallback={
-        <Head>
-          <title>Loading</title>
-        </Head>
-      }
-    >
+    <>
       <Head>
         <title>{title || "Into the drainfield"}</title>
         <link rel="icon" href="/abst icon.ico" />
       </Head>
-      <Grid templateColumns={{ base: "1fr", md: "1fr 3fr", lg: "1fr 4fr" }} gap={12}>
-        <GridItem display={{ base: "none", md: "block" }}>
-          <Navigation />
-        </GridItem>
 
-        <GridItem>{children}</GridItem>
-      </Grid>
-    </Suspense>
-    // </>
+      <Container as="main" pl={0} bg="gray.100">
+        <Grid
+          templateAreas={`"sidebar children"`}
+          templateColumns={"1fr 4fr"}
+          gap={2}
+          justifyItems="left"
+        >
+          <GridItem area="sidebar" w="full">
+            <Navigation />
+          </GridItem>
+
+          <GridItem area="children">{children}</GridItem>
+        </Grid>
+      </Container>
+    </>
   )
 }
 
-export default SidebarLayout
+export default SideBarLayout
