@@ -1,79 +1,85 @@
-import { Suspense, useState } from "react"
-
+import { Suspense } from "react"
 import Image from "next/image"
 import Link from "next/link"
-
-import { BlitzPage, Routes } from "@blitzjs/next"
-
-import { Box, Button, Container, HStack } from "@chakra-ui/react"
-import { FaPlus } from "react-icons/fa"
-
-import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
-import NewUserModalForm from "app/auth/components/NewUserModalForm"
-import logo from "public/logo.png"
 import Layout from "app/core/layouts/Layout"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import logout from "app/auth/mutations/logout"
+import logo from "public/logo.png"
+import { useMutation } from "@blitzjs/rpc"
+import { Routes, BlitzPage } from "@blitzjs/next"
+import { Box, Button, Container, HStack, Text, useDisclosure } from "@chakra-ui/react"
+import { useRouter } from "next/router"
+import NewUserModalForm from "app/auth/components/NewUserModalForm"
+import { useState } from "react"
+import { FaPlus } from "react-icons/fa"
+import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
 
 const UserInfo = () => {
-  // const router = useRouter()
-  // const [loginMutation] = useMutation(login)
-  // const [signupMutation] = useMutation(signup)
-  // const [logoutMutation] = useMutation(logout)
+  const currentUser = useCurrentUser()
+  const router = useRouter()
+  const [logoutMutation] = useMutation(logout)
 
-  const [signingUp, setSigningUp] = useState(false)
-  const [loggingIn, setLoggingIn] = useState(false)
-
-  // const { getDisclosureProps: getSignupDisclosureProps, getButtonProps: getSignupButtonProps } = useDisclosure({ id: 'signup' })
-  // const signupDisclosureProps = getSignupDisclosureProps()
-  // const signupButtonProps = getSignupButtonProps()
-
-  // const { getDisclosureProps: getLoginDisclosureProps, getButtonProps: getLoginButtonProps } = useDisclosure({ id: 'login' })
-  // const loginDisclosureProps = getLoginDisclosureProps()
-  // const loginButtonProps = getLoginButtonProps()
-
-  // const { isOpen: signupIsOpen, onToggle: signupToggle, onClose: signupOnClose } = useDisclosure({ id: 'signup' })
-  // const { isOpen: loginIsOpen, onToggle: loginToggle, onClose: loginOnClose } = useDisclosure({ id: 'login' })
-
-  // if (currentUser) {
-  //   return (
-  //     <>
-  //       <HStack spacing={2}>
-  //         <Button
-  //           onClick={async () => {
-  //             await logoutMutation()
-  //               .then(() => setSigningUp(false))
-  //               .then(() => setLoggingIn(false))
-  //           }}
-  //         >
-  //           Logout
-  //         </Button>
-  //         <div>
-  //           User: <code>{currentUser.username}</code>
-  //           <br />
-  //           Role: <code>{currentUser.role}</code>
-  //         </div>
-  //       </HStack>
-  //     </>
-  //   )
-  // } else {
-  return (
-    <>
+  const NewUser = () => {
+    return (
       <NewUserModalForm
-        isOpen={signingUp}
-        onClose={() => {
-          setSigningUp(false)
+        isOpen={isOpen}
+        onClose={onClose}
+        submitText="Create"
+        onSuccess={async (user) => {
+          await router.push(Routes.ProfilePage({ username: user.username }))
         }}
       />
+    )
+  }
+  const Login = () => {
+    return (
       <LoginUserModalForm
-        isOpen={loggingIn}
-        onClose={() => {
-          setLoggingIn(false)
+        isOpen={isOpen}
+        onClose={onClose}
+        submitText="Log in"
+        onSuccess={async () => {
+          await router.push(Routes.Home())
         }}
       />
+    )
+  }
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [userForm, setUserForm] = useState(<Login />)
+
+  if (currentUser) {
+    return (
+      <>
+        <Button
+          onClick={async () => {
+            await logoutMutation()
+          }}
+        >
+          Logout
+        </Button>
+        <div>
+          User: <code>{currentUser.username}</code>
+          <br />
+          Role: <code>{currentUser.role}</code>
+        </div>
+      </>
+    )
+  } else {
+    return (
       <HStack spacing={2}>
         <Button
           onClick={() => {
-            setSigningUp(true)
+            setUserForm(<Login />)
+            onOpen()
+          }}
+          color="#009a4c"
+        >
+          Login
+        </Button>
+        <Button
+          onClick={() => {
+            setUserForm(<NewUser />)
+            onOpen()
           }}
           variant="outline"
           leftIcon={<FaPlus />}
@@ -83,22 +89,15 @@ const UserInfo = () => {
         >
           Sign up
         </Button>
-        <Button
-          onClick={() => {
-            setLoggingIn(true)
-          }}
-          color="#009a4c"
-        >
-          Login
-        </Button>
+        {userForm}
       </HStack>
-    </>
-  )
+    )
+  }
 }
 
 const Home: BlitzPage = () => {
   return (
-    <>
+    <Layout title="Home">
       <Container>
         <Box as="main">
           <div className="logo">
@@ -107,11 +106,11 @@ const Home: BlitzPage = () => {
           <p>
             <strong>Congrats!</strong> Your app is ready, including user sign-up and log-in.
           </p>
-          <Container my={2}>
-            <Suspense>
+          <div className="buttons" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+            <Suspense fallback="Loading...">
               <UserInfo />
             </Suspense>
-          </Container>
+          </div>
           <p>
             <strong>
               To add a new model to your app, <br />
@@ -177,12 +176,11 @@ const Home: BlitzPage = () => {
           </a>
         </footer>
       </Container>
-    </>
+    </Layout>
   )
 }
 
 Home.suppressFirstRenderFlicker = true
-Home.redirectAuthenticatedTo = Routes.Dashboard()
-Home.getLayout = (page) => <Layout title="ABST">{page}</Layout>
+// Home.redirectAuthenticatedTo = Routes.Dashboard()
 
 export default Home
