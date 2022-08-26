@@ -1,72 +1,110 @@
-import { Suspense, useState } from "react";
-import { Routes } from "@blitzjs/next";
-import Link from "next/link";
-import { usePaginatedQuery } from "@blitzjs/rpc";
-import { useRouter } from "next/router";
-import getCustomers from "app/customers/queries/getCustomers";
-import SidebarLayout from "app/core/layouts/SidebarLayout";
-import { Button, ButtonGroup, UnorderedList } from "@chakra-ui/react";
-import Layout from "app/core/layouts/Layout";
-import { FaPlus } from "react-icons/fa";
-
-const ITEMS_PER_PAGE = 100;
+import { Suspense, useState } from "react"
+import { Routes } from "@blitzjs/next"
+import Link from "next/link"
+import { usePaginatedQuery } from "@blitzjs/rpc"
+import { useRouter } from "next/router"
+import getCustomers from "app/customers/queries/getCustomers"
+import SidebarLayout from "app/core/layouts/SidebarLayout"
+import {
+  Button,
+  ButtonGroup,
+  Container,
+  Flex,
+  Grid,
+  GridItem,
+  ListItem,
+  Stack,
+  UnorderedList,
+} from "@chakra-ui/react"
+import Layout from "app/core/layouts/Layout"
+import { FaPlus } from "react-icons/fa"
+import NewCustomerModalForm from "app/customers/components/NewCustomerModalForm"
+import CustomerListItem from "app/customers/components/CustomerListitem"
+import { FcNext, FcPrevious } from "react-icons/fc"
+const ITEMS_PER_PAGE = 100
 
 export const CustomersList = () => {
-  const router = useRouter();
-  const page = Number(router.query.page) || 0;
+  const router = useRouter()
+  const page = Number(router.query.page) || 0
   const [{ customers, hasMore }] = usePaginatedQuery(getCustomers, {
-    orderBy: { id: "asc" },
+    orderBy: { lastname: "asc" },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
-  });
+  })
 
-  const goToPreviousPage = () => router.push({ query: { page: page - 1 } });
-  const goToNextPage = () => router.push({ query: { page: page + 1 } });
+  const goToPreviousPage = () => router.push({ query: { page: page - 1 } })
+  const goToNextPage = () => router.push({ query: { page: page + 1 } })
 
   return (
-    <div>
-      <UnorderedList>
+    <>
+      <Grid
+        bg="white"
+        gridTemplateAreas={`'name attributes'`}
+        gridTemplateColumns="repeat(5, 1fr)"
+        borderRadius={8}
+      >
         {customers.map((customer) => (
-          <li key={customer.id}>
-            <Link href={Routes.ShowCustomerPage({ customerId: customer.id })}>
-              <a>{customer.firstname} {customer.lastname}</a>
-            </Link>
-          </li>
+          <CustomerListItem key={customer.id}>
+            {customer.firstname} {customer.lastname}
+          </CustomerListItem>
         ))}
-      </UnorderedList>
+      </Grid>
+      {/*
+      <Flex bg='white' borderRadius={8}>
+        <ButtonGroup flexDirection='column' w='full' isAttached>
+          {customers.map((customer) => (
+            <CustomerListItem key={customer.id}>
+              {customer.firstname} {customer.lastname}
+            </CustomerListItem>
+          ))}
+        </ButtonGroup>
+      </Flex>
+          */}
 
-      <ButtonGroup isAttached>
-        <Button variant='outline' disabled={page === 0} onClick={goToPreviousPage}>
+      <ButtonGroup pt={5} isAttached>
+        <Button
+          variant="outline"
+          disabled={page === 0}
+          onClick={goToPreviousPage}
+          leftIcon={<FcPrevious />}
+        >
           Previous
         </Button>
-        <Button variant='outline' disabled={!hasMore} onClick={goToNextPage}>
+        <Button variant="outline" disabled={!hasMore} onClick={goToNextPage} rightIcon={<FcNext />}>
           Next
         </Button>
       </ButtonGroup>
-    </div>
-  );
-};
+    </>
+  )
+}
 
 const CustomersPage = () => {
   const [creatingCustomer, setCreatingCustomer] = useState(false)
 
   return (
     <SidebarLayout title="Customers">
-      <div>
-        <Button
-          onClick={() => { setCreatingCustomer(true) }}
-          variant='outline'
-          leftIcon={<FaPlus />}
-          borderStyle='dashed'
-          borderColor='blackAlpha.400'
-          color='#009a4c'>
-          Create customer
-        </Button>
+      <NewCustomerModalForm
+        isOpen={creatingCustomer}
+        onClose={() => {
+          setCreatingCustomer(false)
+        }}
+      />
 
-        <Suspense>
-          <CustomersList />
-        </Suspense>
-      </div>
+      <Button
+        onClick={() => {
+          setCreatingCustomer(true)
+        }}
+        variant="outline"
+        leftIcon={<FaPlus />}
+        borderStyle="dashed"
+        borderColor="blackAlpha.400"
+        color="#009a4c"
+        mb={4}
+      >
+        Create customer
+      </Button>
+
+      <CustomersList />
     </SidebarLayout>
   )
 }
@@ -78,4 +116,4 @@ CustomersPage.authenticate = { redirectTo: Routes.Home() }
 //   </SidebarLayout>
 // }
 
-export default CustomersPage;
+export default CustomersPage

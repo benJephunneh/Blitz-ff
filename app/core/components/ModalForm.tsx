@@ -60,7 +60,7 @@ const ModalForm: FormComponent<ModalFormProps> = ({
   ...props
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside" isCentered>
+    <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside">
       <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px)" />
       <FinalForm
         initialValues={initialValues}
