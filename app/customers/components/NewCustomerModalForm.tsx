@@ -46,7 +46,7 @@ const NewCustomerModalForm: FC<CustomerModalFormProps> = ({ isOpen, onClose, onS
         onSubmit(values)
           .then((customer) => onSuccess?.(customer!))
           .then(() => onClose())
-          .then((customer) => router.push(Routes.ShowCustomerPage({ customerId: customer.id })))
+          // .then((customer) => router.push(Routes.ShowCustomerPage({ customerId: customer.id })))
           .catch((error) => handleError(error))
       }}
       render={() => (
