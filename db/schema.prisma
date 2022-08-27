@@ -77,7 +77,7 @@ model Location {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  primary Boolean @default(true)
+  primary Boolean @default(true) @unique
   house      String
   street     String
   city       String

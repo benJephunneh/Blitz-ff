@@ -1,14 +1,14 @@
-import { paginate } from "blitz";
-import { resolver } from "@blitzjs/rpc";
-import db, { Prisma } from "db";
+import { paginate } from "blitz"
+import { resolver, useQuery } from "@blitzjs/rpc"
+import db, { Prisma } from "db"
+import { useRouter } from "next/router"
+import { MenuList } from "@chakra-ui/react"
+import getLocation from "./getLocation"
 
 interface GetLocationsInput
-  extends Pick<
-    Prisma.LocationFindManyArgs,
-    "where" | "orderBy" | "skip" | "take"
-  > {}
+  extends Pick<Prisma.LocationFindManyArgs, "where" | "orderBy" | "skip" | "take"> {}
 
-export default resolver.pipe(
+const getLocations = resolver.pipe(
   resolver.authorize(),
   async ({ where, orderBy, skip = 0, take = 100 }: GetLocationsInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
@@ -21,15 +21,16 @@ export default resolver.pipe(
       skip,
       take,
       count: () => db.location.count({ where }),
-      query: (paginateArgs) =>
-        db.location.findMany({ ...paginateArgs, where, orderBy }),
-    });
+      query: (paginateArgs) => db.location.findMany({ ...paginateArgs, where, orderBy }),
+    })
 
     return {
       locations,
       nextPage,
       hasMore,
       count,
-    };
+    }
   }
-);
+)
+
+export default getLocations

@@ -6,12 +6,14 @@ import { useRouter } from "next/router"
 import getCustomers from "app/customers/queries/getCustomers"
 import SidebarLayout from "app/core/layouts/SidebarLayout"
 import {
+  Box,
   Button,
   ButtonGroup,
   Container,
   Flex,
   Grid,
   GridItem,
+  HStack,
   ListItem,
   Stack,
   UnorderedList,
@@ -39,16 +41,18 @@ export const CustomersList = () => {
     <>
       <Grid
         bg="white"
-        gridTemplateAreas={`'name attributes'`}
-        gridTemplateColumns="repeat(5, 1fr)"
+        flexDirection="column"
         borderRadius={8}
+        templateAreas={`'name locations jobs invoices estimates'`}
       >
-        {customers.map((customer) => (
-          <CustomerListItem key={customer.id}>
-            {customer.firstname} {customer.lastname}
-          </CustomerListItem>
-        ))}
+        {customers.length > 0 &&
+          customers.map((customer) => (
+            <CustomerListItem key={customer.id} id={customer.id}>
+              {customer.firstname} {customer.lastname}
+            </CustomerListItem>
+          ))}
       </Grid>
+
       {/*
       <Flex bg='white' borderRadius={8}>
         <ButtonGroup flexDirection='column' w='full' isAttached>
@@ -90,21 +94,23 @@ const CustomersPage = () => {
         }}
       />
 
-      <Button
-        onClick={() => {
-          setCreatingCustomer(true)
-        }}
-        variant="outline"
-        leftIcon={<FaPlus />}
-        borderStyle="dashed"
-        borderColor="blackAlpha.400"
-        color="#009a4c"
-        mb={4}
-      >
-        Create customer
-      </Button>
+      <ButtonGroup spacing={0} flexDirection="column">
+        <Button
+          onClick={() => {
+            setCreatingCustomer(true)
+          }}
+          variant="outline"
+          leftIcon={<FaPlus />}
+          borderStyle="dashed"
+          borderColor="blackAlpha.400"
+          color="#009a4c"
+          mb={4}
+        >
+          Create customer
+        </Button>
 
-      <CustomersList />
+        <CustomersList />
+      </ButtonGroup>
     </SidebarLayout>
   )
 }
