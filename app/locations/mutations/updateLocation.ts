@@ -1,13 +1,30 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
-import { UpdateLocation } from "../validations"
+import { customerId, UpdateLocation } from "../validations"
 
 export default resolver.pipe(
   resolver.zod(UpdateLocation),
   resolver.authorize(),
-  async ({ id, ...data }) => {
+  async ({ id, house, street, city, state, zipcode, block, lot, parcel, customerId }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const location = await db.location.update({ where: { id }, data })
+    const location = await db.location.update({
+      where: { id },
+      data: {
+        house,
+        street,
+        city,
+        state,
+        zipcode,
+        block,
+        lot,
+        parcel,
+        customer: {
+          connect: {
+            id: customerId,
+          },
+        },
+      },
+    })
 
     return location
   }

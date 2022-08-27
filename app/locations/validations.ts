@@ -9,6 +9,7 @@ export const zipcode = z.string()
 export const block = z.string().optional()
 export const lot = z.string().optional()
 export const parcel = z.string().optional()
+export const customerId = z.number()
 
 export const CreateLocation = z.object({
   primary,
@@ -20,6 +21,7 @@ export const CreateLocation = z.object({
   block,
   lot,
   parcel,
+  customerId,
 })
 
 export const UpdateLocation = z.object({
@@ -33,6 +35,7 @@ export const UpdateLocation = z.object({
   block,
   lot,
   parcel,
+  customerId,
 })
 
 export const DeleteLocation = z.object({
