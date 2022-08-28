@@ -14,9 +14,9 @@ import {
   MenuList,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { LocationList } from "app/locations/components/LocationList"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { LocationList } from "pages/customers/[customerId]"
 import { ReactNode, useState } from "react"
 import { FaPlus } from "react-icons/fa"
 import { FcPlus } from "react-icons/fc"
@@ -30,7 +30,7 @@ const CustomerListItem = ({ id, children }: CustomerListItemProps) => {
   const router = useRouter()
   const [hoverState, setHoverState] = useState(false)
   const hoverColor = useColorModeValue("gray.100", "white")
-  console.log(`id: ${id}`)
+  const [{ locations }] =
   return (
     <>
       <GridItem area="name" rowSpan="auto">
@@ -68,33 +68,28 @@ const CustomerListItem = ({ id, children }: CustomerListItemProps) => {
               _hover={{ bg: "white", borderBottom: "1px solid orange" }}
               _active={{ borderBottom: "1px solid orange" }}
             >
-              {/* <MenuList>
-                locations.map((location) => (
-                  list primary, first
-                  <MenuItem>{location.house} etc.</MenuItem>
-              ))}
-                */}
-              Locations
-            </MenuButton>
-            <MenuList>
-              <LocationList customerId={id} />
-            </MenuList>
+              <MenuList>
+                Locations
+                <MenuList>
+                </MenuButton>
+                <LocationList customerId={id} />
+              </MenuList>
 
-            <IconButton
-              onMouseOver={() => setHoverState(true)}
-              onMouseLeave={() => setHoverState(false)}
-              bg={hoverState ? hoverColor : "white"}
-              color="cyan.400"
-              aria-label="Add location"
-              icon={<FaPlus size={10} />}
-              borderRadius={0}
-              px={0}
-              variant="ghost"
-              _hover={{ bg: "white" }}
-            />
-          </Menu>
-        </ButtonGroup>
-      </GridItem>
+              <IconButton
+                onMouseOver={() => setHoverState(true)}
+                onMouseLeave={() => setHoverState(false)}
+                bg={hoverState ? hoverColor : "white"}
+                color="cyan.400"
+                aria-label="Add location"
+                icon={<FaPlus size={10} />}
+                borderRadius={0}
+                px={0}
+                variant="ghost"
+                _hover={{ bg: "white" }}
+              />
+          </Menu >
+        </ButtonGroup >
+      </GridItem >
     </>
   )
 }

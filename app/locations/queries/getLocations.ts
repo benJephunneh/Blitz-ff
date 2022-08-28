@@ -1,9 +1,11 @@
-import { paginate } from "blitz"
+import { paginate, PromiseReturnType } from "blitz"
 import { resolver, useQuery } from "@blitzjs/rpc"
 import db, { Prisma } from "db"
-import { useRouter } from "next/router"
-import { MenuList } from "@chakra-ui/react"
+import router, { useRouter } from "next/router"
+import { HStack, IconButton, MenuList, Tag, TagLabel } from "@chakra-ui/react"
 import getLocation from "./getLocation"
+import { FcGlobe } from "react-icons/fc"
+import createLocation from "../mutations/createLocation"
 
 interface GetLocationsInput
   extends Pick<Prisma.LocationFindManyArgs, "where" | "orderBy" | "skip" | "take"> {}

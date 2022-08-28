@@ -13,6 +13,7 @@ import {
   CustomerForm,
   FORM_ERROR,
 } from "app/customers/components/CustomerForm";
+import { UpdateCustomer } from "app/customers/validations";
 
 export const EditCustomer = () => {
   const router = useRouter();
@@ -26,6 +27,12 @@ export const EditCustomer = () => {
     }
   );
   const [updateCustomerMutation] = useMutation(updateCustomer);
+  const onSubmit = async values => {
+    await new Promise((resolve) => {
+      resolve(updateCustomerMutation({ id: customer.id, ...values, }))
+    })
+  }
+  const next = router.query.next ? decodeURIComponent(router.query.next as string) : '/'
 
   return (
     <>
@@ -42,23 +49,18 @@ export const EditCustomer = () => {
           // TODO use a zod schema for form validation
           //  - Tip: extract mutation's schema into a shared `validations.ts` file and
           //         then import and use it here
-          // schema={UpdateCustomer}
+          schema={UpdateCustomer}
           initialValues={customer}
-          onSubmit={async (values) => {
-            try {
-              const updated = await updateCustomerMutation({
-                id: customer.id,
-                ...values,
-              });
-              await setQueryData(updated);
-              router.push(Routes.ShowCustomerPage({ customerId: updated.id }));
-            } catch (error: any) {
-              console.error(error);
-              return {
-                [FORM_ERROR]: error.toString(),
-              };
-            }
-          }}
+          onSubmit={(values) => {
+            onSubmit(values)
+              .then((updated) => setQueryData(updated!))
+              .then(() => router.push(next))
+              .catch((error) => {
+                console.error(error)
+                return { [FORM_ERROR]: error.toString() }
+              })
+          }
+          }
         />
       </div>
     </>

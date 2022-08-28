@@ -45,12 +45,11 @@ export const CustomersList = () => {
         borderRadius={8}
         templateAreas={`'name locations jobs invoices estimates'`}
       >
-        {customers.length > 0 &&
-          customers.map((customer) => (
-            <CustomerListItem key={customer.id} id={customer.id}>
-              {customer.firstname} {customer.lastname}
-            </CustomerListItem>
-          ))}
+        {customers.map((customer) => (
+          <CustomerListItem key={customer.id} id={customer.id}>
+            {customer.firstname} {customer.lastname}
+          </CustomerListItem>
+        ))}
       </Grid>
 
       {/*
