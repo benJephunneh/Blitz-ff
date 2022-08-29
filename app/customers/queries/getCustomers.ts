@@ -1,12 +1,10 @@
-import { paginate } from "blitz";
-import { resolver } from "@blitzjs/rpc";
-import db, { Prisma } from "db";
+import { paginate } from "blitz"
+import { resolver } from "@blitzjs/rpc"
+import db, { Prisma } from "db"
+import { z } from "zod"
 
 interface GetCustomersInput
-  extends Pick<
-    Prisma.CustomerFindManyArgs,
-    "where" | "orderBy" | "skip" | "take"
-  > {}
+  extends Pick<Prisma.CustomerFindManyArgs, "where" | "orderBy" | "skip" | "take" | "include"> {}
 
 export default resolver.pipe(
   resolver.authorize(),
@@ -21,15 +19,14 @@ export default resolver.pipe(
       skip,
       take,
       count: () => db.customer.count({ where }),
-      query: (paginateArgs) =>
-        db.customer.findMany({ ...paginateArgs, where, orderBy }),
-    });
+      query: (paginateArgs) => db.customer.findMany({ ...paginateArgs, where, orderBy }),
+    })
 
     return {
       customers,
       nextPage,
       hasMore,
       count,
-    };
+    }
   }
-);
+)

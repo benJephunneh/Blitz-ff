@@ -1,11 +1,15 @@
+import { Routes } from "@blitzjs/next"
 import { useQuery } from "@blitzjs/rpc"
-import { IconButton, HStack, Tag, TagLabel, Text } from "@chakra-ui/react"
+import { IconButton, HStack, Tag, TagLabel, Text, MenuItem } from "@chakra-ui/react"
+import { Customer } from "@prisma/client"
 import createLocation from "app/locations/mutations/createLocation"
 import getLocation from "app/locations/queries/getLocation"
 import getLocations from "app/locations/queries/getLocations"
 import { PromiseReturnType } from "blitz"
+import Link from "next/link"
 import { useRouter } from "next/router"
-import { ComponentType } from "react"
+import React, { ComponentType } from "react"
+import { ReactNode } from "react"
 import { FcGlobe } from "react-icons/fc"
 
 type LocationProp = { location: PromiseReturnType<typeof createLocation> }
@@ -26,7 +30,7 @@ const MapLinkIcon = ({ location }: LocationProp) => {
   )
 }
 
-const LocationEntry = ({ location }: LocationProp) => {
+export const LocationEntry = ({ location }: LocationProp) => {
   return (
     <HStack>
       <Text>
@@ -40,29 +44,29 @@ const LocationEntry = ({ location }: LocationProp) => {
   )
 }
 
-type LocationListProps<Tag extends keyof JSX.IntrinsicElements> = {
+type LocationListProps = {
   customerId: number
-  tag: ComponentType | keyof JSX.IntrinsicElements
-} & JSX.IntrinsicElements[Tag]
+}
 
-export const LocationList = ({ customerId, tag, ...rest }: LocationListProps) => {
-  const router = useRouter()
-  const [location] = useQuery(getLocation, { customerId, primary: true })
-  const [{ locations }] = useQuery(getLocations, { where: { customerId, primary: false } })
+const LocationList = ({ customerId }: LocationListProps) => {
+  const [{ locations }] = useQuery(getLocations, {
+    where: { customerId },
+    orderBy: {
+      primary: "asc",
+    },
+  })
 
   return (
     <>
-      {location && <LocationEntry location={location} />}
-
       {locations.map((location) => {
-        <tag {...rest}>
-          <LocationEntry location={location} />
-        </tag>
+        ;<MenuItem>
+          <Link href={Routes.ShowCustomerPage({ where: {} })} passHref>
+            <LocationEntry location={location} />
+          </Link>
+        </MenuItem>
       })}
     </>
   )
 }
-// locations.map((location) => (
-//   <LocationEntry location={location} />
-// ))
 
+export default LocationList

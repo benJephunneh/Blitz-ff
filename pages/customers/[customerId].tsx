@@ -8,14 +8,15 @@ import { useParam } from "@blitzjs/next"
 
 import getCustomer from "app/customers/queries/getCustomer"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
-import getLocation from "app/locations/queries/getLocation"
-import getLocations from "app/locations/queries/getLocations"
+import LocationList, { LocationEntry } from "app/locations/components/LocationList"
 import {
+  Button,
   Heading,
   HStack,
   Icon,
   IconButton,
   Menu,
+  MenuButton,
   MenuItem,
   MenuList,
   Tag,
@@ -26,55 +27,28 @@ import { PromiseReturnType } from "blitz"
 import createLocation from "app/locations/mutations/createLocation"
 import SidebarLayout from "app/core/layouts/SidebarLayout"
 import { FcGlobe } from "react-icons/fc"
+import { FaChevronDown } from "react-icons/fa"
+import { Customer } from "@prisma/client"
+import { customerId } from "app/locations/validations"
 
-type LocationProp = { location: PromiseReturnType<typeof createLocation> }
-
-const MapLinkIcon = ({ location }: LocationProp) => {
-  const router = useRouter()
-
-  return (
-    <IconButton
-      aria-label="Link to Google map"
-      icon={<FcGlobe />}
-      onClick={() =>
-        router.push(
-          `http://maps.google.com/maps?q=${location.house} ${location.street} ${location.city},${location.state}`
-        )
-      }
-    />
-  )
+export function MakeSerializable(c: Customer) {
+  return JSON.parse(JSON.stringify(c))
 }
 
-const LocationEntry = ({ location }: LocationProp) => {
-  return (
-    <HStack>
-      <Text>
-        {location.house} {location.street}, {location.city} {location.zipcode}
-      </Text>
-      <Tag colorScheme="orange" size="sm">
-        <TagLabel>{location.parcel}</TagLabel>
-      </Tag>
-      <MapLinkIcon location={location} />
-    </HStack>
-  )
-}
-
-export const LocationList = ({ customerId }: { customerId: number }) => {
-  const router = useRouter()
-  const [location] = useQuery(getLocation, { customerId, primary: true })
-  const [{ locations }] = useQuery(getLocations, { where: { customerId, primary: false } })
-
-  return <>{location && <LocationEntry location={location} />}</>
-}
-// locations.map((location) => (
-//   <LocationEntry location={location} />
-// ))
-
-export const Customer = () => {
+export const CustomerDisplay = () => {
   const router = useRouter()
   const customerId = useParam("customerId", "number")
-  const [customer] = useQuery(getCustomer, { id: customerId }, { suspense: false })
+  const [customer] = useQuery(
+    getCustomer,
+    { where: { id: customerId }, include: { locations: true } },
+    { suspense: false }
+  )
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
+  // const c = MakeSerializable(customer)
+
+  // if (Array.isArray(customer.locations)) {
+  //   console.log('yay')
+  // }
 
   return (
     <>
@@ -82,13 +56,33 @@ export const Customer = () => {
         <Heading>
           {customer?.firstname} {customer?.lastname}
         </Heading>
+        <pre>{JSON.stringify(customer, null, 2)}</pre>
 
+        {/*
+        <pre>{JSON.stringify(c, null, 2)}</pre>
+        <pre>{JSON.stringify(locations, null, 2)}</pre>
+        <ul>
+          {locations.map((location) => {
+            <li>{location.city}</li>
+          })}
+        </ul>
+
+        <pre>{JSON.stringify(locations![0], null, 2)}</pre>
         <Menu>
-          <MenuList>
-            <LocationList customerId={customer!.id} />
-          </MenuList>
+          <MenuButton as={Button} rightIcon={<FaChevronDown />}>
+            Locations
+          </MenuButton>
+          {customer?.locations.length > 0 &&
+            <MenuList>
+              <LocationEntry location={customer[locations]?.locations} />
+              {/*
+            <LocationList tag="asdf" customerId={customer?.id} />
+            </MenuList>
+          }
         </Menu>
+        */}
 
+        {/*
         <Link href={Routes.EditCustomerPage({ customerId: customer!.id })}>
           <a>Edit</a>
         </Link>
@@ -106,6 +100,7 @@ export const Customer = () => {
         >
           Delete
         </button>
+        */}
       </div>
     </>
   )
@@ -114,9 +109,7 @@ export const Customer = () => {
 const ShowCustomerPage = () => {
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Customer />
-      </Suspense>
+      <CustomerDisplay />
     </>
   )
 }

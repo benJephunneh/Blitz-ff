@@ -30,7 +30,6 @@ const CustomerListItem = ({ id, children }: CustomerListItemProps) => {
   const router = useRouter()
   const [hoverState, setHoverState] = useState(false)
   const hoverColor = useColorModeValue("gray.100", "white")
-  const [{ locations }] =
   return (
     <>
       <GridItem area="name" rowSpan="auto">
@@ -68,28 +67,27 @@ const CustomerListItem = ({ id, children }: CustomerListItemProps) => {
               _hover={{ bg: "white", borderBottom: "1px solid orange" }}
               _active={{ borderBottom: "1px solid orange" }}
             >
-              <MenuList>
-                Locations
-                <MenuList>
-                </MenuButton>
-                <LocationList customerId={id} />
-              </MenuList>
+              Locations
+            </MenuButton>
+            <MenuList>
+              <LocationList tag="" customerId={id} />
+            </MenuList>
 
-              <IconButton
-                onMouseOver={() => setHoverState(true)}
-                onMouseLeave={() => setHoverState(false)}
-                bg={hoverState ? hoverColor : "white"}
-                color="cyan.400"
-                aria-label="Add location"
-                icon={<FaPlus size={10} />}
-                borderRadius={0}
-                px={0}
-                variant="ghost"
-                _hover={{ bg: "white" }}
-              />
-          </Menu >
-        </ButtonGroup >
-      </GridItem >
+            <IconButton
+              onMouseOver={() => setHoverState(true)}
+              onMouseLeave={() => setHoverState(false)}
+              bg={hoverState ? hoverColor : "white"}
+              color="cyan.400"
+              aria-label="Add location"
+              icon={<FaPlus size={10} />}
+              borderRadius={0}
+              px={0}
+              variant="ghost"
+              _hover={{ bg: "white" }}
+            />
+          </Menu>
+        </ButtonGroup>
+      </GridItem>
     </>
   )
 }
