@@ -5,19 +5,23 @@ import Link from "next/link"
 
 import { BlitzPage, Routes } from "@blitzjs/next"
 
-import { Box, Button, Container, HStack } from "@chakra-ui/react"
+import { Box, Button, ButtonGroup, Container, HStack } from "@chakra-ui/react"
 import { FaPlus } from "react-icons/fa"
 
 import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
 import NewUserModalForm from "app/auth/components/NewUserModalForm"
 import logo from "public/logo.png"
 import Layout from "app/core/layouts/Layout"
+import { useMutation } from "@blitzjs/rpc"
+import logout from "app/auth/mutations/logout"
+import { useRouter } from "next/router"
+import { customerId } from "app/locations/validations"
 
 const UserInfo = () => {
-  // const router = useRouter()
+  const router = useRouter()
   // const [loginMutation] = useMutation(login)
   // const [signupMutation] = useMutation(signup)
-  // const [logoutMutation] = useMutation(logout)
+  const [logoutMutation] = useMutation(logout)
 
   const [signingUp, setSigningUp] = useState(false)
   const [loggingIn, setLoggingIn] = useState(false)
@@ -59,18 +63,20 @@ const UserInfo = () => {
     <>
       <NewUserModalForm
         isOpen={signingUp}
-        onClose={() => {
-          setSigningUp(false)
+        onClose={() => setSigningUp(false)}
+        onSuccess={async () => {
+          await router.push(Routes.Dashboard())
         }}
       />
       <LoginUserModalForm
         isOpen={loggingIn}
-        onClose={() => {
-          setLoggingIn(false)
+        onClose={() => setLoggingIn(false)}
+        onSuccess={async () => {
+          await router.push(Routes.Dashboard())
         }}
       />
 
-      <HStack spacing={2}>
+      <ButtonGroup spacing={2}>
         <Button
           onClick={() => {
             setSigningUp(true)
@@ -91,7 +97,14 @@ const UserInfo = () => {
         >
           Login
         </Button>
-      </HStack>
+        <Button
+          onClick={async () => {
+            await logoutMutation()
+          }}
+        >
+          Log out
+        </Button>
+      </ButtonGroup>
     </>
   )
 }

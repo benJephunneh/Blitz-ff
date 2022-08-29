@@ -12,11 +12,6 @@ import {
 const NewCustomerPage = () => {
   const router = useRouter();
   const [createCustomerMutation] = useMutation(createCustomer);
-  const onSubmit = async values => {
-    await new Promise((resolve) => {
-      resolve(createCustomerMutation(values))
-    })
-  }
 
   return (
     <Layout title={"Create New Customer"}>
@@ -32,13 +27,11 @@ const NewCustomerPage = () => {
         onSubmit={(values) => {
           onSubmit(values)
             .then((customer) => router.push(Routes.ShowCustomerPage({ customerId: customer.id })))
+            .then((customer) => )
             .catch((error) => {
               console.error(error)
               return { [FORM_ERROR]: error.toString() }
             })
-        }}
-        onSuccess={(customer) => {
-          router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
         }}
       />
 

@@ -70,6 +70,7 @@ const ModalForm: FormComponent<ModalFormProps> = ({
           <form onSubmit={form.handleSubmit} {...props}>
             <ModalContent>
               <ModalHeader>{title}</ModalHeader>
+              <ModalCloseButton />
               <ModalBody>
                 {form.submitError && (
                   <Alert status="error" mb={6}>

@@ -22,7 +22,6 @@ import { FormComponent } from "app/core/components/FormComponent"
 import { useRouter } from "next/router"
 import { Routes } from "@blitzjs/next"
 import { Customer } from "@prisma/client"
-import { Customer } from "pages/customers/[customerId]"
 
 type LoginUserModalFormProps = {
   isOpen: boolean

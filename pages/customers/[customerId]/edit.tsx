@@ -1,38 +1,35 @@
-import { Suspense } from "react";
-import { Routes } from "@blitzjs/next";
-import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useQuery, useMutation } from "@blitzjs/rpc";
-import { useParam } from "@blitzjs/next";
+import { Suspense } from "react"
+import { Routes } from "@blitzjs/next"
+import Head from "next/head"
+import Link from "next/link"
+import { useRouter } from "next/router"
+import { useQuery, useMutation } from "@blitzjs/rpc"
+import { useParam } from "@blitzjs/next"
 
-import Layout from "app/core/layouts/Layout";
-import getCustomer from "app/customers/queries/getCustomer";
-import updateCustomer from "app/customers/mutations/updateCustomer";
-import {
-  CustomerForm,
-  FORM_ERROR,
-} from "app/customers/components/CustomerForm";
-import { UpdateCustomer } from "app/customers/validations";
+import Layout from "app/core/layouts/Layout"
+import getCustomer from "app/customers/queries/getCustomer"
+import updateCustomer from "app/customers/mutations/updateCustomer"
+import { CustomerForm, FORM_ERROR } from "app/customers/components/CustomerForm"
+import { UpdateCustomer } from "app/customers/validations"
 
 export const EditCustomer = () => {
-  const router = useRouter();
-  const customerId = useParam("customerId", "number");
+  const router = useRouter()
+  const customerId = useParam("customerId", "number")
   const [customer, { setQueryData }] = useQuery(
     getCustomer,
-    { id: customerId },
+    { where: { id: customerId } },
     {
       // This ensures the query never refreshes and overwrites the form data while the user is editing.
       staleTime: Infinity,
     }
-  );
-  const [updateCustomerMutation] = useMutation(updateCustomer);
-  const onSubmit = async values => {
+  )
+  const [updateCustomerMutation] = useMutation(updateCustomer)
+  const onSubmit = async (values) => {
     await new Promise((resolve) => {
-      resolve(updateCustomerMutation({ id: customer.id, ...values, }))
+      resolve(updateCustomerMutation({ id: customer.id, ...values }))
     })
   }
-  const next = router.query.next ? decodeURIComponent(router.query.next as string) : '/'
+  const next = router.query.next ? decodeURIComponent(router.query.next as string) : "/"
 
   return (
     <>
@@ -59,13 +56,12 @@ export const EditCustomer = () => {
                 console.error(error)
                 return { [FORM_ERROR]: error.toString() }
               })
-          }
-          }
+          }}
         />
       </div>
     </>
-  );
-};
+  )
+}
 
 const EditCustomerPage = () => {
   return (
@@ -80,10 +76,10 @@ const EditCustomerPage = () => {
         </Link>
       </p>
     </div>
-  );
-};
+  )
+}
 
-EditCustomerPage.authenticate = true;
-EditCustomerPage.getLayout = (page) => <Layout>{page}</Layout>;
+EditCustomerPage.authenticate = true
+EditCustomerPage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default EditCustomerPage;
+export default EditCustomerPage

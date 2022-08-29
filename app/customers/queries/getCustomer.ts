@@ -1,5 +1,5 @@
-import { NotFoundError } from "blitz"
 import { resolver } from "@blitzjs/rpc"
+import { NotFoundError } from "blitz"
 import db, { Prisma } from "db"
 import { z } from "zod"
 
@@ -17,7 +17,7 @@ export default resolver.pipe(
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const customer = await db.customer.findFirst({ where, include })
 
-    if (!customer) throw new NotFoundError()
+    if (!customer) throw new NotFoundError(`Customer ${where} not found.`)
 
     return customer
   }

@@ -1,8 +1,10 @@
 import { Routes } from "@blitzjs/next"
+import { usePaginatedQuery } from "@blitzjs/rpc"
 import {
   Button,
   ButtonGroup,
   Flex,
+  forwardRef,
   Grid,
   GridItem,
   HStack,
@@ -12,27 +14,33 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { LocationList } from "app/locations/components/LocationList"
+import LocationList from "app/locations/components/LocationList"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { createRef } from "react"
 import { ReactNode, useState } from "react"
-import { FaPlus } from "react-icons/fa"
-import { FcPlus } from "react-icons/fc"
+import { FaChevronDown, FaPlus } from "react-icons/fa"
+import { FcExpand, FcNext, FcPlus, FcPrevious } from "react-icons/fc"
+import { TbChevronDownRight } from "react-icons/tb"
+import { VscChevronDown } from "react-icons/vsc"
+import getCustomers from "../queries/getCustomers"
 
 type CustomerListItemProps = {
   id: number
   children: ReactNode
 }
 
-const CustomerListItem = ({ id, children }: CustomerListItemProps) => {
-  const router = useRouter()
+const CustomerListItem = forwardRef(({ id, children }: CustomerListItemProps, ref) => {
   const [hoverState, setHoverState] = useState(false)
   const hoverColor = useColorModeValue("gray.100", "white")
+  const nextRef = createRef()
+
   return (
     <>
-      <GridItem area="name" rowSpan="auto">
+      <GridItem ref={ref} area="name" rowSpan="auto" borderRadius={8}>
         <Link href={Routes.ShowCustomerPage({ customerId: id })} passHref>
           <Button
             onMouseOver={() => setHoverState(true)}
@@ -54,9 +62,10 @@ const CustomerListItem = ({ id, children }: CustomerListItemProps) => {
       </GridItem>
       <GridItem area="locations" rowSpan="auto">
         <ButtonGroup isAttached>
-          <Menu>
+          <Menu gutter={0} isLazy>
             <MenuButton
               as={Button}
+              rightIcon={<FcExpand size={10} />}
               onMouseOver={() => setHoverState(true)}
               onMouseLeave={() => setHoverState(false)}
               bg={hoverState ? hoverColor : "white"}
@@ -70,26 +79,28 @@ const CustomerListItem = ({ id, children }: CustomerListItemProps) => {
               Locations
             </MenuButton>
             <MenuList>
-              <LocationList tag="" customerId={id} />
+              <LocationList customerId={id} />
             </MenuList>
 
-            <IconButton
-              onMouseOver={() => setHoverState(true)}
-              onMouseLeave={() => setHoverState(false)}
-              bg={hoverState ? hoverColor : "white"}
-              color="cyan.400"
-              aria-label="Add location"
-              icon={<FaPlus size={10} />}
-              borderRadius={0}
-              px={0}
-              variant="ghost"
-              _hover={{ bg: "white" }}
-            />
+            <Tooltip label="Add location">
+              <IconButton
+                onMouseOver={() => setHoverState(true)}
+                onMouseLeave={() => setHoverState(false)}
+                bg={hoverState ? hoverColor : "white"}
+                color="cyan.400"
+                aria-label="Add location"
+                icon={<FaPlus size={10} />}
+                borderRadius={0}
+                px={0}
+                variant="ghost"
+                _hover={{ bg: "white" }}
+              />
+            </Tooltip>
           </Menu>
         </ButtonGroup>
       </GridItem>
     </>
   )
-}
+})
 
 export default CustomerListItem

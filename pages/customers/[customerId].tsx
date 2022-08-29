@@ -1,50 +1,37 @@
-import { Suspense } from "react"
-import { Routes } from "@blitzjs/next"
-import Head from "next/head"
-import Link from "next/link"
 import { useRouter } from "next/router"
 import { useQuery, useMutation } from "@blitzjs/rpc"
-import { useParam } from "@blitzjs/next"
+import { BlitzPage, Routes, useParam } from "@blitzjs/next"
 
 import getCustomer from "app/customers/queries/getCustomer"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
-import LocationList, { LocationEntry } from "app/locations/components/LocationList"
+import LocationList from "app/locations/components/LocationList"
 import {
+  Box,
   Button,
+  ButtonGroup,
+  Flex,
   Heading,
   HStack,
-  Icon,
-  IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Tag,
-  TagLabel,
-  Text,
+  List,
+  ListItem,
+  useToast,
 } from "@chakra-ui/react"
-import { PromiseReturnType } from "blitz"
-import createLocation from "app/locations/mutations/createLocation"
-import SidebarLayout from "app/core/layouts/SidebarLayout"
-import { FcGlobe } from "react-icons/fc"
-import { FaChevronDown } from "react-icons/fa"
-import { Customer } from "@prisma/client"
-import { customerId } from "app/locations/validations"
+import getLocations from "app/locations/queries/getLocations"
+import { createRef, useState } from "react"
+import { MutationType } from "app/core/components/types/MutationType"
+import CustomerModalForm from "app/customers/components/CustomerModalForm"
+import SidebarLayout from "app/core/layouts/SideBarLayout"
 
-export function MakeSerializable(c: Customer) {
-  return JSON.parse(JSON.stringify(c))
-}
-
-export const CustomerDisplay = () => {
+const CustomerDisplay = () => {
+  const toast = useToast()
   const router = useRouter()
+  const [editingCustomer, setEditingCustomer] = useState(false)
+  const [mutationState, setMutationState] = useState("edit")
   const customerId = useParam("customerId", "number")
-  const [customer] = useQuery(
-    getCustomer,
-    { where: { id: customerId }, include: { locations: true } },
-    { suspense: false }
-  )
+  const [customer] = useQuery(getCustomer, { where: { id: customerId } })
+  const [{ locations }] = useQuery(getLocations, { where: { customerId } })
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
-  // const c = MakeSerializable(customer)
+  const ref = createRef()
 
   // if (Array.isArray(customer.locations)) {
   //   console.log('yay')
@@ -52,61 +39,78 @@ export const CustomerDisplay = () => {
 
   return (
     <>
-      <div>
-        <Heading>
-          {customer?.firstname} {customer?.lastname}
-        </Heading>
-        <pre>{JSON.stringify(customer, null, 2)}</pre>
+      <Box shadow="md" bg="white">
+        <HStack spacing={10}>
+          <Heading mt={0}>
+            {customer?.firstname} {customer.lastname}
+          </Heading>
+          <ButtonGroup alignSelf="start" isAttached variant="outline">
+            <Button
+              borderTopWidth={0}
+              borderTopRadius={0}
+              bg="#009a4c"
+              textColor="yellow"
+              onClick={() => {
+                setEditingCustomer(true)
+                setMutationState("edit")
+              }}
+            >
+              Edit customer
+            </Button>
+            <Button
+              borderTopWidth={0}
+              borderTopRadius={0}
+              borderRightWidth={0}
+              borderRightRadius={0}
+              bg="red"
+              textColor="white"
+              onClick={async () => {
+                if (window.confirm("This will be deleted")) {
+                  await deleteCustomerMutation({ id: customer!.id }).then(() =>
+                    router.push(Routes.CustomersPage())
+                  )
+                }
+              }}
+            >
+              Delete
+            </Button>
+          </ButtonGroup>
+        </HStack>
 
-        {/*
-        <pre>{JSON.stringify(c, null, 2)}</pre>
-        <pre>{JSON.stringify(locations, null, 2)}</pre>
-        <ul>
-          {locations.map((location) => {
-            <li>{location.city}</li>
-          })}
-        </ul>
+        <Flex bg="inherit" direction="column">
+          <List>
+            <>
+              {locations.map((location, ii) => {
+                return (
+                  <ListItem key={ii}>
+                    <LocationList customerId={customerId!} />
+                  </ListItem>
+                )
+              })}
+            </>
+          </List>
+        </Flex>
 
-        <pre>{JSON.stringify(locations![0], null, 2)}</pre>
-        <Menu>
-          <MenuButton as={Button} rightIcon={<FaChevronDown />}>
-            Locations
-          </MenuButton>
-          {customer?.locations.length > 0 &&
-            <MenuList>
-              <LocationEntry location={customer[locations]?.locations} />
-              {/*
-            <LocationList tag="asdf" customerId={customer?.id} />
-            </MenuList>
-          }
-        </Menu>
-        */}
-
-        {/*
-        <Link href={Routes.EditCustomerPage({ customerId: customer!.id })}>
-          <a>Edit</a>
-        </Link>
-
-        <button
-          type="button"
-          onClick={async () => {
-            if (window.confirm("This will be deleted")) {
-              await deleteCustomerMutation({ id: customer!.id }).then(() =>
-                router.push(Routes.CustomersPage())
-              )
-            }
+        <CustomerModalForm
+          mutationType={mutationState as MutationType}
+          isOpen={editingCustomer}
+          onClose={() => {
+            setEditingCustomer(false)
           }}
-          style={{ marginLeft: "0.5rem" }}
-        >
-          Delete
-        </button>
-        */}
-      </div>
+          onSuccess={async () => {
+            toast({
+              title: "Finished editing",
+              description: "Successfully edit",
+              status: "success",
+            })
+          }}
+        />
+      </Box>
     </>
   )
 }
 
-const ShowCustomerPage = () => {
+const ShowCustomerPage: BlitzPage = () => {
   return (
     <>
       <CustomerDisplay />
@@ -115,6 +119,6 @@ const ShowCustomerPage = () => {
 }
 
 ShowCustomerPage.authenticate = true
-ShowCustomerPage.getLayout = (page) => <SidebarLayout>{page}</SidebarLayout>
+ShowCustomerPage.getLayout = (page) => <SidebarLayout title="Customer page">{page}</SidebarLayout>
 
 export default ShowCustomerPage

@@ -11,15 +11,15 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
-import SidebarLayout from "app/core/layouts/SidebarLayout"
 import { useRouter } from "next/router"
 import { FC, Suspense } from "react"
 import { User } from "db"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import SidebarLayout from "app/core/layouts/SideBarLayout"
 
 type UserInfoProps = Partial<User>
 
-const UserInfo: FC<UserInfoProps> = ({ username, role }) => {
+const UserInfo = ({ username, role }: UserInfoProps) => {
   const [logoutMutation] = useMutation(logout)
 
   return (
@@ -29,13 +29,14 @@ const UserInfo: FC<UserInfoProps> = ({ username, role }) => {
           onClick={async () => {
             await logoutMutation()
           }}
+          bg="gray.50"
         >
           Log out
         </Button>
         <Box>
-          User: <Code>{username}</Code>
+          User: <Code fontWeight="bold">{username}</Code>
           <br />
-          Role: <Code>{role}</Code>
+          Role: <Code fontWeight="bold">{role}</Code>
         </Box>
       </HStack>
     </>
@@ -45,14 +46,13 @@ const UserInfo: FC<UserInfoProps> = ({ username, role }) => {
 
 const Dashboard: BlitzPage = () => {
   const router = useRouter()
-  // const [currentUser] = useQuery(getCurrentUser, null, { suspense: false })
   const currentUser = useCurrentUser({ suspense: false })
 
   return (
     <>
-      <Box bg={useColorModeValue("gray.50", "gray.800")}>
-        <Container as="main" maxWidth="container.sm" textAlign="center" py={{ base: 12, md: 20 }}>
-          <Heading size="2xl" mb={2}>
+      <Box bg={useColorModeValue("gray.50", "gray.800")} pt={0} mx={0}>
+        <Container as="main" textAlign="center" py={{ base: 12, md: 20 }} mx={0}>
+          <Heading size="2xl" mb={2} mx={0}>
             {currentUser?.username}
           </Heading>
           <Text fontSize="2x" opacity="0.8">
@@ -61,7 +61,7 @@ const Dashboard: BlitzPage = () => {
         </Container>
       </Box>
 
-      <Container as="main" py={{ base: 12, md: 20 }}>
+      <Container as="main" py={{ base: 12, md: 20 }} mx={0}>
         <Suspense>
           <UserInfo username={currentUser?.username} role={currentUser?.role} />
         </Suspense>

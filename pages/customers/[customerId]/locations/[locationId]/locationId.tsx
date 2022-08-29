@@ -1,11 +1,13 @@
 import { BlitzPage, useParam } from "@blitzjs/next"
 import { useQuery } from "@blitzjs/rpc"
 import { Heading } from "@chakra-ui/react"
-import SidebarLayout from "app/core/layouts/SidebarLayout"
+import SidebarLayout from "app/core/layouts/SideBarLayout"
 import getCustomer from "app/customers/queries/getCustomer"
 import getLocation from "app/locations/queries/getLocation"
 import getLocations from "app/locations/queries/getLocations"
 import { useState } from "react"
+
+// Create transfer-ownership routine and button
 
 const ITEMS_PER_PAGE = 20
 

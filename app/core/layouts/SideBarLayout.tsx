@@ -19,14 +19,14 @@ const SidebarLayout: BlitzLayout<SidebarLayoutProps> = ({
     <>
       <PageTitle title={title} />
 
-      <Container as="main" minW="full" minH='full' pt={4} px={0} bg="gray.100">
+      <Container as="main" minW="full" minH="full" pt={0} px={0} bg="gray.100">
         <Grid
           templateAreas={`"sidebar children"`}
           templateColumns={"1fr 4fr"}
           gap={2}
           justifyItems="left"
         >
-          <GridItem area="sidebar" w="full">
+          <GridItem area="sidebar" w="full" pt={4}>
             <Navigation />
           </GridItem>
 
