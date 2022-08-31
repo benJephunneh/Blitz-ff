@@ -23,6 +23,7 @@ import { ReactNode } from "react"
 import { FcGlobe } from "react-icons/fc"
 import { Location } from "db"
 import { createRef } from "react"
+import LocationListItem from "./LocationListItem"
 
 type LocationProp = { location: PromiseReturnType<typeof createLocation> }
 
@@ -79,7 +80,7 @@ const LocationList = ({ customerId }: { customerId: number }) => {
       {locations.map((location, ii) => {
         return (
           <Link key={ii} href={Routes.ShowCustomerPage({ customerId })} passHref>
-            <LocationEntry location={location} />
+            <LocationListItem location={location} />
           </Link>
         )
       })}

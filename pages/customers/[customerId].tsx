@@ -21,15 +21,20 @@ import { createRef, useState } from "react"
 import { MutationType } from "app/core/components/types/MutationType"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import SidebarLayout from "app/core/layouts/SideBarLayout"
+import updateCustomer from "app/customers/mutations/updateCustomer"
+import Link from "next/link"
+import { TiArrowBack } from "react-icons/ti"
+import TitleDivider from "app/core/components/TitleDivider"
 
 const CustomerDisplay = () => {
   const toast = useToast()
   const router = useRouter()
   const [editingCustomer, setEditingCustomer] = useState(false)
-  const [mutationState, setMutationState] = useState("edit")
+  const [mutationState, setMutationState] = useState("edit" as MutationType)
   const customerId = useParam("customerId", "number")
   const [customer] = useQuery(getCustomer, { where: { id: customerId } })
   const [{ locations }] = useQuery(getLocations, { where: { customerId } })
+  const [editCustomerMutation] = useMutation(updateCustomer)
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
   const ref = createRef()
 
@@ -41,13 +46,25 @@ const CustomerDisplay = () => {
     <>
       <Box shadow="md" bg="white">
         <HStack spacing={10}>
-          <Heading mt={0}>
+          <Heading ml={4}>
             {customer?.firstname} {customer.lastname}
           </Heading>
-          <ButtonGroup alignSelf="start" isAttached variant="outline">
+          <ButtonGroup isAttached alignSelf="start">
+            <Link href={Routes.CustomersPage()} passHref>
+              <Button
+                as="a"
+                size="sm"
+                borderTopRadius={0}
+                borderBottomRightRadius={0}
+                leftIcon={<TiArrowBack size={15} />}
+                _hover={{ textColor: "cyan.500" }}
+              >
+                Back to customers list
+              </Button>
+            </Link>
             <Button
-              borderTopWidth={0}
-              borderTopRadius={0}
+              size="sm"
+              borderRadius={0}
               bg="#009a4c"
               textColor="yellow"
               onClick={() => {
@@ -57,25 +74,10 @@ const CustomerDisplay = () => {
             >
               Edit customer
             </Button>
-            <Button
-              borderTopWidth={0}
-              borderTopRadius={0}
-              borderRightWidth={0}
-              borderRightRadius={0}
-              bg="red"
-              textColor="white"
-              onClick={async () => {
-                if (window.confirm("This will be deleted")) {
-                  await deleteCustomerMutation({ id: customer!.id }).then(() =>
-                    router.push(Routes.CustomersPage())
-                  )
-                }
-              }}
-            >
-              Delete
-            </Button>
           </ButtonGroup>
         </HStack>
+
+        <TitleDivider mb={4}>Locations</TitleDivider>
 
         <Flex bg="inherit" direction="column">
           <List>
@@ -90,9 +92,27 @@ const CustomerDisplay = () => {
             </>
           </List>
         </Flex>
+        <Button
+          mt={10}
+          justifySelf="end"
+          borderTopLeftRadius={0}
+          borderBottomRadius={0}
+          bg="red"
+          textColor="white"
+          size="xs"
+          onClick={async () => {
+            if (window.confirm(`OK to delete ${customer.firstname} ${customer.lastname}?`)) {
+              await deleteCustomerMutation({ id: customer!.id }).then(() =>
+                router.push(Routes.CustomersPage())
+              )
+            }
+          }}
+        >
+          Delete {`${customer.firstname} ${customer.lastname}`}
+        </Button>
 
         <CustomerModalForm
-          mutationType={mutationState as MutationType}
+          mutationType={mutationState}
           isOpen={editingCustomer}
           onClose={() => {
             setEditingCustomer(false)
