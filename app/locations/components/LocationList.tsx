@@ -49,14 +49,17 @@ export const LocationEntry = ({ location }: LocationProp) => {
   console.log(JSON.stringify(location))
   return (
     <HStack spacing={4} ml={4}>
-      {/*
-      <Link href={Routes.ShowLocationPage({ customerId: location.customerId, id: location.id })} passHref>
-        {location.house} {location.street}, {location.city} {location.zipcode}
+      <Link
+        href={Routes.ShowLocationPage({ customerId: location.customerId, locationId: location.id })}
+        passHref
+      >
+        {`${location.house} ${location.street}, ${location.city} ${location.zipcode}`}
       </Link>
-  */}
+      {/*
       <Text>
         {location.house} {location.street}, {location.city} {location.zipcode}
       </Text>
+  */}
       <Tag colorScheme="orange" ml={3}>
         <TagLabel>Parcel ID: {location.parcel}</TagLabel>
       </Tag>

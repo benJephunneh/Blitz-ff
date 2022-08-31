@@ -10,47 +10,81 @@ import getCustomer from "app/customers/queries/getCustomer"
 import ModalForm from "app/core/components/ModalForm"
 import { CreateCustomer } from "app/customers/validations"
 import LabeledTextField from "app/core/components/LabeledTextField"
+import createLocation from "../mutations/createLocation"
+import deleteLocation from "../mutations/deleteLocation"
+import updateLocation from "../mutations/updateLocation"
+import getLocation from "../queries/getLocation"
+import { CreateLocation } from "../validations"
 
-type CustomerModalFormProps = {
+type Location = PromiseReturnType<typeof createLocation>
+
+type LocationModalFormProps = {
   isOpen: boolean
   onClose: () => void
-  onSuccess?: (customer: PromiseReturnType<typeof createCustomer>) => void
-  customerId?: number
+  // onSuccess?: (Location: Location) => void
+  onSuccess?: () => void
+  customerId: number
+  locationId: number
+  mutationType: MutationType
 }
 
-type Customer = PromiseReturnType<typeof createCustomer>
-
-const CustomerModalForm = (
-  { isOpen, onClose, onSuccess, customerId }: CustomerModalFormProps,
-  mutationType: MutationType
-) => {
-  const [newCustomerMutation] = useMutation(createCustomer)
-  const [editCustomerMutation] = useMutation(updateCustomer)
-  const [deleteCustomerMutation] = useMutation(deleteCustomer)
-  const [customer] = useQuery(getCustomer, { where: { id: customerId } })
+const LocationModalForm = ({
+  isOpen,
+  onClose,
+  onSuccess,
+  customerId,
+  locationId,
+  mutationType,
+}: LocationModalFormProps) => {
+  const [newLocationMutation] = useMutation(createLocation)
+  const [editLocationMutation] = useMutation(updateLocation)
+  const [deleteLocationMutation] = useMutation(deleteLocation)
+  const [location] = useQuery(getLocation, { where: { id: locationId } })
 
   let mutation
-  let { firstname, lastname } = {} as Customer
+  let { house, street, city, state, zipcode, block, lot, parcel, primary } = {} as Location
   switch (mutationType) {
     case "new":
-      mutation = newCustomerMutation
+      mutation = newLocationMutation
       break
     case "edit":
-      firstname = customer.firstname
-      lastname = customer.lastname
-      mutation = editCustomerMutation
+      house = location.house
+      street = location.street
+      city = location.city
+      state = location.state
+      zipcode = location.zipcode
+      block = location.block
+      lot = location.lot
+      parcel = location.parcel
+      primary = location.primary
+      mutation = editLocationMutation
       break
     case "delete":
-      firstname = customer.firstname
-      lastname = customer.lastname
-      mutation = deleteCustomerMutation
+      house = location.house
+      street = location.street
+      city = location.city
+      state = location.state
+      zipcode = location.zipcode
+      block = location.block
+      lot = location.lot
+      parcel = location.parcel
+      primary = location.primary
+      mutation = deleteLocationMutation
       break
     default:
       break
   }
   const initialValues = {
-    firstname,
-    lastname,
+    house,
+    street,
+    city,
+    state,
+    zipcode,
+    block,
+    lot,
+    parcel,
+    primary,
+    customerId,
   }
 
   const onSubmit = async (values) => {
@@ -69,23 +103,23 @@ const CustomerModalForm = (
       isOpen={isOpen}
       onClose={onClose}
       size="lg"
-      schema={CreateCustomer}
-      title="Customer form"
+      schema={CreateLocation}
+      title="Location form"
       submitText="Submit"
       initialValues={initialValues}
       onSubmit={(values) => {
         onSubmit(values)
-          .then((_customer) => onSuccess?.(_customer!))
+          .then((_location) => onSuccess?.(_location!))
           .then(() => onClose())
           .catch((error) => handleError(error))
       }}
       render={() => (
         <>
           <Grid
-            templateAreas={`'house street . .'
-                                'city state zipcode'
-                                'block lot parcel'`}
-            templateColumns={"repeat(6, 1fr)"}
+            templateAreas={`'house street street'
+                            'city state zipcode'
+                            'block lot parcel'`}
+            templateColumns={"repeat(3, 1fr)"}
           >
             <GridItem area="house" colSpan={1}>
               <LabeledTextField name="house" label="House #" />
@@ -118,4 +152,4 @@ const CustomerModalForm = (
   )
 }
 
-export default CustomerModalForm
+export default LocationModalForm

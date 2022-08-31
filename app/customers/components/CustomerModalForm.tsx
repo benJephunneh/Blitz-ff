@@ -32,7 +32,7 @@ const CustomerModalForm = ({
   const [newCustomerMutation] = useMutation(createCustomer)
   const [editCustomerMutation] = useMutation(updateCustomer)
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
-  const [customer] = useQuery(getCustomer, { where: { id: customerId } }, { enabled: !!customerId })
+  const [customer] = useQuery(getCustomer, { where: { id: customerId } })
 
   let mutation
   let { firstname, lastname } = {} as Customer
