@@ -30,7 +30,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ username, password },
   const expiresAt = new Date()
   expiresAt.setHours(expiresAt.getHours() + SESSION_EXPIRATION_IN_HOURS)
 
-  await ctx.session.$create({ userId: user.id, role: user.role as Role, expiresAt })
+  await ctx.session.$create({ userId: user.id, role: user.role as Role })
 
   return user
 })
