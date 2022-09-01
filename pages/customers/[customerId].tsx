@@ -4,11 +4,12 @@ import { BlitzPage, Routes, useParam } from "@blitzjs/next"
 
 import getCustomer from "app/customers/queries/getCustomer"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
-import LocationList, { LocationEntry } from "app/locations/components/LocationList"
+import LocationList from "app/locations/components/LocationList"
 import {
   Box,
   Button,
   ButtonGroup,
+  Container,
   Flex,
   Heading,
   HStack,
@@ -28,18 +29,21 @@ import TitleDivider from "app/core/components/TitleDivider"
 import LocationListItem from "app/locations/components/LocationListItem"
 import { FaPlus } from "react-icons/fa"
 import LocationModalForm from "app/locations/components/LocationModalForm"
+import createLocation from "app/locations/mutations/createLocation"
 
-const CustomerDisplay = () => {
-  const toast = useToast()
+const ShowCustomerPage = () => {
   const router = useRouter()
+
+  const customerId = useParam("customerId", "number")
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [customerMutationState, setCustomerMutationState] = useState("edit" as MutationType)
-  const customerId = useParam("customerId", "number")
   const [customer] = useQuery(getCustomer, { where: { id: customerId } })
-  const [creatingLocation, setCreatingLocation] = useState(false)
-  const [{ locations }] = useQuery(getLocations, { where: { customerId } })
   const [editCustomerMutation] = useMutation(updateCustomer)
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
+
+  const [creatingLocation, setCreatingLocation] = useState(false)
+  const [{ locations }] = useQuery(getLocations, { where: { customerId } })
+  const [createLocationMutation] = useMutation(createLocation)
   const ref = createRef()
 
   return (
@@ -52,11 +56,6 @@ const CustomerDisplay = () => {
           setEditingCustomer(false)
         }}
         onSuccess={async () => {
-          toast({
-            title: "Finished editing",
-            description: "Successfully edited",
-            status: "success",
-          })
           setEditingCustomer(false)
         }}
       />
@@ -88,6 +87,7 @@ const CustomerDisplay = () => {
                 bg="gray.50"
                 borderTopRadius={0}
                 borderBottomRightRadius={0}
+                borderTopWidth={0}
                 leftIcon={<TiArrowBack size={15} />}
                 _hover={{ textColor: "cyan.500" }}
               >
@@ -99,6 +99,8 @@ const CustomerDisplay = () => {
               borderRadius={0}
               bg="gray.100"
               textColor="#009a4c"
+              variant="outline"
+              borderTopWidth={0}
               onClick={() => {
                 setEditingCustomer(true)
                 setCustomerMutationState("edit")
@@ -110,12 +112,13 @@ const CustomerDisplay = () => {
               mb={4}
               size="sm"
               color="#009a4c"
-              bg="gray.100"
+              bg="gray.200"
               variant="outline"
               leftIcon={<FaPlus />}
               borderStyle="dashed"
               borderColor="blackAlpha.400"
               borderRadius={0}
+              borderTopWidth={0}
               onClick={() => {
                 setCreatingLocation(true)
                 setCustomerMutationState("new")
@@ -128,19 +131,10 @@ const CustomerDisplay = () => {
 
         <TitleDivider mb={4}>Locations</TitleDivider>
 
-        <Flex bg="inherit" direction="column">
-          <List>
-            <>
-              {locations.map((location, ii) => {
-                return (
-                  <ListItem key={ii}>
-                    <LocationListItem location={location} />
-                  </ListItem>
-                )
-              })}
-            </>
-          </List>
-        </Flex>
+        <Container borderRadius={8} mx={0} px={0}>
+          <LocationList customerId={customerId!} />
+        </Container>
+
         <Button
           mt={10}
           justifySelf="end"
@@ -160,14 +154,6 @@ const CustomerDisplay = () => {
           Delete {`${customer.firstname} ${customer.lastname}`}
         </Button>
       </Box>
-    </>
-  )
-}
-
-const ShowCustomerPage: BlitzPage = () => {
-  return (
-    <>
-      <CustomerDisplay />
     </>
   )
 }

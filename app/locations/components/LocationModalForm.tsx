@@ -40,7 +40,7 @@ const LocationModalForm = ({
   const [location] = useQuery(getLocation, { where: { id: locationId } })
 
   let mutation: MutateFunction<Location, unknown, {}, unknown>
-  let { house, street, city, state, zipcode, block, lot, parcel, primary } = {} as Location
+  let { id, house, street, city, state, zipcode, block, lot, parcel, primary } = {} as Location
   switch (mutationType) {
     case "new":
       house = ""
@@ -55,6 +55,7 @@ const LocationModalForm = ({
       mutation = newLocationMutation
       break
     case "edit":
+      id = locationId!
       house = location.house
       street = location.street
       city = location.city
@@ -80,6 +81,7 @@ const LocationModalForm = ({
       break
   }
   const initialValues = {
+    id,
     house,
     street,
     city,

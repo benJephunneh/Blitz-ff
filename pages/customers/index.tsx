@@ -48,6 +48,7 @@ const CustomersPage = () => {
                 bg="gray.50"
                 borderTopRadius={0}
                 borderBottomRightRadius={0}
+                borderTopWidth={0}
                 leftIcon={<TiArrowBack size={15} />}
                 _hover={{ textColor: "cyan.500" }}
               >
@@ -64,6 +65,7 @@ const CustomersPage = () => {
               borderStyle="dashed"
               borderColor="blackAlpha.400"
               borderRadius={0}
+              borderTopWidth={0}
               onClick={() => {
                 setCreatingCustomer(true)
                 setMutationState("new")

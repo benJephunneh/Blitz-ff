@@ -69,8 +69,8 @@ const CustomerListItem = forwardRef(({ id, children }: CustomerListItemProps, re
               onMouseOver={() => setHoverState(true)}
               onMouseLeave={() => setHoverState(false)}
               bg={hoverState ? hoverColor : "white"}
-              fontWeight="hairline"
-              fontSize="lg"
+              fontSize="md"
+              fontWeight="light"
               borderRadius={0}
               px={2}
               _hover={{ bg: "white", borderBottom: "1px solid orange" }}

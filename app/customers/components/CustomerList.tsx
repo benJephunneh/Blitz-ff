@@ -1,9 +1,9 @@
 import { usePaginatedQuery } from "@blitzjs/rpc"
 import { useRouter } from "next/router"
 import { FcPrevious, FcNext } from "react-icons/fc"
-import getCustomers from "../queries/getCustomers"
 import CustomerListItem from "./CustomerListitem"
 import { Grid, ButtonGroup, Button } from "@chakra-ui/react"
+import getCustomers from "../queries/getCustomers"
 
 const ITEMS_PER_PAGE = 100
 

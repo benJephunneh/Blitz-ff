@@ -18,11 +18,7 @@ export default resolver.pipe(
         block,
         lot,
         parcel,
-        customer: {
-          connect: {
-            id: customerId,
-          },
-        },
+        customerId,
       },
     })
 

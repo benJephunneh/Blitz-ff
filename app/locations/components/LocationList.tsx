@@ -1,28 +1,22 @@
 import { Routes } from "@blitzjs/next"
-import { useQuery } from "@blitzjs/rpc"
+import { usePaginatedQuery } from "@blitzjs/rpc"
 import {
   IconButton,
   HStack,
   Tag,
   TagLabel,
-  Text,
-  MenuItem,
   ChakraComponent,
-  forwardRef,
   Button,
+  ButtonGroup,
+  Grid,
 } from "@chakra-ui/react"
-import { Customer } from "@prisma/client"
 import createLocation from "app/locations/mutations/createLocation"
-import getLocation from "app/locations/queries/getLocation"
 import getLocations from "app/locations/queries/getLocations"
 import { PromiseReturnType } from "blitz"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import React, { ComponentType, Suspense } from "react"
-import { ReactNode } from "react"
-import { FcGlobe } from "react-icons/fc"
-import { Location } from "db"
-import { createRef } from "react"
+import React from "react"
+import { FcGlobe, FcNext, FcPrevious } from "react-icons/fc"
 import LocationListItem from "./LocationListItem"
 
 type LocationProp = { location: PromiseReturnType<typeof createLocation> }
@@ -69,21 +63,49 @@ export const LocationEntry = ({ location }: LocationProp) => {
   )
 }
 
+const ITEMS_PER_PAGE = 20
 const LocationList = ({ customerId }: { customerId: number }) => {
-  const [{ locations }] = useQuery(getLocations, {
+  const router = useRouter()
+  const page = Number(router.query.page) || 0
+  const [{ locations, hasMore }] = usePaginatedQuery(getLocations, {
     where: { customerId },
-    orderBy: { primary: "desc" },
+    orderBy: [
+      { primary: "asc" },
+      { zipcode: "asc" },
+      { city: "asc" },
+      { street: "asc" },
+      { house: "asc" },
+    ],
+    skip: ITEMS_PER_PAGE * page,
+    take: ITEMS_PER_PAGE,
   })
+
+  const goToPreviousPage = () => router.push({ query: { page: page - 1 } })
+  const goToNextPage = () => router.push({ query: { page: page + 1 } })
 
   return (
     <>
-      {locations.map((location, ii) => {
-        return (
-          <Link key={ii} href={Routes.ShowCustomerPage({ customerId })} passHref>
-            <LocationListItem location={location} />
-          </Link>
-        )
-      })}
+      <Grid
+        bg="inherit"
+        flexDirection="column"
+        borderRadius={8}
+        templateAreas={`'address jobMenu invoiceMenu estimateMenu'`}
+      >
+        {locations.map((location, ii) => (
+          <LocationListItem key={ii} location={location}>
+            {location.house} {location.street} {location.city}, {location.zipcode}
+          </LocationListItem>
+        ))}
+      </Grid>
+
+      <ButtonGroup mt={5} isAttached variant="outline">
+        <Button disabled={page === 0} onClick={goToPreviousPage} leftIcon={<FcPrevious />}>
+          Previous
+        </Button>
+        <Button disabled={!hasMore} onClick={goToNextPage} rightIcon={<FcNext />}>
+          Next
+        </Button>
+      </ButtonGroup>
     </>
   )
 }

@@ -22,16 +22,15 @@ const ITEMS_PER_PAGE = 20
 
 type LocationPageProps = {
   customerId: number
+  locationId: number
 }
 
-const ShowLocationPage: BlitzPage = ({ customerId }: LocationPageProps) => {
+const ShowLocationPage: BlitzPage = () => {
   const router = useRouter()
   const locationId = useParam("locationId", "number")
   const [location] = useQuery(getLocation, { where: { id: locationId } })
-  const [{ house, street, city, state, zipcode, block, lot, parcel, primary }] = useQuery(
-    getLocation,
-    { where: { id: location.customerId } }
-  )
+  const [{ id, house, street, city, state, zipcode, block, lot, parcel, primary, customerId }] =
+    useQuery(getLocation, { where: { id: locationId } })
   const [{ firstname, lastname }] = useQuery(getCustomer, { where: { id: customerId } })
   const [editLocationMutation] = useMutation(updateLocation)
   const [deleteLocationMutation] = useMutation(deleteLocation)
@@ -42,6 +41,20 @@ const ShowLocationPage: BlitzPage = ({ customerId }: LocationPageProps) => {
 
   return (
     <SidebarLayout title="Location page">
+      <LocationModalForm
+        customerId={customerId}
+        locationId={locationId}
+        isOpen={editingLocation}
+        onClose={() => setEditingLocation(false)}
+        mutationType={mutationType}
+        onSuccess={async (_location) => {
+          setEditingLocation(false)
+          await router.push(
+            Routes.ShowLocationPage({ customerId: customerId, locationId: _location.id })
+          )
+        }}
+      />
+
       <Box shadow="md" bg="white">
         <HStack spacing={10}>
           <Heading ml={4}>{customerName}</Heading>
@@ -55,9 +68,10 @@ const ShowLocationPage: BlitzPage = ({ customerId }: LocationPageProps) => {
                 as="a"
                 size="sm"
                 variant="outline"
-                bg="gray.100"
+                bg="gray.50"
                 borderTopRadius={0}
                 borderBottomRightRadius={0}
+                borderTopWidth={0}
                 leftIcon={<TiArrowBack size={15} />}
                 _hover={{ textColor: "cyan.500" }}
               >
@@ -70,6 +84,7 @@ const ShowLocationPage: BlitzPage = ({ customerId }: LocationPageProps) => {
               borderRadius={0}
               bg="gray.100"
               textColor="#009a4c"
+              borderTopWidth={0}
               onClick={() => {
                 setEditingLocation(true)
                 setMutationType("edit")
@@ -82,27 +97,19 @@ const ShowLocationPage: BlitzPage = ({ customerId }: LocationPageProps) => {
 
         <TitleDivider>location</TitleDivider>
 
-        <LocationModalForm
-          customerId={customerId}
-          locationId={locationId!}
-          isOpen={editingLocation}
-          onClose={() => setEditingLocation(false)}
-          mutationType={mutationType}
-        />
-
         <pre> {JSON.stringify(location, null, 2)}</pre>
         <Button
           mt={10}
           justifySelf="end"
           borderTopLeftRadius={0}
-          borderBottomRightRadius={0}
+          borderBottomRadius={0}
           bg="red"
           textColor="white"
           size="xs"
           onClick={async () => {
             if (window.confirm("This will be deleted")) {
-              await deleteLocationMutation({ id: location!.id }).then(() =>
-                router.push(Routes.CustomersPage())
+              await deleteLocationMutation({ id }).then(() =>
+                router.push(Routes.ShowCustomerPage({ customerId }))
               )
             }
           }}

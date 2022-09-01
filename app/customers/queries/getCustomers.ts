@@ -1,12 +1,11 @@
 import { resolver } from "@blitzjs/rpc"
 import { paginate } from "blitz"
-import db, { Location, Prisma } from "db"
-import { z } from "zod"
+import db, { Prisma } from "db"
 
 interface GetCustomersInput
   extends Pick<Prisma.CustomerFindManyArgs, "where" | "orderBy" | "skip" | "take" | "include"> {}
 
-export default resolver.pipe(
+const getCustomers = resolver.pipe(
   resolver.authorize(),
   async ({ where, orderBy, skip = 0, take = 100, include }: GetCustomersInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
@@ -30,3 +29,5 @@ export default resolver.pipe(
     }
   }
 )
+
+export default getCustomers
