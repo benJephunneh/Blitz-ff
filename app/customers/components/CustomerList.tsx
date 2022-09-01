@@ -22,8 +22,7 @@ const CustomersList = () => {
   return (
     <>
       <Grid
-        shadow="md"
-        bg="white"
+        bg="inherit"
         flexDirection="column"
         borderRadius={8}
         templateAreas={`'name name locations jobs invoices estimates'`}

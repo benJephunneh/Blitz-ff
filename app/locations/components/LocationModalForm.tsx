@@ -1,7 +1,7 @@
-import { useMutation, useQuery } from "@blitzjs/rpc"
+import { MutateFunction, useMutation, useQuery } from "@blitzjs/rpc"
 import { PromiseReturnType } from "blitz"
 import { FORM_ERROR } from "final-form"
-import { Grid, GridItem } from "@chakra-ui/react"
+import { Checkbox, Grid, GridItem } from "@chakra-ui/react"
 import createCustomer from "app/customers/mutations/createCustomer"
 import { MutationType } from "app/core/components/types/MutationType"
 import updateCustomer from "app/customers/mutations/updateCustomer"
@@ -21,10 +21,9 @@ type Location = PromiseReturnType<typeof createLocation>
 type LocationModalFormProps = {
   isOpen: boolean
   onClose: () => void
-  // onSuccess?: (Location: Location) => void
-  onSuccess?: () => void
+  onSuccess?: (location: Location) => void
   customerId: number
-  locationId: number
+  locationId?: number
   mutationType: MutationType
 }
 
@@ -34,14 +33,13 @@ const LocationModalForm = ({
   onSuccess,
   customerId,
   locationId,
-  mutationType,
+  mutationType = "new",
 }: LocationModalFormProps) => {
   const [newLocationMutation] = useMutation(createLocation)
   const [editLocationMutation] = useMutation(updateLocation)
-  const [deleteLocationMutation] = useMutation(deleteLocation)
   const [location] = useQuery(getLocation, { where: { id: locationId } })
 
-  let mutation
+  let mutation: MutateFunction<Location, unknown, {}, unknown>
   let { house, street, city, state, zipcode, block, lot, parcel, primary } = {} as Location
   switch (mutationType) {
     case "new":
@@ -67,18 +65,6 @@ const LocationModalForm = ({
       parcel = location.parcel ?? ""
       primary = location.primary
       mutation = editLocationMutation
-      break
-    case "delete":
-      house = location.house
-      street = location.street
-      city = location.city
-      state = location.state
-      zipcode = location.zipcode
-      block = location.block ?? ""
-      lot = location.lot ?? ""
-      parcel = location.parcel ?? ""
-      primary = location.primary
-      mutation = deleteLocationMutation
       break
     default:
       house = ""
@@ -112,6 +98,7 @@ const LocationModalForm = ({
     })
   }
   const handleError = async (error) => {
+    console.log(`Error doing something with location modal: ${error.toString()}`)
     return {
       [FORM_ERROR]: `Customer modal error: ${error.toString()}`,
     }
@@ -121,47 +108,54 @@ const LocationModalForm = ({
     <ModalForm
       isOpen={isOpen}
       onClose={onClose}
-      size="lg"
+      size="xl"
       schema={CreateLocation}
-      title="Location form"
+      title={`${mutationType} location`}
       submitText="Submit"
       initialValues={initialValues}
       onSubmit={(values) => {
         onSubmit(values)
-          .then((_location) => onSuccess?.())
+          .then((_location) => onSuccess?.(_location!))
           .then(() => onClose())
           .catch((error) => handleError(error))
       }}
       render={() => (
         <Grid
-          templateAreas={`'house street street'
-                            'city state zipcode'
-                            'block lot parcel'`}
-          templateColumns={"repeat(3, 1fr)"}
+          templateAreas={`'house street street street street'
+                          'city city state zipcode .'
+                          'block lot parcel parcel parcel'
+                          'primary . . . .'`}
+          templateColumns="repeat(5, 1fr)"
+          gap={2}
         >
-          <GridItem area="house" colSpan={1}>
+          <GridItem area="house">
             <LabeledTextField name="house" label="House #" />
           </GridItem>
-          <GridItem area="street" colSpan={2}>
+          <GridItem area="street">
             <LabeledTextField name="street" label="Street" />
           </GridItem>
-          <GridItem area="city" colSpan={2}>
+          <GridItem area="city">
             <LabeledTextField name="city" label="City" />
           </GridItem>
-          <GridItem area="state" colSpan={1}>
+          <GridItem area="state">
             <LabeledTextField name="state" label="State" disabled={true} value="FL" />
           </GridItem>
-          <GridItem area="zipcode" colSpan={1}>
+          <GridItem area="zipcode">
             <LabeledTextField name="zipcode" label="Zipcode" />
           </GridItem>
-          <GridItem area="block" colSpan={1}>
+          <GridItem area="block">
             <LabeledTextField name="block" label="Block" />
           </GridItem>
-          <GridItem area="lot" colSpan={1}>
+          <GridItem area="lot">
             <LabeledTextField name="lot" label="Lot" />
           </GridItem>
-          <GridItem area="parcel" colSpan={2}>
+          <GridItem area="parcel">
             <LabeledTextField name="parcel" label="Parcel" />
+          </GridItem>
+          <GridItem area="primary">
+            <Checkbox name="primary" defaultChecked>
+              Primary address
+            </Checkbox>
           </GridItem>
         </Grid>
       )}

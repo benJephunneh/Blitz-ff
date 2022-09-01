@@ -4,7 +4,7 @@ import { BlitzPage, Routes, useParam } from "@blitzjs/next"
 
 import getCustomer from "app/customers/queries/getCustomer"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
-import LocationList from "app/locations/components/LocationList"
+import LocationList, { LocationEntry } from "app/locations/components/LocationList"
 import {
   Box,
   Button,
@@ -25,35 +25,67 @@ import updateCustomer from "app/customers/mutations/updateCustomer"
 import Link from "next/link"
 import { TiArrowBack } from "react-icons/ti"
 import TitleDivider from "app/core/components/TitleDivider"
+import LocationListItem from "app/locations/components/LocationListItem"
+import { FaPlus } from "react-icons/fa"
+import LocationModalForm from "app/locations/components/LocationModalForm"
 
 const CustomerDisplay = () => {
   const toast = useToast()
   const router = useRouter()
   const [editingCustomer, setEditingCustomer] = useState(false)
-  const [mutationState, setMutationState] = useState("edit" as MutationType)
+  const [customerMutationState, setCustomerMutationState] = useState("edit" as MutationType)
   const customerId = useParam("customerId", "number")
   const [customer] = useQuery(getCustomer, { where: { id: customerId } })
+  const [creatingLocation, setCreatingLocation] = useState(false)
   const [{ locations }] = useQuery(getLocations, { where: { customerId } })
   const [editCustomerMutation] = useMutation(updateCustomer)
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
   const ref = createRef()
 
-  // if (Array.isArray(customer.locations)) {
-  //   console.log('yay')
-  // }
-
   return (
     <>
+      <CustomerModalForm
+        customerId={customerId}
+        mutationType={customerMutationState}
+        isOpen={editingCustomer}
+        onClose={() => {
+          setEditingCustomer(false)
+        }}
+        onSuccess={async () => {
+          toast({
+            title: "Finished editing",
+            description: "Successfully edited",
+            status: "success",
+          })
+          setEditingCustomer(false)
+        }}
+      />
+
+      <LocationModalForm
+        customerId={customerId!}
+        isOpen={creatingLocation}
+        onClose={() => setCreatingLocation(false)}
+        mutationType={"new" as MutationType}
+        onSuccess={async (_location) => {
+          setCreatingLocation(false)
+          await router.push(
+            Routes.ShowLocationPage({ customerId: customerId!, locationId: _location.id })
+          )
+        }}
+      />
+
       <Box shadow="md" bg="white">
         <HStack spacing={10}>
           <Heading ml={4}>
-            {customer?.firstname} {customer.lastname}
+            {customer.firstname} {customer.lastname}
           </Heading>
           <ButtonGroup isAttached alignSelf="start">
             <Link href={Routes.CustomersPage()} passHref>
               <Button
                 as="a"
                 size="sm"
+                variant="outline"
+                bg="gray.50"
                 borderTopRadius={0}
                 borderBottomRightRadius={0}
                 leftIcon={<TiArrowBack size={15} />}
@@ -65,14 +97,31 @@ const CustomerDisplay = () => {
             <Button
               size="sm"
               borderRadius={0}
-              bg="#009a4c"
-              textColor="yellow"
+              bg="gray.100"
+              textColor="#009a4c"
               onClick={() => {
                 setEditingCustomer(true)
-                setMutationState("edit")
+                setCustomerMutationState("edit")
               }}
             >
               Edit customer
+            </Button>
+            <Button
+              mb={4}
+              size="sm"
+              color="#009a4c"
+              bg="gray.100"
+              variant="outline"
+              leftIcon={<FaPlus />}
+              borderStyle="dashed"
+              borderColor="blackAlpha.400"
+              borderRadius={0}
+              onClick={() => {
+                setCreatingLocation(true)
+                setCustomerMutationState("new")
+              }}
+            >
+              Create location
             </Button>
           </ButtonGroup>
         </HStack>
@@ -85,7 +134,7 @@ const CustomerDisplay = () => {
               {locations.map((location, ii) => {
                 return (
                   <ListItem key={ii}>
-                    <LocationList customerId={customerId!} />
+                    <LocationListItem location={location} />
                   </ListItem>
                 )
               })}
@@ -110,21 +159,6 @@ const CustomerDisplay = () => {
         >
           Delete {`${customer.firstname} ${customer.lastname}`}
         </Button>
-
-        <CustomerModalForm
-          mutationType={mutationState}
-          isOpen={editingCustomer}
-          onClose={() => {
-            setEditingCustomer(false)
-          }}
-          onSuccess={async () => {
-            toast({
-              title: "Finished editing",
-              description: "Successfully edit",
-              status: "success",
-            })
-          }}
-        />
       </Box>
     </>
   )

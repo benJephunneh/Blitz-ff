@@ -27,14 +27,13 @@ const CustomerModalForm = ({
   onClose,
   onSuccess,
   customerId,
-  mutationType,
+  mutationType = "new",
 }: CustomerModalFormProps) => {
   const [newCustomerMutation] = useMutation(createCustomer)
   const [editCustomerMutation] = useMutation(updateCustomer)
-  const [deleteCustomerMutation] = useMutation(deleteCustomer)
   const [customer] = useQuery(getCustomer, { where: { id: customerId } })
 
-  let mutation
+  let mutation: MutateFunction<Customer, unknown, {}, unknown>
   let { firstname, lastname } = {} as Customer
   switch (mutationType) {
     case "new":
@@ -44,11 +43,6 @@ const CustomerModalForm = ({
       firstname = customer!.firstname
       lastname = customer!.lastname
       mutation = editCustomerMutation
-      break
-    case "delete":
-      firstname = customer!.firstname
-      lastname = customer!.lastname
-      mutation = deleteCustomerMutation
       break
     default:
       break
@@ -64,6 +58,7 @@ const CustomerModalForm = ({
     })
   }
   const handleError = (error) => {
+    console.log(`Error doing something with customer modal: ${error.toString()}`)
     return {
       [FORM_ERROR]: `Customer modal error: ${error.toString()}`,
     }
@@ -75,7 +70,7 @@ const CustomerModalForm = ({
       onClose={onClose}
       size="lg"
       schema={CreateCustomer}
-      title="Customer form"
+      title={`${mutationType} customer`}
       submitText="Submit"
       initialValues={initialValues}
       onSubmit={(values) => {

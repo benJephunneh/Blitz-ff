@@ -1,28 +1,33 @@
 import { createRef, useState } from "react"
 import { Routes } from "@blitzjs/next"
 import { useRouter } from "next/router"
-import { Button, Container } from "@chakra-ui/react"
+import { Box, Button, ButtonGroup, Container, Heading, HStack, Icon } from "@chakra-ui/react"
 import { FaPlus } from "react-icons/fa"
 import SidebarLayout from "app/core/layouts/SideBarLayout"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import { MutationType } from "app/core/components/types/MutationType"
 import CustomerList from "app/customers/components/CustomerList"
+import Link from "next/link"
+import { TiArrowBack } from "react-icons/ti"
+import { GiDiamonds } from "react-icons/gi"
+import TitleDivider from "app/core/components/TitleDivider"
 
 const CustomersPage = () => {
   const router = useRouter()
   const [creatingCustomer, setCreatingCustomer] = useState(false)
-  const [mutationState, setMutationState] = useState("new")
+  const [mutationState, setMutationState] = useState("edit" as MutationType)
   const ref = createRef()
 
   return (
     <SidebarLayout title="Customers">
       <CustomerModalForm
-        mutationType={mutationState as MutationType}
+        mutationType={mutationState}
         isOpen={creatingCustomer}
         onClose={() => {
           setCreatingCustomer(false)
         }}
         onSuccess={async (_customer) => {
+          setCreatingCustomer(false)
           const next = router.query.next ? decodeURIComponent(router.query.next as string) : "/"
           await router.push(Routes.ShowCustomerPage({ customerId: _customer.id }))
         }}
@@ -31,27 +36,55 @@ const CustomersPage = () => {
       {/*
       <ButtonGroup spacing={0} flexDirection="column">
  */}
-      <Button
-        onClick={() => {
-          setCreatingCustomer(true)
-          setMutationState("new")
-        }}
-        variant="outline"
-        leftIcon={<FaPlus />}
-        borderStyle="dashed"
-        borderColor="blackAlpha.400"
-        color="#009a4c"
-        mb={4}
-      >
-        Create customer
-      </Button>
+      <Box shadow="md" bg="white">
+        <HStack spacing={10}>
+          <Heading ml={4}>Customers</Heading>
+          <ButtonGroup isAttached alignSelf="start">
+            <Link href={Routes.Dashboard()} passHref>
+              <Button
+                as="a"
+                size="sm"
+                variant="outline"
+                bg="gray.50"
+                borderTopRadius={0}
+                borderBottomRightRadius={0}
+                leftIcon={<TiArrowBack size={15} />}
+                _hover={{ textColor: "cyan.500" }}
+              >
+                Back to dashboard
+              </Button>
+            </Link>
+            <Button
+              mb={4}
+              size="sm"
+              color="#009a4c"
+              bg="gray.100"
+              variant="outline"
+              leftIcon={<FaPlus />}
+              borderStyle="dashed"
+              borderColor="blackAlpha.400"
+              borderRadius={0}
+              onClick={() => {
+                setCreatingCustomer(true)
+                setMutationState("new")
+              }}
+            >
+              Create customer
+            </Button>
+          </ButtonGroup>
+        </HStack>
 
-      <Container borderRadius={8} mx={0} px={0}>
-        <CustomerList />
-      </Container>
-      {/*
+        <TitleDivider>
+          <Icon as={GiDiamonds} color="#009a4c" />
+        </TitleDivider>
+
+        <Container borderRadius={8} mx={0} px={0}>
+          <CustomerList />
+        </Container>
+        {/*
       </ButtonGroup>
  */}
+      </Box>
     </SidebarLayout>
   )
 }

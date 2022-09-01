@@ -39,8 +39,6 @@ const ShowLocationPage: BlitzPage = ({ customerId }: LocationPageProps) => {
 
   const [editingLocation, setEditingLocation] = useState(false)
   const [mutationType, setMutationType] = useState("edit" as MutationType)
-  const backgroundColor = useColorModeValue("#009a4c", "#009a4c")
-  const foregroundColor = useColorModeValue("yellow", "yellow")
 
   return (
     <SidebarLayout title="Location page">
@@ -56,6 +54,8 @@ const ShowLocationPage: BlitzPage = ({ customerId }: LocationPageProps) => {
               <Button
                 as="a"
                 size="sm"
+                variant="outline"
+                bg="gray.100"
                 borderTopRadius={0}
                 borderBottomRightRadius={0}
                 leftIcon={<TiArrowBack size={15} />}
@@ -66,14 +66,14 @@ const ShowLocationPage: BlitzPage = ({ customerId }: LocationPageProps) => {
             </Link>
             <Button
               size="sm"
+              variant="outline"
               borderRadius={0}
-              bg={backgroundColor}
-              textColor={foregroundColor}
+              bg="gray.100"
+              textColor="#009a4c"
               onClick={() => {
                 setEditingLocation(true)
                 setMutationType("edit")
               }}
-              _hover={{ bg: foregroundColor, textColor: backgroundColor }}
             >
               Edit location
             </Button>

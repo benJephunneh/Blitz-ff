@@ -10,6 +10,7 @@ import {
   MenuList,
   Tag,
   TagLabel,
+  Text,
 } from "@chakra-ui/react"
 import { PromiseReturnType } from "blitz"
 import Link from "next/link"
@@ -73,22 +74,27 @@ const LocationListItem = ({ location }: LocationProp) => {
   */}
         <Tag colorScheme="orange" ml={3}>
           {location.parcel ? (
-            <Menu>
-              <TagLabel as="button">Parcel ID: {location.parcel}</TagLabel>
-              <MenuList>
-                <MenuItem
-                  onClick={() =>
-                    router.push(`https://qpublic.schneidercorp.com/Search?q=4061n2w1543)`)
-                  }
-                >
-                  {location.parcel}
-                </MenuItem>
-              </MenuList>
-            </Menu>
+            <TagLabel>
+              <Link
+                href={`https://qpublic.schneidercorp.com/Search?q=${location.parcel}`}
+                passHref
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <Text>Parcel ID: {location.parcel}</Text>
+              </Link>
+            </TagLabel>
           ) : (
-            <Link href={`https://qpublic.schneidercorp.com/Search?q=${location.parcel}`} passHref>
-              <TagLabel as="a">{location.parcel}</TagLabel>
-            </Link>
+            <TagLabel>
+              <Link
+                href={`https://qpublic.schneidercorp.com/Search?q=${location.house} ${location.street}`}
+                passHref
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <Text as="a">Find parcel ID</Text>
+              </Link>
+            </TagLabel>
           )}
         </Tag>
         <MapLinkIcon location={location} />
@@ -96,5 +102,7 @@ const LocationListItem = ({ location }: LocationProp) => {
     </>
   )
 }
+
+const GadsdenLink = () => {}
 
 export default LocationListItem
