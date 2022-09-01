@@ -1,16 +1,14 @@
 import { resolver, useMutation } from "@blitzjs/rpc"
 import { NotFoundError } from "blitz"
-import db from "db"
+import db, { Prisma } from "db"
 import { ArchiveCustomer } from "../validations"
 
+interface ArchiveCustomerInput extends Pick<Prisma.CustomerFindFirstArgs, "where"> {}
+
 export default resolver.pipe(
-  resolver.zod(ArchiveCustomer),
   resolver.authorize(["Admin", "Owner"]),
-  async ({ id }) => {
-    const [archiveLocationsMutation] = useMutation(archiveLocations)
-    const [archiveJobsMutation] = useMutation(archiveJobs)
-    const [archiveInvoicesMutation] = useMutation(archiveInvoices)
-    const [archiveEstimatesMutation] = useMutation(archiveEstimates)
+  async ({ where }: ArchiveCustomerInput) => {
+    // const [archiveLocationsMutation] = useMutation(archiveLocations)
 
     // Get customer to be archived:
     const customer = await db.customer.findFirst({ where })
