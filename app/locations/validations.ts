@@ -1,5 +1,6 @@
 import { z } from "zod"
 
+export const id = z.number()
 export const primary = z.boolean()
 export const house = z.string()
 export const street = z.string()
@@ -25,7 +26,7 @@ export const CreateLocation = z.object({
 })
 
 export const UpdateLocation = z.object({
-  id: z.number(),
+  id,
   primary,
   house,
   street,
@@ -39,5 +40,9 @@ export const UpdateLocation = z.object({
 })
 
 export const DeleteLocation = z.object({
-  id: z.number(),
+  id,
+})
+
+export const ArchiveLocation = z.object({
+  id,
 })
