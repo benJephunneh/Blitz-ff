@@ -33,7 +33,7 @@ const LocationModalForm = ({
   onSuccess,
   customerId,
   locationId,
-  mutationType = "new",
+  mutationType = "New",
 }: LocationModalFormProps) => {
   const [newLocationMutation] = useMutation(createLocation)
   const [editLocationMutation] = useMutation(updateLocation)
@@ -42,28 +42,25 @@ const LocationModalForm = ({
   let mutation: MutateFunction<Location, unknown, {}, unknown>
   let { id, house, street, city, state, zipcode, block, lot, parcel, primary } = {} as Location
   switch (mutationType) {
-    case "new":
+    case "New":
       house = ""
       street = ""
       city = ""
-      state = ""
+      state = "FL"
       zipcode = ""
-      block = ""
-      lot = ""
-      parcel = ""
       primary = true
       mutation = newLocationMutation
       break
-    case "edit":
+    case "Edit":
       id = locationId!
       house = location.house
       street = location.street
       city = location.city
       state = location.state
       zipcode = location.zipcode
-      block = location.block ?? ""
-      lot = location.lot ?? ""
-      parcel = location.parcel ?? ""
+      block = location.block
+      lot = location.lot
+      parcel = location.parcel
       primary = location.primary
       mutation = editLocationMutation
       break
@@ -71,11 +68,8 @@ const LocationModalForm = ({
       house = ""
       street = ""
       city = ""
-      state = ""
+      state = "FL"
       zipcode = ""
-      block = ""
-      lot = ""
-      parcel = ""
       primary = true
       mutation = newLocationMutation
       break
@@ -140,7 +134,7 @@ const LocationModalForm = ({
             <LabeledTextField name="city" label="City" />
           </GridItem>
           <GridItem area="state">
-            <LabeledTextField name="state" label="State" disabled={true} value="FL" />
+            <LabeledTextField name="state" label="State" value="FL" />
           </GridItem>
           <GridItem area="zipcode">
             <LabeledTextField name="zipcode" label="Zipcode" />

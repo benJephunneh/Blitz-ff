@@ -64,7 +64,7 @@ const ShowCustomerPage = () => {
         customerId={customerId!}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
-        mutationType={"new" as MutationType}
+        mutationType={"New" as MutationType}
         onSuccess={async (_location) => {
           setCreatingLocation(false)
           await router.push(
@@ -103,7 +103,7 @@ const ShowCustomerPage = () => {
               borderTopWidth={0}
               onClick={() => {
                 setEditingCustomer(true)
-                setCustomerMutationState("edit")
+                setCustomerMutationState("Edit")
               }}
             >
               Edit customer
@@ -121,7 +121,7 @@ const ShowCustomerPage = () => {
               borderTopWidth={0}
               onClick={() => {
                 setCreatingLocation(true)
-                setCustomerMutationState("new")
+                setCustomerMutationState("New")
               }}
             >
               Create location

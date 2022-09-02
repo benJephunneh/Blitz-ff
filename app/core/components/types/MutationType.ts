@@ -1,1 +1,1 @@
-export type MutationType = "new" | "edit" | "delete"
+export type MutationType = "New" | "Edit" | "Delete"

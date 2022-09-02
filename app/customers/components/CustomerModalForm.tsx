@@ -27,7 +27,7 @@ const CustomerModalForm = ({
   onClose,
   onSuccess,
   customerId,
-  mutationType = "new",
+  mutationType = "New",
 }: CustomerModalFormProps) => {
   const [newCustomerMutation] = useMutation(createCustomer)
   const [editCustomerMutation] = useMutation(updateCustomer)
@@ -36,10 +36,10 @@ const CustomerModalForm = ({
   let mutation: MutateFunction<Customer, unknown, {}, unknown>
   let { firstname, lastname } = {} as Customer
   switch (mutationType) {
-    case "new":
+    case "New":
       mutation = newCustomerMutation
       break
-    case "edit":
+    case "Edit":
       firstname = customer!.firstname
       lastname = customer!.lastname
       mutation = editCustomerMutation

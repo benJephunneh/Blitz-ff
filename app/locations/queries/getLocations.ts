@@ -7,7 +7,7 @@ interface GetLocationsInput
 
 const getLocations = resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetLocationsInput) => {
+  async ({ where, orderBy, skip, take }: GetLocationsInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const {
       items: locations,

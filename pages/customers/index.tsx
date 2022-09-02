@@ -68,7 +68,7 @@ const CustomersPage = () => {
               borderTopWidth={0}
               onClick={() => {
                 setCreatingCustomer(true)
-                setMutationState("new")
+                setMutationState("New")
               }}
             >
               Create customer

@@ -6,9 +6,9 @@ export const street = z.string()
 export const city = z.string()
 export const state = z.string()
 export const zipcode = z.string()
-export const block = z.string().optional()
-export const lot = z.string().optional()
-export const parcel = z.string().optional()
+export const block = z.string().nullable()
+export const lot = z.string().nullable()
+export const parcel = z.string().nullable()
 export const customerId = z.number()
 
 export const CreateLocation = z.object({

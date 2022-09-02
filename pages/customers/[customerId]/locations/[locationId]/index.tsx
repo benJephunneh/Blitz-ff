@@ -37,7 +37,7 @@ const ShowLocationPage: BlitzPage = () => {
   const customerName = `${firstname} ${lastname}`
 
   const [editingLocation, setEditingLocation] = useState(false)
-  const [mutationType, setMutationType] = useState("edit" as MutationType)
+  const [mutationType, setMutationType] = useState("Edit" as MutationType)
 
   return (
     <SidebarLayout title="Location page">
@@ -87,7 +87,7 @@ const ShowLocationPage: BlitzPage = () => {
               borderTopWidth={0}
               onClick={() => {
                 setEditingLocation(true)
-                setMutationType("edit")
+                setMutationType("Edit")
               }}
             >
               Edit location

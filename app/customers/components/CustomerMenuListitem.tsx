@@ -1,53 +1,47 @@
 import { Routes } from "@blitzjs/next"
+import { usePaginatedQuery } from "@blitzjs/rpc"
 import {
   Button,
   ButtonGroup,
+  Flex,
   forwardRef,
-  GridItem,
+  Grid,
+  GridItem as ListItem,
+  HStack,
   IconButton,
+  LinkOverlay,
   Menu,
   MenuButton,
+  MenuItem,
   MenuList,
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { MutationType } from "app/core/components/types/MutationType"
-import LocationMenuList from "app/locations/components/LocationMenuList"
-import LocationModalForm from "app/locations/components/LocationModalForm"
+import LocationList from "app/locations/components/LocationList"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { createRef } from "react"
 import { ReactNode, useState } from "react"
-import { FaPlus } from "react-icons/fa"
-import { FcExpand } from "react-icons/fc"
+import { FaChevronDown, FaPlus } from "react-icons/fa"
+import { FcExpand, FcNext, FcPlus, FcPrevious } from "react-icons/fc"
+import { TbChevronDownRight } from "react-icons/tb"
+import { VscChevronDown } from "react-icons/vsc"
+import getCustomers from "../queries/getCustomers"
 
-type CustomerListItemProps = {
-  customerId: number
+type CustomerMenuListItemProps = {
+  id: number
   children: ReactNode
 }
 
-const CustomerListItem = ({ customerId, children }: CustomerListItemProps) => {
-  const router = useRouter()
-  const [creatingLocation, setCreatingLocation] = useState(false)
+const CustomerMenuListItem = forwardRef(({ id, children }: CustomerMenuListItemProps, ref) => {
   const [hoverState, setHoverState] = useState(false)
   const hoverColor = useColorModeValue("gray.100", "white")
+  const nextRef = createRef()
 
   return (
     <>
-      <LocationModalForm
-        customerId={customerId!}
-        isOpen={creatingLocation}
-        onClose={() => setCreatingLocation(false)}
-        mutationType={"New" as MutationType}
-        onSuccess={async (_location) => {
-          setCreatingLocation(false)
-          await router.push(
-            Routes.ShowLocationPage({ customerId: customerId!, locationId: _location.id })
-          )
-        }}
-      />
-
-      <GridItem area="name" rowSpan="auto" borderRadius={8}>
-        <Link href={Routes.ShowCustomerPage({ customerId })} passHref>
+      <ListItem ref={ref} area="name" rowSpan="auto" borderRadius={8}>
+        <Link href={Routes.ShowCustomerPage({ customerId: id })} passHref>
           <Button
             onMouseOver={() => setHoverState(true)}
             onMouseLeave={() => setHoverState(false)}
@@ -65,8 +59,8 @@ const CustomerListItem = ({ customerId, children }: CustomerListItemProps) => {
             {children}
           </Button>
         </Link>
-      </GridItem>
-      <GridItem area="locations" rowSpan="auto">
+      </ListItem>
+      <ListItem area="locations" rowSpan="auto">
         <ButtonGroup isAttached>
           <Menu gutter={0} isLazy>
             <MenuButton
@@ -85,7 +79,7 @@ const CustomerListItem = ({ customerId, children }: CustomerListItemProps) => {
               Locations
             </MenuButton>
             <MenuList>
-              <LocationMenuList customerId={customerId} />
+              <LocationList customerId={id} />
             </MenuList>
 
             <Tooltip label="Add location">
@@ -100,14 +94,13 @@ const CustomerListItem = ({ customerId, children }: CustomerListItemProps) => {
                 px={0}
                 variant="ghost"
                 _hover={{ bg: "white" }}
-                onClick={() => setCreatingLocation(true)}
               />
             </Tooltip>
           </Menu>
         </ButtonGroup>
-      </GridItem>
+      </ListItem>
     </>
   )
-}
+})
 
-export default CustomerListItem
+export default CustomerMenuListItem
