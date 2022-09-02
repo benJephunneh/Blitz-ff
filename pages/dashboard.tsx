@@ -16,6 +16,7 @@ import { FC, Suspense } from "react"
 import { User } from "db"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import SidebarLayout from "app/core/layouts/SideBarLayout"
+import SideHeaderLayout from "app/core/layouts/SideHeaderLayout"
 
 type UserInfoProps = Partial<User>
 
@@ -84,9 +85,9 @@ const Dashboard: BlitzPage = () => {
 Dashboard.suppressFirstRenderFlicker = true
 Dashboard.authenticate = { redirectTo: Routes.Home() }
 Dashboard.getLayout = (page) => (
-  <SidebarLayout title="Dashboard" description="Home page for ABST staff">
+  <SideHeaderLayout title="Dashboard" description="Home page for ABST staff">
     {page}
-  </SidebarLayout>
+  </SideHeaderLayout>
 )
 
 export default Dashboard

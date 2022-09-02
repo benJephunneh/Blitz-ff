@@ -23,11 +23,8 @@ import {
   ModalProps,
   Stack,
   UnorderedList,
-  useDisclosure,
 } from "@chakra-ui/react"
 import { FormComponent } from "./FormComponent"
-import login from "app/auth/mutations/login"
-import signup from "app/auth/mutations/signup"
 export { FORM_ERROR } from "final-form"
 
 type ModalFormProps = {

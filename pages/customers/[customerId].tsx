@@ -7,15 +7,25 @@ import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import LocationList from "app/locations/components/LocationList"
 import {
   Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
   Button,
   ButtonGroup,
   Container,
   Flex,
   Heading,
   HStack,
+  IconButton,
   List,
   ListItem,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
   useToast,
+  VStack,
 } from "@chakra-ui/react"
 import getLocations from "app/locations/queries/getLocations"
 import { createRef, useState } from "react"
@@ -30,6 +40,8 @@ import LocationListItem from "app/locations/components/LocationListItem"
 import { FaPlus } from "react-icons/fa"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import createLocation from "app/locations/mutations/createLocation"
+import { FcExpand } from "react-icons/fc"
+import SideHeaderLayout from "app/core/layouts/SideHeaderLayout"
 
 const ShowCustomerPage = () => {
   const router = useRouter()
@@ -52,9 +64,7 @@ const ShowCustomerPage = () => {
         customerId={customerId}
         mutationType={customerMutationState}
         isOpen={editingCustomer}
-        onClose={() => {
-          setEditingCustomer(false)
-        }}
+        onClose={() => setEditingCustomer(false)}
         onSuccess={async () => {
           setEditingCustomer(false)
         }}
@@ -62,9 +72,9 @@ const ShowCustomerPage = () => {
 
       <LocationModalForm
         customerId={customerId!}
+        mutationType={"New" as MutationType}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
-        mutationType={"New" as MutationType}
         onSuccess={async (_location) => {
           setCreatingLocation(false)
           await router.push(
@@ -73,92 +83,113 @@ const ShowCustomerPage = () => {
         }}
       />
 
-      <Box shadow="md" bg="white">
-        <HStack spacing={10}>
-          <Heading ml={4}>
-            {customer.firstname} {customer.lastname}
-          </Heading>
-          <ButtonGroup isAttached alignSelf="start">
-            <Link href={Routes.CustomersPage()} passHref>
+      <Flex shadow="md" bg="white">
+        <VStack spacing={4}>
+          <HStack spacing={10}>
+            <Breadcrumb ml={5} fontWeight="black" fontStyle="italic">
+              <BreadcrumbItem>
+                <BreadcrumbLink href={Routes.Dashboard().pathname}>dashboard</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbItem>
+                <BreadcrumbLink href={Routes.CustomersPage().pathname}>customers</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbItem>
+                <BreadcrumbLink as={Menu} gutter={0} isLazy href="">
+                  <MenuButton
+                    as={Button}
+                    ml={0}
+                    pl={0}
+                    fontSize="xl"
+                    fontWeight="black"
+                    fontStyle="italic"
+                    textColor="#009a4c"
+                    variant="link"
+                    rightIcon={<FcExpand size={10} />}
+                  >
+                    {customer.firstname} {customer.lastname}
+                  </MenuButton>
+                  <MenuList>
+                    <MenuItem
+                      onClick={() => {
+                        setEditingCustomer(true)
+                        setCustomerMutationState("Edit")
+                      }}
+                    >
+                      Edit customer
+                    </MenuItem>
+                  </MenuList>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
+            <ButtonGroup isAttached alignSelf="start">
               <Button
-                as="a"
                 size="sm"
+                borderRadius={0}
+                bg="gray.100"
+                textColor="#009a4c"
                 variant="outline"
-                bg="gray.50"
-                borderTopRadius={0}
-                borderBottomRightRadius={0}
                 borderTopWidth={0}
-                leftIcon={<TiArrowBack size={15} />}
-                _hover={{ textColor: "cyan.500" }}
+                onClick={() => {
+                  setEditingCustomer(true)
+                  setCustomerMutationState("Edit")
+                }}
               >
-                Back to customers list
+                Edit customer
               </Button>
-            </Link>
-            <Button
-              size="sm"
-              borderRadius={0}
-              bg="gray.100"
-              textColor="#009a4c"
-              variant="outline"
-              borderTopWidth={0}
-              onClick={() => {
-                setEditingCustomer(true)
-                setCustomerMutationState("Edit")
-              }}
-            >
-              Edit customer
-            </Button>
-            <Button
-              mb={4}
-              size="sm"
-              color="#009a4c"
-              bg="gray.200"
-              variant="outline"
-              leftIcon={<FaPlus />}
-              borderStyle="dashed"
-              borderColor="blackAlpha.400"
-              borderRadius={0}
-              borderTopWidth={0}
-              onClick={() => {
-                setCreatingLocation(true)
-                setCustomerMutationState("New")
-              }}
-            >
-              Create location
-            </Button>
-          </ButtonGroup>
-        </HStack>
+              <Button
+                mb={4}
+                size="sm"
+                color="#009a4c"
+                bg="gray.200"
+                variant="outline"
+                leftIcon={<FaPlus />}
+                borderStyle="dashed"
+                borderColor="blackAlpha.400"
+                borderRadius={0}
+                borderTopWidth={0}
+                onClick={() => {
+                  setCreatingLocation(true)
+                  setCustomerMutationState("New")
+                }}
+              >
+                Create location
+              </Button>
+            </ButtonGroup>
+          </HStack>
 
-        <TitleDivider mb={4}>Locations</TitleDivider>
+          <TitleDivider mb={4}>Locations</TitleDivider>
 
-        <Container borderRadius={8} mx={0} px={0}>
-          <LocationList customerId={customerId!} />
-        </Container>
+          <Container borderRadius={8} mx={0} px={0}>
+            <LocationList customerId={customerId!} />
+          </Container>
 
-        <Button
-          mt={10}
-          justifySelf="end"
-          borderTopLeftRadius={0}
-          borderBottomRadius={0}
-          bg="red"
-          textColor="white"
-          size="xs"
-          onClick={async () => {
-            if (window.confirm(`OK to delete ${customer.firstname} ${customer.lastname}?`)) {
-              await deleteCustomerMutation({ id: customer!.id }).then(() =>
-                router.push(Routes.CustomersPage())
-              )
-            }
-          }}
-        >
-          Delete {`${customer.firstname} ${customer.lastname}`}
-        </Button>
-      </Box>
+          <Button
+            mt={10}
+            justifySelf="end"
+            borderTopLeftRadius={0}
+            borderBottomRadius={0}
+            bg="red"
+            textColor="white"
+            size="xs"
+            onClick={async () => {
+              if (window.confirm(`OK to delete ${customer.firstname} ${customer.lastname}?`)) {
+                await deleteCustomerMutation({ id: customer!.id }).then(() =>
+                  router.push(Routes.CustomersPage())
+                )
+              }
+            }}
+          >
+            Delete {`${customer.firstname} ${customer.lastname}`}
+          </Button>
+        </VStack>
+      </Flex>
     </>
   )
 }
 
 ShowCustomerPage.authenticate = true
-ShowCustomerPage.getLayout = (page) => <SidebarLayout title="Customer page">{page}</SidebarLayout>
+ShowCustomerPage.getLayout = (page) => (
+  <SideHeaderLayout title="Customer page">{page}</SideHeaderLayout>
+)
 
 export default ShowCustomerPage

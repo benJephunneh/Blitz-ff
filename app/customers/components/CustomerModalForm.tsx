@@ -8,7 +8,7 @@ import deleteCustomer from "../mutations/deleteCustomer"
 import updateCustomer from "../mutations/updateCustomer"
 import getCustomer from "../queries/getCustomer"
 import { CreateCustomer, firstname } from "../validations"
-import { Grid, GridItem } from "@chakra-ui/react"
+import { Grid, GridItem, Modal, ModalProps } from "@chakra-ui/react"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import { MutationType } from "app/core/components/types/MutationType"
 
@@ -18,6 +18,7 @@ type CustomerModalFormProps = {
   onSuccess?: (customer: PromiseReturnType<typeof createCustomer>) => void
   customerId?: number
   mutationType: MutationType
+  size?: ModalProps["size"]
 }
 
 type Customer = PromiseReturnType<typeof createCustomer>
@@ -28,18 +29,20 @@ const CustomerModalForm = ({
   onSuccess,
   customerId,
   mutationType = "New",
+  size,
 }: CustomerModalFormProps) => {
   const [newCustomerMutation] = useMutation(createCustomer)
   const [editCustomerMutation] = useMutation(updateCustomer)
   const [customer] = useQuery(getCustomer, { where: { id: customerId } })
 
   let mutation: MutateFunction<Customer, unknown, {}, unknown>
-  let { firstname, lastname } = {} as Customer
+  let { id, firstname, lastname } = {} as Customer
   switch (mutationType) {
     case "New":
       mutation = newCustomerMutation
       break
     case "Edit":
+      id = customerId!
       firstname = customer!.firstname
       lastname = customer!.lastname
       mutation = editCustomerMutation
@@ -48,6 +51,7 @@ const CustomerModalForm = ({
       break
   }
   const initialValues = {
+    id,
     firstname,
     lastname,
   }
@@ -68,7 +72,7 @@ const CustomerModalForm = ({
     <ModalForm
       isOpen={isOpen}
       onClose={onClose}
-      size="lg"
+      size={size}
       schema={CreateCustomer}
       title={`${mutationType} customer`}
       submitText="Submit"

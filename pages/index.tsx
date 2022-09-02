@@ -16,6 +16,8 @@ import { useMutation } from "@blitzjs/rpc"
 import logout from "app/auth/mutations/logout"
 import { useRouter } from "next/router"
 import { customerId } from "app/locations/validations"
+import HeaderLayout from "app/core/layouts/HeaderLayout"
+import { Chakra } from "Chakra"
 
 const UserInfo = () => {
   const router = useRouter()
@@ -109,9 +111,13 @@ const UserInfo = () => {
   )
 }
 
-const Home: BlitzPage = () => {
+interface HomeProps {
+  cookies?: string
+}
+
+const Home: BlitzPage = ({ cookies }: HomeProps) => {
   return (
-    <>
+    <Chakra cookies={cookies}>
       <Container>
         <Box as="main">
           <div className="logo">
@@ -190,12 +196,12 @@ const Home: BlitzPage = () => {
           </a>
         </footer>
       </Container>
-    </>
+    </Chakra>
   )
 }
 
 Home.suppressFirstRenderFlicker = true
 Home.redirectAuthenticatedTo = Routes.Dashboard()
-Home.getLayout = (page) => <Layout title="ABST">{page}</Layout>
+Home.getLayout = (page) => <HeaderLayout title="ABST">{page}</HeaderLayout>
 
 export default Home

@@ -50,24 +50,24 @@ const CustomersList = () => {
   //   When you select a location, the menu for Jobs should show that location's jobs.
   //   Needs to be, then, selection (default) for all locations.
 
-  useEffect(() => {
-    const [{ locations }] = async () => {
-      await new Promise((resolve) => {
-        return resolve(
-          db.location.findMany({
-            where: { customerId: customerSelection },
-            orderBy: [
-              { primary: "asc" },
-              { zipcode: "asc" },
-              { city: "asc" },
-              { street: "asc" },
-              { house: "asc" },
-            ],
-          })
-        )
-      })
-    }
-  })
+  // useEffect(() => {
+  //   const [{ locations }] = async () => {
+  //     await new Promise((resolve) => {
+  //       return resolve(
+  //         db.location.findMany({
+  //           where: { customerId: customerSelection },
+  //           orderBy: [
+  //             { primary: "asc" },
+  //             { zipcode: "asc" },
+  //             { city: "asc" },
+  //             { street: "asc" },
+  //             { house: "asc" },
+  //           ],
+  //         })
+  //       )
+  //     })
+  //   }
+  // })
 
   return (
     <>
@@ -87,33 +87,14 @@ const CustomersList = () => {
               return (
                 <Tr key={ii}>
                   <Td>
-                    <Link href={Routes.ShowCustomerPage({ customerId: customer.id })}>
+                    <Link href={Routes.ShowCustomerPage({ customerId: customer.id })} passHref>
                       {`${customer.firstname} ${customer.lastname}`}
                     </Link>
                   </Td>
                   <Td>
-                    <Menu isLazy gutter={0}>
-                      <MenuButton
-                        as={Button}
-                        size="xs"
-                        variant="ghost"
-                        fontWeight="light"
-                        rightIcon={<FcExpand size={10} />}
-                      >
-                        {locations.length === 1
-                          ? `${locations[0]!.house} ${locations[0]!.street}`
-                          : `Locations`}
-                      </MenuButton>
-                      <MenuList>
-                        {locations.map((location, jj) => {
-                          return (
-                            <MenuItem key={jj}>
-                              {location.house} {location.street} {location.city} {location.zipcode}
-                            </MenuItem>
-                          )
-                        })}
-                      </MenuList>
-                    </Menu>
+                    <Link href={Routes.ShowCustomerPage({ customerId: customer.id })} passHref>
+                      Locations
+                    </Link>
                   </Td>
                   <Td>jobs</Td>
                   <Td>estimates</Td>

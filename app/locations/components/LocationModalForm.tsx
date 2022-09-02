@@ -1,7 +1,7 @@
 import { MutateFunction, useMutation, useQuery } from "@blitzjs/rpc"
 import { PromiseReturnType } from "blitz"
 import { FORM_ERROR } from "final-form"
-import { Checkbox, Grid, GridItem } from "@chakra-ui/react"
+import { Checkbox, Grid, GridItem, ModalProps } from "@chakra-ui/react"
 import createCustomer from "app/customers/mutations/createCustomer"
 import { MutationType } from "app/core/components/types/MutationType"
 import updateCustomer from "app/customers/mutations/updateCustomer"
@@ -25,6 +25,7 @@ type LocationModalFormProps = {
   customerId: number
   locationId?: number
   mutationType: MutationType
+  size?: ModalProps["size"]
 }
 
 const LocationModalForm = ({
@@ -34,6 +35,7 @@ const LocationModalForm = ({
   customerId,
   locationId,
   mutationType = "New",
+  size = "xl",
 }: LocationModalFormProps) => {
   const [newLocationMutation] = useMutation(createLocation)
   const [editLocationMutation] = useMutation(updateLocation)
@@ -104,7 +106,7 @@ const LocationModalForm = ({
     <ModalForm
       isOpen={isOpen}
       onClose={onClose}
-      size="xl"
+      size={size}
       schema={CreateLocation}
       title={`${mutationType} location`}
       submitText="Submit"

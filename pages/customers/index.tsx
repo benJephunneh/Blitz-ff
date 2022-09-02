@@ -11,6 +11,7 @@ import Link from "next/link"
 import { TiArrowBack } from "react-icons/ti"
 import { GiDiamonds } from "react-icons/gi"
 import TitleDivider from "app/core/components/TitleDivider"
+import SideHeaderLayout from "app/core/layouts/SideHeaderLayout"
 
 const CustomersPage = () => {
   const router = useRouter()
@@ -19,7 +20,7 @@ const CustomersPage = () => {
   const ref = createRef()
 
   return (
-    <SidebarLayout title="Customers">
+    <SideHeaderLayout title="Customers" description="Customer list">
       <CustomerModalForm
         mutationType={mutationState}
         isOpen={creatingCustomer}
@@ -87,15 +88,15 @@ const CustomersPage = () => {
       </ButtonGroup>
  */}
       </Box>
-    </SidebarLayout>
+    </SideHeaderLayout>
   )
 }
 
 CustomersPage.authenticate = { redirectTo: Routes.Home() }
 // CustomersPage.getLayout = (page) => {
-//   <SidebarLayout title="Customers" description="Customer list">
+//   <SideHeaderLayout title="Customers" description="Customer list">
 //     {page}
-//   </SidebarLayout>
+//   </SideHeaderLayout>
 // }
 
 export default CustomersPage

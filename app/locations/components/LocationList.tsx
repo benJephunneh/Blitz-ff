@@ -9,6 +9,13 @@ import {
   Button,
   ButtonGroup,
   Grid,
+  TableContainer,
+  Thead,
+  Table,
+  Tr,
+  Th,
+  Tbody,
+  Td,
 } from "@chakra-ui/react"
 import createLocation from "app/locations/mutations/createLocation"
 import getLocations from "app/locations/queries/getLocations"
@@ -85,18 +92,39 @@ const LocationList = ({ customerId }: { customerId: number }) => {
 
   return (
     <>
-      <Grid
-        bg="inherit"
-        flexDirection="column"
-        borderRadius={8}
-        templateAreas={`'address jobMenu invoiceMenu estimateMenu'`}
-      >
-        {locations.map((location, ii) => (
-          <LocationListItem key={ii} location={location}>
-            {location.house} {location.street} {location.city}, {location.zipcode}
-          </LocationListItem>
-        ))}
-      </Grid>
+      <TableContainer>
+        <Table bg="inherit" size="sm">
+          <Thead>
+            <Tr>
+              <Th fontWeight="extrabold">Address</Th>
+              <Th fontWeight="extrabold">Block</Th>
+              <Th fontWeight="extrabold">Lot</Th>
+              <Th fontWeight="extrabold">Parcel</Th>
+              <Th fontWeight="extrabold">Map</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {locations.map((location, ii) => {
+              return (
+                <Tr key={ii}>
+                  <Td>
+                    <Link
+                      href={Routes.ShowLocationPage({ customerId, locationId: location.id })}
+                      passHref
+                    >
+                      {`${location.house} ${location.street}, ${location.city}, ${location.zipcode}`}
+                    </Link>
+                  </Td>
+                  <Td>{location.block}</Td>
+                  <Td>{location.lot}</Td>
+                  <Td>{location.parcel}</Td>
+                  <Td>map</Td>
+                </Tr>
+              )
+            })}
+          </Tbody>
+        </Table>
+      </TableContainer>
 
       <ButtonGroup mt={5} isAttached variant="outline">
         <Button disabled={page === 0} onClick={goToPreviousPage} leftIcon={<FcPrevious />}>
