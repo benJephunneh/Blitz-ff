@@ -17,6 +17,7 @@ import { User } from "db"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import SidebarLayout from "app/core/layouts/SideBarLayout"
 import SideHeaderLayout from "app/core/layouts/SideHeaderLayout"
+import HeaderLayout from "app/core/layouts/HeaderLayout"
 
 type UserInfoProps = Partial<User>
 
@@ -51,12 +52,12 @@ const Dashboard: BlitzPage = () => {
 
   return (
     <>
-      <Box bg={useColorModeValue("gray.50", "gray.800")} pt={0} mx={0}>
-        <Container as="main" textAlign="center" py={{ base: 12, md: 20 }} mx={0}>
+      <Box bg={useColorModeValue("gray.50", "gray.800")}>
+        <Container as="main" textAlign="center" py={{ base: 12, md: 20 }}>
           <Heading size="2xl" mb={2} mx={0}>
             {currentUser?.username}
           </Heading>
-          <Text fontSize="2x" opacity="0.8">
+          <Text fontSize="xl" opacity="0.8">
             Ride the effluent.
           </Text>
         </Container>
@@ -85,9 +86,9 @@ const Dashboard: BlitzPage = () => {
 Dashboard.suppressFirstRenderFlicker = true
 Dashboard.authenticate = { redirectTo: Routes.Home() }
 Dashboard.getLayout = (page) => (
-  <SideHeaderLayout title="Dashboard" description="Home page for ABST staff">
+  <HeaderLayout title="Dashboard" description="Home page for ABST staff">
     {page}
-  </SideHeaderLayout>
+  </HeaderLayout>
 )
 
 export default Dashboard

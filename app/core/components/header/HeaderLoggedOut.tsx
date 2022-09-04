@@ -1,6 +1,6 @@
 import { Routes } from "@blitzjs/next"
 import { useMutation } from "@blitzjs/rpc"
-import { Button, ButtonGroup, HStack } from "@chakra-ui/react"
+import { Button, ButtonGroup, HStack, useColorModeValue } from "@chakra-ui/react"
 import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
 import NewUserModalForm from "app/auth/components/NewUserModalForm"
 import logout from "app/auth/mutations/logout"
@@ -33,22 +33,24 @@ const HeaderLoggedOut = () => {
       <HStack spacing={1} justify="flex-end">
         <ButtonGroup isAttached variant="outline" size="sm">
           <Button
+            color="#009a4c"
+            bg={useColorModeValue("blackAlpha.100", "gray.600")}
             onClick={() => {
               setLoggingIn(true)
             }}
-            color="#009a4c"
           >
             Login
           </Button>
           <Button
-            onClick={() => {
-              setSigningUp(true)
-            }}
             variant="outline"
             leftIcon={<FaPlus />}
             borderStyle="dashed"
-            borderColor="blackAlpha.400"
+            borderColor={useColorModeValue("blackAlpha.400", "gray.400")}
             color="#009a4c"
+            bg={useColorModeValue("blackAlpha.100", "gray.600")}
+            onClick={() => {
+              setSigningUp(true)
+            }}
           >
             Sign up
           </Button>

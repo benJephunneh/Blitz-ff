@@ -15,7 +15,6 @@ const SideHeaderLayout: BlitzLayout<SideHeaderLayoutProps> = ({
   description,
   children,
 }) => {
-  console.log(`${title}`)
   return (
     <>
       <PageTitle title={title} />

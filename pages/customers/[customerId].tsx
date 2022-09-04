@@ -41,7 +41,7 @@ import { FaPlus } from "react-icons/fa"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import createLocation from "app/locations/mutations/createLocation"
 import { FcExpand } from "react-icons/fc"
-import SideHeaderLayout from "app/core/layouts/SideHeaderLayout"
+import HeaderLayout from "app/core/layouts/HeaderLayout"
 
 const ShowCustomerPage = () => {
   const router = useRouter()
@@ -50,12 +50,12 @@ const ShowCustomerPage = () => {
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [customerMutationState, setCustomerMutationState] = useState("edit" as MutationType)
   const [customer] = useQuery(getCustomer, { where: { id: customerId } })
-  const [editCustomerMutation] = useMutation(updateCustomer)
+  // const [editCustomerMutation] = useMutation(updateCustomer)
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
 
   const [creatingLocation, setCreatingLocation] = useState(false)
-  const [{ locations }] = useQuery(getLocations, { where: { customerId } })
-  const [createLocationMutation] = useMutation(createLocation)
+  // const [{ locations }] = useQuery(getLocations, { where: { customerId } })
+  // const [createLocationMutation] = useMutation(createLocation)
   const ref = createRef()
 
   return (
@@ -86,41 +86,31 @@ const ShowCustomerPage = () => {
       <Flex shadow="md" bg="white">
         <VStack spacing={4}>
           <HStack spacing={10}>
-            <Breadcrumb ml={5} fontWeight="black" fontStyle="italic">
-              <BreadcrumbItem>
-                <BreadcrumbLink href={Routes.Dashboard().pathname}>dashboard</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbItem>
-                <BreadcrumbLink href={Routes.CustomersPage().pathname}>customers</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbItem>
-                <BreadcrumbLink as={Menu} gutter={0} isLazy href="">
-                  <MenuButton
-                    as={Button}
-                    ml={0}
-                    pl={0}
-                    fontSize="xl"
-                    fontWeight="black"
-                    fontStyle="italic"
-                    textColor="#009a4c"
-                    variant="link"
-                    rightIcon={<FcExpand size={10} />}
-                  >
-                    {customer.firstname} {customer.lastname}
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem
-                      onClick={() => {
-                        setEditingCustomer(true)
-                        setCustomerMutationState("Edit")
-                      }}
-                    >
-                      Edit customer
-                    </MenuItem>
-                  </MenuList>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-            </Breadcrumb>
+            <Menu>
+              <MenuButton
+                as={Button}
+                ml={0}
+                pl={0}
+                fontSize="xl"
+                fontWeight="black"
+                fontStyle="italic"
+                textColor="#009a4c"
+                variant="link"
+                rightIcon={<FcExpand size={10} />}
+              >
+                {customer.firstname} {customer.lastname}
+              </MenuButton>
+              <MenuList>
+                <MenuItem
+                  onClick={() => {
+                    setEditingCustomer(true)
+                    setCustomerMutationState("Edit")
+                  }}
+                >
+                  Edit customer
+                </MenuItem>
+              </MenuList>
+            </Menu>
             <ButtonGroup isAttached alignSelf="start">
               <Button
                 size="sm"
@@ -188,8 +178,6 @@ const ShowCustomerPage = () => {
 }
 
 ShowCustomerPage.authenticate = true
-ShowCustomerPage.getLayout = (page) => (
-  <SideHeaderLayout title="Customer page">{page}</SideHeaderLayout>
-)
+ShowCustomerPage.getLayout = (page) => <HeaderLayout title="Customer page">{page}</HeaderLayout>
 
 export default ShowCustomerPage

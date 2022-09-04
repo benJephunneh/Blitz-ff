@@ -14,7 +14,6 @@ const SidebarLayout: BlitzLayout<SidebarLayoutProps> = ({
   description,
   children,
 }) => {
-  console.log(`${title}`)
   return (
     <>
       <PageTitle title={title} />

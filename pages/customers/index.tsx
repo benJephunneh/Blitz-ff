@@ -1,5 +1,5 @@
 import { createRef, useState } from "react"
-import { Routes } from "@blitzjs/next"
+import { BlitzPage, Routes } from "@blitzjs/next"
 import { useRouter } from "next/router"
 import { Box, Button, ButtonGroup, Container, Heading, HStack, Icon } from "@chakra-ui/react"
 import { FaPlus } from "react-icons/fa"
@@ -11,16 +11,16 @@ import Link from "next/link"
 import { TiArrowBack } from "react-icons/ti"
 import { GiDiamonds } from "react-icons/gi"
 import TitleDivider from "app/core/components/TitleDivider"
-import SideHeaderLayout from "app/core/layouts/SideHeaderLayout"
+import HeaderLayout from "app/core/layouts/HeaderLayout"
 
-const CustomersPage = () => {
+const CustomersPage: BlitzPage = () => {
   const router = useRouter()
   const [creatingCustomer, setCreatingCustomer] = useState(false)
   const [mutationState, setMutationState] = useState("edit" as MutationType)
   const ref = createRef()
 
   return (
-    <SideHeaderLayout title="Customers" description="Customer list">
+    <>
       <CustomerModalForm
         mutationType={mutationState}
         isOpen={creatingCustomer}
@@ -88,15 +88,15 @@ const CustomersPage = () => {
       </ButtonGroup>
  */}
       </Box>
-    </SideHeaderLayout>
+    </>
   )
 }
 
 CustomersPage.authenticate = { redirectTo: Routes.Home() }
-// CustomersPage.getLayout = (page) => {
-//   <SideHeaderLayout title="Customers" description="Customer list">
-//     {page}
-//   </SideHeaderLayout>
-// }
+CustomersPage.getLayout = (page) => (
+  <HeaderLayout title="Customers" description="Customer list">
+    {page}
+  </HeaderLayout>
+)
 
 export default CustomersPage

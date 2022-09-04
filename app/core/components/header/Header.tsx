@@ -25,7 +25,7 @@ import HeaderLogo from "./HeaderLogo"
 
 const Header = () => {
   const router = useRouter()
-  const pathname = window.location.pathname
+  const pathname = router.pathname
   const [drawerIsOpen, setDrawerIsOpen] = useState(false)
   const toggleDrawer = () => setDrawerIsOpen((state) => !state)
 
@@ -35,12 +35,16 @@ const Header = () => {
   const [showBreadcrumbs, setShowBreadcrumbs] = useState(false)
 
   useEffect(() => {
-    if (pathname !== Routes.Dashboard().pathname) {
+    if (pathname != "/") {
+      console.log(`pathname: ${pathname}`)
+      // const paths = pathname.split('/')
+      // if (paths.length > 1) {
       setShowBreadcrumbs(true)
+      // }
     } else {
       setShowBreadcrumbs(false)
     }
-  }, [pathname])
+  }, [pathname]) // eslint-disable-line
 
   return (
     <>
@@ -54,15 +58,11 @@ const Header = () => {
           borderBottom="1px solid"
           borderBottomColor={useColorModeValue("gray.200", "gray.600")}
         >
-          <Grid
-            templateAreas={`'hamburger title logging'`}
-            templateColumns={`repeat(3, 1fr)`}
-            alignItems="center"
-          >
-            <GridItem area="hamburger" ml={5}>
+          <Grid templateColumns={`repeat(6, 1fr)`} alignItems="center">
+            <GridItem colSpan={1} ml={5}>
               <HeaderActions toggleDrawer={toggleDrawer} />
             </GridItem>
-            <GridItem area="title" justifySelf="center">
+            <GridItem colSpan={4} justifySelf="left">
               {showBreadcrumbs ? (
                 <HeaderCrumbs />
               ) : (
@@ -71,7 +71,7 @@ const Header = () => {
                 </Heading>
               )}
             </GridItem>
-            <GridItem area="logging" mr={5} justifySelf="flex-end">
+            <GridItem colSpan={1} mr={5} justifySelf="flex-end">
               {isLoggedOut && <HeaderLoggedOut />}
               {isLoggedIn && <HeaderLoggedIn />}
             </GridItem>

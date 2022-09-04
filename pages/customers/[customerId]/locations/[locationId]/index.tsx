@@ -3,6 +3,7 @@ import { useMutation, useQuery } from "@blitzjs/rpc"
 import { Box, Button, ButtonGroup, Heading, HStack, useColorModeValue } from "@chakra-ui/react"
 import TitleDivider from "app/core/components/TitleDivider"
 import { MutationType } from "app/core/components/types/MutationType"
+import HeaderLayout from "app/core/layouts/HeaderLayout"
 import SidebarLayout from "app/core/layouts/SideBarLayout"
 import getCustomer from "app/customers/queries/getCustomer"
 import LocationModalForm from "app/locations/components/LocationModalForm"
@@ -40,7 +41,7 @@ const ShowLocationPage: BlitzPage = () => {
   const [mutationType, setMutationType] = useState("Edit" as MutationType)
 
   return (
-    <SidebarLayout title="Location page">
+    <>
       <LocationModalForm
         customerId={customerId}
         locationId={locationId}
@@ -117,8 +118,11 @@ const ShowLocationPage: BlitzPage = () => {
           Delete location
         </Button>
       </Box>
-    </SidebarLayout>
+    </>
   )
 }
+
+ShowLocationPage.authenticate = { redirectTo: Routes.Home() }
+ShowLocationPage.getLayout = (page) => <HeaderLayout title="Location page">{page}</HeaderLayout>
 
 export default ShowLocationPage

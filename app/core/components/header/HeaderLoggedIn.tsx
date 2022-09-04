@@ -1,5 +1,5 @@
 import { useMutation } from "@blitzjs/rpc"
-import { Box, Button } from "@chakra-ui/react"
+import { Box, Button, useColorModeValue } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
 import { useRouter } from "next/router"
 import { useState } from "react"
@@ -14,6 +14,7 @@ const HeaderLoggedIn = () => {
         size="sm"
         variant="outline"
         color="#009a4c"
+        bg={useColorModeValue("blackAlpha.100", "gray.600")}
         onClick={async () => {
           await logoutMutation()
         }}
