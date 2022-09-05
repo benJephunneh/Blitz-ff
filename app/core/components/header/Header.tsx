@@ -35,13 +35,14 @@ const Header = () => {
   const [showBreadcrumbs, setShowBreadcrumbs] = useState(false)
 
   useEffect(() => {
-    if (pathname != "/") {
-      console.log(`pathname: ${pathname}`)
+    if (pathname != "/dashboard") {
+      console.log(`if pathname: ${pathname}`)
       // const paths = pathname.split('/')
       // if (paths.length > 1) {
       setShowBreadcrumbs(true)
       // }
     } else {
+      console.log(`else pathname: ${pathname}`)
       setShowBreadcrumbs(false)
     }
   }, [pathname]) // eslint-disable-line

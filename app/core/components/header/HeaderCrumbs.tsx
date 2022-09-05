@@ -1,4 +1,4 @@
-import { Routes } from "@blitzjs/next"
+import { Routes, useParams } from "@blitzjs/next"
 import {
   Box,
   Breadcrumb,
@@ -6,6 +6,7 @@ import {
   BreadcrumbLink,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { useRouter } from "next/router"
 
 const HeaderCrumbs = () => {
   const pathname = window.location.pathname
@@ -15,12 +16,19 @@ const HeaderCrumbs = () => {
   // const example = '/dash/cust/loc/inv/est'
   // const paths = pages.exec(example)
   // const paths = example.split('/')
+  // console.log(`pathname: ${pathname}`)
   // console.log(paths?.length)
+  console.log(`sliced: ${paths?.slice(1)}`)
   // paths?.slice(1,).map((path, ii) => {
-  //   console.log(`index ${ii}: ${path}`)
+  // 	console.log(`index ${ii}: ${path}`)
   // })
+  // const breadcrumb = paths?.slice(1,).length == 1
+  // 	? '/breadcrumb'
+  // 	: `/breadcrumb/${paths.slice(1,).}`
 
   // Could go off of /customers/... in path to infer useQuery(getCustomer ...)
+
+  let textColor = paths?.slice(1).length == 1 ? "#009a4c" : "black"
 
   return (
     <Box
@@ -32,19 +40,19 @@ const HeaderCrumbs = () => {
     >
       <Breadcrumb fontWeight="black" fontStyle="italic">
         <BreadcrumbItem>
-          <BreadcrumbLink href={Routes.Dashboard().pathname}>Dashboard</BreadcrumbLink>
+          <BreadcrumbLink href="/dashboard">dashboard</BreadcrumbLink>
         </BreadcrumbItem>
-        {paths?.slice(1).map((path, ii) =>
-          ii != paths.length - 2 ? (
+        {paths?.slice(1).length >= 1 &&
+          paths?.slice(1).map((path, ii) => (
             <BreadcrumbItem key={ii}>
-              <BreadcrumbLink href={`/${paths?.slice(1, ii + 2).join("/")}`}>{path}</BreadcrumbLink>
+              <BreadcrumbLink
+                href={`/${paths?.slice(1, ii + 2).join("/")}`}
+                textColor={ii + 1 == paths?.slice(1).length ? "#009a4c" : "black"}
+              >
+                {path}
+              </BreadcrumbLink>
             </BreadcrumbItem>
-          ) : (
-            <BreadcrumbItem key={ii} fontSize="xl" textColor="#009a4c">
-              <BreadcrumbLink href="">{path}</BreadcrumbLink>
-            </BreadcrumbItem>
-          )
-        )}
+          ))}
       </Breadcrumb>
     </Box>
   )

@@ -1,7 +1,7 @@
 import { createRef, useState } from "react"
 import { BlitzPage, Routes } from "@blitzjs/next"
 import { useRouter } from "next/router"
-import { Box, Button, ButtonGroup, Container, Heading, HStack, Icon } from "@chakra-ui/react"
+import { Box, Button, ButtonGroup, Container, Grid, Heading, HStack, Icon } from "@chakra-ui/react"
 import { FaPlus } from "react-icons/fa"
 import SidebarLayout from "app/core/layouts/SideBarLayout"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
@@ -37,45 +37,30 @@ const CustomersPage: BlitzPage = () => {
       {/*
       <ButtonGroup spacing={0} flexDirection="column">
  */}
-      <Box shadow="md" bg="white">
-        <HStack spacing={10}>
-          <Heading ml={4}>Customers</Heading>
-          <ButtonGroup isAttached alignSelf="start">
-            <Link href={Routes.Dashboard()} passHref>
-              <Button
-                as="a"
-                size="sm"
-                variant="outline"
-                bg="gray.50"
-                borderTopRadius={0}
-                borderBottomRightRadius={0}
-                borderTopWidth={0}
-                leftIcon={<TiArrowBack size={15} />}
-                _hover={{ textColor: "cyan.500" }}
-              >
-                Back to dashboard
-              </Button>
-            </Link>
-            <Button
-              mb={4}
-              size="sm"
-              color="#009a4c"
-              bg="gray.100"
-              variant="outline"
-              leftIcon={<FaPlus />}
-              borderStyle="dashed"
-              borderColor="blackAlpha.400"
-              borderRadius={0}
-              borderTopWidth={0}
-              onClick={() => {
-                setCreatingCustomer(true)
-                setMutationState("New")
-              }}
-            >
-              Create customer
-            </Button>
-          </ButtonGroup>
-        </HStack>
+      <Box shadow="md" bg="white" w="100vw">
+        <Grid templateColumns={`auto 1fr 1fr`}>
+          <Heading justifySelf="center">Customers</Heading>
+          <Button
+            alignSelf="start"
+            justifySelf="end"
+            mb={4}
+            size="sm"
+            color="#009a4c"
+            bg="gray.100"
+            variant="outline"
+            leftIcon={<FaPlus />}
+            borderStyle="dashed"
+            borderColor="blackAlpha.400"
+            borderRadius={0}
+            borderTopWidth={0}
+            onClick={() => {
+              setCreatingCustomer(true)
+              setMutationState("New")
+            }}
+          >
+            Create customer
+          </Button>
+        </Grid>
 
         <TitleDivider>
           <Icon as={GiDiamonds} color="#009a4c" />

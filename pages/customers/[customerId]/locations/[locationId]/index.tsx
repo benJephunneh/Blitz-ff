@@ -1,20 +1,17 @@
-import { BlitzPage, Routes, useParam } from "@blitzjs/next"
+import { BlitzPage, Routes, useParam, useParams } from "@blitzjs/next"
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import { Box, Button, ButtonGroup, Heading, HStack, useColorModeValue } from "@chakra-ui/react"
 import TitleDivider from "app/core/components/TitleDivider"
 import { MutationType } from "app/core/components/types/MutationType"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
-import SidebarLayout from "app/core/layouts/SideBarLayout"
 import getCustomer from "app/customers/queries/getCustomer"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import deleteLocation from "app/locations/mutations/deleteLocation"
 import updateLocation from "app/locations/mutations/updateLocation"
 import getLocation from "app/locations/queries/getLocation"
-import getLocations from "app/locations/queries/getLocations"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useState } from "react"
-import { FcPrevious } from "react-icons/fc"
 import { TiArrowBack } from "react-icons/ti"
 
 // Create transfer-ownership routine and button
@@ -27,6 +24,10 @@ type LocationPageProps = {
 }
 
 const ShowLocationPage: BlitzPage = () => {
+  // const params = Object.assign({}, useParams())
+  // console.log(`params: ${JSON.stringify(params)}`)
+  // const p = processParams(params)
+
   const router = useRouter()
   const locationId = useParam("locationId", "number")
   const [location] = useQuery(getLocation, { where: { id: locationId } })
@@ -98,7 +99,7 @@ const ShowLocationPage: BlitzPage = () => {
 
         <TitleDivider>location</TitleDivider>
 
-        <pre> {JSON.stringify(location, null, 2)}</pre>
+        <pre>location: {JSON.stringify(location, null, 2)}</pre>
         <Button
           mt={10}
           justifySelf="end"
