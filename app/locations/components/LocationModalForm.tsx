@@ -1,20 +1,16 @@
-import { MutateFunction, useMutation, useQuery } from "@blitzjs/rpc"
+import { useMutation, useQuery } from "@blitzjs/rpc"
 import { PromiseReturnType } from "blitz"
 import { FORM_ERROR } from "final-form"
-import { Checkbox, Grid, GridItem, ModalProps } from "@chakra-ui/react"
-import createCustomer from "app/customers/mutations/createCustomer"
+import { Grid, GridItem, HStack, ModalProps, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
-import updateCustomer from "app/customers/mutations/updateCustomer"
-import deleteCustomer from "app/customers/mutations/deleteCustomer"
-import getCustomer from "app/customers/queries/getCustomer"
-import ModalForm from "app/core/components/ModalForm"
-import { CreateCustomer } from "app/customers/validations"
-import LabeledTextField from "app/core/components/LabeledTextField"
+import ModalForm from "app/core/components/forms/ModalForm"
 import createLocation from "../mutations/createLocation"
-import deleteLocation from "../mutations/deleteLocation"
 import updateLocation from "../mutations/updateLocation"
 import getLocation from "../queries/getLocation"
 import { CreateLocation } from "../validations"
+import LabeledTextField from "app/core/components/forms/LabeledTextField"
+import LabeledCheckboxField from "app/core/components/forms/LabeledCheckboxField"
+import { FcButtingIn } from "react-icons/fc"
 
 type Location = PromiseReturnType<typeof createLocation>
 
@@ -41,7 +37,7 @@ const LocationModalForm = ({
   const [editLocationMutation] = useMutation(updateLocation)
   const [location, { isLoading }] = useQuery(
     getLocation,
-    { where: { id: locationId } },
+    { id: locationId },
     { suspense: false, enabled: !!locationId }
   )
 
@@ -139,7 +135,7 @@ const LocationModalForm = ({
           templateAreas={`'house street street street street'
                           'city city state zipcode zipcode'
                           'block lot parcel parcel parcel'
-                          'primary . . . .'`}
+                          'primary primary primary . .'`}
           templateColumns="repeat(5, 1fr)"
           gap={2}
         >
@@ -168,9 +164,13 @@ const LocationModalForm = ({
             <LabeledTextField name="parcel" label="Parcel" />
           </GridItem>
           <GridItem area="primary">
-            <Checkbox name="primary" defaultChecked>
-              Primary address
-            </Checkbox>
+            <HStack>
+              <Tag colorScheme="orange" flexShrink={0}>
+                <TagLeftIcon as={FcButtingIn} />
+                <TagLabel>Make this the primary location?</TagLabel>
+              </Tag>
+              <LabeledCheckboxField name="primary" defaultChecked={true} />
+            </HStack>
           </GridItem>
         </Grid>
       )}

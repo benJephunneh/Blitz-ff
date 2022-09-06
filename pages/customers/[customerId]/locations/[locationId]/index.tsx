@@ -44,33 +44,25 @@ const ShowLocationPage: BlitzPage = () => {
   // const p = processParams(params)
 
   const router = useRouter()
-  const locationId = useParam("locationId", "number")
+  const { customerId, locationId } = useParams("number")
 
   const [editingLocation, setEditingLocation] = useState(false)
 
   const [editLocationMutation] = useMutation(updateLocation)
   const [deleteLocationMutation] = useMutation(deleteLocation)
 
-  const [location] = useQuery(getLocation, { where: { id: locationId } })
-  const [{ id, house, street, city, state, zipcode, block, lot, parcel, primary, customerId }] =
-    useQuery(getLocation, { where: { id: locationId } })
-
-  const [customer] = useQuery(getCustomer, { where: { id: customerId } })
-
-  // const [mutationType, setMutationType] = useState("Edit" as MutationType)
+  const [location] = useQuery(getLocation, { id: locationId })
+  const [customer] = useQuery(getCustomer, { id: customerId })
 
   return (
     <>
       <LocationModalForm
-        customerId={customerId}
+        customerId={customerId!}
         locationId={locationId}
         isOpen={editingLocation}
         onClose={() => setEditingLocation(false)}
-        onSuccess={async (location) => {
+        onSuccess={() => {
           setEditingLocation(false)
-          await router.push(
-            Routes.ShowLocationPage({ customerId: customerId, locationId: location.id })
-          )
         }}
       />
 
@@ -78,15 +70,18 @@ const ShowLocationPage: BlitzPage = () => {
         <VStack w="inherit" borderBottomWidth={1}>
           <Box w="inherit">
             <HStack w="inherit">
+              {/*
               <Menu>
                 <MenuButton as={Button} variant="link" rightIcon={<FcExpand size={10} />}>
-                  <Heading
-                    ml={4}
-                    fontStyle="italic"
-                    textColor={useColorModeValue("#009a4c", "yellow.200")}
-                  >
-                    {customer.firstname} {customer.lastname}
-                  </Heading>
+      */}
+              <Heading
+                ml={4}
+                fontStyle="italic"
+                textColor={useColorModeValue("#009a4c", "yellow.200")}
+              >
+                {customer.firstname} {customer.lastname}
+              </Heading>
+              {/*
                 </MenuButton>
                 <MenuList>
                   <MenuItem
@@ -98,6 +93,7 @@ const ShowLocationPage: BlitzPage = () => {
                   </MenuItem>
                 </MenuList>
               </Menu>
+                  */}
               <Spacer />
               <Button
                 size="sm"
@@ -127,13 +123,13 @@ const ShowLocationPage: BlitzPage = () => {
             justifySelf="right"
             borderTopRightRadius={0}
             borderBottomRadius={0}
-            bg="red"
+            bg="red.500"
             textColor="white"
             size="xs"
             onClick={async () => {
               if (window.confirm("This will be deleted")) {
-                await deleteLocationMutation({ id }).then(() =>
-                  router.push(Routes.ShowCustomerPage({ customerId }))
+                await deleteLocationMutation({ id: locationId! }).then(() =>
+                  router.push(Routes.ShowCustomerPage({ customerId: customerId! }))
                 )
               }
             }}

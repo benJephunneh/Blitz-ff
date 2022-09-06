@@ -29,20 +29,12 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react"
-import getLocations from "app/locations/queries/getLocations"
-import { createRef, useState } from "react"
-import { MutationType } from "app/core/components/types/MutationType"
+import { useState } from "react"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
-import SidebarLayout from "app/core/layouts/SideBarLayout"
-import updateCustomer from "app/customers/mutations/updateCustomer"
-import Link from "next/link"
-import { TiArrowBack, TiEdit } from "react-icons/ti"
-import TitleDivider from "app/core/components/TitleDivider"
-import LocationListItem from "app/locations/components/LocationListItem"
+import { TiEdit } from "react-icons/ti"
 import { FaPlus } from "react-icons/fa"
 import LocationModalForm from "app/locations/components/LocationModalForm"
-import createLocation from "app/locations/mutations/createLocation"
-import { FcEditImage, FcExpand } from "react-icons/fc"
+import { FcExpand } from "react-icons/fc"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 
 const ShowCustomerPage = () => {
@@ -54,7 +46,7 @@ const ShowCustomerPage = () => {
 
   // const [customerMutationState, setCustomerMutationState] = useState("edit" as MutationType)
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
-  const [customer] = useQuery(getCustomer, { where: { id: customerId } })
+  const [customer] = useQuery(getCustomer, { id: customerId })
 
   return (
     <>
@@ -62,12 +54,10 @@ const ShowCustomerPage = () => {
         customerId={customerId}
         isOpen={editingCustomer}
         onClose={() => setEditingCustomer(false)}
-        onSuccess={() => setEditingCustomer(false)}
       />
 
       <LocationModalForm
         customerId={customerId!}
-        mutationType={"New" as MutationType}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
         onSuccess={(location) =>
@@ -78,15 +68,18 @@ const ShowCustomerPage = () => {
       <Flex w="100vw" bg={useColorModeValue("white", "gray.600")}>
         <VStack w="inherit" borderBottomWidth={1}>
           <HStack w="inherit">
+            {/*
             <Menu>
               <MenuButton as={Button} variant="link" rightIcon={<FcExpand size={10} />}>
-                <Heading
-                  ml={4}
-                  fontStyle="italic"
-                  textColor={useColorModeValue("#009a4c", "yellow.200")}
-                >
-                  {customer.firstname} {customer.lastname}
-                </Heading>
+      */}
+            <Heading
+              ml={4}
+              fontStyle="italic"
+              textColor={useColorModeValue("#009a4c", "yellow.200")}
+            >
+              {customer.firstname} {customer.lastname}
+            </Heading>
+            {/*
               </MenuButton>
               <MenuList>
                 <MenuItem
@@ -98,6 +91,7 @@ const ShowCustomerPage = () => {
                 </MenuItem>
               </MenuList>
             </Menu>
+                */}
             <Spacer />
             <ButtonGroup isAttached alignSelf="start">
               <Button
@@ -147,7 +141,7 @@ const ShowCustomerPage = () => {
             justifySelf="right"
             borderTopRightRadius={0}
             borderBottomRadius={0}
-            bg="red"
+            bg="red.500"
             textColor="white"
             size="xs"
             onClick={async () => {

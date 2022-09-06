@@ -4,16 +4,17 @@ import db, { Prisma } from "db"
 import { z } from "zod"
 
 const GetLocation = z.object({
+  id: z.number(),
   // This accepts type of undefined, but is required at runtime
-  customerId: z.number().optional().refine(Boolean, "Required"),
-  primary: z.boolean().optional(),
+  // customerId: z.number().optional().refine(Boolean, "Required"),
+  // primary: z.boolean().optional(),
 })
 
 interface GetCustomersInput extends Pick<Prisma.CustomerFindFirstArgs, "where"> {}
 
-export default resolver.pipe(resolver.authorize(), async ({ where }: GetCustomersInput) => {
+export default resolver.pipe(resolver.authorize(), resolver.zod(GetLocation), async ({ id }) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const location = await db.location.findFirst({ where })
+  const location = await db.location.findFirst({ where: { id } })
 
   if (!location) throw new NotFoundError()
 

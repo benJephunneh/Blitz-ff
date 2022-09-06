@@ -56,7 +56,7 @@ const CustomersPage: BlitzPage = () => {
                 mb={4}
                 size="sm"
                 variant="outline"
-                leftIcon={<FaPlus />}
+                leftIcon={<FaPlus size={10} />}
                 color={useColorModeValue("#009a4c", "yellow.200")}
                 bg={useColorModeValue("cyan.50", "gray.500")}
                 borderStyle="dashed"

@@ -35,7 +35,7 @@ const Header = () => {
   const [showBreadcrumbs, setShowBreadcrumbs] = useState(false)
 
   useEffect(() => {
-    if (pathname != "/dashboard") {
+    if (pathname != "/dashboard" && pathname != "/") {
       console.log(`if pathname: ${pathname}`)
       // const paths = pathname.split('/')
       // if (paths.length > 1) {

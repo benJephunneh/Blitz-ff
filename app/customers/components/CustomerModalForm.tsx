@@ -1,16 +1,14 @@
-import { MutateFunction, useMutation, useQuery } from "@blitzjs/rpc"
-import ModalForm from "app/core/components/ModalForm"
+import { useMutation, useQuery } from "@blitzjs/rpc"
+import ModalForm from "app/core/components/forms/ModalForm"
 import { PromiseReturnType } from "blitz"
 import { FORM_ERROR } from "final-form"
-import { type } from "os"
 import createCustomer from "../mutations/createCustomer"
-import deleteCustomer from "../mutations/deleteCustomer"
 import updateCustomer from "../mutations/updateCustomer"
 import getCustomer from "../queries/getCustomer"
-import { CreateCustomer, firstname } from "../validations"
-import { Center, Grid, GridItem, Modal, ModalProps, Spinner } from "@chakra-ui/react"
-import LabeledTextField from "app/core/components/LabeledTextField"
+import { CreateCustomer } from "../validations"
+import { Center, ModalProps, Spinner } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
+import LabeledTextField from "app/core/components/forms/LabeledTextField"
 
 type CustomerModalFormProps = {
   isOpen: boolean
@@ -37,9 +35,12 @@ const CustomerModalForm = ({
 
   const [customer, { isLoading }] = useQuery(
     getCustomer,
-    { where: { id: customerId } },
+    { id: customerId },
     { suspense: false, enabled: !!customerId }
   )
+  console.log(`customerId: ${customerId}`)
+  console.log(`isLoading: ${isLoading}`)
+  console.log(`customer.id: ${customer?.id}`)
 
   // let mutation: MutateFunction<Customer, unknown, {}, unknown>
   // let { id, firstname, lastname } = {} as Customer
@@ -94,16 +95,8 @@ const CustomerModalForm = ({
       }}
       render={() => (
         <>
-          {isLoading ? (
-            <Center p={3}>
-              <Spinner />
-            </Center>
-          ) : (
-            <>
-              <LabeledTextField name="firstname" label="First name" />
-              <LabeledTextField name="lastname" label="Last name" />
-            </>
-          )}
+          <LabeledTextField name="firstname" label="First name" />
+          <LabeledTextField name="lastname" label="Last name" />
         </>
       )}
       {...props}

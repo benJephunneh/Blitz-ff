@@ -1,11 +1,11 @@
 import { AuthenticationError, PromiseReturnType } from "blitz"
 import Link from "next/link"
-import { LabeledTextField } from "app/core/components/LabeledTextField"
-import { Form, FORM_ERROR } from "app/core/components/Form"
+import { Form, FORM_ERROR } from "app/core/components/forms/Form"
 import login from "app/auth/mutations/login"
 import { Login } from "app/auth/validations"
 import { useMutation } from "@blitzjs/rpc"
 import { Routes } from "@blitzjs/next"
+import LabeledTextField from "app/core/components/forms/LabeledTextField"
 
 type LoginFormProps = {
   onSuccess?: (user: PromiseReturnType<typeof login>) => void

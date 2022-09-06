@@ -1,17 +1,13 @@
-import { Routes } from "@blitzjs/next"
 import { useMutation } from "@blitzjs/rpc"
-import { Customer } from "@prisma/client"
-import { Form, FormProps } from "app/core/components/Form"
-import { LabeledTextField } from "app/core/components/LabeledTextField"
-import ModalForm from "app/core/components/ModalForm"
+import LabeledTextField from "app/core/components/forms/LabeledTextField"
+import ModalForm from "app/core/components/forms/ModalForm"
 import { PromiseReturnType } from "blitz"
 import { useRouter } from "next/router"
 import React from "react"
 import { FC } from "react"
 import createCustomer from "../mutations/createCustomer"
-import updateCustomer from "../mutations/updateCustomer"
 import { CreateCustomer } from "../validations"
-export { FORM_ERROR } from "app/core/components/Form"
+export { FORM_ERROR } from "app/core/components/forms/Form"
 
 type CustomerModalFormProps = {
   isOpen: boolean
