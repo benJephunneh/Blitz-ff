@@ -21,6 +21,20 @@ export default resolver.pipe(
         customerId,
       },
     })
+    await db.locationArchive.update({
+      where: { id },
+      data: {
+        house,
+        street,
+        city,
+        state,
+        zipcode,
+        block,
+        lot,
+        parcel,
+        customerId,
+      },
+    })
 
     return location
   }

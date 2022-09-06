@@ -21,6 +21,20 @@ export default resolver.pipe(
         customerId,
       },
     })
+    await db.locationArchive.create({
+      data: {
+        primary,
+        house,
+        street,
+        city,
+        state,
+        zipcode,
+        block,
+        lot,
+        parcel,
+        customerId,
+      },
+    })
 
     return location
   }
