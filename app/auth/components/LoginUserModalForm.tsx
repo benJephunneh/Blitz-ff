@@ -1,26 +1,11 @@
 import { useMutation } from "@blitzjs/rpc"
-import {
-  Center,
-  HStack,
-  ModalProps,
-  Spinner,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  Text,
-} from "@chakra-ui/react"
-import LabeledTextField from "app/core/components/LabeledTextField"
-import ModalForm, { FORM_ERROR } from "app/core/components/ModalForm"
+import ModalForm, { FORM_ERROR } from "app/core/components/forms/ModalForm"
 import { PromiseReturnType } from "blitz"
 import { FC } from "react"
-import signup from "../mutations/signup"
-import { Login, Signup } from "../validations"
-import { FaLock } from "react-icons/fa"
-import LabeledSelectField from "app/core/components/LabeledSelectField"
+import { Login } from "../validations"
 import login from "../mutations/login"
-import { FormComponent } from "app/core/components/FormComponent"
 import { useRouter } from "next/router"
-import { Routes } from "@blitzjs/next"
+import LabeledTextField from "app/core/components/forms/LabeledTextField"
 
 type LoginUserModalFormProps = {
   isOpen: boolean

@@ -1,12 +1,12 @@
 import Layout from "app/core/layouts/Layout"
-import { LabeledTextField } from "app/core/components/LabeledTextField"
-import { Form, FORM_ERROR } from "app/core/components/Form"
+import { Form, FORM_ERROR } from "app/core/components/forms/Form"
 import { ResetPassword } from "app/auth/validations"
 import resetPassword from "app/auth/mutations/resetPassword"
 import { BlitzPage, Routes } from "@blitzjs/next"
 import { useRouter } from "next/router"
 import { useMutation } from "@blitzjs/rpc"
 import Link from "next/link"
+import LabeledTextField from "app/core/components/forms/LabeledTextField"
 
 const ResetPasswordPage: BlitzPage = () => {
   const router = useRouter()

@@ -5,7 +5,7 @@ import { Routes } from "@blitzjs/next"
 import { RouteUrlObject } from "blitz"
 import { Box, Heading, HStack, Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import { IconType } from "react-icons"
-import { FcHome } from "react-icons/fc"
+import { FcContacts, FcHome } from "react-icons/fc"
 import { useState } from "react"
 
 type NavigationItemProps = {
@@ -90,6 +90,9 @@ const Navigation = () => {
         <NavigationSection title="Apalachee">
           <NavigationItem route={Routes.Dashboard()} icon={FcHome}>
             Home
+          </NavigationItem>
+          <NavigationItem route={Routes.CustomersPage()} icon={FcContacts}>
+            Customers
           </NavigationItem>
         </NavigationSection>
       </Stack>

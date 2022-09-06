@@ -1,12 +1,5 @@
-import { ReactNode, PropsWithoutRef } from "react"
-import {
-  Form as FinalForm,
-  FormProps as FinalFormProps,
-  FormProps,
-  FormRenderProps,
-} from "react-final-form"
-import { TypeOf, z } from "zod"
-import { PromiseReturnType, validateZodSchema } from "blitz"
+import { Form as FinalForm } from "react-final-form"
+import { validateZodSchema } from "blitz"
 import {
   Alert,
   AlertIcon,
@@ -23,11 +16,8 @@ import {
   ModalProps,
   Stack,
   UnorderedList,
-  useDisclosure,
 } from "@chakra-ui/react"
 import { FormComponent } from "./FormComponent"
-import login from "app/auth/mutations/login"
-import signup from "app/auth/mutations/signup"
 export { FORM_ERROR } from "final-form"
 
 type ModalFormProps = {
@@ -60,7 +50,7 @@ const ModalForm: FormComponent<ModalFormProps> = ({
   ...props
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside" isCentered>
+    <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside">
       <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px)" />
       <FinalForm
         initialValues={initialValues}
@@ -70,6 +60,7 @@ const ModalForm: FormComponent<ModalFormProps> = ({
           <form onSubmit={form.handleSubmit} {...props}>
             <ModalContent>
               <ModalHeader>{title}</ModalHeader>
+              <ModalCloseButton />
               <ModalBody>
                 {form.submitError && (
                   <Alert status="error" mb={6}>

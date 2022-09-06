@@ -1,26 +1,12 @@
 import { useMutation } from "@blitzjs/rpc"
-import {
-  Center,
-  HStack,
-  ModalProps,
-  Spinner,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  Text,
-} from "@chakra-ui/react"
-import LabeledTextField from "app/core/components/LabeledTextField"
-import ModalForm, { FORM_ERROR } from "app/core/components/ModalForm"
+import ModalForm, { FORM_ERROR } from "app/core/components/forms/ModalForm"
 import { PromiseReturnType } from "blitz"
-import { FC, ReactNode } from "react"
+import { FC } from "react"
 import signup from "../mutations/signup"
 import { Signup } from "../validations"
-import { FaLock } from "react-icons/fa"
-import LabeledSelectField from "app/core/components/LabeledSelectField"
-import { PropsWithoutRef } from "react"
-import { FormComponent } from "app/core/components/FormComponent"
 import { useRouter } from "next/router"
-import { Routes } from "@blitzjs/next"
+import LabeledTextField from "app/core/components/forms/LabeledTextField"
+import LabeledSelectField from "app/core/components/forms/LabeledSelectField"
 
 type NewUserModalFormProps = {
   isOpen: boolean
@@ -55,11 +41,10 @@ const NewUserModalForm: FC<NewUserModalFormProps> = ({ isOpen, onClose, onSucces
       title="Create new user"
       submitText="Create"
       initialValues={{ username: "", email: "", password: "", role: "Admin" }}
-      onSubmit={(values) => {
+      onSubmit={async (values) => {
         onSubmit(values)
           .then((user) => onSuccess?.(user!))
           .then(() => onClose())
-          // .then((user) => router.push(Routes.ProfilePage({ username: user!.username })))
           .catch((error) => handleError(error))
       }}
       render={() => (

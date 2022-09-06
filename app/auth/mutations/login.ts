@@ -5,6 +5,8 @@ import db from "db"
 import { Role } from "types"
 import { Login } from "../validations"
 
+const SESSION_EXPIRATION_IN_HOURS = 4
+
 export const authenticateUser = async (rawUsername: string, rawPassword: string) => {
   const { username, password } = Login.parse({ username: rawUsername, password: rawPassword })
   const user = await db.user.findFirst({ where: { username } })
@@ -25,6 +27,8 @@ export const authenticateUser = async (rawUsername: string, rawPassword: string)
 export default resolver.pipe(resolver.zod(Login), async ({ username, password }, ctx) => {
   // This throws an error if credentials are invalid
   const user = await authenticateUser(username, password)
+  const expiresAt = new Date()
+  expiresAt.setHours(expiresAt.getHours() + SESSION_EXPIRATION_IN_HOURS)
 
   await ctx.session.$create({ userId: user.id, role: user.role as Role })
 
