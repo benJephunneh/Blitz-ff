@@ -118,7 +118,7 @@ const LocationModalForm = ({
       submitText={locationId ? "Update" : "Create"}
       initialValues={{
         primary: !!location?.primary,
-        house: location?.house ?? "", // This needs to be changed to "?? null," to match updated schema, after migration.
+        house: location?.house ?? null,
         street: location?.street ?? "",
         city: location?.city ?? "",
         state: location?.state ?? "",

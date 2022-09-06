@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 export const primary = z.boolean()
-export const house = z.string() // This needs to be amended with .nullable() to match updated schema, after migration
+export const house = z.string().nullable()
 export const street = z.string()
 export const city = z.string()
 export const state = z.string()
