@@ -28,7 +28,8 @@ const HeaderCrumbs = () => {
 
   // Could go off of /customers/... in path to infer useQuery(getCustomer ...)
 
-  let textColor = paths?.slice(1).length == 1 ? "#009a4c" : "black"
+  const textColorMode = useColorModeValue("#009a4c", "yellow.200")
+  // const textColor = paths?.slice(1).length == 1 ? textColorMode : 'blue'
 
   return (
     <Box
@@ -47,7 +48,8 @@ const HeaderCrumbs = () => {
             <BreadcrumbItem key={ii}>
               <BreadcrumbLink
                 href={`/${paths?.slice(1, ii + 2).join("/")}`}
-                textColor={ii + 1 == paths?.slice(1).length ? "#009a4c" : "black"}
+                textColor={ii + 1 == paths?.slice(1).length ? textColorMode : "initial"}
+                fontSize={ii + 1 == paths?.slice(1).length ? "xl" : "md"}
               >
                 {path}
               </BreadcrumbLink>

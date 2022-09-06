@@ -55,7 +55,7 @@ const NewUserModalForm: FC<NewUserModalFormProps> = ({ isOpen, onClose, onSucces
       title="Create new user"
       submitText="Create"
       initialValues={{ username: "", email: "", password: "", role: "Admin" }}
-      onSubmit={(values) => {
+      onSubmit={async (values) => {
         onSubmit(values)
           .then((user) => onSuccess?.(user!))
           .then(() => onClose())

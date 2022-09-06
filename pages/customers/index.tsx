@@ -1,7 +1,21 @@
 import { createRef, useState } from "react"
 import { BlitzPage, Routes } from "@blitzjs/next"
 import { useRouter } from "next/router"
-import { Box, Button, ButtonGroup, Container, Grid, Heading, HStack, Icon } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Container,
+  Divider,
+  Flex,
+  Grid,
+  Heading,
+  HStack,
+  Icon,
+  Spacer,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import { FaPlus } from "react-icons/fa"
 import SidebarLayout from "app/core/layouts/SideBarLayout"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
@@ -16,63 +30,60 @@ import HeaderLayout from "app/core/layouts/HeaderLayout"
 const CustomersPage: BlitzPage = () => {
   const router = useRouter()
   const [creatingCustomer, setCreatingCustomer] = useState(false)
-  const [mutationState, setMutationState] = useState("edit" as MutationType)
+  // const [mutationState, setMutationState] = useState("edit" as MutationType)
   const ref = createRef()
 
   return (
     <>
       <CustomerModalForm
-        mutationType={mutationState}
         isOpen={creatingCustomer}
-        onClose={() => {
-          setCreatingCustomer(false)
-        }}
-        onSuccess={async (_customer) => {
-          setCreatingCustomer(false)
-          const next = router.query.next ? decodeURIComponent(router.query.next as string) : "/"
-          await router.push(Routes.ShowCustomerPage({ customerId: _customer.id }))
-        }}
+        onClose={() => setCreatingCustomer(false)}
+        onSuccess={(customer) => router.push(Routes.ShowCustomerPage({ customerId: customer.id }))}
       />
 
       {/*
       <ButtonGroup spacing={0} flexDirection="column">
  */}
-      <Box shadow="md" bg="white" w="100vw">
-        <Grid templateColumns={`auto 1fr 1fr`}>
-          <Heading justifySelf="center">Customers</Heading>
-          <Button
-            alignSelf="start"
-            justifySelf="end"
-            mb={4}
-            size="sm"
-            color="#009a4c"
-            bg="gray.100"
-            variant="outline"
-            leftIcon={<FaPlus />}
-            borderStyle="dashed"
-            borderColor="blackAlpha.400"
-            borderRadius={0}
-            borderTopWidth={0}
-            onClick={() => {
-              setCreatingCustomer(true)
-              setMutationState("New")
-            }}
-          >
-            Create customer
-          </Button>
-        </Grid>
+      <Flex shadow="md" bg={useColorModeValue("white", "gray.600")}>
+        <VStack>
+          <HStack w="100vw">
+            <Heading ml={4} textColor={useColorModeValue("#009a4c", "yellow.200")}>
+              Customers
+            </Heading>
+            <Spacer />
+            <Box>
+              <Button
+                mb={4}
+                size="sm"
+                variant="outline"
+                leftIcon={<FaPlus />}
+                color={useColorModeValue("#009a4c", "yellow.200")}
+                bg={useColorModeValue("cyan.50", "gray.500")}
+                borderStyle="dashed"
+                borderColor={useColorModeValue("blackAlpha.400", "gray.400")}
+                borderRadius={0}
+                borderBottomLeftRadius={8}
+                borderTopWidth={0}
+                borderRightWidth={0}
+                alignSelf="start"
+                justifySelf="end"
+                onClick={() => {
+                  setCreatingCustomer(true)
+                }}
+              >
+                Create customer
+              </Button>
+            </Box>
+          </HStack>
 
-        <TitleDivider>
-          <Icon as={GiDiamonds} color="#009a4c" />
-        </TitleDivider>
-
-        <Container borderRadius={8} mx={0} px={0}>
-          <CustomerList />
-        </Container>
-        {/*
+          <Container w="90vw" justifyContent="center">
+            <CustomerList />
+          </Container>
+          {/*
       </ButtonGroup>
  */}
-      </Box>
+        </VStack>
+      </Flex>
     </>
   )
 }

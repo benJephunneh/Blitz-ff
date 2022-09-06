@@ -24,8 +24,8 @@ type LocationModalFormProps = {
   onSuccess?: (location: Location) => void
   customerId: number
   locationId?: number
-  mutationType: MutationType
-  size?: ModalProps["size"]
+  mutationType?: MutationType
+  props?: Partial<ModalProps>
 }
 
 const LocationModalForm = ({
@@ -35,66 +35,72 @@ const LocationModalForm = ({
   customerId,
   locationId,
   mutationType = "New",
-  size = "xl",
+  ...props
 }: LocationModalFormProps) => {
   const [newLocationMutation] = useMutation(createLocation)
   const [editLocationMutation] = useMutation(updateLocation)
-  const [location] = useQuery(getLocation, { where: { id: locationId } })
+  const [location, { isLoading }] = useQuery(
+    getLocation,
+    { where: { id: locationId } },
+    { suspense: false, enabled: !!locationId }
+  )
 
-  let mutation: MutateFunction<Location, unknown, {}, unknown>
-  let { id, house, street, city, state, zipcode, block, lot, parcel, primary } = {} as Location
-  switch (mutationType) {
-    case "New":
-      house = ""
-      street = ""
-      city = ""
-      state = "FL"
-      zipcode = ""
-      primary = true
-      mutation = newLocationMutation
-      break
-    case "Edit":
-      id = locationId!
-      house = location.house
-      street = location.street
-      city = location.city
-      state = location.state
-      zipcode = location.zipcode
-      block = location.block
-      lot = location.lot
-      parcel = location.parcel
-      primary = location.primary
-      mutation = editLocationMutation
-      break
-    default:
-      house = ""
-      street = ""
-      city = ""
-      state = "FL"
-      zipcode = ""
-      primary = true
-      mutation = newLocationMutation
-      break
-  }
-  const initialValues = {
-    id,
-    house,
-    street,
-    city,
-    state,
-    zipcode,
-    block,
-    lot,
-    parcel,
-    primary,
-    customerId,
-  }
+  // let mutation: MutateFunction<Location, unknown, {}, unknown>
+  // let { id, house, street, city, state, zipcode, block, lot, parcel, primary } = {} as Location
+  // switch (mutationType) {
+  //   case "New":
+  //     house = ""
+  //     street = ""
+  //     city = ""
+  //     state = "FL"
+  //     zipcode = ""
+  //     primary = true
+  //     mutation = newLocationMutation
+  //     break
+  //   case "Edit":
+  //     id = locationId!
+  //     house = location.house
+  //     street = location.street
+  //     city = location.city
+  //     state = location.state
+  //     zipcode = location.zipcode
+  //     block = location.block
+  //     lot = location.lot
+  //     parcel = location.parcel
+  //     primary = location.primary
+  //     mutation = editLocationMutation
+  //     break
+  //   default:
+  //     house = ""
+  //     street = ""
+  //     city = ""
+  //     state = "FL"
+  //     zipcode = ""
+  //     primary = true
+  //     mutation = newLocationMutation
+  //     break
+  // }
+  // const initialValues = {
+  //   id,
+  //   house,
+  //   street,
+  //   city,
+  //   state,
+  //   zipcode,
+  //   block,
+  //   lot,
+  //   parcel,
+  //   primary,
+  //   customerId,
+  // }
 
   const onSubmit = async (values) => {
-    await new Promise((resolve) => {
-      resolve(mutation(values))
-    })
+    if (location) {
+      return editLocationMutation({ id: location.id, ...values })
+    }
+    return newLocationMutation(values)
   }
+
   const handleError = async (error) => {
     console.log(`Error doing something with location modal: ${error.toString()}`)
     return {
@@ -104,23 +110,34 @@ const LocationModalForm = ({
 
   return (
     <ModalForm
+      size="xl"
       isOpen={isOpen}
       onClose={onClose}
-      size={size}
       schema={CreateLocation}
-      title={`${mutationType} location`}
-      submitText="Submit"
-      initialValues={initialValues}
+      title={locationId ? "Edit location" : "New location"}
+      submitText={locationId ? "Update" : "Create"}
+      initialValues={{
+        primary: !!location?.primary,
+        house: location?.house ?? "", // This needs to be changed to "?? null," to match updated schema, after migration.
+        street: location?.street ?? "",
+        city: location?.city ?? "",
+        state: location?.state ?? "",
+        zipcode: location?.zipcode ?? "",
+        block: location?.block ?? null,
+        lot: location?.lot ?? null,
+        parcel: location?.parcel ?? null,
+        customerId,
+      }}
       onSubmit={(values) => {
         onSubmit(values)
-          .then((_location) => onSuccess?.(_location!))
+          .then((location) => onSuccess?.(location!))
           .then(() => onClose())
           .catch((error) => handleError(error))
       }}
       render={() => (
         <Grid
           templateAreas={`'house street street street street'
-                          'city city state zipcode .'
+                          'city city state zipcode zipcode'
                           'block lot parcel parcel parcel'
                           'primary . . . .'`}
           templateColumns="repeat(5, 1fr)"
@@ -157,6 +174,7 @@ const LocationModalForm = ({
           </GridItem>
         </Grid>
       )}
+      {...props}
     />
   )
 }

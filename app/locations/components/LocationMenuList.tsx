@@ -8,7 +8,6 @@ import {
   ChakraComponent,
   Button,
   ButtonGroup,
-  Grid as List,
   Menu,
   MenuButton,
   MenuList,

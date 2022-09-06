@@ -8,17 +8,18 @@ import deleteCustomer from "../mutations/deleteCustomer"
 import updateCustomer from "../mutations/updateCustomer"
 import getCustomer from "../queries/getCustomer"
 import { CreateCustomer, firstname } from "../validations"
-import { Grid, GridItem, Modal, ModalProps } from "@chakra-ui/react"
+import { Center, Grid, GridItem, Modal, ModalProps, Spinner } from "@chakra-ui/react"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import { MutationType } from "app/core/components/types/MutationType"
 
 type CustomerModalFormProps = {
   isOpen: boolean
   onClose: () => void
-  onSuccess?: (customer: PromiseReturnType<typeof createCustomer>) => void
+  onSuccess?: (customer: PromiseReturnType<typeof createCustomer | typeof updateCustomer>) => void
+  // onSuccess?: (customer: Customer) => void
   customerId?: number
-  mutationType: MutationType
-  size?: ModalProps["size"]
+  mutationType?: MutationType
+  props?: Partial<ModalProps>
 }
 
 type Customer = PromiseReturnType<typeof createCustomer>
@@ -29,38 +30,45 @@ const CustomerModalForm = ({
   onSuccess,
   customerId,
   mutationType = "New",
-  size,
+  ...props
 }: CustomerModalFormProps) => {
   const [newCustomerMutation] = useMutation(createCustomer)
   const [editCustomerMutation] = useMutation(updateCustomer)
-  const [customer] = useQuery(getCustomer, { where: { id: customerId } })
 
-  let mutation: MutateFunction<Customer, unknown, {}, unknown>
-  let { id, firstname, lastname } = {} as Customer
-  switch (mutationType) {
-    case "New":
-      mutation = newCustomerMutation
-      break
-    case "Edit":
-      id = customerId!
-      firstname = customer!.firstname
-      lastname = customer!.lastname
-      mutation = editCustomerMutation
-      break
-    default:
-      break
-  }
-  const initialValues = {
-    id,
-    firstname,
-    lastname,
-  }
+  const [customer, { isLoading }] = useQuery(
+    getCustomer,
+    { where: { id: customerId } },
+    { suspense: false, enabled: !!customerId }
+  )
+
+  // let mutation: MutateFunction<Customer, unknown, {}, unknown>
+  // let { id, firstname, lastname } = {} as Customer
+  // switch (mutationType) {
+  //   case "New":
+  //     mutation = newCustomerMutation
+  //     break
+  //   case "Edit":
+  //     id = customerId!
+  //     firstname = customer!.firstname
+  //     lastname = customer!.lastname
+  //     mutation = editCustomerMutation
+  //     break
+  //   default:
+  //     break
+  // }
+  // const initialValues = {
+  //   id,
+  //   firstname,
+  //   lastname,
+  // }
 
   const onSubmit = async (values) => {
-    await new Promise((resolve) => {
-      resolve(mutation(values))
-    })
+    if (customer) {
+      return editCustomerMutation({ id: customer.id, ...values })
+    }
+    return newCustomerMutation(values)
   }
+
   const handleError = (error) => {
     console.log(`Error doing something with customer modal: ${error.toString()}`)
     return {
@@ -72,23 +80,33 @@ const CustomerModalForm = ({
     <ModalForm
       isOpen={isOpen}
       onClose={onClose}
-      size={size}
       schema={CreateCustomer}
-      title={`${mutationType} customer`}
-      submitText="Submit"
-      initialValues={initialValues}
+      title={customerId ? "Edit customer" : "New customer"}
+      submitText={customerId ? "Update" : "Create"}
+      initialValues={{
+        firstname: customer?.firstname ?? "",
+        lastname: customer?.lastname ?? "",
+      }}
       onSubmit={(values) => {
         onSubmit(values)
-          .then((_customer) => onSuccess?.(_customer!))
-          .then(() => onClose())
+          .then((customer) => onSuccess?.(customer))
           .catch((error) => handleError(error))
       }}
       render={() => (
         <>
-          <LabeledTextField name="firstname" label="First name" />
-          <LabeledTextField name="lastname" label="Last name" />
+          {isLoading ? (
+            <Center p={3}>
+              <Spinner />
+            </Center>
+          ) : (
+            <>
+              <LabeledTextField name="firstname" label="First name" />
+              <LabeledTextField name="lastname" label="Last name" />
+            </>
+          )}
         </>
       )}
+      {...props}
     />
   )
 }

@@ -79,7 +79,7 @@ model Location {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   primary Boolean @default(true)
-  house      String
+  house      String?
   street     String
   city       String
   state      String   @default("FL")

@@ -23,7 +23,9 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Spacer,
   Text,
+  useColorModeValue,
   useToast,
   VStack,
 } from "@chakra-ui/react"
@@ -34,40 +36,33 @@ import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import SidebarLayout from "app/core/layouts/SideBarLayout"
 import updateCustomer from "app/customers/mutations/updateCustomer"
 import Link from "next/link"
-import { TiArrowBack } from "react-icons/ti"
+import { TiArrowBack, TiEdit } from "react-icons/ti"
 import TitleDivider from "app/core/components/TitleDivider"
 import LocationListItem from "app/locations/components/LocationListItem"
 import { FaPlus } from "react-icons/fa"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import createLocation from "app/locations/mutations/createLocation"
-import { FcExpand } from "react-icons/fc"
+import { FcEditImage, FcExpand } from "react-icons/fc"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 
 const ShowCustomerPage = () => {
   const router = useRouter()
-
   const customerId = useParam("customerId", "number")
-  const [editingCustomer, setEditingCustomer] = useState(false)
-  const [customerMutationState, setCustomerMutationState] = useState("edit" as MutationType)
-  const [customer] = useQuery(getCustomer, { where: { id: customerId } })
-  // const [editCustomerMutation] = useMutation(updateCustomer)
-  const [deleteCustomerMutation] = useMutation(deleteCustomer)
 
   const [creatingLocation, setCreatingLocation] = useState(false)
-  // const [{ locations }] = useQuery(getLocations, { where: { customerId } })
-  // const [createLocationMutation] = useMutation(createLocation)
-  const ref = createRef()
+  const [editingCustomer, setEditingCustomer] = useState(false)
+
+  // const [customerMutationState, setCustomerMutationState] = useState("edit" as MutationType)
+  const [deleteCustomerMutation] = useMutation(deleteCustomer)
+  const [customer] = useQuery(getCustomer, { where: { id: customerId } })
 
   return (
     <>
       <CustomerModalForm
         customerId={customerId}
-        mutationType={customerMutationState}
         isOpen={editingCustomer}
         onClose={() => setEditingCustomer(false)}
-        onSuccess={async () => {
-          setEditingCustomer(false)
-        }}
+        onSuccess={() => setEditingCustomer(false)}
       />
 
       <LocationModalForm
@@ -75,71 +70,68 @@ const ShowCustomerPage = () => {
         mutationType={"New" as MutationType}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
-        onSuccess={async (_location) => {
-          setCreatingLocation(false)
-          await router.push(
-            Routes.ShowLocationPage({ customerId: customerId!, locationId: _location.id })
-          )
-        }}
+        onSuccess={(location) =>
+          router.push(Routes.ShowLocationPage({ customerId: customerId!, locationId: location.id }))
+        }
       />
 
-      <Flex shadow="md" bg="white">
-        <VStack spacing={4}>
-          <HStack spacing={10}>
+      <Flex w="100vw" bg={useColorModeValue("white", "gray.600")}>
+        <VStack w="inherit" borderBottomWidth={1}>
+          <HStack w="inherit">
             <Menu>
-              <MenuButton
-                as={Button}
-                ml={0}
-                pl={0}
-                fontSize="xl"
-                fontWeight="black"
-                fontStyle="italic"
-                textColor="#009a4c"
-                variant="link"
-                rightIcon={<FcExpand size={10} />}
-              >
-                {customer.firstname} {customer.lastname}
+              <MenuButton as={Button} variant="link" rightIcon={<FcExpand size={10} />}>
+                <Heading
+                  ml={4}
+                  fontStyle="italic"
+                  textColor={useColorModeValue("#009a4c", "yellow.200")}
+                >
+                  {customer.firstname} {customer.lastname}
+                </Heading>
               </MenuButton>
               <MenuList>
                 <MenuItem
                   onClick={() => {
                     setEditingCustomer(true)
-                    setCustomerMutationState("Edit")
                   }}
                 >
                   Edit customer
                 </MenuItem>
               </MenuList>
             </Menu>
+            <Spacer />
             <ButtonGroup isAttached alignSelf="start">
               <Button
                 size="sm"
-                borderRadius={0}
-                bg="gray.100"
-                textColor="#009a4c"
                 variant="outline"
+                leftIcon={<TiEdit />}
+                color={useColorModeValue("#009a4c", "yellow.200")}
+                bg="transparent"
+                borderColor={useColorModeValue("blackAlpha.100", "gray.500")}
+                borderRadius={0}
+                borderBottomLeftRadius={8}
                 borderTopWidth={0}
+                alignSelf="start"
                 onClick={() => {
                   setEditingCustomer(true)
-                  setCustomerMutationState("Edit")
                 }}
               >
                 Edit customer
               </Button>
               <Button
-                mb={4}
                 size="sm"
-                color="#009a4c"
-                bg="gray.200"
                 variant="outline"
-                leftIcon={<FaPlus />}
+                leftIcon={<FaPlus size={10} />}
+                color={useColorModeValue("#009a4c", "yellow.200")}
+                bg={useColorModeValue("cyan.50", "#009a4c")}
                 borderStyle="dashed"
-                borderColor="blackAlpha.400"
+                borderColor={useColorModeValue("blackAlpha.400", "gray.400")}
                 borderRadius={0}
                 borderTopWidth={0}
+                borderRightWidth={0}
+                alignSelf="start"
+                justifySelf="end"
                 onClick={() => {
                   setCreatingLocation(true)
-                  setCustomerMutationState("New")
                 }}
               >
                 Create location
@@ -147,16 +139,13 @@ const ShowCustomerPage = () => {
             </ButtonGroup>
           </HStack>
 
-          <TitleDivider mb={4}>Locations</TitleDivider>
-
-          <Container borderRadius={8} mx={0} px={0}>
+          <Container w="90vw" justifyContent="center">
             <LocationList customerId={customerId!} />
           </Container>
-
           <Button
-            mt={10}
-            justifySelf="end"
-            borderTopLeftRadius={0}
+            alignSelf="flex-end"
+            justifySelf="right"
+            borderTopRightRadius={0}
             borderBottomRadius={0}
             bg="red"
             textColor="white"
