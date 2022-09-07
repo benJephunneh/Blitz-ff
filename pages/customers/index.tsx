@@ -30,7 +30,7 @@ import HeaderLayout from "app/core/layouts/HeaderLayout"
 const CustomersPage: BlitzPage = () => {
   const router = useRouter()
   const [creatingCustomer, setCreatingCustomer] = useState(false)
-  // const [mutationState, setMutationState] = useState("edit" as MutationType)
+  // const [mutationState, setMutationState] = useState<MutationType>("edit")
   const ref = createRef()
 
   return (
