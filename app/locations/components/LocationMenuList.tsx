@@ -70,7 +70,7 @@ export const LocationEntry = ({ location }: LocationProp) => {
 const LocationMenuList = ({ customerId }: { customerId: number }) => {
   const router = useRouter()
   const [creatingLocation, setCreatingLocation] = useState(false)
-  const [mutationState, setMutationState] = useState("new" as MutationType)
+  const [mutationState, setMutationState] = useState<MutationType>("New")
   const [{ locations, count }] = useQuery(getLocations, {
     where: { customerId },
     orderBy: [

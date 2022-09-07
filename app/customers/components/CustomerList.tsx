@@ -60,7 +60,7 @@ type SortOrder = "asc" | "desc"
 const CustomersList = () => {
   const router = useRouter()
   // const [hovered, setHovered] = useState(false)
-  const [sortMethod, setSortMethod] = useState("asc" as SortOrder)
+  const [sortMethod, setSortMethod] = useState<SortOrder>("asc")
   const hovered = useColorModeValue("gray.50", "gray.500")
   const [customerSelection, setCustomerSelection] = useState(0)
   const page = Number(router.query.page) || 0

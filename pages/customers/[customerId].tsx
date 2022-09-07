@@ -44,7 +44,7 @@ const ShowCustomerPage = () => {
   const [creatingLocation, setCreatingLocation] = useState(false)
   const [editingCustomer, setEditingCustomer] = useState(false)
 
-  // const [customerMutationState, setCustomerMutationState] = useState("edit" as MutationType)
+  // const [customerMutationState, setCustomerMutationState] = useState<MutationType>("edit")
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
   const [customer] = useQuery(getCustomer, { id: customerId })
 

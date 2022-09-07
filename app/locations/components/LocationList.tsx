@@ -97,7 +97,7 @@ const LocationList = ({ customerId }: { customerId: number }) => {
     { parcel: "asc" as SortOrder },
   ]
 
-  const [sortMethod, setSortMethod] = useState("asc" as SortOrder)
+  const [sortMethod, setSortMethod] = useState<SortOrder>("asc")
   const [sortBy, setSortBy] = useState(initialSortBy)
   const page = Number(router.query.page) || 0
   const [{ locations, hasMore }] = usePaginatedQuery(getLocations, {
