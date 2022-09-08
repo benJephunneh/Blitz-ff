@@ -21,7 +21,7 @@ import CustomerModalForm from "./CustomerModalForm"
 const CustomerSubheaderActions = () => {
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [creatingLocation, setCreatingLocation] = useState(false)
-  const { customer, showDetails, editCustomer } = useContext(customerContext)
+  const { customer, showDetails, editCustomer, refetchCustomer, refetchLocations } = useContext(customerContext)
 
   return (
     <>
@@ -29,14 +29,14 @@ const CustomerSubheaderActions = () => {
         customerId={customer.id}
         isOpen={editingCustomer}
         onClose={() => setEditingCustomer(false)}
-        onSuccess={() => setEditingCustomer(false)}
+        onSuccess={() => refetchCustomer()}
       />
 
       <LocationModalForm
         customerId={customer.id}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
-        onSuccess={() => setCreatingLocation(false)}
+        onSuccess={() => refetchLocations()}
       />
 
       <HStack>
@@ -44,10 +44,10 @@ const CustomerSubheaderActions = () => {
           size="sm"
           variant="outline"
           leftIcon={<FaPlus size={10} />}
-          color={useColorModeValue("#009a4c", "yellow.200")}
+          color={useColorModeValue("#009a4c", "blue.200")}
           bg="transparent"
           borderStyle="dashed"
-          borderColor={useColorModeValue("cyan.800", "cyan.200")}
+          borderColor={useColorModeValue("cyan.800", "blue.200")}
           alignSelf="start"
           justifySelf="end"
           onClick={() => {

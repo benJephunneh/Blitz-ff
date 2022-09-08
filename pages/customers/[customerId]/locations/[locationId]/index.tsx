@@ -1,42 +1,32 @@
-import { BlitzPage, Routes, useParam, useParams } from "@blitzjs/next"
+import { BlitzPage, Routes, useParams } from "@blitzjs/next"
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import {
   Box,
   Button,
-  ButtonGroup,
+  Container,
   Flex,
   Heading,
   HStack,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Spacer,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import TitleDivider from "app/core/components/TitleDivider"
-import { MutationType } from "app/core/components/types/MutationType"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
+import useCustomer from "app/customers/hooks/useCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
+import { LocationEntry } from "app/locations/components/LocationMenuList"
 import LocationModalForm from "app/locations/components/LocationModalForm"
+import LocationSubheader from "app/locations/components/LocationSubheader"
+import locationContext from "app/locations/contexts/LocationContext"
 import deleteLocation from "app/locations/mutations/deleteLocation"
 import updateLocation from "app/locations/mutations/updateLocation"
 import getLocation from "app/locations/queries/getLocation"
-import Link from "next/link"
 import { useRouter } from "next/router"
+import { useContext } from "react"
 import { useState } from "react"
-import { FcExpand } from "react-icons/fc"
-import { TiArrowBack, TiEdit } from "react-icons/ti"
+import { TiEdit } from "react-icons/ti"
 
 // Create transfer-ownership routine and button
-
-const ITEMS_PER_PAGE = 20
-
-type LocationPageProps = {
-  customerId: number
-  locationId: number
-}
 
 const ShowLocationPage: BlitzPage = () => {
   // const params = Object.assign({}, useParams())
@@ -44,44 +34,44 @@ const ShowLocationPage: BlitzPage = () => {
   // const p = processParams(params)
 
   const router = useRouter()
-  const { customerId, locationId } = useParams("number")
+  // const { location } = useContext(locationContext)
+  const { customerId, locationId } = useParams('number')
+  console.log(`customerId: ${customerId}`)
+  console.log(`locationId: ${locationId}`)
 
   const [editingLocation, setEditingLocation] = useState(false)
-
   const [editLocationMutation] = useMutation(updateLocation)
   const [deleteLocationMutation] = useMutation(deleteLocation)
 
   const [location] = useQuery(getLocation, { id: locationId })
   const [customer] = useQuery(getCustomer, { id: customerId })
+  console.log(JSON.stringify(customer))
 
   return (
     <>
-      <LocationModalForm
+      {/* <LocationModalForm
         customerId={customerId!}
-        locationId={locationId}
+        locationId={locationId!}
         isOpen={editingLocation}
         onClose={() => setEditingLocation(false)}
         onSuccess={() => {
           setEditingLocation(false)
         }}
-      />
+      /> */}
 
-      <Flex w="100vw" bg={useColorModeValue("white", "gray.600")}>
-        <VStack w="inherit" borderBottomWidth={1}>
-          <Box w="inherit">
+      <Flex w="100vw" bg={useColorModeValue("white", "gray.800")}>
+        <VStack w="inherit">
+          {/* <Box w="inherit">
             <HStack w="inherit">
-              {/*
               <Menu>
                 <MenuButton as={Button} variant="link" rightIcon={<FcExpand size={10} />}>
-      */}
               <Heading
                 ml={4}
                 fontStyle="italic"
                 textColor={useColorModeValue("#009a4c", "yellow.200")}
               >
-                {customer.firstname} {customer.lastname}
+                {customer?.firstname} {customer?.lastname}
               </Heading>
-              {/*
                 </MenuButton>
                 <MenuList>
                   <MenuItem
@@ -93,7 +83,6 @@ const ShowLocationPage: BlitzPage = () => {
                   </MenuItem>
                 </MenuList>
               </Menu>
-                  */}
               <Spacer />
               <Button
                 size="sm"
@@ -115,7 +104,11 @@ const ShowLocationPage: BlitzPage = () => {
             </HStack>
 
             <pre>location: {JSON.stringify(location, null, 2)}</pre>
-          </Box>
+          </Box> */}
+
+          <Container w='90vw' justifyContent='space-around' mt={6}>
+            <pre>{JSON.stringify(customer, null, 2)}</pre>
+          </Container>
 
           <Button
             mt={10}
@@ -143,6 +136,9 @@ const ShowLocationPage: BlitzPage = () => {
 }
 
 ShowLocationPage.authenticate = { redirectTo: Routes.Home() }
-ShowLocationPage.getLayout = (page) => <HeaderLayout title="Location page">{page}</HeaderLayout>
+ShowLocationPage.getLayout = (page) =>
+  <HeaderLayout title="Location page" subheader={<LocationSubheader />}>
+    {page}
+  </HeaderLayout>
 
 export default ShowLocationPage

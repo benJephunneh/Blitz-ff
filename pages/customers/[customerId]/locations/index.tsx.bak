@@ -1,0 +1,123 @@
+import { BlitzPage, Routes, useParam, useParams } from "@blitzjs/next"
+import { useMutation, useQuery } from "@blitzjs/rpc"
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Spacer,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
+import HeaderLayout from "app/core/layouts/HeaderLayout"
+import useCustomer from "app/customers/hooks/useCustomer"
+import getCustomer from "app/customers/queries/getCustomer"
+import LocationModalForm from "app/locations/components/LocationModalForm"
+import deleteLocation from "app/locations/mutations/deleteLocation"
+import updateLocation from "app/locations/mutations/updateLocation"
+import getLocation from "app/locations/queries/getLocation"
+import getLocations from "app/locations/queries/getLocations"
+import { useRouter } from "next/router"
+import { useState } from "react"
+import { TiEdit } from "react-icons/ti"
+
+// Create transfer-ownership routine and button
+
+const ITEMS_PER_PAGE = 20
+
+type LocationsPageProps = {
+  customerId: number
+}
+
+const LocationsPage: BlitzPage = () => {
+  const router = useRouter()
+  const { customerId } = useParams("number")
+  const customer = useCustomer({ id: customerId! })
+
+  const [creatingLocation, setCreatingLocation] = useState(false)
+  const [{ locations }, { refetch: refetchLocations }] = useQuery(getLocations, {
+    where: { customerId },
+    orderBy: [
+      { primary: 'asc' },
+      { zipcode: 'asc' },
+      { city: 'asc' },
+      { street: 'asc' },
+      { house: 'asc' },
+    ]
+  })
+
+  return (
+    <>
+      <LocationModalForm
+        customerId={customerId!}
+        isOpen={creatingLocation}
+        onClose={() => setCreatingLocation(false)}
+        onSuccess={() => {
+          refetchLocations().catch((e) => console.log(e))
+          setCreatingLocation(false)
+        }}
+      />
+
+      <Flex w="100vw" bg={useColorModeValue("white", "gray.600")}>
+        <VStack w="inherit" borderBottomWidth={1}>
+          <Box w="inherit">
+            <HStack w="inherit">
+              {/*
+              <Menu>
+                <MenuButton as={Button} variant="link" rightIcon={<FcExpand size={10} />}>
+      */}
+              <Heading
+                ml={4}
+                fontStyle="italic"
+                textColor={useColorModeValue("#009a4c", "yellow.200")}
+              >
+                {customer!.firstname} {customer!.lastname}
+              </Heading>
+              {/*
+                </MenuButton>
+                <MenuList>
+                  <MenuItem
+                    onClick={() => {
+                      setEditingLocation(true)
+                    }}
+                  >
+                    Edit location
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+                  */}
+              <Spacer />
+              <Button
+                size="sm"
+                variant="outline"
+                leftIcon={<TiEdit />}
+                color={useColorModeValue("#009a4c", "yellow.200")}
+                bg="transparent"
+                borderColor={useColorModeValue("blackAlpha.100", "gray.500")}
+                borderRadius={0}
+                borderBottomLeftRadius={8}
+                borderTopWidth={0}
+                alignSelf="start"
+                onClick={() => {
+                  setCreatingLocation(true)
+                }}
+              >
+                Edit location
+              </Button>
+            </HStack>
+
+          </Box>
+        </VStack>
+      </Flex>
+    </>
+  )
+}
+
+LocationsPage.authenticate = true
+LocationsPage.getLayout = (page) =>
+  <HeaderLayout title="Locations page">
+    {page}
+  </HeaderLayout>
+
+export default LocationsPage

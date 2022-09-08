@@ -1,14 +1,14 @@
 import { useQuery } from "@blitzjs/rpc"
+import getCustomer from "app/customers/queries/getCustomer"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import getLocations from "app/locations/queries/getLocations"
 import { NotFoundError } from "blitz"
 import db from "db"
 import { ReactNode } from "react"
 import { useState } from "react"
-import CustomerDrawer from "../components/CustomerDrawer"
-import CustomerModalForm from "../components/CustomerModalForm"
-import customerContext from "../contexts/customerContext"
-import getCustomer from "../queries/getCustomer"
+import LocationDrawer from "../components/LocationDrawer"
+import locationContext from "../contexts/LocationContext"
+import getLocation from "../queries/getLocation"
 
 const fetchLocations = async (customerId: number) => {
   const locations = await db.location.findMany({
@@ -35,28 +35,30 @@ const fetchCustomer = async (customerId: number) => {
   return customer
 }
 
-const { Provider } = customerContext
+const { Provider } = locationContext
 
-type CustomerProviderProps = {
+type LocationProviderProps = {
   customerId: number
+  locationId: number
   children?: ReactNode
 }
 
-const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
+const LocationProvider = ({ customerId, locationId, children }: LocationProviderProps) => {
   // const [customer, { refetch: refetchCustomer }] = useCustomer({ id, suspense: false })
 
-  const [editingCustomer, setEditingCustomer] = useState(false)
+  const [editingLocation, setEditingLocation] = useState(false)
   const [showingDetails, setShowingDetails] = useState(false)
-  const [creatingLocation, setCreatingLocation] = useState(false)
 
   const [customer, { refetch: refetchCustomer }] = useQuery(
     getCustomer,
     { id: customerId },
     { enabled: true }
   )
-  const [{ locations }, { refetch: refetchLocations }] = useQuery(getLocations, {
-    where: { customerId },
-  })
+  const [location, { refetch: refetchLocation }] = useQuery(
+    getLocation,
+    {
+      where: { id: locationId },
+    })
 
   // const [customerOranizer, { refetch: refetchOrganizer }] = useQuery(getCustomerOrganizer, { id })
   // const { jobs, totalPaid, totalOwed } = useCalculateBalanceSheet(customerOrganizer?.jobs || [])
@@ -64,43 +66,30 @@ const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
   return (
     <Provider
       value={{
-        editCustomer: () => setEditingCustomer(true),
+        editLocation: () => setEditingLocation(true),
         showDetails: () => setShowingDetails(true),
-        createLocation: () => setCreatingLocation(true),
+        createLocation: () => setEditingLocation(true),
 
-        customer: customer,
-        locations: locations,
+        location: location,
 
-        refetchCustomer,
-        refetchLocations,
+        refetchLocation,
       }}
     >
-      <CustomerModalForm
-        customerId={customerId}
-        isOpen={editingCustomer}
-        onClose={() => setEditingCustomer(false)}
-        onSuccess={() => {
-          refetchCustomer().catch((e) => console.log(e))
-          setEditingCustomer(false)
-        }}
-      />
-
       <LocationModalForm
         customerId={customerId}
-        isOpen={creatingLocation}
-        onClose={() => setCreatingLocation(false)}
+        isOpen={editingLocation}
+        onClose={() => setEditingLocation(false)}
         onSuccess={() => {
-          refetchCustomer().catch((e) => console.log(e))
-          refetchLocations().catch((e) => console.log(e))
-          setCreatingLocation(false)
+          refetchLocation().catch((e) => console.log(e))
+          setEditingLocation(false)
         }}
       />
 
-      <CustomerDrawer onClose={() => setShowingDetails(false)} isOpen={showingDetails} />
+      <LocationDrawer onClose={() => setShowingDetails(false)} isOpen={showingDetails} />
 
       {children}
     </Provider>
   )
 }
 
-export default CustomerProvider
+export default LocationProvider

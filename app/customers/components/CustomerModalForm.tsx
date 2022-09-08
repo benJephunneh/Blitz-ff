@@ -38,9 +38,9 @@ const CustomerModalForm = ({
     { id: customerId },
     { suspense: false, enabled: !!customerId }
   )
-  console.log(`customerId: ${customerId}`)
-  console.log(`isLoading: ${isLoading}`)
-  console.log(`customer.id: ${customer?.id}`)
+  // console.log(`customerId: ${customerId}`)
+  // console.log(`isLoading: ${isLoading}`)
+  // console.log(`customer.id: ${customer?.id}`)
 
   // let mutation: MutateFunction<Customer, unknown, {}, unknown>
   // let { id, firstname, lastname } = {} as Customer

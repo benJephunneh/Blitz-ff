@@ -13,8 +13,9 @@ const HeaderLoggedIn = () => {
       <Button
         size="sm"
         variant="outline"
-        color={useColorModeValue("#009a4c", "gray.800")}
+        color={useColorModeValue("blackAlpha.600", "gray.800")}
         bg={useColorModeValue("blackAlpha.100", "gray.600")}
+        borderColor={useColorModeValue('blackAlpha.300', 'blackAlpha.400')}
         onClick={async () => {
           await logoutMutation()
         }}

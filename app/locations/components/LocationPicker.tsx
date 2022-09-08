@@ -66,7 +66,7 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
               href={Routes.ShowLocationPage({ customerId: customer.id, locationId: location.id })}
               passHref
             >
-              <MenuItem as="a" icon={<FcHome />}>
+              <MenuItem as="a" fontWeight='semibold' fontSize='sm' icon={<FcHome />}>
                 {`${location.house} ${location.street}, ${location.city}  ${location.zipcode}`}
               </MenuItem>
             </Link>

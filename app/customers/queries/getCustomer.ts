@@ -1,10 +1,7 @@
 import { resolver } from "@blitzjs/rpc"
 import { NotFoundError } from "blitz"
-import db, { Prisma } from "db"
+import db from "db"
 import { z } from "zod"
-
-interface GetCustomerInput
-  extends Pick<Prisma.CustomerFindFirstArgs, "where" | "orderBy" | "skip" | "take" | "include"> {}
 
 const GetCustomer = z.object({
   // This accepts type of undefined, but is required at runtime

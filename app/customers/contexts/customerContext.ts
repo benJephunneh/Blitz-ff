@@ -19,6 +19,7 @@ export type CustomerContext = {
   // amountOwed: number
   // balance: number
 
+  refetchCustomer: () => void
   refetchLocations: () => void
 }
 

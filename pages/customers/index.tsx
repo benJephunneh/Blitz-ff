@@ -1,37 +1,30 @@
-import { createRef, useState } from "react"
+import { useState } from "react"
 import { BlitzPage, Routes } from "@blitzjs/next"
 import { useRouter } from "next/router"
 import {
   Box,
   Button,
-  ButtonGroup,
   Container,
-  Divider,
   Flex,
-  Grid,
   Heading,
   HStack,
-  Icon,
   Spacer,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import { FaPlus } from "react-icons/fa"
-import SidebarLayout from "app/core/layouts/SideBarLayout"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
-import { MutationType } from "app/core/components/types/MutationType"
 import CustomerList from "app/customers/components/CustomerList"
-import Link from "next/link"
-import { TiArrowBack } from "react-icons/ti"
-import { GiDiamonds } from "react-icons/gi"
-import TitleDivider from "app/core/components/TitleDivider"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 
 const CustomersPage: BlitzPage = () => {
   const router = useRouter()
   const [creatingCustomer, setCreatingCustomer] = useState(false)
   // const [mutationState, setMutationState] = useState<MutationType>("edit")
-  const ref = createRef()
+  // const ref = createRef()
+
+  const buttonBorder = useColorModeValue('gray.300', 'gray.600')
+  const emptyBg = useColorModeValue('gray.200', 'gray.700')
 
   return (
     <>
@@ -44,29 +37,26 @@ const CustomersPage: BlitzPage = () => {
       {/*
       <ButtonGroup spacing={0} flexDirection="column">
  */}
-      <Flex shadow="md" bg={useColorModeValue("white", "gray.600")}>
+      <Flex h='full' bg={useColorModeValue("white", "gray.800")}>
         <VStack>
-          <HStack w="100vw">
-            <Heading ml={4} textColor={useColorModeValue("#009a4c", "yellow.200")}>
+          <HStack w="100vw" justifyContent='space-between'>
+            <Heading size='md' ml={4} textColor={useColorModeValue('gray.600', 'gray.300')}>
               Customers
             </Heading>
             <Spacer />
             <Box>
               <Button
                 mb={4}
+                mr={4}
+                mt={4}
                 size="sm"
                 variant="outline"
                 leftIcon={<FaPlus size={10} />}
-                color={useColorModeValue("#009a4c", "yellow.200")}
-                bg={useColorModeValue("cyan.50", "gray.500")}
                 borderStyle="dashed"
-                borderColor={useColorModeValue("blackAlpha.400", "gray.400")}
-                borderRadius={0}
-                borderBottomLeftRadius={8}
-                borderTopWidth={0}
-                borderRightWidth={0}
-                alignSelf="start"
-                justifySelf="end"
+                bg={useColorModeValue('transparent', 'blue.200')}
+                borderColor={useColorModeValue("blue.300", "blue.800")}
+                textColor={useColorModeValue('gray.600', 'gray.800')}
+                _hover={{ bg: useColorModeValue('blue.200', 'blue.300') }}
                 onClick={() => {
                   setCreatingCustomer(true)
                 }}
@@ -76,7 +66,7 @@ const CustomersPage: BlitzPage = () => {
             </Box>
           </HStack>
 
-          <Container w="90vw" justifyContent="center">
+          <Container w="90vw" justifyContent="space-around">
             <CustomerList />
           </Container>
           {/*

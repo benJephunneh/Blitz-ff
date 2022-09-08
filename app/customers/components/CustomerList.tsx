@@ -33,6 +33,8 @@ import {
   Icon,
   IconButton,
   Tooltip,
+  useColorMode,
+  Container,
 } from "@chakra-ui/react"
 import getCustomers from "../queries/getCustomers"
 import Link from "next/link"
@@ -61,7 +63,7 @@ const CustomersList = () => {
   const router = useRouter()
   // const [hovered, setHovered] = useState(false)
   const [sortMethod, setSortMethod] = useState<SortOrder>("asc")
-  const hovered = useColorModeValue("gray.50", "gray.500")
+  const hovered = useColorModeValue("gray.50", "gray.700")
   const [customerSelection, setCustomerSelection] = useState(0)
   const page = Number(router.query.page) || 0
   const [{ customers, hasMore }] = usePaginatedQuery(getCustomers, {
@@ -97,69 +99,93 @@ const CustomersList = () => {
   // })
 
   return (
-    <Flex justify="center">
+    <Flex justifyContent='space-around'>
       <VStack w="inherit">
-        <TableContainer borderRadius={8} justifyItems="center">
-          <Table size="sm" borderWidth={1} w="90vw">
-            <Thead bg={useColorModeValue("gray.100", "gray.700")} borderBottomWidth={2}>
-              <Tr>
-                <HStack>
-                  <Th fontWeight="extrabold">Customer</Th>
-                  <Tooltip label="Sort">
-                    <IconButton
-                      aria-label="Sort customers"
-                      icon={
-                        sortMethod == "asc" ? (
-                          <FcAlphabeticalSortingAz size={15} />
-                        ) : (
-                          <FcAlphabeticalSortingZa size={15} />
-                        )
-                      }
-                      bg={useColorModeValue("gray.100", "gray.700")}
-                      onClick={() =>
-                        sortMethod == "asc" ? setSortMethod("desc") : setSortMethod("asc")
-                      }
-                    />
-                  </Tooltip>
-                </HStack>
-                <Th fontWeight="extrabold">Locations</Th>
-                <Th fontWeight="extrabold">Jobs</Th>
-                <Th fontWeight="extrabold">Estimates</Th>
-                <Th fontWeight="extrabold">Invoices</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {customers.map((customer) => (
-                <Tr
-                  key={customer.id}
-                  onClick={() => router.push(Routes.ShowCustomerPage({ customerId: customer.id }))}
-                  _hover={{ bg: hovered }}
-                >
-                  <Td>
-                    <Link href={Routes.ShowCustomerPage({ customerId: customer.id })} passHref>
-                      {`${customer.firstname} ${customer.lastname}`}
-                    </Link>
-                  </Td>
-                  <Td>
-                    <Link href={Routes.ShowCustomerPage({ customerId: customer.id })} passHref>
-                      Locations
-                    </Link>
-                  </Td>
-                  <Td>jobs</Td>
-                  <Td>estimates</Td>
-                  <Td>invoices</Td>
+        <Box bg={useColorModeValue('gray.200', 'gray.700')} borderWidth={2} borderRadius={8} borderColor={useColorModeValue('gray.100', 'gray.900')}>
+          <TableContainer m={4} borderRadius={8} justifyItems="center">
+            <Table
+              size="sm"
+              borderWidth={2}
+              w="90vw"
+              borderColor={useColorModeValue('gray.100', 'gray.800')}
+              borderRadius={8}
+            >
+              <Thead bg={useColorModeValue("gray.50", "gray.900")} borderBottomWidth={2} borderBottomColor='blackAlpha.500'>
+                <Tr>
+                  <HStack>
+                    <Th textColor={useColorModeValue('gray.800', 'gray.300')} fontWeight="extrabold">Customer</Th>
+                    <Tooltip label="Sort">
+                      <IconButton
+                        aria-label="Sort customers"
+                        variant='ghost'
+                        icon={
+                          sortMethod == "asc" ? (
+                            <FcAlphabeticalSortingAz size={20} />
+                          ) : (
+                            <FcAlphabeticalSortingZa size={20} />
+                          )
+                        }
+                        bg={useColorModeValue('transparent', "gray.900")}
+                        onClick={() =>
+                          sortMethod == "asc" ? setSortMethod("desc") : setSortMethod("asc")
+                        }
+                      />
+                    </Tooltip>
+                  </HStack>
+                  <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Locations</Th>
+                  <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Jobs</Th>
+                  <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Estimates</Th>
+                  <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Invoices</Th>
                 </Tr>
-              ))}
-            </Tbody>
-            {/*
+              </Thead>
+              <Tbody bg={useColorModeValue('gray.100', 'gray.800')}>
+                {customers.map((customer) => (
+                  <Tr
+                    key={customer.id}
+                    _hover={{ bg: hovered }}
+                  >
+                    <Td>
+                      <Link href={Routes.ShowCustomerPage({ customerId: customer.id })} passHref>
+                        <Text as='a' fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                          {`${customer.firstname} ${customer.lastname}`}
+                        </Text>
+                      </Link>
+                    </Td>
+                    <Td>
+                      <Link href={Routes.ShowCustomerPage({ customerId: customer.id })} passHref>
+                        <Text as='a' fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                          Locations
+                        </Text>
+                      </Link>
+                    </Td>
+                    <Td>
+                      <Text fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                        Jobs
+                      </Text>
+                    </Td>
+                    <Td>
+                      <Text fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                        Estimates
+                      </Text>
+                    </Td>
+                    <Td>
+                      <Text fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                        Invoices
+                      </Text>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+              {/*
         {customers.map((customer, ii) => (
           <CustomerListItem key={ii} customerId={customer.id}>
             {customer.firstname} {customer.lastname}
           </CustomerListItem>
         ))}
         */}
-          </Table>
-        </TableContainer>
+            </Table>
+          </TableContainer>
+        </Box>
 
         {/*
       <Flex bg='white' borderRadius={8}>
@@ -182,7 +208,7 @@ const CustomersList = () => {
           </Button>
         </ButtonGroup>
       </VStack>
-    </Flex>
+    </Flex >
   )
 }
 

@@ -89,7 +89,7 @@ const Navigation = () => {
       <Stack as="aside" spacing={4}>
         <NavigationSection title="Apalachee">
           <NavigationItem route={Routes.Dashboard()} icon={FcHome}>
-            Home
+            Dashboard
           </NavigationItem>
           <NavigationItem route={Routes.CustomersPage()} icon={FcContacts}>
             Customers

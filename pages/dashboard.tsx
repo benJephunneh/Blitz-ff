@@ -18,6 +18,7 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import SidebarLayout from "app/core/layouts/SideBarLayout"
 import SideHeaderLayout from "app/core/layouts/SideHeaderLayout"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
+import Link from "next/link"
 
 type UserInfoProps = Partial<User>
 
@@ -63,20 +64,24 @@ const Dashboard: BlitzPage = () => {
         </Container>
       </Box>
 
-      <Container as="main" py={{ base: 12, md: 20 }} mx={0}>
+      {/* <Container as="main" py={{ base: 12, md: 20 }} mx={0}>
         <Suspense>
           <UserInfo username={currentUser?.username} role={currentUser?.role} />
         </Suspense>
-      </Container>
+      </Container> */}
 
       <footer>
         <HStack spacing={2}>
-          <Button onClick={() => router.push("https://github.com/benJephunneh/Blitz-ff")}>
-            Github: dev-ff
-          </Button>
-          <Button onClick={() => router.push("https://www.apalacheeseptic.com")}>
-            Apalachee Backhoe
-          </Button>
+          <Link href="https://github.com/benJephunneh/Blitz-ff" passHref rel='noopener noreferrer' target='_blank'>
+            <Button as='a' size='sm'>
+              Github: dev-ff
+            </Button>
+          </Link>
+          <Link href="https://www.apalacheeseptic.com" passHref rel='noopener noreferrer' target='_blank'>
+            <Button as='a' size='sm'>
+              Apalachee Backhoe
+            </Button>
+          </Link>
         </HStack>
       </footer>
     </>

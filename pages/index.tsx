@@ -5,12 +5,13 @@ import Link from "next/link"
 
 import { BlitzPage, Routes } from "@blitzjs/next"
 
-import { Box, Button, ButtonGroup, Container, HStack } from "@chakra-ui/react"
+import { Box, Button, ButtonGroup, Container, HStack, VStack } from "@chakra-ui/react"
 import { FaPlus } from "react-icons/fa"
 
 import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
 import NewUserModalForm from "app/auth/components/NewUserModalForm"
 import logo from "public/logo.png"
+import abstLogo from 'public/abst logo.png'
 import Layout from "app/core/layouts/Layout"
 import { useMutation } from "@blitzjs/rpc"
 import logout from "app/auth/mutations/logout"
@@ -117,20 +118,17 @@ interface HomeProps {
 
 const Home: BlitzPage = ({ cookies }: HomeProps) => {
   return (
-    <Chakra cookies={cookies}>
-      <Container>
-        <Box as="main">
+    <VStack alignItems='space-between'>
+      <HStack justifyContent='space-between'>
+        <Box ml={10}>
           <div className="logo">
-            <Image src={`${logo.src}`} alt="blitzjs" width="256px" height="118px" layout="fixed" />
+            <Image src={`${abstLogo.src}`} alt="blitzjs" width="460px" height="116px" layout="fixed" />
           </div>
+        </Box>
+        <Box>
           <p>
             <strong>Congrats!</strong> Your app is ready, including user sign-up and log-in.
           </p>
-          <Container my={2}>
-            <Suspense>
-              <UserInfo />
-            </Suspense>
-          </Container>
           <p>
             <strong>
               To add a new model to your app, <br />
@@ -158,45 +156,48 @@ const Home: BlitzPage = ({ cookies }: HomeProps) => {
               </Link>
             </p>
           </div>
-          <div className="buttons" style={{ marginTop: "5rem" }}>
-            <a
-              className="button"
-              href="https://blitzjs.com/docs/getting-started?utm_source=blitz-new&utm_medium=app-template&utm_campaign=blitz-new"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Documentation
-            </a>
-            <a
-              className="button-outline"
-              href="https://github.com/blitz-js/blitz"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Github Repo
-            </a>
-            <a
-              className="button-outline"
-              href="https://discord.blitzjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Discord Community
-            </a>
-          </div>
         </Box>
+      </HStack>
+      <ButtonGroup>
+        <Link
+          href="https://blitzjs.com/docs/getting-started?utm_source=blitz-new&utm_medium=app-template&utm_campaign=blitz-new"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button as='a' size='sm' variant='solid'>
+            Documentation
+          </Button>
+        </Link>
+        <Link
+          href="https://github.com/blitz-js/blitz"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button as='a' size='sm' variant='solid'>
+            Github Repo
+          </Button>
+        </Link>
+        <Link
+          href="https://discord.blitzjs.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Button as='a' size='sm' variant='solid'>
+            Discord Community
+          </Button>
+        </Link>
+      </ButtonGroup>
 
-        <footer>
-          <a
-            href="https://blitzjs.com?utm_source=blitz-new&utm_medium=app-template&utm_campaign=blitz-new"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Powered by Blitz.js
-          </a>
-        </footer>
-      </Container>
-    </Chakra>
+      <footer>
+        <a
+          href="https://blitzjs.com?utm_source=blitz-new&utm_medium=app-template&utm_campaign=blitz-new"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Powered by Blitz.js
+        </a>
+      </footer>
+    </VStack>
   )
 }
 
