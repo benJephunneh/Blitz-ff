@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Routes } from "@blitzjs/next";
+import { BlitzPage, Routes } from "@blitzjs/next";
 import Head from "next/head";
 import Link from "next/link";
 import { usePaginatedQuery } from "@blitzjs/rpc";
@@ -43,7 +43,7 @@ export const JobsList = () => {
   );
 };
 
-const JobsPage = () => {
+const JobsPage: BlitzPage = () => {
   return (
     <Layout>
       <Head>

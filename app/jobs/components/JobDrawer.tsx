@@ -8,15 +8,15 @@ import {
   Spinner,
 } from "@chakra-ui/react"
 import { useContext } from "react"
-import locationContext from "../contexts/LocationContext"
+import jobContext from "../contexts/JobContext"
 
-type LocationDrawerProps = {
+type JobDrawerProps = {
   isOpen: boolean
   onClose: () => void
 }
 
-const LocationDrawer = ({ isOpen, onClose }: LocationDrawerProps) => {
-  const { location } = useContext(locationContext)
+const JobDrawer = ({ isOpen, onClose }: JobDrawerProps) => {
+  const { job } = useContext(jobContext)
 
   return (
     <Drawer placement="right" size="xl" onClose={onClose} isOpen={isOpen}>
@@ -24,7 +24,7 @@ const LocationDrawer = ({ isOpen, onClose }: LocationDrawerProps) => {
       <DrawerContent>
         <DrawerCloseButton zIndex={2} />
         <DrawerHeader borderBottomWidth={1}>
-          {location?.house} {location?.street}, {location?.city}  {location?.zipcode}
+          {job.title}
         </DrawerHeader>
         <DrawerBody p={0}>
           <Spinner />
@@ -34,4 +34,4 @@ const LocationDrawer = ({ isOpen, onClose }: LocationDrawerProps) => {
   )
 }
 
-export default LocationDrawer
+export default JobDrawer

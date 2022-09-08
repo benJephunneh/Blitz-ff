@@ -52,11 +52,13 @@ const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
   const [customer, { refetch: refetchCustomer }] = useQuery(
     getCustomer,
     { id: customerId },
-    { enabled: true }
+    { suspense: true }
   )
-  const [{ locations }, { refetch: refetchLocations }] = useQuery(getLocations, {
-    where: { customerId },
-  })
+  // const [locations, { refetch: refetchLocations }] = useQuery(
+  //   getLocations,
+  //   { where: { customerId } },
+  //   { suspense: true }
+  // )
 
   // const [customerOranizer, { refetch: refetchOrganizer }] = useQuery(getCustomerOrganizer, { id })
   // const { jobs, totalPaid, totalOwed } = useCalculateBalanceSheet(customerOrganizer?.jobs || [])
@@ -68,11 +70,11 @@ const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
         showDetails: () => setShowingDetails(true),
         createLocation: () => setCreatingLocation(true),
 
-        customer: customer,
-        locations: locations,
+        customer: customer!,
+        // locations: locations!.locations,
 
         refetchCustomer,
-        refetchLocations,
+        // refetchLocations,
       }}
     >
       <CustomerModalForm
@@ -85,7 +87,7 @@ const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
         }}
       />
 
-      <LocationModalForm
+      {/* <LocationModalForm
         customerId={customerId}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
@@ -94,7 +96,7 @@ const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
           refetchLocations().catch((e) => console.log(e))
           setCreatingLocation(false)
         }}
-      />
+      /> */}
 
       <CustomerDrawer onClose={() => setShowingDetails(false)} isOpen={showingDetails} />
 

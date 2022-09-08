@@ -20,15 +20,16 @@ const LocationSubheader = () => {
   // const customerId = useParam('customerId', 'number')
   const { customerId, locationId } = useParams('number')
 
-  console.log(`locationId: ${locationId}`)
-  console.log(`customerId: ${customerId}`)
+  console.log("from location subheader:")
+  console.log(`   locationId: ${locationId}`)
+  console.log(`   customerId: ${customerId}`)
 
   return (
     <LocationProvider customerId={customerId!} locationId={locationId!}>
       <Subheader>
         <HStack justify="space-between">
           <LocationPickerSubheader />
-          <LocationSubheaderActions />
+          {/* <LocationSubheaderActions /> */}
         </HStack>
       </Subheader>
     </LocationProvider>

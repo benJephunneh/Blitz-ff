@@ -20,24 +20,25 @@ import {
   Box,
   Text,
 } from "@chakra-ui/react"
-import { Location } from "@prisma/client"
+import createLocation from "app/locations/mutations/createLocation"
 import getLocations from "app/locations/queries/getLocations"
+import { PromiseReturnType } from "blitz"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import React from "react"
 import { useState } from "react"
-import { FaEdit } from "react-icons/fa"
 import {
-  FcEditImage,
   FcGlobe,
   FcNumericalSorting12,
   FcNumericalSorting21,
 } from "react-icons/fc"
+import createJob from "../mutations/createJob"
+import getJobs from "../queries/getJobs"
 
-type LocationProp = { location: Location }
+type JobProp = { job: PromiseReturnType<typeof createJob> }
 type SortOrder = "asc" | "desc"
 
-const MapLinkIcon = ({ location }: LocationProp) => {
+const MapLinkIcon = ({ job }: JobProp) => {
   const router = useRouter()
 
   return (
@@ -56,15 +57,15 @@ const MapLinkIcon = ({ location }: LocationProp) => {
 
 type ChakraFragment = ChakraComponent<"div", {}>
 
-export const LocationEntry = ({ location }: LocationProp) => {
-  console.log(JSON.stringify(location))
+export const JobEntry = ({ job }: JobProp) => {
+  console.log(JSON.stringify(job))
   return (
     <HStack spacing={4} ml={4}>
       <Link
-        href={Routes.ShowLocationPage({ customerId: location.customerId, locationId: location.id })}
+        href={Routes.ShowJobPage({ locationId: location.id, jobId: job.id })}
         passHref
       >
-        {`${location.house} ${location.street}, ${location.city} ${location.zipcode}`}
+        {`${job.title}`}
       </Link>
       {/*
       <Text>
@@ -80,30 +81,26 @@ export const LocationEntry = ({ location }: LocationProp) => {
 }
 
 const ITEMS_PER_PAGE = 20
-const LocationList = ({ customerId }: { customerId: number }) => {
+const JobList = ({ locationId }: { locationId: number }) => {
   const router = useRouter()
   const hovered = useColorModeValue('gray.50', 'gray.700')
-  const linkText = useColorModeValue('gray.800', 'gray.200')
   const initialSortBy = [
-    { primary: "asc" as SortOrder },
-    { zipcode: "asc" as SortOrder },
-    { city: "asc" as SortOrder },
-    { street: "asc" as SortOrder },
-    { house: "asc" as SortOrder },
-    { parcel: "asc" as SortOrder },
+    { start: "asc" as SortOrder },
+    { end: "asc" as SortOrder },
+    { title: "asc" as SortOrder },
   ]
 
   const [sortMethod, setSortMethod] = useState<SortOrder>("asc")
   const [sortBy, setSortBy] = useState(initialSortBy)
-  const [{ locations }] = useQuery(getLocations, {
-    where: { customerId },
+  const [{ jobs }] = useQuery(getJobs, {
+    where: { locationId },
     orderBy: sortBy,
   })
 
   return (
     <Flex justifyContent='space-around'>
       <VStack w="inherit">
-        <Box bg={useColorModeValue('gray.200', 'gray.700')} borderWidth={2} borderRadius={8} borderColor={useColorModeValue('gray.100', 'gray.800')}>
+        <Box bg={useColorModeValue('gray.200', 'gray.700')} borderWidth={2} borderRadius={8} borderColor={useColorModeValue('gray.100', 'gray.900')}>
           <TableContainer m={4} borderRadius={8} justifyContent="space-around">
             <Table
               size="sm"
@@ -111,10 +108,10 @@ const LocationList = ({ customerId }: { customerId: number }) => {
               w="90vw"
               borderColor={useColorModeValue('gray.100', 'gray.800')}
             >
-              <Thead bg={useColorModeValue("gray.50", "gray.900")} borderBottomWidth={2} borderBottomColor='blackAlpha.200'>
+              <Thead bg={useColorModeValue("gray.50", "gray.900")} borderBottomWidth={2} borderBottomColor='blackAlpha.500'>
                 <Tr>
                   <HStack>
-                    <Th textColor={useColorModeValue('gray.800', 'gray.500')} fontWeight="extrabold">Address</Th>
+                    <Th textColor={useColorModeValue('gray.800', 'gray.300')} fontWeight="extrabold">Address</Th>
                     <Tooltip label="Sort by address">
                       <IconButton
                         aria-label="Sort by address"
@@ -129,21 +126,18 @@ const LocationList = ({ customerId }: { customerId: number }) => {
                         onClick={() => {
                           sortMethod == "asc" ? setSortMethod("desc") : setSortMethod("asc")
                           setSortBy([
-                            { primary: "asc" },
-                            { zipcode: sortMethod },
-                            { city: sortMethod },
-                            { street: sortMethod },
-                            { house: sortMethod },
-                            { parcel: sortMethod },
+                            { title: sortMethod },
+                            { start: "asc" },
+                            { end: "asc" },
                           ])
                         }}
                       />
                     </Tooltip>
                   </HStack>
-                  <Th textColor={useColorModeValue('gray.800', 'gray.500')} fontWeight="extrabold">Block</Th>
-                  <Th textColor={useColorModeValue('gray.800', 'gray.500')} fontWeight="extrabold">Lot</Th>
+                  <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Block</Th>
+                  <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Lot</Th>
                   <HStack>
-                    <Th textColor={useColorModeValue('gray.800', 'gray.500')} fontWeight="extrabold">Parcel</Th>
+                    <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Parcel</Th>
                     <Tooltip label="Sort by parcel">
                       <IconButton
                         aria-label="Sort by parcel"
@@ -158,48 +152,42 @@ const LocationList = ({ customerId }: { customerId: number }) => {
                         onClick={() => {
                           sortMethod == "asc" ? setSortMethod("desc") : setSortMethod("asc")
                           setSortBy([
-                            { parcel: sortMethod },
-                            { primary: "asc" },
-                            { zipcode: "asc" },
-                            { city: "asc" },
-                            { street: "asc" },
-                            { house: "asc" },
+                            { start: sortMethod },
+                            { end: "asc" },
+                            { title: "asc" },
                           ])
                         }}
                       />
                     </Tooltip>
                   </HStack>
-                  <Th textColor={useColorModeValue('gray.800', 'gray.500')} fontWeight="extrabold">Map</Th>
+                  <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Map</Th>
                 </Tr>
               </Thead>
               <Tbody bg={useColorModeValue('gray.100', 'gray.800')}>
-                {locations.map((location) => {
+                {jobs.map((job) => {
                   return (
                     <Tr
-                      key={location.id}
+                      key={job.id}
                       _hover={{ bg: hovered }}
                     >
                       <Td>
-                        <HStack>
-                          <Link
-                            href={Routes.ShowLocationPage({ customerId, locationId: location.id })}
-                            passHref
-                          >
-                            <Text as='a' fontWeight='semibold' textColor={linkText}>
-                              {`${location.house} ${location.street}, ${location.city}, ${location.zipcode}`}
-                            </Text>
-                          </Link>
-                          <IconButton aria-label="Edit location" icon={<FaEdit size={10} />} variant='ghost' />
-                        </HStack>
+                        <Link
+                          href={Routes.ShowJobPage({ jobId: job.id })}
+                          passHref
+                        >
+                          <Text as='a' fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                            {`${job.title}`}
+                          </Text>
+                        </Link>
                       </Td>
                       <Td>
-                        <Text fontWeight='semibold' textColor={linkText}>
-                          {location.block}
+                        <Text fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                          {job.start}
                         </Text>
                       </Td>
                       <Td>
-                        <Text fontWeight='semibold' textColor={linkText}>
-                          {location.lot}
+                        <Text fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                          {job.end}
                         </Text>
                       </Td>
                       <Td>
@@ -233,7 +221,7 @@ const LocationList = ({ customerId }: { customerId: number }) => {
                           target='_blank'
                           rel='noopener noreferrer'
                         >
-                          <Text as='a' fontWeight='semibold' textColor={linkText}>
+                          <Text as='a' fontWeight='semibold' textColor={useColorModeValue('gray.800', 'blue.200')}>
                             map
                           </Text>
                         </Link>

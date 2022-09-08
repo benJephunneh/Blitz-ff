@@ -5,29 +5,17 @@ import db, { Prisma } from "db"
 interface GetCustomersInput
   extends Pick<Prisma.CustomerFindManyArgs, "where" | "orderBy" | "skip" | "take" | "include"> {}
 
-const getCustomers = resolver.pipe(
+export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip, take, include }: GetCustomersInput) => {
+
+  async ({ where, orderBy, include }: GetCustomersInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const {
-      items: customers,
-      hasMore,
-      nextPage,
-      count,
-    } = await paginate({
-      skip,
-      take,
-      count: () => db.customer.count({ where }),
-      query: (paginateArgs) => db.customer.findMany({ ...paginateArgs, where, orderBy, include }),
-    })
+    const customers = await db.customer.findMany({ where, orderBy, include })
+    const count = customers.length
 
     return {
       customers,
-      nextPage,
-      hasMore,
       count,
     }
   }
 )
-
-export default getCustomers

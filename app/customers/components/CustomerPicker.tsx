@@ -24,7 +24,9 @@ type CustomerPickerProps = {
 }
 
 const CustomerPicker = ({ icon }: CustomerPickerProps) => {
-  const [customers] = useQuery(getCustomers, { orderBy: { lastname: "asc" } }, { suspense: false })
+  const [customers] = useQuery(getCustomers,
+    { orderBy: { lastname: "asc" } },
+    { suspense: true })
   const { customer } = useContext(customerContext)
 
   return (
@@ -56,7 +58,7 @@ const CustomerPicker = ({ icon }: CustomerPickerProps) => {
           {!!customers?.customers.length && <MenuDivider />}
 
           {customers?.customers.map((customer) => {
-            ;<Link
+            <Link
               key={customer.id}
               href={Routes.ShowCustomerPage({ customerId: customer.id })}
               passHref

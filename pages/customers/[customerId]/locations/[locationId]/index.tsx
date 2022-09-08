@@ -5,26 +5,21 @@ import {
   Button,
   Container,
   Flex,
-  Heading,
-  HStack,
-  Spacer,
+  Square,
+  Text,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
-import useCustomer from "app/customers/hooks/useCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
-import { LocationEntry } from "app/locations/components/LocationMenuList"
-import LocationModalForm from "app/locations/components/LocationModalForm"
 import LocationSubheader from "app/locations/components/LocationSubheader"
 import locationContext from "app/locations/contexts/LocationContext"
 import deleteLocation from "app/locations/mutations/deleteLocation"
 import updateLocation from "app/locations/mutations/updateLocation"
 import getLocation from "app/locations/queries/getLocation"
 import { useRouter } from "next/router"
-import { useContext } from "react"
-import { useState } from "react"
-import { TiEdit } from "react-icons/ti"
+import { useContext, useState } from "react"
+import { GiRayGun } from "react-icons/gi"
 
 // Create transfer-ownership routine and button
 
@@ -34,32 +29,29 @@ const ShowLocationPage: BlitzPage = () => {
   // const p = processParams(params)
 
   const router = useRouter()
-  // const { location } = useContext(locationContext)
   const { customerId, locationId } = useParams('number')
-  console.log(`customerId: ${customerId}`)
-  console.log(`locationId: ${locationId}`)
+  // console.log("from location index:")
+  // console.log(`   customerId: ${customerId}`)
+  // console.log(`   locationId: ${locationId}`)
+  const [location] = useQuery(getLocation, { id: 1 }, { suspense: false })
+  const [customer] = useQuery(getCustomer, { id: customerId }, { suspense: false })
 
   const [editingLocation, setEditingLocation] = useState(false)
   const [editLocationMutation] = useMutation(updateLocation)
   const [deleteLocationMutation] = useMutation(deleteLocation)
 
-  const [location] = useQuery(getLocation, { id: locationId })
-  const [customer] = useQuery(getCustomer, { id: customerId })
-  console.log(JSON.stringify(customer))
-
   return (
     <>
-      {/* <LocationModalForm
-        customerId={customerId!}
-        locationId={locationId!}
-        isOpen={editingLocation}
-        onClose={() => setEditingLocation(false)}
-        onSuccess={() => {
-          setEditingLocation(false)
-        }}
-      /> */}
-
       <Flex w="100vw" bg={useColorModeValue("white", "gray.800")}>
+
+        <Box h={100} w={500} bg={useColorModeValue('gray.200', 'gray.700')} borderWidth={2} borderRadius={8} borderColor={useColorModeValue('gray.100', 'gray.900')}>
+          <Box m={10} justifyContent='space-around'>
+            <Text fontWeight='semibold' size='sm'>
+              {`${location?.house} ${location?.street} ${location?.city}  ${location?.zipcode}`}
+            </Text>
+          </Box>
+        </Box>
+
         <VStack w="inherit">
           {/* <Box w="inherit">
             <HStack w="inherit">
@@ -103,11 +95,11 @@ const ShowLocationPage: BlitzPage = () => {
               </Button>
             </HStack>
 
-            <pre>location: {JSON.stringify(location, null, 2)}</pre>
           </Box> */}
 
           <Container w='90vw' justifyContent='space-around' mt={6}>
             <pre>{JSON.stringify(customer, null, 2)}</pre>
+            <pre>{JSON.stringify(location, null, 2)}</pre>
           </Container>
 
           <Button

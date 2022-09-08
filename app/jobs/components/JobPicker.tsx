@@ -1,5 +1,5 @@
 import { Routes } from "@blitzjs/next"
-import { useQuery } from "@blitzjs/rpc"
+import { usePaginatedQuery, useQuery } from "@blitzjs/rpc"
 import {
   Button,
   Heading,
@@ -16,18 +16,18 @@ import { useContext } from "react"
 import { IconType } from "react-icons"
 import { FaChevronDown } from "react-icons/fa"
 import { FcHome } from "react-icons/fc"
-import getLocations from "../queries/getLocations"
+import jobContext from "../contexts/JobContext"
 
-type LocationPickerProps = {
+type JobPickerProps = {
   icon: IconType
 }
 
-const LocationPicker = ({ icon }: LocationPickerProps) => {
-  const { customer } = useContext(customerContext)
-  const [locations, { refetch: refetchLocations }] = useQuery(
-    getLocations,
+const LocationPicker = ({ icon }: JobPickerProps) => {
+  const { job } = useContext(jobContext)
+  const [{ jobs }] = useQuery(
+    getJobs,
     {
-      where: { customerId: customer.id },
+      where: { locationId: location.id },
       orderBy: [
         { primary: "asc" },
         { zipcode: "asc" },
@@ -36,7 +36,7 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
         { house: "asc" },
       ],
     },
-    { suspense: false }
+    { suspense: true }
   )
 
   return (
@@ -59,14 +59,14 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
 
       <MenuList>
         <>
-          {locations?.locations.map((location) => (
+          {jobs.map((job) => (
             <Link
-              key={location.id}
-              href={Routes.ShowLocationPage({ customerId: customer.id, locationId: location.id })}
+              key={job.id}
+              href={Routes.ShowJobPage({ locationId: location.id, jobId: job.id })}
               passHref
             >
               <MenuItem as="a" fontWeight='semibold' fontSize='sm' icon={<FcHome />}>
-                {`${location.house} ${location.street}, ${location.city}  ${location.zipcode}`}
+                {`${job.title}`}
               </MenuItem>
             </Link>
           ))}

@@ -28,7 +28,7 @@ const CustomerSubheader = () => {
     <CustomerProvider customerId={customerId!}>
       <Subheader>
         <HStack justify="space-between">
-          <LocationPickerSubheader />
+          <CustomerPickerSubheader />
           <CustomerSubheaderActions />
         </HStack>
       </Subheader>

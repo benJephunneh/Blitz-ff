@@ -1,3 +1,4 @@
+import { Location } from "@prisma/client"
 import { createContext } from "react"
 
 export type LocationContext = {
@@ -6,19 +7,20 @@ export type LocationContext = {
   refetchLocation: () => void
   showDetails: () => void
 
-  location: {
-    id: number
-    house?: string | null
-    street: string
-    city: string
-    state: string
-    zipcode: string
-    block?: string | null
-    lot?: string | null
-    parcel?: string | null
-    primary?: boolean | null
-    customerId: number
-  }
+  location: Location
+  // location: {
+  //   id: number
+  //   house?: string | null
+  //   street: string
+  //   city: string
+  //   state: string
+  //   zipcode: string
+  //   block?: string | null
+  //   lot?: string | null
+  //   parcel?: string | null
+  //   primary?: boolean | null
+  //   customerId: number
+  // }
 
   // amountPaid: number
   // amountOwed: number

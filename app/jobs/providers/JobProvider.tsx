@@ -1,14 +1,11 @@
 import { useQuery } from "@blitzjs/rpc"
 import getCustomer from "app/customers/queries/getCustomer"
-import LocationModalForm from "app/locations/components/LocationModalForm"
-import getLocations from "app/locations/queries/getLocations"
 import { NotFoundError } from "blitz"
 import db from "db"
 import { ReactNode } from "react"
 import { useState } from "react"
-import JobDrawer from "../components/LocationDrawer"
-import locationContext from "../contexts/LocationContext"
-import getLocation from "../queries/getLocation"
+import JobDrawer from "../components/JobDrawer"
+import jobContext from "../contexts/JobContext"
 
 const fetchLocations = async (customerId: number) => {
   const locations = await db.location.findMany({
@@ -35,18 +32,18 @@ const fetchCustomer = async (customerId: number) => {
   return customer
 }
 
-const { Provider } = locationContext
+const { Provider } = jobContext
 
-type LocationProviderProps = {
-  customerId: number
+type JobProviderProps = {
   locationId: number
+  jobId: number
   children?: ReactNode
 }
 
-const LocationProvider = ({ customerId, locationId, children }: LocationProviderProps) => {
+const JobProvider = ({ locationId, jobId, children }: JobProviderProps) => {
   // const [customer, { refetch: refetchCustomer }] = useCustomer({ id, suspense: false })
 
-  const [editingLocation, setEditingLocation] = useState(false)
+  const [editingJob, setEditingJob] = useState(false)
   const [showingDetails, setShowingDetails] = useState(false)
 
   const [customer, { refetch: refetchCustomer }] = useQuery(
@@ -58,8 +55,12 @@ const LocationProvider = ({ customerId, locationId, children }: LocationProvider
     getLocation,
     {
       where: { id: locationId },
-    },
-    { suspense: false })
+    })
+  const [job, { refetch: refetchJob }] = useQuery(
+    getJob,
+    {
+      where: { id: jobId },
+    })
 
   // const [customerOranizer, { refetch: refetchOrganizer }] = useQuery(getCustomerOrganizer, { id })
   // const { jobs, totalPaid, totalOwed } = useCalculateBalanceSheet(customerOrganizer?.jobs || [])
@@ -67,22 +68,22 @@ const LocationProvider = ({ customerId, locationId, children }: LocationProvider
   return (
     <Provider
       value={{
-        editLocation: () => setEditingLocation(true),
+        editJob: () => setEditingJob(true),
         showDetails: () => setShowingDetails(true),
-        createLocation: () => setEditingLocation(true),
+        createJob: () => setEditingJob(true),
 
-        location: location!,
+        job: job,
 
-        refetchLocation,
+        refetchJob,
       }}
     >
-      <LocationModalForm
+      <JobModalForm
         customerId={customerId}
-        isOpen={editingLocation}
-        onClose={() => setEditingLocation(false)}
+        isOpen={editingJob}
+        onClose={() => setEditingJob(false)}
         onSuccess={() => {
-          refetchLocation().catch((e) => console.log(e))
-          setEditingLocation(false)
+          refetchJob().catch((e) => console.log(e))
+          setEditingJob(false)
         }}
       />
 
@@ -93,4 +94,4 @@ const LocationProvider = ({ customerId, locationId, children }: LocationProvider
   )
 }
 
-export default LocationProvider
+export default JobProvider

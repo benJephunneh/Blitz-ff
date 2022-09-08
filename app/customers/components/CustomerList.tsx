@@ -1,15 +1,12 @@
-import { usePaginatedQuery, useQuery } from "@blitzjs/rpc"
+import { usePaginatedQuery } from "@blitzjs/rpc"
 import { useRouter } from "next/router"
 import {
   FcPrevious,
   FcNext,
-  FcExpand,
   FcAlphabeticalSortingAz,
   FcAlphabeticalSortingZa,
 } from "react-icons/fc"
-import CustomerListItem from "./CustomerListitem"
 import {
-  Grid,
   ButtonGroup,
   Button,
   Table,
@@ -19,32 +16,19 @@ import {
   Th,
   Tbody,
   Td,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
   Flex,
-  Spacer,
   Text,
   Box,
   VStack,
   useColorModeValue,
   HStack,
-  Icon,
   IconButton,
   Tooltip,
-  useColorMode,
-  Container,
 } from "@chakra-ui/react"
 import getCustomers from "../queries/getCustomers"
 import Link from "next/link"
 import { Routes } from "@blitzjs/next"
-import LocationList from "app/locations/components/LocationList"
-import db from "db"
-import getLocations from "app/locations/queries/getLocations"
 import { useState } from "react"
-import { useEffect } from "react"
-import { debug } from "webpack"
 
 const ITEMS_PER_PAGE = 20
 
@@ -64,6 +48,7 @@ const CustomersList = () => {
   // const [hovered, setHovered] = useState(false)
   const [sortMethod, setSortMethod] = useState<SortOrder>("asc")
   const hovered = useColorModeValue("gray.50", "gray.700")
+  const linkText = useColorModeValue('gray.800', 'gray.200')
   const [customerSelection, setCustomerSelection] = useState(0)
   const page = Number(router.query.page) || 0
   const [{ customers, hasMore }] = usePaginatedQuery(getCustomers, {
@@ -146,30 +131,30 @@ const CustomersList = () => {
                   >
                     <Td>
                       <Link href={Routes.ShowCustomerPage({ customerId: customer.id })} passHref>
-                        <Text as='a' fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                        <Text as='a' fontWeight='semibold' textColor={linkText}>
                           {`${customer.firstname} ${customer.lastname}`}
                         </Text>
                       </Link>
                     </Td>
                     <Td>
                       <Link href={Routes.ShowCustomerPage({ customerId: customer.id })} passHref>
-                        <Text as='a' fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                        <Text as='a' fontWeight='semibold' textColor={linkText}>
                           Locations
                         </Text>
                       </Link>
                     </Td>
                     <Td>
-                      <Text fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                      <Text fontWeight='semibold' textColor={linkText}>
                         Jobs
                       </Text>
                     </Td>
                     <Td>
-                      <Text fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                      <Text fontWeight='semibold' textColor={linkText}>
                         Estimates
                       </Text>
                     </Td>
                     <Td>
-                      <Text fontWeight='semibold' textColor={useColorModeValue('gray.800', 'gray.200')}>
+                      <Text fontWeight='semibold' textColor={linkText}>
                         Invoices
                       </Text>
                     </Td>

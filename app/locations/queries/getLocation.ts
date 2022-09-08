@@ -7,13 +7,18 @@ const GetLocation = z.object({
   id: z.number(),
 })
 
-export default resolver.pipe(resolver.authorize(), resolver.zod(GetLocation), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const location = await db.location.findFirst({
-    where: { id },
-  })
+export default resolver.pipe(
+  resolver.authorize(),
+  resolver.zod(GetLocation),
 
-  if (!location) throw new NotFoundError(`LocationId ${id} not found.`)
+  async ({ id }) => {
+    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    const location = await db.location.findFirst({
+      where: { id },
+    })
 
-  return location
-})
+    if (!location) throw new NotFoundError(`LocationId ${id} not found.`)
+
+    return location
+  }
+)

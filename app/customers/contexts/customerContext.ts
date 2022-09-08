@@ -1,6 +1,4 @@
-import { Customer, Location } from "@prisma/client"
 import { createContext } from "react"
-import useCalculateBalanceSheet from "../hooks/useCalculateBalanceSheet"
 
 export type CustomerContext = {
   editCustomer: () => void
@@ -13,14 +11,14 @@ export type CustomerContext = {
     lastname: string
   }
 
-  locations: Location[]
+  // locations: Location[]
 
   // amountPaid: number
   // amountOwed: number
   // balance: number
 
   refetchCustomer: () => void
-  refetchLocations: () => void
+  // refetchLocations: () => void
 }
 
 const customerContext = createContext<CustomerContext>({} as CustomerContext)

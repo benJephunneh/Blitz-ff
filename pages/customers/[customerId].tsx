@@ -7,31 +7,19 @@ import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import LocationList from "app/locations/components/LocationList"
 import {
   Button,
-  ButtonGroup,
   Container,
   Flex,
-  Heading,
-  HStack,
-  Spacer,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import { useState } from "react"
-import CustomerModalForm from "app/customers/components/CustomerModalForm"
-import { TiEdit } from "react-icons/ti"
-import { FaPlus } from "react-icons/fa"
-import LocationModalForm from "app/locations/components/LocationModalForm"
+import { useContext, useState } from "react"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 import CustomerSubheader from "app/customers/components/CustomerSubheader"
-import db, { Customer } from "db"
-import { createContext } from "react"
 import customerContext from "app/customers/contexts/customerContext"
-import { useContext } from "react"
-import CustomerProvider from "app/customers/providers/customerProvider"
-import useCustomer from "app/customers/hooks/useCustomer"
 
 const ShowCustomerPage: BlitzPage = () => {
   const router = useRouter()
+
   const customerId = useParam('customerId', 'number')
   const [customer] = useQuery(getCustomer, { id: customerId })
 

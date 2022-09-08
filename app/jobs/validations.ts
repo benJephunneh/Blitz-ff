@@ -4,9 +4,13 @@ export const id = z.number()
 export const title = z.string()
 export const start = z.date().optional()
 export const end = z.date().optional()
+export const locationId = z.number()
 
 export const CreateJob = z.object({
   title,
+  start,
+  end,
+  locationId,
 })
 
 export const UpdateJob = z.object({
