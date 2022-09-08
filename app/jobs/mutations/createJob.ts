@@ -3,7 +3,10 @@ import db from "db"
 import { z } from "zod"
 
 const CreateJob = z.object({
-  name: z.string(),
+  title: z.string(),
+  start: z.date().optional(),
+  end: z.date().optional(),
+  locationId: z.number(),
 })
 
 export default resolver.pipe(resolver.zod(CreateJob), resolver.authorize(), async (input) => {

@@ -4,7 +4,10 @@ import { z } from "zod"
 
 const UpdateJob = z.object({
   id: z.number(),
-  name: z.string(),
+  title: z.string(),
+  start: z.date().optional(),
+  end: z.date().optional(),
+  locationId: z.number(),
 })
 
 export default resolver.pipe(
