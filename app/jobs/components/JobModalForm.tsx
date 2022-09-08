@@ -1,23 +1,21 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import { PromiseReturnType } from "blitz"
 import { FORM_ERROR } from "final-form"
-import createCustomer from "../mutations/createCustomer"
-import updateCustomer from "../mutations/updateCustomer"
-import getCustomer from "../queries/getCustomer"
-import { CreateCustomer } from "../validations"
-import { Center, ModalProps, Spinner } from "@chakra-ui/react"
+import { CreateJob } from "../validations"
+import { ModalProps } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import createJob from "../mutations/createJob"
 import updateJob from "../mutations/updateJob"
+import getJob from "../queries/getJob"
 
 type JobModalFormProps = {
   isOpen: boolean
   onClose: () => void
   onSuccess?: (job: PromiseReturnType<typeof createJob | typeof updateJob>) => void
   // onSuccess?: (customer: Customer) => void
-  customerId?: number
+  jobId?: number
   mutationType?: MutationType
   props?: Partial<ModalProps>
 }
@@ -28,14 +26,14 @@ const JobModalForm = ({
   isOpen,
   onClose,
   onSuccess,
-  customerId,
+  jobId,
   mutationType = "New",
   ...props
 }: JobModalFormProps) => {
   const [newJobMutation] = useMutation(createJob)
   const [editJobMutation] = useMutation(updateJob)
 
-  const [customer, { isLoading }] = useQuery(
+  const [job, { isLoading }] = useQuery(
     getJob,
     { id: jobId },
     { suspense: false, enabled: !!jobId }
@@ -66,7 +64,7 @@ const JobModalForm = ({
   // }
 
   const onSubmit = async (values) => {
-    if (customer) {
+    if (job) {
       return editJobMutation({ id: job.id, ...values })
     }
     return newJobMutation(values)
@@ -87,8 +85,7 @@ const JobModalForm = ({
       title={jobId ? "Edit job" : "New job"}
       submitText={jobId ? "Update" : "Create"}
       initialValues={{
-        firstname: job?.firstname ?? "",
-        lastname: job?.lastname ?? "",
+        title: job?.title ?? "",
       }}
       onSubmit={(values) => {
         onSubmit(values)

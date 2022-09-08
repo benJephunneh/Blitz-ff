@@ -23,6 +23,9 @@ export const CreateLocation = z.object({
   city,
   state,
   zipcode,
+  block,
+  lot,
+  parcel,
   customerId,
 })
 

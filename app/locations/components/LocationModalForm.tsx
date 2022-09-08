@@ -11,7 +11,7 @@ import { CreateLocation } from "../validations"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import LabeledCheckboxField from "app/core/components/forms/LabeledCheckboxField"
 import { FcButtingIn } from "react-icons/fc"
-import { unknown } from "zod"
+import { unknown, z } from "zod"
 
 type Location = PromiseReturnType<typeof createLocation>
 
@@ -116,12 +116,15 @@ const LocationModalForm = ({
       initialValues={{
         email: location?.email ?? "",
         phone: location?.phone ?? "",
-        primary: !!location?.primary,
+        primary: location?.primary ?? true,
         house: location?.house ?? "",
         street: location?.street ?? "",
         city: location?.city ?? "",
         state: location?.state ?? "",
         zipcode: location?.zipcode ?? "",
+        block: location?.block ?? undefined,
+        lot: location?.lot ?? undefined,
+        parcel: location?.parcel ?? undefined,
         customerId,
       }}
       onSubmit={(values) => {
