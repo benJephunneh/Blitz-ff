@@ -80,8 +80,8 @@ model Location {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  email String @unique
-  phone Int @unique
+  email      String
+  phone      String
   primary    Boolean  @default(true)
   house      String?
   street     String
@@ -111,8 +111,8 @@ model LocationArchive {
   id               Int             @id @default(autoincrement())
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
-  email String @unique
-  phone            Int @unique
+  email            String
+  phone            String
   primary          Boolean         @default(true)
   house            String?
   street           String

@@ -5,11 +5,26 @@ import { customerId, UpdateLocation } from "../validations"
 export default resolver.pipe(
   resolver.zod(UpdateLocation),
   resolver.authorize(),
-  async ({ id, house, street, city, state, zipcode, block, lot, parcel, customerId }) => {
+  async ({
+    id,
+    email,
+    phone,
+    house,
+    street,
+    city,
+    state,
+    zipcode,
+    block,
+    lot,
+    parcel,
+    customerId,
+  }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const location = await db.location.update({
       where: { id },
       data: {
+        email,
+        phone,
         house,
         street,
         city,
@@ -24,6 +39,8 @@ export default resolver.pipe(
     await db.locationArchive.update({
       where: { id },
       data: {
+        email,
+        phone,
         house,
         street,
         city,

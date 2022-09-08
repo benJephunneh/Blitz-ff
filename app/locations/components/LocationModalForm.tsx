@@ -11,6 +11,7 @@ import { CreateLocation } from "../validations"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import LabeledCheckboxField from "app/core/components/forms/LabeledCheckboxField"
 import { FcButtingIn } from "react-icons/fc"
+import { unknown } from "zod"
 
 type Location = PromiseReturnType<typeof createLocation>
 
@@ -113,15 +114,14 @@ const LocationModalForm = ({
       title={locationId ? "Edit location" : "New location"}
       submitText={locationId ? "Update" : "Create"}
       initialValues={{
+        email: location?.email ?? "",
+        phone: location?.phone ?? "",
         primary: !!location?.primary,
-        house: location?.house ?? null,
+        house: location?.house ?? "",
         street: location?.street ?? "",
         city: location?.city ?? "",
         state: location?.state ?? "",
         zipcode: location?.zipcode ?? "",
-        block: location?.block ?? null,
-        lot: location?.lot ?? null,
-        parcel: location?.parcel ?? null,
         customerId,
       }}
       onSubmit={(values) => {
@@ -135,6 +135,7 @@ const LocationModalForm = ({
           templateAreas={`'house street street street street'
                           'city city state zipcode zipcode'
                           'block lot parcel parcel parcel'
+                          'email email phone phone .'
                           'primary primary primary . .'`}
           templateColumns="repeat(5, 1fr)"
           gap={2}
@@ -145,6 +146,7 @@ const LocationModalForm = ({
           <GridItem area="street">
             <LabeledTextField name="street" label="Street" />
           </GridItem>
+
           <GridItem area="city">
             <LabeledTextField name="city" label="City" />
           </GridItem>
@@ -154,6 +156,7 @@ const LocationModalForm = ({
           <GridItem area="zipcode">
             <LabeledTextField name="zipcode" label="Zipcode" />
           </GridItem>
+
           <GridItem area="block">
             <LabeledTextField name="block" label="Block" />
           </GridItem>
@@ -163,6 +166,14 @@ const LocationModalForm = ({
           <GridItem area="parcel">
             <LabeledTextField name="parcel" label="Parcel" />
           </GridItem>
+
+          <GridItem area="email">
+            <LabeledTextField name="email" type="email" label="Email" />
+          </GridItem>
+          <GridItem area="phone">
+            <LabeledTextField name="phone" label="Phone" />
+          </GridItem>
+
           <GridItem area="primary">
             <HStack>
               <Tag colorScheme="orange" flexShrink={0}>
