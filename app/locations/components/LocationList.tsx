@@ -1,5 +1,5 @@
 import { Routes } from "@blitzjs/next"
-import { usePaginatedQuery } from "@blitzjs/rpc"
+import { usePaginatedQuery, useQuery } from "@blitzjs/rpc"
 import {
   IconButton,
   HStack,
@@ -99,16 +99,10 @@ const LocationList = ({ customerId }: { customerId: number }) => {
 
   const [sortMethod, setSortMethod] = useState<SortOrder>("asc")
   const [sortBy, setSortBy] = useState(initialSortBy)
-  const page = Number(router.query.page) || 0
-  const [{ locations, hasMore }] = usePaginatedQuery(getLocations, {
+  const [{ locations }] = useQuery(getLocations, {
     where: { customerId },
     orderBy: sortBy,
-    skip: ITEMS_PER_PAGE * page,
-    take: ITEMS_PER_PAGE,
   })
-
-  const goToPreviousPage = () => router.push({ query: { page: page - 1 } })
-  const goToNextPage = () => router.push({ query: { page: page + 1 } })
 
   return (
     <Flex justify="center">
@@ -198,15 +192,6 @@ const LocationList = ({ customerId }: { customerId: number }) => {
             </Tbody>
           </Table>
         </TableContainer>
-
-        <ButtonGroup pt={5} isAttached variant="outline">
-          <Button disabled={page === 0} onClick={goToPreviousPage} leftIcon={<FcPrevious />}>
-            Previous
-          </Button>
-          <Button disabled={!hasMore} onClick={goToNextPage} rightIcon={<FcNext />}>
-            Next
-          </Button>
-        </ButtonGroup>
       </VStack>
     </Flex>
   )

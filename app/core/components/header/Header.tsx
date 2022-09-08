@@ -57,7 +57,7 @@ const Header = () => {
           py={3}
           bg={useColorModeValue("white", "gray.700")}
           borderBottom="1px solid"
-          borderBottomColor={useColorModeValue("gray.200", "gray.500")}
+          borderBottomColor={useColorModeValue("gray.200", "gray.800")}
         >
           <Grid templateColumns={`repeat(6, 1fr)`} alignItems="center">
             <GridItem colSpan={1} ml={5}>

@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
-import ModalForm from "app/core/components/forms/ModalForm"
 import { PromiseReturnType } from "blitz"
 import { FORM_ERROR } from "final-form"
 import createCustomer from "../mutations/createCustomer"
@@ -8,6 +7,7 @@ import getCustomer from "../queries/getCustomer"
 import { CreateCustomer } from "../validations"
 import { Center, ModalProps, Spinner } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
+import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 
 type CustomerModalFormProps = {

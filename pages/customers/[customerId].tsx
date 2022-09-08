@@ -6,27 +6,14 @@ import getCustomer from "app/customers/queries/getCustomer"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import LocationList from "app/locations/components/LocationList"
 import {
-  Box,
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
   Button,
   ButtonGroup,
   Container,
   Flex,
   Heading,
   HStack,
-  IconButton,
-  List,
-  ListItem,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Spacer,
-  Text,
   useColorModeValue,
-  useToast,
   VStack,
 } from "@chakra-ui/react"
 import { useState } from "react"
@@ -34,37 +21,27 @@ import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import { TiEdit } from "react-icons/ti"
 import { FaPlus } from "react-icons/fa"
 import LocationModalForm from "app/locations/components/LocationModalForm"
-import { FcExpand } from "react-icons/fc"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
+import CustomerSubheader from "app/customers/components/CustomerSubheader"
+import db, { Customer } from "db"
+import { createContext } from "react"
+import customerContext from "app/customers/contexts/customerContext"
+import { useContext } from "react"
+import CustomerProvider from "app/customers/providers/customerProvider"
 
-const ShowCustomerPage = () => {
+const ShowCustomerPage: BlitzPage = () => {
   const router = useRouter()
   const customerId = useParam("customerId", "number")
+  // const [customer] = useQuery(getCustomer, { id: customerId }, { suspense: false })
 
-  const [creatingLocation, setCreatingLocation] = useState(false)
   const [editingCustomer, setEditingCustomer] = useState(false)
+  const [creatingLocation, setCreatingLocation] = useState(false)
 
-  // const [customerMutationState, setCustomerMutationState] = useState<MutationType>("edit")
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
-  const [customer] = useQuery(getCustomer, { id: customerId })
+  const { customer } = useContext(customerContext)
 
   return (
     <>
-      <CustomerModalForm
-        customerId={customerId}
-        isOpen={editingCustomer}
-        onClose={() => setEditingCustomer(false)}
-      />
-
-      <LocationModalForm
-        customerId={customerId!}
-        isOpen={creatingLocation}
-        onClose={() => setCreatingLocation(false)}
-        onSuccess={(location) =>
-          router.push(Routes.ShowLocationPage({ customerId: customerId!, locationId: location.id }))
-        }
-      />
-
       <Flex w="100vw" bg={useColorModeValue("white", "gray.600")}>
         <VStack w="inherit" borderBottomWidth={1}>
           <HStack w="inherit">
@@ -77,7 +54,7 @@ const ShowCustomerPage = () => {
               fontStyle="italic"
               textColor={useColorModeValue("#009a4c", "yellow.200")}
             >
-              {customer.firstname} {customer.lastname}
+              {customer?.firstname} {customer?.lastname}
             </Heading>
             {/*
               </MenuButton>
@@ -145,14 +122,14 @@ const ShowCustomerPage = () => {
             textColor="white"
             size="xs"
             onClick={async () => {
-              if (window.confirm(`OK to delete ${customer.firstname} ${customer.lastname}?`)) {
+              if (window.confirm(`OK to delete ${customer?.firstname} ${customer?.lastname}?`)) {
                 await deleteCustomerMutation({ id: customer!.id }).then(() =>
                   router.push(Routes.CustomersPage())
                 )
               }
             }}
           >
-            Delete {`${customer.firstname} ${customer.lastname}`}
+            Delete {`${customer?.firstname} ${customer?.lastname}`}
           </Button>
         </VStack>
       </Flex>
@@ -161,6 +138,10 @@ const ShowCustomerPage = () => {
 }
 
 ShowCustomerPage.authenticate = true
-ShowCustomerPage.getLayout = (page) => <HeaderLayout title="Customer page">{page}</HeaderLayout>
+ShowCustomerPage.getLayout = (page) => (
+  <HeaderLayout title="Customer page" subheader={<CustomerSubheader />}>
+    {page}
+  </HeaderLayout>
+)
 
 export default ShowCustomerPage
