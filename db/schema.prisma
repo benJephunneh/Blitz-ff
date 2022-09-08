@@ -7,7 +7,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
@@ -78,7 +78,7 @@ model Location {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  primary Boolean @default(true)
+  primary    Boolean  @default(true)
   house      String?
   street     String
   city       String
@@ -89,30 +89,52 @@ model Location {
   parcel     String?
   customer   Customer @relation(fields: [customerId], references: [id])
   customerId Int
+  jobs Job[]
 }
 
 model CustomerArchive {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  firstname String
-  lastname  String
+  id                Int               @id @default(autoincrement())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  firstname         String
+  lastname          String
   archivedLocations LocationArchive[]
 }
 
 model LocationArchive {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  primary Boolean @default(true)
-  house      String?
-  street     String
-  city       String
-  state      String   @default("FL")
-  zipcode    String
-  block      String?
-  lot        String?
-  parcel     String?
-  archivedCustomer   CustomerArchive @relation(fields: [customerId], references: [id])
-  customerId Int
+  id               Int             @id @default(autoincrement())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  primary          Boolean         @default(true)
+  house            String?
+  street           String
+  city             String
+  state            String          @default("FL")
+  zipcode          String
+  block            String?
+  lot              String?
+  parcel           String?
+  archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id])
+  customerId       Int
+  archivedJobs JobArchive[]
+}
+
+model Job {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  start      DateTime?
+  end        DateTime?
+  location   Location  @relation(fields: [locationId], references: [id])
+  locationId Int
+}
+
+model JobArchive {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  start      DateTime?
+  end        DateTime?
+  archivedLocation   LocationArchive  @relation(fields: [locationId], references: [id])
+  locationId Int
 }
