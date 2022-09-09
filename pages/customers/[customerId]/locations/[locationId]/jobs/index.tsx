@@ -1,25 +1,25 @@
-import { Suspense } from "react";
-import { BlitzPage, Routes } from "@blitzjs/next";
-import Head from "next/head";
-import Link from "next/link";
-import { usePaginatedQuery } from "@blitzjs/rpc";
-import { useRouter } from "next/router";
-import Layout from "app/core/layouts/Layout";
-import getJobs from "app/jobs/queries/getJobs";
+import { Suspense } from "react"
+import { BlitzPage, Routes } from "@blitzjs/next"
+import Head from "next/head"
+import Link from "next/link"
+import { usePaginatedQuery } from "@blitzjs/rpc"
+import { useRouter } from "next/router"
+import Layout from "app/core/layouts/Layout"
+import getJobs from "app/jobs/queries/getJobs"
 
-const ITEMS_PER_PAGE = 100;
+const ITEMS_PER_PAGE = 100
 
 export const JobsList = () => {
-  const router = useRouter();
-  const page = Number(router.query.page) || 0;
+  const router = useRouter()
+  const page = Number(router.query.page) || 0
   const [{ jobs, hasMore }] = usePaginatedQuery(getJobs, {
     orderBy: { id: "asc" },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
-  });
+  })
 
-  const goToPreviousPage = () => router.push({ query: { page: page - 1 } });
-  const goToNextPage = () => router.push({ query: { page: page + 1 } });
+  const goToPreviousPage = () => router.push({ query: { page: page - 1 } })
+  const goToNextPage = () => router.push({ query: { page: page + 1 } })
 
   return (
     <div>
@@ -27,7 +27,7 @@ export const JobsList = () => {
         {jobs.map((job) => (
           <li key={job.id}>
             <Link href={Routes.ShowJobPage({ jobId: job.id })}>
-              <a>{job.name}</a>
+              <a>{job.title}</a>
             </Link>
           </li>
         ))}
@@ -40,8 +40,8 @@ export const JobsList = () => {
         Next
       </button>
     </div>
-  );
-};
+  )
+}
 
 const JobsPage: BlitzPage = () => {
   return (
@@ -62,7 +62,7 @@ const JobsPage: BlitzPage = () => {
         </Suspense>
       </div>
     </Layout>
-  );
-};
+  )
+}
 
-export default JobsPage;
+export default JobsPage

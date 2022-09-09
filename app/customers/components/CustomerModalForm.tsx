@@ -1,26 +1,24 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
-import { PromiseReturnType } from "blitz"
 import { FORM_ERROR } from "final-form"
 import createCustomer from "../mutations/createCustomer"
 import updateCustomer from "../mutations/updateCustomer"
 import getCustomer from "../queries/getCustomer"
 import { CreateCustomer } from "../validations"
-import { Center, ModalProps, Spinner } from "@chakra-ui/react"
+import { Grid, GridItem, ModalProps } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
+import { Customer } from "@prisma/client"
 
 type CustomerModalFormProps = {
   isOpen: boolean
   onClose: () => void
-  onSuccess?: (customer: PromiseReturnType<typeof createCustomer | typeof updateCustomer>) => void
+  onSuccess?: (customer: Customer) => void
   // onSuccess?: (customer: Customer) => void
   customerId?: number
   mutationType?: MutationType
   props?: Partial<ModalProps>
 }
-
-type Customer = PromiseReturnType<typeof createCustomer>
 
 const CustomerModalForm = ({
   isOpen,
@@ -36,7 +34,7 @@ const CustomerModalForm = ({
   const [customer, { isLoading }] = useQuery(
     getCustomer,
     { id: customerId },
-    { suspense: false, enabled: !!customerId }
+    { suspense: !!customerId, enabled: !!customerId }
   )
   // console.log(`customerId: ${customerId}`)
   // console.log(`isLoading: ${isLoading}`)
@@ -63,7 +61,7 @@ const CustomerModalForm = ({
   //   lastname,
   // }
 
-  const onSubmit = async (values) => {
+  const onSubmit = (values) => {
     if (customer) {
       return editCustomerMutation({ id: customer.id, ...values })
     }
@@ -79,6 +77,7 @@ const CustomerModalForm = ({
 
   return (
     <ModalForm
+      size="lg"
       isOpen={isOpen}
       onClose={onClose}
       schema={CreateCustomer}
@@ -87,6 +86,8 @@ const CustomerModalForm = ({
       initialValues={{
         firstname: customer?.firstname ?? "",
         lastname: customer?.lastname ?? "",
+        email: customer?.email ?? "",
+        phone: customer?.phone ?? "",
       }}
       onSubmit={(values) => {
         onSubmit(values)
@@ -94,10 +95,20 @@ const CustomerModalForm = ({
           .catch((error) => handleError(error))
       }}
       render={() => (
-        <>
-          <LabeledTextField name="firstname" label="First name" />
-          <LabeledTextField name="lastname" label="Last name" />
-        </>
+        <Grid templateColumns="repeat(5, 1fr)" gap={2}>
+          <GridItem colSpan={2}>
+            <LabeledTextField name="firstname" label="First name" />
+          </GridItem>
+          <GridItem colSpan={3}>
+            <LabeledTextField name="lastname" label="Last name" />
+          </GridItem>
+          <GridItem colSpan={3}>
+            <LabeledTextField name="email" label="Email address" type="email" />
+          </GridItem>
+          <GridItem colSpan={2}>
+            <LabeledTextField name="phone" label="Phone number" type="phone" />
+          </GridItem>
+        </Grid>
       )}
       {...props}
     />

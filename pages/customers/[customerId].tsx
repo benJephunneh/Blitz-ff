@@ -5,22 +5,15 @@ import { BlitzPage, Routes, useParam } from "@blitzjs/next"
 import getCustomer from "app/customers/queries/getCustomer"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import LocationList from "app/locations/components/LocationList"
-import {
-  Button,
-  Container,
-  Flex,
-  useColorModeValue,
-  VStack,
-} from "@chakra-ui/react"
-import { useContext, useState } from "react"
+import { Button, Container, Flex, useColorModeValue, VStack } from "@chakra-ui/react"
+import { useState } from "react"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 import CustomerSubheader from "app/customers/components/CustomerSubheader"
-import customerContext from "app/customers/contexts/customerContext"
 
 const ShowCustomerPage: BlitzPage = () => {
   const router = useRouter()
 
-  const customerId = useParam('customerId', 'number')
+  const customerId = useParam("customerId", "number")
   const [customer] = useQuery(getCustomer, { id: customerId })
 
   const [editingCustomer, setEditingCustomer] = useState(false)
@@ -124,7 +117,7 @@ const ShowCustomerPage: BlitzPage = () => {
   )
 }
 
-ShowCustomerPage.authenticate = true
+ShowCustomerPage.authenticate = { redirectTo: Routes.Home() }
 ShowCustomerPage.getLayout = (page) => (
   <HeaderLayout title="Customer page" subheader={<CustomerSubheader />}>
     {page}

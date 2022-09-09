@@ -17,6 +17,7 @@ type CustomerDrawerProps = {
 
 const CustomerDrawer = ({ isOpen, onClose }: CustomerDrawerProps) => {
   const { customer } = useContext(customerContext)
+  // console.log(`Customer's firstname from CustomerDrawer: ${customer?.firstname}`)
 
   return (
     <Drawer placement="right" size="xl" onClose={onClose} isOpen={isOpen}>
@@ -24,7 +25,8 @@ const CustomerDrawer = ({ isOpen, onClose }: CustomerDrawerProps) => {
       <DrawerContent>
         <DrawerCloseButton zIndex={2} />
         <DrawerHeader borderBottomWidth={1}>
-          {customer.firstname} {customer.lastname}
+          {/* {customer.firstname} {customer.lastname} */}
+          asdf
         </DrawerHeader>
         <DrawerBody p={0}>
           <Spinner />

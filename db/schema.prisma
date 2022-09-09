@@ -71,17 +71,17 @@ model Customer {
   updatedAt DateTime   @updatedAt
   firstname String
   lastname  String
+  email            String @unique
+  phone            String @unique
   locations Location[]
 
-  @@index([firstname, lastname])
+  @@index([firstname, lastname, email, phone])
 }
 
 model Location {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  email      String
-  phone      String
   primary    Boolean  @default(true)
   house      String?
   street     String
@@ -95,7 +95,7 @@ model Location {
   customerId Int
   jobs       Job[]
 
-  @@index([email, phone, house, street, city, zipcode, block, lot, parcel])
+  @@index([house, street, city, zipcode, block, lot, parcel])
 }
 
 model CustomerArchive {
@@ -104,6 +104,8 @@ model CustomerArchive {
   updatedAt         DateTime          @updatedAt
   firstname         String
   lastname          String
+  email            String @unique
+  phone            String @unique
   archivedLocations LocationArchive[]
 }
 
@@ -111,8 +113,6 @@ model LocationArchive {
   id               Int             @id @default(autoincrement())
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
-  email            String
-  phone            String
   primary          Boolean         @default(true)
   house            String?
   street           String

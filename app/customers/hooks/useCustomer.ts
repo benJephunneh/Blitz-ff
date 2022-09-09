@@ -2,15 +2,22 @@ import { useQuery } from "@blitzjs/rpc"
 import getCustomer from "../queries/getCustomer"
 
 type UseCustomerOptions = {
-  id: number
+  id?: number
   suspense?: boolean
   enabled?: boolean
 }
 
-const useCustomer = ({ id, suspense, enabled }: UseCustomerOptions) => {
-  const [customer] = useQuery(getCustomer, { where: { id } }, { suspense, enabled })
+const useCustomer = ({ id, suspense = true, enabled }: UseCustomerOptions) => {
+  const [customer, { refetch: refetchCustomer }] = useQuery(
+    getCustomer,
+    { id },
+    { suspense, enabled }
+  )
 
-  return customer
+  return {
+    customer,
+    refetchCustomer,
+  }
 }
 
 export default useCustomer

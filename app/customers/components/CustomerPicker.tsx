@@ -1,5 +1,5 @@
 import { Routes } from "@blitzjs/next"
-import { useQuery } from "@blitzjs/rpc"
+import { usePaginatedQuery, useQuery } from "@blitzjs/rpc"
 import {
   Button,
   Heading,
@@ -7,7 +7,6 @@ import {
   Icon,
   Menu,
   MenuButton,
-  MenuDivider,
   MenuItem,
   MenuList,
 } from "@chakra-ui/react"
@@ -24,20 +23,23 @@ type CustomerPickerProps = {
 }
 
 const CustomerPicker = ({ icon }: CustomerPickerProps) => {
-  const [customers] = useQuery(getCustomers,
+  const [{ customers, count }] = usePaginatedQuery(
+    getCustomers,
     { orderBy: { lastname: "asc" } },
-    { suspense: true })
+    { suspense: true }
+  )
   const { customer } = useContext(customerContext)
 
+  const tempArray = [1, 2, 3]
+
   return (
-    <Menu>
+    <Menu isLazy>
       <MenuButton
         as={Button}
         size="sm"
         variant="ghost"
         px={1}
         rightIcon={<Icon pr={1} as={FaChevronDown} />}
-        isTruncated
       >
         <HStack>
           <Icon as={icon} w={5} h={5} />
@@ -48,27 +50,21 @@ const CustomerPicker = ({ icon }: CustomerPickerProps) => {
       </MenuButton>
 
       <MenuList>
-        <>
-          <Link href={Routes.CustomersPage()} passHref>
-            <MenuItem as="a" icon={<FcList />}>
-              Customers
-            </MenuItem>
-          </Link>
+        {/* <Link href={Routes.CustomersPage()} passHref>
+          <MenuItem as="a" icon={<FcList />}>
+            Customers
+          </MenuItem>
+        </Link> */}
+        <MenuItem>Customers array length: {customers.length}</MenuItem>
+        <MenuItem>Customers count: {count}</MenuItem>
 
-          {!!customers?.customers.length && <MenuDivider />}
+        {tempArray.map((e, ii) => (
+          <MenuItem key={ii}>{e}</MenuItem>
+        ))}
 
-          {customers?.customers.map((customer) => {
-            <Link
-              key={customer.id}
-              href={Routes.ShowCustomerPage({ customerId: customer.id })}
-              passHref
-            >
-              <MenuItem as="a" icon={<FcTimeline />}>
-                {`${customer.firstname} ${customer.lastname}`}
-              </MenuItem>
-            </Link>
-          })}
-        </>
+        {customers.map((customer, ii) => (
+          <MenuItem key={customer.id}>{customer.firstname}</MenuItem>
+        ))}
       </MenuList>
     </Menu>
   )

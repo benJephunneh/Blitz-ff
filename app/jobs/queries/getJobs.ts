@@ -1,13 +1,13 @@
-import { paginate } from "blitz";
-import { resolver } from "@blitzjs/rpc";
-import db, { Prisma } from "db";
+import { paginate } from "blitz"
+import { resolver } from "@blitzjs/rpc"
+import db, { Prisma } from "db"
 
 interface GetJobsInput
-  extends Pick<Prisma.JobFindManyArgs, "where" | "orderBy" | "skip" | "take"> {}
+  extends Pick<Prisma.JobFindManyArgs, "where" | "include" | "orderBy" | "skip" | "take"> {}
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetJobsInput) => {
+  async ({ where, include, orderBy, skip = 0, take = 100 }: GetJobsInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const {
       items: jobs,
@@ -18,15 +18,14 @@ export default resolver.pipe(
       skip,
       take,
       count: () => db.job.count({ where }),
-      query: (paginateArgs) =>
-        db.job.findMany({ ...paginateArgs, where, orderBy }),
-    });
+      query: (paginateArgs) => db.job.findMany({ ...paginateArgs, where, include, orderBy }),
+    })
 
     return {
       jobs,
       nextPage,
       hasMore,
       count,
-    };
+    }
   }
-);
+)

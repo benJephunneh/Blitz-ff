@@ -114,8 +114,6 @@ const LocationModalForm = ({
       title={locationId ? "Edit location" : "New location"}
       submitText={locationId ? "Update" : "Create"}
       initialValues={{
-        email: location?.email ?? "",
-        phone: location?.phone ?? "",
         primary: location?.primary ?? true,
         house: location?.house ?? "",
         street: location?.street ?? "",
