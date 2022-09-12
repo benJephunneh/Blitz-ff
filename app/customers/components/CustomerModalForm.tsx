@@ -14,7 +14,6 @@ type CustomerModalFormProps = {
   isOpen: boolean
   onClose: () => void
   onSuccess?: (customer: Customer) => void
-  // onSuccess?: (customer: Customer) => void
   customerId?: number
   mutationType?: MutationType
   props?: Partial<ModalProps>
@@ -34,7 +33,7 @@ const CustomerModalForm = ({
   const [customer, { isLoading }] = useQuery(
     getCustomer,
     { id: customerId },
-    { suspense: !!customerId, enabled: !!customerId }
+    { suspense: !!customerId, enabled: !!customerId, staleTime: Infinity }
   )
   // console.log(`customerId: ${customerId}`)
   // console.log(`isLoading: ${isLoading}`)

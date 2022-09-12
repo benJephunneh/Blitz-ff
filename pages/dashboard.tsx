@@ -19,6 +19,7 @@ import SidebarLayout from "app/core/layouts/SideBarLayout"
 import SideHeaderLayout from "app/core/layouts/SideHeaderLayout"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 import Link from "next/link"
+import DashboardSubheader from "app/dashboard/DashboardSubheader"
 
 type UserInfoProps = Partial<User>
 
@@ -72,13 +73,23 @@ const Dashboard: BlitzPage = () => {
 
       <footer>
         <HStack spacing={2}>
-          <Link href="https://github.com/benJephunneh/Blitz-ff" passHref rel='noopener noreferrer' target='_blank'>
-            <Button as='a' size='sm'>
+          <Link
+            href="https://github.com/benJephunneh/Blitz-ff"
+            passHref
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Button as="a" size="sm">
               Github: dev-ff
             </Button>
           </Link>
-          <Link href="https://www.apalacheeseptic.com" passHref rel='noopener noreferrer' target='_blank'>
-            <Button as='a' size='sm'>
+          <Link
+            href="https://www.apalacheeseptic.com"
+            passHref
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Button as="a" size="sm">
               Apalachee Backhoe
             </Button>
           </Link>
@@ -91,7 +102,11 @@ const Dashboard: BlitzPage = () => {
 Dashboard.suppressFirstRenderFlicker = true
 Dashboard.authenticate = { redirectTo: Routes.Home() }
 Dashboard.getLayout = (page) => (
-  <HeaderLayout title="Dashboard" description="Home page for ABST staff">
+  <HeaderLayout
+    title="Dashboard"
+    description="Home page for ABST staff"
+    subheader={<DashboardSubheader />}
+  >
     {page}
   </HeaderLayout>
 )

@@ -55,9 +55,9 @@ const Header = () => {
         <Box
           as="header"
           py={3}
-          bg={useColorModeValue("white", "gray.700")}
+          bg={useColorModeValue("white", "gray.600")}
           borderBottom="1px solid"
-          borderBottomColor={useColorModeValue("gray.200", "gray.800")}
+          borderBottomColor={useColorModeValue("gray.100", "blackAlpha.300")}
         >
           <Grid templateColumns={`repeat(6, 1fr)`} alignItems="center">
             <GridItem colSpan={1} ml={5}>

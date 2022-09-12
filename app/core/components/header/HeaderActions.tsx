@@ -1,5 +1,5 @@
 import { useSession } from "@blitzjs/auth"
-import { HStack, Icon, useColorMode } from "@chakra-ui/react"
+import { HStack, Icon, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import { FaHamburger } from "react-icons/fa"
 import { GiMoon, GiSun, GiWoodenClogs } from "react-icons/gi"
 import HeaderIconButton from "./HeaderIconButton"
@@ -12,6 +12,7 @@ const HeaderActions = ({ toggleDrawer }: HeaderActionsProps) => {
   const { colorMode, toggleColorMode } = useColorMode()
   const session = useSession({ suspense: false })
   const isLoggedIn = !!session.userId
+  const iconColor = useColorModeValue("gray.700", "gray.200")
 
   return (
     <HStack spacing={3}>
@@ -19,13 +20,13 @@ const HeaderActions = ({ toggleDrawer }: HeaderActionsProps) => {
         <HeaderIconButton
           label="Open menu"
           onClick={toggleDrawer}
-          icon={<Icon as={FaHamburger} w={6} h={6} />}
+          icon={<Icon as={FaHamburger} color={iconColor} w={6} h={6} />}
         />
       )}
       <HeaderIconButton
         label={colorMode === "dark" ? "Bright" : "Dark"}
         onClick={toggleColorMode}
-        icon={<Icon as={colorMode === "dark" ? GiSun : GiMoon} w={8} h={8} />}
+        icon={<Icon as={colorMode === "dark" ? GiSun : GiMoon} color={iconColor} w={8} h={8} />}
       />
     </HStack>
   )

@@ -30,21 +30,22 @@ const HeaderCrumbs = () => {
 
   const textColorMode = useColorModeValue("cyan.500", "blue.200")
   // const textColor = paths?.slice(1).length == 1 ? textColorMode : 'blue'
+  const lightDarkTextColor = useColorModeValue("blackAlpha.600", "gray.300")
 
   return (
     <Box
-      bg={useColorModeValue("blackAlpha.100", "gray.600")}
-      borderColor={useColorModeValue('blackAlpha.50', 'blackAlpha.400')}
+      bg={useColorModeValue("blackAlpha.100", "blackAlpha.400")}
+      borderColor={useColorModeValue("gray.50", "blackAlpha.50")}
       px={4}
       pb={1}
-      borderWidth={1}
-      borderRadius={4}
+      borderWidth={2}
+      borderRadius={8}
     >
       <Breadcrumb fontWeight="black" fontStyle="italic">
         <BreadcrumbItem>
           <BreadcrumbLink
             href="/dashboard"
-            textColor={useColorModeValue('blackAlpha.600', 'gray.300')}
+            textColor={useColorModeValue("blackAlpha.600", "gray.300")}
           >
             dashboard
           </BreadcrumbLink>
@@ -54,7 +55,7 @@ const HeaderCrumbs = () => {
             <BreadcrumbItem key={ii}>
               <BreadcrumbLink
                 href={`/${paths?.slice(1, ii + 2).join("/")}`}
-                textColor={ii + 1 == paths?.slice(1).length ? textColorMode : useColorModeValue('blackAlpha.600', 'gray.300')}
+                textColor={ii + 1 == paths?.slice(1).length ? textColorMode : lightDarkTextColor}
                 fontSize={ii + 1 == paths?.slice(1).length ? "xl" : "md"}
               >
                 {path}

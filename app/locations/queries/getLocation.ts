@@ -1,10 +1,10 @@
 import { resolver } from "@blitzjs/rpc"
 import { NotFoundError } from "blitz"
-import db from "db"
+import db, { Location } from "db"
 import { z } from "zod"
 
 const GetLocation = z.object({
-  id: z.number(),
+  id: z.number().optional(),
 })
 
 export default resolver.pipe(
@@ -17,7 +17,13 @@ export default resolver.pipe(
       where: { id },
     })
 
-    if (!location) throw new NotFoundError(`LocationId ${id} not found.`)
+    if (!location) {
+      if (!!id) {
+        throw new NotFoundError(`LocationId ${id} not found.`)
+      } else {
+        return {} as Location
+      }
+    }
 
     return location
   }

@@ -27,12 +27,7 @@ import { useRouter } from "next/router"
 import React from "react"
 import { useState } from "react"
 import { FaEdit } from "react-icons/fa"
-import {
-  FcEditImage,
-  FcGlobe,
-  FcNumericalSorting12,
-  FcNumericalSorting21,
-} from "react-icons/fc"
+import { FcEditImage, FcGlobe, FcNumericalSorting12, FcNumericalSorting21 } from "react-icons/fc"
 
 type LocationProp = { location: Location }
 type SortOrder = "asc" | "desc"
@@ -82,8 +77,8 @@ export const LocationEntry = ({ location }: LocationProp) => {
 const ITEMS_PER_PAGE = 20
 const LocationList = ({ customerId }: { customerId: number }) => {
   const router = useRouter()
-  const hovered = useColorModeValue('gray.50', 'gray.700')
-  const linkText = useColorModeValue('gray.800', 'gray.200')
+  const hovered = useColorModeValue("gray.50", "gray.700")
+  const linkText = useColorModeValue("gray.800", "gray.200")
   const initialSortBy = [
     { primary: "asc" as SortOrder },
     { zipcode: "asc" as SortOrder },
@@ -101,24 +96,38 @@ const LocationList = ({ customerId }: { customerId: number }) => {
   })
 
   return (
-    <Flex justifyContent='space-around'>
+    <Flex justifyContent="space-around">
       <VStack w="inherit">
-        <Box bg={useColorModeValue('gray.200', 'gray.700')} borderWidth={2} borderRadius={8} borderColor={useColorModeValue('gray.100', 'gray.800')}>
+        <Box
+          bg={useColorModeValue("gray.300", "gray.700")}
+          borderWidth={2}
+          borderRadius={8}
+          borderColor={useColorModeValue("gray.100", "gray.800")}
+        >
           <TableContainer m={4} borderRadius={8} justifyContent="space-around">
             <Table
               size="sm"
               borderWidth={2}
               w="90vw"
-              borderColor={useColorModeValue('gray.100', 'gray.800')}
+              borderColor={useColorModeValue("gray.100", "gray.800")}
             >
-              <Thead bg={useColorModeValue("gray.50", "gray.900")} borderBottomWidth={2} borderBottomColor='blackAlpha.200'>
+              <Thead
+                bg={useColorModeValue("gray.50", "gray.900")}
+                borderBottomWidth={2}
+                borderBottomColor="blackAlpha.200"
+              >
                 <Tr>
                   <HStack>
-                    <Th textColor={useColorModeValue('gray.800', 'gray.500')} fontWeight="extrabold">Address</Th>
+                    <Th
+                      textColor={useColorModeValue("gray.800", "gray.500")}
+                      fontWeight="extrabold"
+                    >
+                      Address
+                    </Th>
                     <Tooltip label="Sort by address">
                       <IconButton
                         aria-label="Sort by address"
-                        bg={useColorModeValue('transparent', "gray.900")}
+                        bg={useColorModeValue("transparent", "gray.900")}
                         icon={
                           sortMethod == "asc" ? (
                             <FcNumericalSorting12 size={20} />
@@ -140,14 +149,23 @@ const LocationList = ({ customerId }: { customerId: number }) => {
                       />
                     </Tooltip>
                   </HStack>
-                  <Th textColor={useColorModeValue('gray.800', 'gray.500')} fontWeight="extrabold">Block</Th>
-                  <Th textColor={useColorModeValue('gray.800', 'gray.500')} fontWeight="extrabold">Lot</Th>
+                  <Th textColor={useColorModeValue("gray.800", "gray.500")} fontWeight="extrabold">
+                    Block
+                  </Th>
+                  <Th textColor={useColorModeValue("gray.800", "gray.500")} fontWeight="extrabold">
+                    Lot
+                  </Th>
                   <HStack>
-                    <Th textColor={useColorModeValue('gray.800', 'gray.500')} fontWeight="extrabold">Parcel</Th>
+                    <Th
+                      textColor={useColorModeValue("gray.800", "gray.500")}
+                      fontWeight="extrabold"
+                    >
+                      Parcel
+                    </Th>
                     <Tooltip label="Sort by parcel">
                       <IconButton
                         aria-label="Sort by parcel"
-                        bg={useColorModeValue('transparent', 'gray.900')}
+                        bg={useColorModeValue("transparent", "gray.900")}
                         icon={
                           sortMethod == "asc" ? (
                             <FcNumericalSorting12 size={20} />
@@ -169,45 +187,56 @@ const LocationList = ({ customerId }: { customerId: number }) => {
                       />
                     </Tooltip>
                   </HStack>
-                  <Th textColor={useColorModeValue('gray.800', 'gray.500')} fontWeight="extrabold">Map</Th>
+                  <Th textColor={useColorModeValue("gray.800", "gray.500")} fontWeight="extrabold">
+                    Map
+                  </Th>
                 </Tr>
               </Thead>
-              <Tbody bg={useColorModeValue('gray.100', 'gray.800')}>
+              <Tbody bg={useColorModeValue("gray.100", "gray.800")}>
                 {locations.map((location) => {
                   return (
-                    <Tr
-                      key={location.id}
-                      _hover={{ bg: hovered }}
-                    >
+                    <Tr key={location.id} _hover={{ bg: hovered }}>
                       <Td>
                         <HStack>
                           <Link
                             href={Routes.ShowLocationPage({ customerId, locationId: location.id })}
                             passHref
                           >
-                            <Text as='a' fontWeight='semibold' textColor={linkText}>
+                            <Text as="a" fontWeight="semibold" textColor={linkText}>
                               {`${location.house} ${location.street}, ${location.city}, ${location.zipcode}`}
                             </Text>
                           </Link>
-                          <IconButton aria-label="Edit location" icon={<FaEdit size={10} />} variant='ghost' />
+                          <IconButton
+                            aria-label="Edit location"
+                            icon={<FaEdit size={10} />}
+                            variant="ghost"
+                          />
                         </HStack>
                       </Td>
                       <Td>
-                        <Text fontWeight='semibold' textColor={linkText}>
+                        <Text fontWeight="semibold" textColor={linkText}>
                           {location.block}
                         </Text>
                       </Td>
                       <Td>
-                        <Text fontWeight='semibold' textColor={linkText}>
+                        <Text fontWeight="semibold" textColor={linkText}>
                           {location.lot}
                         </Text>
                       </Td>
                       <Td>
-                        <Tag justifyContent='left' colorScheme="orange" ml={-2}>
+                        <Tag justifyContent="left" colorScheme="orange" ml={-2}>
                           {location.parcel ? (
                             <TagLabel>
-                              <Link href={`https://beacon.schneidercorp.com/Search?q=${location.parcel}`} passHref>
-                                <Text as="a" fontSize="smaller" rel="noopener noreferrer" target="_blank">
+                              <Link
+                                href={`https://beacon.schneidercorp.com/Search?q=${location.parcel}`}
+                                passHref
+                              >
+                                <Text
+                                  as="a"
+                                  fontSize="smaller"
+                                  rel="noopener noreferrer"
+                                  target="_blank"
+                                >
                                   {location.parcel}
                                 </Text>
                               </Link>
@@ -218,7 +247,12 @@ const LocationList = ({ customerId }: { customerId: number }) => {
                                 href={`https://beacon.schneidercorp.com/Search?q=${location.house} ${location.street}`}
                                 passHref
                               >
-                                <Text as="a" fontSize="smaller" rel="noopener norefferer" target="_blank">
+                                <Text
+                                  as="a"
+                                  fontSize="smaller"
+                                  rel="noopener norefferer"
+                                  target="_blank"
+                                >
                                   Find parcel ID
                                 </Text>
                               </Link>
@@ -230,10 +264,10 @@ const LocationList = ({ customerId }: { customerId: number }) => {
                         <Link
                           href={`http://maps.google.com/maps?q=${location.house} ${location.street} ${location.city},${location.state}`}
                           passHref
-                          target='_blank'
-                          rel='noopener noreferrer'
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
-                          <Text as='a' fontWeight='semibold' textColor={linkText}>
+                          <Text as="a" fontWeight="semibold" textColor={linkText}>
                             map
                           </Text>
                         </Link>

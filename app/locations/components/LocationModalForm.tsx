@@ -39,7 +39,7 @@ const LocationModalForm = ({
   const [location, { isLoading }] = useQuery(
     getLocation,
     { id: locationId },
-    { suspense: false, enabled: !!locationId }
+    { suspense: false, enabled: !!locationId, staleTime: Infinity }
   )
 
   // let mutation: MutateFunction<Location, unknown, {}, unknown>

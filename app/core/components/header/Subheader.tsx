@@ -11,8 +11,8 @@ const Subheader = ({ children }: SubheaderProps) => {
     <Box
       py={2}
       borderBottom="1px solid"
-      borderBottomColor={useColorModeValue("gray.200", "gray.800")}
-      bg={useColorModeValue("white", "gray.700")}
+      borderBottomColor={useColorModeValue("gray.200", "gray.700")}
+      bg={useColorModeValue("white", "gray.600")}
       zIndex={2}
     >
       <Container maxW="full">{children}</Container>

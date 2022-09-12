@@ -16,6 +16,7 @@ import { FaPlus } from "react-icons/fa"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import CustomerList from "app/customers/components/CustomerList"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
+import DashboardSubheader from "app/dashboard/DashboardSubheader"
 
 const CustomersPage: BlitzPage = () => {
   const router = useRouter()
@@ -23,8 +24,8 @@ const CustomersPage: BlitzPage = () => {
   // const [mutationState, setMutationState] = useState<MutationType>("edit")
   // const ref = createRef()
 
-  const buttonBorder = useColorModeValue('gray.300', 'gray.600')
-  const emptyBg = useColorModeValue('gray.200', 'gray.700')
+  const buttonBorder = useColorModeValue("gray.300", "gray.600")
+  const emptyBg = useColorModeValue("gray.200", "gray.700")
 
   return (
     <>
@@ -37,10 +38,10 @@ const CustomersPage: BlitzPage = () => {
       {/*
       <ButtonGroup spacing={0} flexDirection="column">
  */}
-      <Flex h='full' bg={useColorModeValue("white", "gray.800")}>
+      <Flex h="full" bg={useColorModeValue("white", "gray.800")}>
         <VStack>
-          <HStack w="100vw" justifyContent='space-between'>
-            <Heading size='md' ml={4} textColor={useColorModeValue('gray.600', 'gray.300')}>
+          <HStack w="100vw" justifyContent="space-between">
+            <Heading size="md" ml={4} textColor={useColorModeValue("gray.600", "gray.300")}>
               Customers
             </Heading>
             <Spacer />
@@ -53,10 +54,10 @@ const CustomersPage: BlitzPage = () => {
                 variant="outline"
                 leftIcon={<FaPlus size={10} />}
                 borderStyle="dashed"
-                bg={useColorModeValue('transparent', 'blue.200')}
+                bg={useColorModeValue("transparent", "blue.200")}
                 borderColor={useColorModeValue("blue.300", "blue.800")}
-                textColor={useColorModeValue('gray.600', 'gray.800')}
-                _hover={{ bg: useColorModeValue('blue.200', 'blue.300') }}
+                textColor={useColorModeValue("gray.600", "gray.800")}
+                _hover={{ bg: useColorModeValue("blue.200", "blue.300") }}
                 onClick={() => {
                   setCreatingCustomer(true)
                 }}
@@ -80,7 +81,7 @@ const CustomersPage: BlitzPage = () => {
 
 CustomersPage.authenticate = { redirectTo: Routes.Home() }
 CustomersPage.getLayout = (page) => (
-  <HeaderLayout title="Customers" description="Customer list">
+  <HeaderLayout title="Customers" description="Customer list" subheader={<DashboardSubheader />}>
     {page}
   </HeaderLayout>
 )
