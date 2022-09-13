@@ -15,6 +15,7 @@ const DashboardSubheader = () => {
       <Subheader>
         <HStack justify="space-between">
           <NavigationPickerSubheader />
+          {/* <CustomerPicker /> */}
           <DashboardSubheaderActions />
         </HStack>
       </Subheader>

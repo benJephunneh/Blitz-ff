@@ -3,6 +3,7 @@ import { createContext } from "react"
 
 export type CustomerContext = {
   editCustomer: () => void
+  deleteCustomer: () => void
   showDetails: () => void
   createLocation: () => void
 

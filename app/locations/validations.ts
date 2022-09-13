@@ -29,20 +29,8 @@ export const CreateLocation = z.object({
   customerId,
 })
 
-export const UpdateLocation = z.object({
+export const UpdateLocation = CreateLocation.extend({
   id,
-  primary,
-  email,
-  phone,
-  house,
-  street,
-  city,
-  state,
-  zipcode,
-  block,
-  lot,
-  parcel,
-  customerId,
 })
 
 export const DeleteLocation = z.object({

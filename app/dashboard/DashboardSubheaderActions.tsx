@@ -1,5 +1,4 @@
 import { Button, HStack, useColorModeValue } from "@chakra-ui/react"
-import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import { useContext } from "react"
 import { FaPlus } from "react-icons/fa"
 import dashboardContext from "./dashboardContext"

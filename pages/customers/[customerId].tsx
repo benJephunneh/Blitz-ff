@@ -5,8 +5,16 @@ import { BlitzPage, Routes, useParam } from "@blitzjs/next"
 import getCustomer from "app/customers/queries/getCustomer"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import LocationList from "app/locations/components/LocationList"
-import { Box, Button, Container, Flex, useColorModeValue, VStack } from "@chakra-ui/react"
-import { useState } from "react"
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  useColorModeValue,
+  useDisclosure,
+  VStack,
+} from "@chakra-ui/react"
+import { useEffect, useState } from "react"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 import CustomerSubheader from "app/customers/components/CustomerSubheader"
 import useCustomer from "app/customers/hooks/useCustomer"
@@ -14,21 +22,36 @@ import { GetServerSideProps } from "next"
 import PrefetchQueryClient from "app/core/helpers/prefetchQueryClient"
 import getLocations from "app/locations/queries/getLocations"
 import { AuthenticationError, AuthorizationError, NotFoundError } from "blitz"
+import ConfirmDeleteModal from "app/core/components/ConfirmDeleteModal"
 
 const ShowCustomerPage: BlitzPage = () => {
   const router = useRouter()
   const customerId = useParam("customerId", "number")
-  console.log(customerId)
-  const [customer] = useQuery(getCustomer, { id: customerId })
+  const [customer] = useQuery(getCustomer, { id: customerId }, { refetchOnWindowFocus: false })
 
-  const [editingCustomer, setEditingCustomer] = useState(false)
-  const [creatingLocation, setCreatingLocation] = useState(false)
+  // Moved to subheader:
+  // const [editingCustomer, setEditingCustomer] = useState(false)
+  // const [creatingLocation, setCreatingLocation] = useState(false)
 
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
-  // const { customer: { id, firstname, lastname } } = useContext(customerContext)
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  useEffect(() => {})
 
   return (
     <Box bg={useColorModeValue("white", "gray.800")}>
+      <ConfirmDeleteModal
+        title={`Delete ${customer?.firstname} ${customer?.lastname}?`}
+        description="Are you sure you want to delete this customer and their history?  All associated locations, jobs, invoices, and estimates will also be deleted."
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={async () => {
+          await deleteCustomerMutation({ id: customer!.id }).then(() =>
+            router.push(Routes.CustomersPage())
+          )
+        }}
+      />
+
       <VStack>
         {/*
           <HStack w="inherit">
@@ -104,13 +127,7 @@ const ShowCustomerPage: BlitzPage = () => {
           bg="red.500"
           textColor="white"
           size="xs"
-          onClick={async () => {
-            if (window.confirm(`OK to delete ${customer!.firstname} ${customer!.lastname}?`)) {
-              await deleteCustomerMutation({ id: customer!.id }).then(() =>
-                router.push(Routes.CustomersPage())
-              )
-            }
-          }}
+          onClick={onOpen}
         >
           Delete {`${customer!.firstname} ${customer!.lastname}`}
         </Button>

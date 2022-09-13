@@ -2,6 +2,7 @@ import { createContext } from "react"
 
 export type DashboardContext = {
   addCustomer: () => void
+  deleteCustomer: () => void
   addJob: () => void
 }
 

@@ -13,12 +13,8 @@ export const CreateCustomer = z.object({
   phone,
 })
 
-export const UpdateCustomer = z.object({
+export const UpdateCustomer = CreateCustomer.extend({
   id,
-  firstname,
-  lastname,
-  email,
-  phone,
 })
 
 export const DeleteCustomer = z.object({

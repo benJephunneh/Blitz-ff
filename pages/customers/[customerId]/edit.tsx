@@ -26,7 +26,7 @@ export const EditCustomer = () => {
   const [updateCustomerMutation] = useMutation(updateCustomer)
   const onSubmit = async (values) => {
     await new Promise((resolve) => {
-      resolve(updateCustomerMutation({ id: customer.id, ...values }))
+      resolve(updateCustomerMutation({ id: customer?.id, ...values }))
     })
   }
   const next = router.query.next ? decodeURIComponent(router.query.next as string) : "/"
@@ -34,11 +34,11 @@ export const EditCustomer = () => {
   return (
     <>
       <Head>
-        <title>Edit Customer {customer.id}</title>
+        <title>Edit Customer {customer?.id}</title>
       </Head>
 
       <div>
-        <h1>Edit Customer {customer.id}</h1>
+        <h1>Edit Customer {customer?.id}</h1>
         <pre>{JSON.stringify(customer, null, 2)}</pre>
 
         <CustomerForm
@@ -47,7 +47,7 @@ export const EditCustomer = () => {
           //  - Tip: extract mutation's schema into a shared `validations.ts` file and
           //         then import and use it here
           schema={UpdateCustomer}
-          initialValues={customer}
+          initialValues={customer!}
           onSubmit={(values) => {
             onSubmit(values)
               .then((updated) => setQueryData(updated!))

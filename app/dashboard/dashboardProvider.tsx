@@ -17,12 +17,14 @@ type DashboardProviderProps = {
 const DashboardProvider = ({ locationId, children }: DashboardProviderProps) => {
   const router = useRouter()
   const [addingCustomer, setAddingCustomer] = useState(false)
+  const [deletingCustomer, setDeletingCustomer] = useState(false)
   const [addingJob, setAddingJob] = useState(false)
 
   return (
     <Provider
       value={{
         addCustomer: () => setAddingCustomer(true),
+        deleteCustomer: () => setDeletingCustomer(true),
         addJob: () => setAddingJob(true),
       }}
     >

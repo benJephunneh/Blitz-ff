@@ -13,7 +13,7 @@ import { useRouter } from "next/router"
 import { useContext } from "react"
 import { useState } from "react"
 import { FaArrowRight, FaPlus } from "react-icons/fa"
-import { FcDoughnutChart } from "react-icons/fc"
+import { FcDoughnutChart, FcFullTrash } from "react-icons/fc"
 import { TiEdit } from "react-icons/ti"
 import customerContext from "../contexts/customerContext"
 import CustomerModalForm from "./CustomerModalForm"
@@ -21,7 +21,8 @@ import CustomerModalForm from "./CustomerModalForm"
 const CustomerSubheaderActions = () => {
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [creatingLocation, setCreatingLocation] = useState(false)
-  const { customer, showDetails, editCustomer, refetchCustomer, refetchLocations } = useContext(customerContext)
+  const { customer, showDetails, editCustomer, deleteCustomer, refetchCustomer, refetchLocations } =
+    useContext(customerContext)
 
   return (
     <>
@@ -58,8 +59,11 @@ const CustomerSubheaderActions = () => {
         </Button>
         <SettingsMenuButton>
           <MenuList>
-            <MenuItem icon={<TiEdit />} onClick={() => setEditingCustomer(true)}>
+            <MenuItem icon={<TiEdit />} onClick={editCustomer} fontWeight="semibold">
               Edit customer
+            </MenuItem>
+            <MenuItem icon={<FcFullTrash />} onClick={deleteCustomer} fontWeight="semibold">
+              Delete customer
             </MenuItem>
           </MenuList>
         </SettingsMenuButton>
@@ -71,7 +75,10 @@ const CustomerSubheaderActions = () => {
           fontWeight="bold"
           variant="outline"
           colorScheme="blue"
-        ></Button>
+          onClick={showDetails}
+        >
+          $(bal)
+        </Button>
       </HStack>
     </>
   )
