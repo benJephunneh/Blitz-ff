@@ -88,8 +88,8 @@ const CustomerModalForm = ({
         email: customer?.email ?? "",
         phone: customer?.phone ?? "",
       }}
-      onSubmit={(values) => {
-        onSubmit(values)
+      onSubmit={async (values) => {
+        await onSubmit(values)
           .then((customer) => onSuccess?.(customer))
           .catch((error) => handleError(error))
       }}

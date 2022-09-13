@@ -28,25 +28,22 @@ const HeaderCrumbs = () => {
 
   // Could go off of /customers/... in path to infer useQuery(getCustomer ...)
 
-  const textColorMode = useColorModeValue("cyan.500", "blue.200")
+  const textColorMode = useColorModeValue("cyan.500", "cyan.300")
   // const textColor = paths?.slice(1).length == 1 ? textColorMode : 'blue'
   const lightDarkTextColor = useColorModeValue("blackAlpha.600", "gray.300")
 
   return (
     <Box
-      bg={useColorModeValue("blackAlpha.100", "blackAlpha.400")}
-      borderColor={useColorModeValue("gray.50", "blackAlpha.50")}
       px={4}
       pb={1}
-      borderWidth={2}
+      bg={useColorModeValue("blackAlpha.100", "gray.700")}
+      borderColor={useColorModeValue("gray.50", "blackAlpha.100")}
+      borderWidth={1}
       borderRadius={8}
     >
       <Breadcrumb fontWeight="black" fontStyle="italic">
         <BreadcrumbItem>
-          <BreadcrumbLink
-            href="/dashboard"
-            textColor={useColorModeValue("blackAlpha.600", "gray.300")}
-          >
+          <BreadcrumbLink href="/dashboard" textColor={lightDarkTextColor}>
             dashboard
           </BreadcrumbLink>
         </BreadcrumbItem>

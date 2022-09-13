@@ -9,11 +9,13 @@ type SubheaderProps = {
 const Subheader = ({ children }: SubheaderProps) => {
   return (
     <Box
+      position="sticky"
+      top={14}
       py={2}
+      bg={useColorModeValue("gray.100", "gray.700")}
       borderBottom="1px solid"
-      borderBottomColor={useColorModeValue("gray.200", "gray.700")}
-      bg={useColorModeValue("white", "gray.600")}
-      zIndex={2}
+      borderBottomColor={useColorModeValue("blackAlpha.100", "blackAlpha.50")}
+      zIndex={0}
     >
       <Container maxW="full">{children}</Container>
     </Box>

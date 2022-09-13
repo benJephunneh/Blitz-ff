@@ -97,14 +97,14 @@ const LocationList = ({ customerId }: { customerId: number }) => {
 
   return (
     <Flex justifyContent="space-around">
-      <VStack w="inherit">
+      <VStack>
         <Box
           bg={useColorModeValue("gray.300", "gray.700")}
-          borderWidth={2}
+          borderWidth={20}
           borderRadius={8}
           borderColor={useColorModeValue("gray.100", "gray.800")}
         >
-          <TableContainer m={4} borderRadius={8} justifyContent="space-around">
+          <TableContainer borderRadius={8}>
             <Table
               size="sm"
               borderWidth={2}

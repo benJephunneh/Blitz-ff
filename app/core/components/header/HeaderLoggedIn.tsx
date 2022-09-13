@@ -13,14 +13,15 @@ const HeaderLoggedIn = () => {
       <Button
         size="sm"
         variant="outline"
-        color={useColorModeValue("blackAlpha.700", "gray.300")}
-        bg={useColorModeValue("blackAlpha.100", "blackAlpha.400")}
+        color={useColorModeValue("blackAlpha.600", "gray.300")}
+        bg={useColorModeValue("blackAlpha.100", "gray.700")}
         borderColor={useColorModeValue("gray.50", "blackAlpha.50")}
         borderWidth={1}
         textColor="current"
         onClick={async () => {
           await logoutMutation()
         }}
+        _hover={{ bg: useColorModeValue("blackAlpha.300", "gray.900") }}
       >
         Log out
       </Button>

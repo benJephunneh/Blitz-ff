@@ -3,7 +3,7 @@ import db from "db"
 import { z } from "zod"
 
 const FindCustomer = z.object({
-  query: z.string()
+  query: z.string(),
 })
 
 const findCustomer = resolver.pipe(
@@ -12,26 +12,19 @@ const findCustomer = resolver.pipe(
   async ({ query }) => {
     if (!query) return []
 
-    // const search = query.split(" ").join(" | ")
+    const search = query.split(" ").join(" | ")
 
     const customers = await db.customer.findMany({
       where: {
         OR: [
-          { firstname: { query, mode: 'insensitive' }},
-          { lastname: { query, mode: 'insensitive' }},
+          { firstname: { search: query } },
+          { lastname: { search: query } },
+          { email: { search: query } },
+          { phone: { search: query } },
         ],
       },
-
-      orderBy: [
-        {
-          _relevance: {
-            fields: ['lastname', 'firstname'],
-            search,
-            sort, 'desc',
-          },
-        },
-      ],
     })
 
     return customers
   }
+)

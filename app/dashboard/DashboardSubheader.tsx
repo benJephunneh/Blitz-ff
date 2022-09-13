@@ -2,6 +2,7 @@ import { HStack } from "@chakra-ui/react"
 import Subheader from "app/core/components/header/Subheader"
 import { FcMindMap } from "react-icons/fc"
 import DashboardProvider from "./dashboardProvider"
+import DashboardSubheaderActions from "./DashboardSubheaderActions"
 import NavigationPicker from "./NavigationPicker"
 
 const NavigationPickerSubheader = () => {
@@ -12,9 +13,10 @@ const DashboardSubheader = () => {
   return (
     <DashboardProvider>
       <Subheader>
-        <HStack justify="space-between"></HStack>
-        <NavigationPickerSubheader />
-        {/* <DashboardSubheaderActions /> */}
+        <HStack justify="space-between">
+          <NavigationPickerSubheader />
+          <DashboardSubheaderActions />
+        </HStack>
       </Subheader>
     </DashboardProvider>
   )

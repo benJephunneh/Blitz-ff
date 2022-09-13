@@ -1,7 +1,8 @@
 import { createContext } from "react"
 
 export type DashboardContext = {
-  nothing: number
+  addCustomer: () => void
+  addJob: () => void
 }
 
 const dashboardContext = createContext<DashboardContext>({} as DashboardContext)

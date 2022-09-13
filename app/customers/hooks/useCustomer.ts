@@ -7,7 +7,7 @@ type UseCustomerOptions = {
   enabled?: boolean
 }
 
-const useCustomer = ({ id, suspense = true, enabled }: UseCustomerOptions) => {
+const useCustomer = ({ id, suspense, enabled }: UseCustomerOptions) => {
   const [customer, { refetch: refetchCustomer }] = useQuery(
     getCustomer,
     { id },

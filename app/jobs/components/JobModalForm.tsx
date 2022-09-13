@@ -2,32 +2,31 @@ import { useMutation, useQuery } from "@blitzjs/rpc"
 import { PromiseReturnType } from "blitz"
 import { FORM_ERROR } from "final-form"
 import { CreateJob } from "../validations"
-import { ModalProps } from "@chakra-ui/react"
+import { ModalProps, Text } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import createJob from "../mutations/createJob"
 import updateJob from "../mutations/updateJob"
 import getJob from "../queries/getJob"
+import { Job } from "db"
+import getLocation from "app/locations/queries/getLocation"
 
 type JobModalFormProps = {
+  jobId?: number
+  locationId?: number
   isOpen: boolean
   onClose: () => void
-  onSuccess?: (job: PromiseReturnType<typeof createJob | typeof updateJob>) => void
-  // onSuccess?: (customer: Customer) => void
-  jobId?: number
-  mutationType?: MutationType
+  onSuccess?: (job: Job) => void
   props?: Partial<ModalProps>
 }
 
-type Job = PromiseReturnType<typeof createJob>
-
 const JobModalForm = ({
+  jobId,
+  locationId,
   isOpen,
   onClose,
   onSuccess,
-  jobId,
-  mutationType = "New",
   ...props
 }: JobModalFormProps) => {
   const [newJobMutation] = useMutation(createJob)
@@ -38,32 +37,9 @@ const JobModalForm = ({
     { id: jobId },
     { suspense: false, enabled: !!jobId }
   )
-  // console.log(`customerId: ${customerId}`)
-  // console.log(`isLoading: ${isLoading}`)
-  // console.log(`customer.id: ${customer?.id}`)
+  const [location] = useQuery(getLocation, { id: locationId })
 
-  // let mutation: MutateFunction<Customer, unknown, {}, unknown>
-  // let { id, firstname, lastname } = {} as Customer
-  // switch (mutationType) {
-  //   case "New":
-  //     mutation = newCustomerMutation
-  //     break
-  //   case "Edit":
-  //     id = customerId!
-  //     firstname = customer!.firstname
-  //     lastname = customer!.lastname
-  //     mutation = editCustomerMutation
-  //     break
-  //   default:
-  //     break
-  // }
-  // const initialValues = {
-  //   id,
-  //   firstname,
-  //   lastname,
-  // }
-
-  const onSubmit = async (values) => {
+  const onSubmit = (values) => {
     if (job) {
       return editJobMutation({ id: job.id, ...values })
     }
@@ -71,14 +47,15 @@ const JobModalForm = ({
   }
 
   const handleError = (error) => {
-    console.log(`Error doing something with customer modal: ${error.toString()}`)
+    console.log(`Error doing something with job modal: ${error.toString()}`)
     return {
-      [FORM_ERROR]: `Customer modal error: ${error.toString()}`,
+      [FORM_ERROR]: `Job modal error: ${error.toString()}`,
     }
   }
 
   return (
     <ModalForm
+      size="lg"
       isOpen={isOpen}
       onClose={onClose}
       schema={CreateJob}
@@ -86,6 +63,7 @@ const JobModalForm = ({
       submitText={jobId ? "Update" : "Create"}
       initialValues={{
         title: job?.title ?? "",
+        locationId: location.id,
       }}
       onSubmit={(values) => {
         onSubmit(values)
@@ -96,6 +74,9 @@ const JobModalForm = ({
         <>
           <LabeledTextField name="firstname" label="First name" />
           <LabeledTextField name="lastname" label="Last name" />
+          <Text>
+            {location.house} {location.street} {location.zipcode}
+          </Text>
         </>
       )}
       {...props}

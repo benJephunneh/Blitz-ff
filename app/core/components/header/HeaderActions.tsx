@@ -16,13 +16,14 @@ const HeaderActions = ({ toggleDrawer }: HeaderActionsProps) => {
 
   return (
     <HStack spacing={3}>
-      {isLoggedIn && (
+      {/* {isLoggedIn && (
         <HeaderIconButton
           label="Open menu"
           onClick={toggleDrawer}
           icon={<Icon as={FaHamburger} color={iconColor} w={6} h={6} />}
+          _hover={{ bg: 'transparent' }}
         />
-      )}
+      )} */}
       <HeaderIconButton
         label={colorMode === "dark" ? "Bright" : "Dark"}
         onClick={toggleColorMode}

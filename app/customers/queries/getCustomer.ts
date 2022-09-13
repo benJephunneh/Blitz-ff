@@ -15,6 +15,9 @@ type GetCustomerProps = {
 
 export default async function getCustomer({ id }: GetCustomerProps) {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+
+  if (!id) return null
+
   const customer = await db.customer.findFirst({
     where: { id },
     select: { id: true, firstname: true, lastname: true, email: true, phone: true },

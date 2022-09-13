@@ -48,7 +48,7 @@ const CustomersList = () => {
   // const [hovered, setHovered] = useState(false)
   const [sortMethod, setSortMethod] = useState<SortOrder>("asc")
   const hovered = useColorModeValue("gray.50", "gray.700")
-  const linkText = useColorModeValue('gray.800', 'gray.200')
+  const linkText = useColorModeValue("gray.800", "gray.200")
   const [customerSelection, setCustomerSelection] = useState(0)
   const page = Number(router.query.page) || 0
   const [{ customers, hasMore }] = usePaginatedQuery(getCustomers, {
@@ -84,25 +84,39 @@ const CustomersList = () => {
   // })
 
   return (
-    <Flex justifyContent='space-around'>
+    <Flex justifyContent="space-around">
       <VStack w="inherit">
-        <Box bg={useColorModeValue('gray.200', 'gray.700')} borderWidth={2} borderRadius={8} borderColor={useColorModeValue('gray.100', 'gray.900')}>
+        <Box
+          bg={useColorModeValue("gray.200", "gray.700")}
+          borderWidth={2}
+          borderRadius={8}
+          borderColor={useColorModeValue("gray.100", "gray.900")}
+        >
           <TableContainer m={4} borderRadius={8} justifyItems="center">
             <Table
               size="sm"
               borderWidth={2}
               w="90vw"
-              borderColor={useColorModeValue('gray.100', 'gray.800')}
+              borderColor={useColorModeValue("gray.100", "gray.800")}
               borderRadius={8}
             >
-              <Thead bg={useColorModeValue("gray.50", "gray.900")} borderBottomWidth={2} borderBottomColor='blackAlpha.500'>
+              <Thead
+                bg={useColorModeValue("gray.50", "gray.900")}
+                borderBottomWidth={2}
+                borderBottomColor="blackAlpha.500"
+              >
                 <Tr>
-                  <HStack>
-                    <Th textColor={useColorModeValue('gray.800', 'gray.300')} fontWeight="extrabold">Customer</Th>
+                  <HStack as={Th}>
+                    <Text
+                      fontWeight="extrabold"
+                      textColor={useColorModeValue("gray.800", "gray.300")}
+                    >
+                      Customers
+                    </Text>
                     <Tooltip label="Sort">
                       <IconButton
                         aria-label="Sort customers"
-                        variant='ghost'
+                        variant="ghost"
                         icon={
                           sortMethod == "asc" ? (
                             <FcAlphabeticalSortingAz size={20} />
@@ -110,51 +124,56 @@ const CustomersList = () => {
                             <FcAlphabeticalSortingZa size={20} />
                           )
                         }
-                        bg={useColorModeValue('transparent', "gray.900")}
+                        bg={useColorModeValue("transparent", "gray.900")}
                         onClick={() =>
                           sortMethod == "asc" ? setSortMethod("desc") : setSortMethod("asc")
                         }
                       />
                     </Tooltip>
                   </HStack>
-                  <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Locations</Th>
-                  <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Jobs</Th>
-                  <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Estimates</Th>
-                  <Th textColor={useColorModeValue('gray.800', 'gray.400')} fontWeight="extrabold">Invoices</Th>
+                  <Th textColor={useColorModeValue("gray.800", "gray.400")} fontWeight="extrabold">
+                    Locations
+                  </Th>
+                  <Th textColor={useColorModeValue("gray.800", "gray.400")} fontWeight="extrabold">
+                    Jobs
+                  </Th>
+                  <Th textColor={useColorModeValue("gray.800", "gray.400")} fontWeight="extrabold">
+                    Estimates
+                  </Th>
+                  <Th textColor={useColorModeValue("gray.800", "gray.400")} fontWeight="extrabold">
+                    Invoices
+                  </Th>
                 </Tr>
               </Thead>
-              <Tbody bg={useColorModeValue('gray.100', 'gray.800')}>
+              <Tbody bg={useColorModeValue("gray.100", "gray.800")}>
                 {customers.map((customer) => (
-                  <Tr
-                    key={customer.id}
-                    _hover={{ bg: hovered }}
-                  >
+                  <Tr key={customer.id} _hover={{ bg: hovered }}>
                     <Td>
                       <Link href={Routes.ShowCustomerPage({ customerId: customer.id })} passHref>
-                        <Text as='a' fontWeight='semibold' textColor={linkText}>
+                        <Text as="a" fontWeight="semibold" textColor={linkText}>
                           {`${customer.firstname} ${customer.lastname}`}
                         </Text>
                       </Link>
                     </Td>
                     <Td>
                       <Link href={Routes.ShowCustomerPage({ customerId: customer.id })} passHref>
-                        <Text as='a' fontWeight='semibold' textColor={linkText}>
+                        <Text as="a" fontWeight="semibold" textColor={linkText}>
                           Locations
                         </Text>
                       </Link>
                     </Td>
                     <Td>
-                      <Text fontWeight='semibold' textColor={linkText}>
+                      <Text fontWeight="semibold" textColor={linkText}>
                         Jobs
                       </Text>
                     </Td>
                     <Td>
-                      <Text fontWeight='semibold' textColor={linkText}>
+                      <Text fontWeight="semibold" textColor={linkText}>
                         Estimates
                       </Text>
                     </Td>
                     <Td>
-                      <Text fontWeight='semibold' textColor={linkText}>
+                      <Text fontWeight="semibold" textColor={linkText}>
                         Invoices
                       </Text>
                     </Td>
@@ -193,7 +212,7 @@ const CustomersList = () => {
           </Button>
         </ButtonGroup>
       </VStack>
-    </Flex >
+    </Flex>
   )
 }
 

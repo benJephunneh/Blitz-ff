@@ -33,25 +33,28 @@ const HeaderLoggedOut = () => {
       <HStack spacing={1} justify="flex-end">
         <ButtonGroup isAttached variant="outline" size="sm">
           <Button
-            color={useColorModeValue("blackAlpha.700", "gray.300")}
-            bg={useColorModeValue("blackAlpha.100", "blackAlpha.400")}
-            borderColor={useColorModeValue("gray.50", "gray.600")}
+            color={useColorModeValue("blackAlpha.600", "gray.300")}
+            bg={useColorModeValue("blackAlpha.100", "gray.700")}
+            borderColor={useColorModeValue("gray.50", "blackAlpha.50")}
             onClick={() => {
               setLoggingIn(true)
             }}
+            _hover={{ bg: useColorModeValue("blackAlpha.300", "gray.900") }}
           >
             Login
           </Button>
           <Button
             variant="outline"
             leftIcon={<FaPlus />}
-            color={useColorModeValue("cyan.600", "cyan.300")}
-            bg={useColorModeValue("blackAlpha.100", "blackAlpha.400")}
-            borderColor={useColorModeValue("cyan.600", "cyan.300")}
+            color={useColorModeValue("#009a4c", "green.300")}
+            bg={useColorModeValue("blackAlpha.100", "gray.700")}
+            borderColor={useColorModeValue("#009a4c", "green.300")}
             borderStyle="dashed"
+            borderLeftWidth={0}
             onClick={() => {
               setSigningUp(true)
             }}
+            _hover={{ bg: useColorModeValue("blackAlpha.300", "gray.900") }}
           >
             Sign up
           </Button>

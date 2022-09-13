@@ -6,6 +6,7 @@ import {
   Grid,
   GridItem,
   Heading,
+  HStack,
   SimpleGrid,
   Spacer,
   Text,
@@ -51,33 +52,29 @@ const Header = () => {
     <>
       <HamburgerDrawer isOpen={drawerIsOpen} onClose={() => setDrawerIsOpen(false)} />
 
-      <Box position="sticky" top={0}>
-        <Box
+      <Box position="sticky" top={0} zIndex={3}>
+        <HStack
           as="header"
-          py={3}
-          bg={useColorModeValue("white", "gray.600")}
+          pt={2}
+          px={3}
+          bg={useColorModeValue("white", "gray.800")}
           borderBottom="1px solid"
-          borderBottomColor={useColorModeValue("gray.100", "blackAlpha.300")}
+          borderBottomColor={useColorModeValue("gray.100", "blackAlpha.50")}
+          justifyContent="space-between"
         >
-          <Grid templateColumns={`repeat(6, 1fr)`} alignItems="center">
-            <GridItem colSpan={1} ml={5}>
-              <HeaderActions toggleDrawer={toggleDrawer} />
-            </GridItem>
-            <GridItem colSpan={4} justifySelf="left">
-              {showBreadcrumbs ? (
-                <HeaderCrumbs />
-              ) : (
-                <Heading size="md" display={{ base: "none", md: "block" }}>
-                  Apalachee Backhoe & Septic Tank, LLC
-                </Heading>
-              )}
-            </GridItem>
-            <GridItem colSpan={1} mr={5} justifySelf="flex-end">
-              {isLoggedOut && <HeaderLoggedOut />}
-              {isLoggedIn && <HeaderLoggedIn />}
-            </GridItem>
-          </Grid>
-        </Box>
+          <HeaderActions toggleDrawer={toggleDrawer} />
+          <Box justifySelf="flex-start">
+            {showBreadcrumbs ? (
+              <HeaderCrumbs />
+            ) : (
+              <Heading size="md" display={{ base: "none", md: "block" }} textColor="#009a4c">
+                Apalachee Backhoe & Septic Tank, LLC
+              </Heading>
+            )}
+          </Box>
+          {isLoggedOut && <HeaderLoggedOut />}
+          {isLoggedIn && <HeaderLoggedIn />}
+        </HStack>
       </Box>
     </>
   )

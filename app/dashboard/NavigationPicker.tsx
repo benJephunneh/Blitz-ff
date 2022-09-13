@@ -72,20 +72,21 @@ const NavigationPicker = ({ icon }: NavigationPickerProps) => {
   // window.alert(window.location.pathname)
 
   return (
-    <Menu isLazy gutter={0}>
+    <Menu isLazy>
       <MenuButton
         as={Button}
         size="sm"
-        px={1}
         variant="outline"
         color={useColorModeValue("blackAlpha.700", "gray.300")}
-        bgColor={useColorModeValue("blackAlpha.100", "blackAlpha.400")}
-        borderColor={useColorModeValue("gray.50", "blackAlpha.50")}
-        borderWidth={2}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+        bgColor="transparent"
+        borderColor={useColorModeValue("gray.100", "blackAlpha.50")}
+        borderWidth={1}
+        _hover={{
+          bg: useColorModeValue("blackAlpha.200", "gray.800"),
+          borderColor: useColorModeValue("gray.200", "blackAlpha.50"),
+        }}
       >
-        <HStack px={2}>
+        <HStack>
           <Icon as={icon} w={5} h={5} />
           <Heading size="sm">{router.pathname.split("/")}</Heading>
           <Icon as={FaChevronDown} w={3} h={3} />

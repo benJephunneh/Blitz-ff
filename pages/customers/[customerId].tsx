@@ -5,15 +5,20 @@ import { BlitzPage, Routes, useParam } from "@blitzjs/next"
 import getCustomer from "app/customers/queries/getCustomer"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import LocationList from "app/locations/components/LocationList"
-import { Button, Container, Flex, useColorModeValue, VStack } from "@chakra-ui/react"
+import { Box, Button, Container, Flex, useColorModeValue, VStack } from "@chakra-ui/react"
 import { useState } from "react"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 import CustomerSubheader from "app/customers/components/CustomerSubheader"
+import useCustomer from "app/customers/hooks/useCustomer"
+import { GetServerSideProps } from "next"
+import PrefetchQueryClient from "app/core/helpers/prefetchQueryClient"
+import getLocations from "app/locations/queries/getLocations"
+import { AuthenticationError, AuthorizationError, NotFoundError } from "blitz"
 
 const ShowCustomerPage: BlitzPage = () => {
   const router = useRouter()
-
   const customerId = useParam("customerId", "number")
+  console.log(customerId)
   const [customer] = useQuery(getCustomer, { id: customerId })
 
   const [editingCustomer, setEditingCustomer] = useState(false)
@@ -23,10 +28,9 @@ const ShowCustomerPage: BlitzPage = () => {
   // const { customer: { id, firstname, lastname } } = useContext(customerContext)
 
   return (
-    <>
-      <Flex w="100vw" bg={useColorModeValue("white", "gray.800")}>
-        <VStack w="inherit">
-          {/*
+    <Box bg={useColorModeValue("white", "gray.800")}>
+      <VStack>
+        {/*
           <HStack w="inherit">
             <Menu>
               <MenuButton as={Button} variant="link" rightIcon={<FcExpand size={10} />}>
@@ -90,30 +94,28 @@ const ShowCustomerPage: BlitzPage = () => {
         </HStack>
       */}
 
-          <Container w="90vw" justifyContent="space-around" mt={6}>
-            <LocationList customerId={customer!.id} />
-          </Container>
-          <Button
-            alignSelf="flex-end"
-            justifySelf="right"
-            borderTopRightRadius={0}
-            borderBottomRadius={0}
-            bg="red.500"
-            textColor="white"
-            size="xs"
-            onClick={async () => {
-              if (window.confirm(`OK to delete ${customer!.firstname} ${customer!.lastname}?`)) {
-                await deleteCustomerMutation({ id: customer!.id }).then(() =>
-                  router.push(Routes.CustomersPage())
-                )
-              }
-            }}
-          >
-            Delete {`${customer!.firstname} ${customer!.lastname}`}
-          </Button>
-        </VStack>
-      </Flex>
-    </>
+        <LocationList customerId={customer!.id} />
+
+        <Button
+          alignSelf="flex-end"
+          justifySelf="right"
+          borderTopRightRadius={0}
+          borderBottomRadius={0}
+          bg="red.500"
+          textColor="white"
+          size="xs"
+          onClick={async () => {
+            if (window.confirm(`OK to delete ${customer!.firstname} ${customer!.lastname}?`)) {
+              await deleteCustomerMutation({ id: customer!.id }).then(() =>
+                router.push(Routes.CustomersPage())
+              )
+            }
+          }}
+        >
+          Delete {`${customer!.firstname} ${customer!.lastname}`}
+        </Button>
+      </VStack>
+    </Box>
   )
 }
 
