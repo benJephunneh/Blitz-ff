@@ -15,7 +15,7 @@ const HeaderLoggedIn = () => {
         variant="outline"
         color={useColorModeValue("blackAlpha.600", "gray.300")}
         bg={useColorModeValue("blackAlpha.100", "gray.700")}
-        borderColor={useColorModeValue("gray.50", "blackAlpha.50")}
+        borderColor={useColorModeValue("gray.50", "blackAlpha.100")}
         borderWidth={1}
         textColor="current"
         onClick={async () => {

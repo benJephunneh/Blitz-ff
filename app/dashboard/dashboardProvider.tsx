@@ -5,6 +5,7 @@ import useCustomer from "app/customers/hooks/useCustomer"
 import JobModalForm from "app/jobs/components/JobModalForm"
 import { Router, useRouter } from "next/router"
 import { ReactNode, useState } from "react"
+import { number } from "zod"
 import dashboardContext from "./dashboardContext"
 
 const { Provider } = dashboardContext
@@ -19,13 +20,16 @@ const DashboardProvider = ({ locationId, children }: DashboardProviderProps) => 
   const [addingCustomer, setAddingCustomer] = useState(false)
   const [deletingCustomer, setDeletingCustomer] = useState(false)
   const [addingJob, setAddingJob] = useState(false)
+  const [customerId, setCustomerId] = useState<number | undefined>(undefined)
 
   return (
     <Provider
       value={{
         addCustomer: () => setAddingCustomer(true),
+        pickCustomer: (id) => setCustomerId(id),
         deleteCustomer: () => setDeletingCustomer(true),
         addJob: () => setAddingJob(true),
+        customerId,
       }}
     >
       <CustomerModalForm

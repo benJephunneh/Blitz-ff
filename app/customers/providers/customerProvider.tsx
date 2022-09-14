@@ -1,4 +1,4 @@
-import { Routes } from "@blitzjs/next"
+import { Routes, useParam } from "@blitzjs/next"
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import ConfirmDeleteModal from "app/core/components/ConfirmDeleteModal"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -7,13 +7,14 @@ import getLocations from "app/locations/queries/getLocations"
 import { NotFoundError } from "blitz"
 import db, { Customer } from "db"
 import { useRouter } from "next/router"
-import { ReactNode } from "react"
+import { ReactNode, useEffect } from "react"
 import { useState } from "react"
 import CustomerDrawer from "../components/CustomerDrawer"
 import CustomerModalForm from "../components/CustomerModalForm"
 import customerContext from "../contexts/customerContext"
 import useCustomer from "../hooks/useCustomer"
 import deleteCustomer from "../mutations/deleteCustomer"
+import findCustomer from "../queries/findCustomer"
 import getCustomer from "../queries/getCustomer"
 
 const fetchLocations = async (customerId: number) => {
@@ -44,20 +45,28 @@ const fetchCustomer = async (customerId: number) => {
 const { Provider } = customerContext
 
 type CustomerProviderProps = {
-  customerId: number
   children?: ReactNode
 }
 
-const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
+const CustomerProvider = ({ children }: CustomerProviderProps) => {
   const router = useRouter()
+  const customerId = useParam("customerId", "number")
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [showingDetails, setShowingDetails] = useState(false)
   const [creatingLocation, setCreatingLocation] = useState(false)
   const [deletingCustomer, setDeletingCustomer] = useState(false)
+  const [custId, setCustId] = useState(customerId)
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const [searchResults, { refetch: refetchSearch }] = useQuery(
+    findCustomer,
+    { query: searchQuery },
+    { suspense: false, enabled: !!searchQuery }
+  )
 
   const [customer, { refetch: refetchCustomer }] = useQuery(
     getCustomer,
-    { id: customerId },
+    { id: custId },
     {
       suspense: true,
       staleTime: Infinity,
@@ -65,7 +74,7 @@ const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
   )
   const [locations, { refetch: refetchLocations }] = useQuery(
     getLocations,
-    { where: { customerId } },
+    { where: { customerId: custId } },
     {
       suspense: false,
       enabled: false,
@@ -83,6 +92,7 @@ const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
   return (
     <Provider
       value={{
+        pickCustomer: (id) => setCustId(id),
         editCustomer: () => setEditingCustomer(true),
         deleteCustomer: () => setDeletingCustomer(true),
         showDetails: () => setShowingDetails(true),
@@ -96,7 +106,7 @@ const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
       }}
     >
       <CustomerModalForm
-        customerId={customerId}
+        customerId={custId}
         isOpen={editingCustomer}
         onClose={() => setEditingCustomer(false)}
         onSuccess={() => {
@@ -106,7 +116,7 @@ const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
       />
 
       <LocationModalForm
-        customerId={customerId}
+        customerId={custId!}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
         onSuccess={() => {
@@ -118,7 +128,7 @@ const CustomerProvider = ({ customerId, children }: CustomerProviderProps) => {
 
       <ConfirmDeleteModal
         title={`Delete ${customer?.firstname} ${customer?.lastname}?`}
-        description="Are you sure you want to delete this customer and their history?  All associated ocations, jobs, invoices, and estimates will also be deleted."
+        description="Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
         isOpen={deletingCustomer}
         onClose={() => setDeletingCustomer(false)}
         onConfirm={async () => {

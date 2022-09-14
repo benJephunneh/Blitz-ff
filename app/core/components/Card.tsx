@@ -16,7 +16,7 @@ const Card = ({ children, ...props }: CardProps) => {
       px={4}
       py={6}
       borderRadius="md"
-      border={`${borderWidth} solid`}
+      borderWidth={1}
       borderColor={borderColor}
       bg={bgColor}
       w="full"

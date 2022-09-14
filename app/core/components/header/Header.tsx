@@ -24,7 +24,11 @@ import HeaderLoggedIn from "./HeaderLoggedIn"
 import HeaderLoggedOut from "./HeaderLoggedOut"
 import HeaderLogo from "./HeaderLogo"
 
-const Header = () => {
+type HeaderProps = {
+  children?: JSX.Element | null
+}
+
+const Header = ({ children }: HeaderProps) => {
   const router = useRouter()
   const pathname = router.pathname
   const [drawerIsOpen, setDrawerIsOpen] = useState(false)
@@ -50,18 +54,19 @@ const Header = () => {
 
   return (
     <>
-      <HamburgerDrawer isOpen={drawerIsOpen} onClose={() => setDrawerIsOpen(false)} />
+      {/* <HamburgerDrawer isOpen={drawerIsOpen} onClose={() => setDrawerIsOpen(false)} /> */}
 
-      <Box position="sticky" top={0} zIndex={3}>
-        <HStack
-          as="header"
-          pt={2}
-          px={3}
-          bg={useColorModeValue("white", "gray.800")}
-          borderBottom="1px solid"
-          borderBottomColor={useColorModeValue("gray.100", "blackAlpha.50")}
-          justifyContent="space-between"
-        >
+      {/* <Box w='full' position='fixed' top={0} zIndex={3} alignItems='center'> */}
+      <HStack
+        as="header"
+        px={3}
+        py={2}
+        bg={useColorModeValue("white", "gray.800")}
+        borderBottom="1px solid"
+        borderBottomColor={useColorModeValue("gray.100", "whiteAlpha.50")}
+        justifyContent="space-between"
+      >
+        <HStack spacing={8}>
           <HeaderActions toggleDrawer={toggleDrawer} />
           <Box justifySelf="flex-start">
             {showBreadcrumbs ? (
@@ -72,10 +77,22 @@ const Header = () => {
               </Heading>
             )}
           </Box>
-          {isLoggedOut && <HeaderLoggedOut />}
-          {isLoggedIn && <HeaderLoggedIn />}
         </HStack>
+        {isLoggedOut && <HeaderLoggedOut />}
+        {isLoggedIn && <HeaderLoggedIn />}
+      </HStack>
+
+      <Box
+        position="absolute"
+        w="full"
+        bg={useColorModeValue("gray.100", "gray.700")}
+        borderBottom="1px solid"
+        borderBottomColor={useColorModeValue("blackAlpha.100", "whiteAlpha.50")}
+        zIndex={0}
+      >
+        {children}
       </Box>
+      {/* </Box> */}
     </>
   )
 }

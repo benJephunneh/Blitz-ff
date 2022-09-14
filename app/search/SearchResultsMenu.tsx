@@ -10,24 +10,22 @@ type SearchResultsProps = {
 }
 
 const SearchResults = ({ query, message, isLoading, items, children }: SearchResultsProps) => {
-  console.log(`isLoading: ${isLoading}`)
-
   return (
-    <Box mt={4}>
-      {isLoading && !!query && (
+    <Box>
+      {isLoading && (
         <Center p={3}>
           <Spinner />
         </Center>
       )}
 
-      {!query && !items.length && (
-        <Text pl={3} fontSize="md" fontWeight="semibold">
+      {!query && !items.length && !isLoading && (
+        <Text pl={3} fontSize="md">
           {message}
         </Text>
       )}
 
       {query && !isLoading && items?.length === 0 && (
-        <Text pl={3} fontSize="md" fontWeight="semibold">
+        <Text pl={3} fontSize="md">
           No results found for &quot;{query}&quot;.
         </Text>
       )}

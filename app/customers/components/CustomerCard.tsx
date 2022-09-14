@@ -13,7 +13,7 @@ type CustomerCardProps = {
   props?: ComponentPropsWithoutRef<typeof LinkCard>
 }
 
-const CustomerCard = ({ customer, actions, ...props }) => {
+const CustomerCard = ({ customer, actions, ...props }: CustomerCardProps) => {
   const route = Routes.ShowCustomerPage
 
   return (

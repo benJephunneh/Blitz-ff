@@ -16,9 +16,10 @@ import getLocation from "app/locations/queries/getLocation"
 import db from "db"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { IconType } from "react-icons"
 import { FaChevronDown } from "react-icons/fa"
+import dashboardContext from "./dashboardContext"
 
 type NavigationPickerProps = {
   icon: IconType
@@ -31,9 +32,11 @@ const NavigationPicker = ({ icon }: NavigationPickerProps) => {
   const normalBg = useColorModeValue("blackAlpha.100", "blackAlpha.400")
   const bg = hovered ? hoveredBg : normalBg
   const borderColor = useColorModeValue("gray.50", "blackAlpha.50")
+  const { customerId } = useContext(dashboardContext)
+
   const [customer] = useQuery(
     getCustomer,
-    { id: undefined },
+    { id: customerId },
     { suspense: false, refetchOnWindowFocus: false }
   )
   const [location] = useQuery(

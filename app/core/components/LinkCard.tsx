@@ -3,12 +3,12 @@ import { ComponentPropsWithoutRef, ReactNode } from "react"
 import Card from "./Card"
 
 type LinkCardProps = {
-  actions?: JSX.Element
+  // actions?: JSX.Element
   children?: ReactNode
   props?: ComponentPropsWithoutRef<typeof LinkBox>
 }
 
-const LinkCard = ({ actions, children, ...props }) => {
+const LinkCard = ({ children, ...props }) => {
   return (
     <LinkBox
       as={Card}
@@ -18,7 +18,7 @@ const LinkCard = ({ actions, children, ...props }) => {
       _hover={{ borderColor: "blue.400" }}
       {...props}
     >
-      {actions && (
+      {/* {actions && (
         <HStack
           position="absolute"
           top={3}
@@ -29,7 +29,7 @@ const LinkCard = ({ actions, children, ...props }) => {
         >
           {actions}
         </HStack>
-      )}
+      )} */}
 
       {children}
     </LinkBox>

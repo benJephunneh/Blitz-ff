@@ -13,8 +13,7 @@ export default resolver.pipe(
   async ({ query }) => {
     if (!query) return []
 
-    const search = query.split(" ").join(" || ")
-    console.log(search)
+    const search = query.split(" ").join(" | ")
 
     const customers = await db.customer.findMany({
       where: {

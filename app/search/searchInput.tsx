@@ -1,4 +1,4 @@
-import { Icon, Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
+import { Icon, Input, InputGroup, InputLeftElement, useColorModeValue } from "@chakra-ui/react"
 import {
   ChangeEventHandler,
   ComponentPropsWithoutRef,
@@ -31,7 +31,7 @@ const SearchInput = ({ setQuery, ...props }: SearchInputProps) => {
   }, [debouncedChangeHandler])
 
   return (
-    <InputGroup size="lg">
+    <InputGroup size="sm">
       <InputLeftElement pointerEvents="none">
         <Icon as={FcSearch} />
       </InputLeftElement>
@@ -39,6 +39,13 @@ const SearchInput = ({ setQuery, ...props }: SearchInputProps) => {
         onChange={debouncedChangeHandler}
         placeholder="Search..."
         variant="filled"
+        textColor={useColorModeValue("black", "black")}
+        borderRadius={6}
+        bg={useColorModeValue("gray.200", "gray.300")}
+        _hover={{ bg: useColorModeValue("gray.100", "gray.200") }}
+        _active={{ bg: useColorModeValue("gray.100", "gray.200") }}
+        _focus={{ bg: "white" }}
+        _placeholder={{ textColor: "blackAlpha.600" }}
         {...props}
       />
     </InputGroup>

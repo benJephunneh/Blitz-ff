@@ -9,12 +9,13 @@ import { useContext } from "react"
 import { createContext } from "react"
 import { FcTimeline } from "react-icons/fc"
 import useCustomer from "../hooks/useCustomer"
-import CustomerProvider from "../providers/customerProvider"
+import CustomerProvider from "../providers/CustomerProvider"
 import CustomerPicker from "./CustomerPicker"
+import CustomerPicker2 from "./CustomerPicker2"
 import CustomerSubheaderActions from "./CustomerSubheaderActions"
 
 const CustomerPickerSubheader = () => {
-  return <CustomerPicker icon={FcTimeline} />
+  return <CustomerPicker2 />
 }
 
 const LocationPickerSubheader = () => {
@@ -25,7 +26,7 @@ const CustomerSubheader = () => {
   const customerId = useParam("customerId", "number")
 
   return (
-    <CustomerProvider customerId={customerId!}>
+    <CustomerProvider>
       <Subheader>
         <HStack justify="space-between">
           <CustomerPickerSubheader />

@@ -62,7 +62,12 @@ const CustomerSubheaderActions = () => {
             <MenuItem icon={<TiEdit />} onClick={editCustomer} fontWeight="semibold">
               Edit customer
             </MenuItem>
-            <MenuItem icon={<FcFullTrash />} onClick={deleteCustomer} fontWeight="semibold">
+            <MenuItem
+              icon={<FcFullTrash />}
+              onClick={deleteCustomer}
+              fontWeight="semibold"
+              bgColor="red.600"
+            >
               Delete customer
             </MenuItem>
           </MenuList>

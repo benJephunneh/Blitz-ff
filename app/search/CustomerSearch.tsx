@@ -2,7 +2,8 @@ import { useQuery } from "@blitzjs/rpc"
 import { Box, SimpleGrid } from "@chakra-ui/react"
 import { Customer } from "@prisma/client"
 import CustomerCard from "app/customers/components/CustomerCard"
-import { useState } from "react"
+import CustomerSearchResult from "app/customers/components/CustomerSearchResult"
+import { useEffect, useState } from "react"
 import findCustomer from "../customers/queries/findCustomer"
 import SearchInput from "./SearchInput"
 import SearchResults from "./SearchResults"
@@ -13,7 +14,8 @@ type CustomerSearchProps = {
 
 const CustomerSearch = ({ customerActions }: CustomerSearchProps) => {
   const [query, setQuery] = useState("")
-  const [items, { isLoading }] = useQuery(
+  const [enabled, setEnabled] = useState(false)
+  const [items, { status, isLoading }] = useQuery(
     findCustomer,
     { query },
     { suspense: false, enabled: !!query }
@@ -29,13 +31,9 @@ const CustomerSearch = ({ customerActions }: CustomerSearchProps) => {
         items={items || []}
         isLoading={isLoading}
       >
-        <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={3}>
+        <SimpleGrid ml={4} columns={1} spacing={3}>
           {items?.map((item) => (
-            <CustomerCard
-              key={item.id}
-              customer={item}
-              actions={customerActions && customerActions(item)}
-            />
+            <CustomerSearchResult key={item.id} customer={item} />
           ))}
         </SimpleGrid>
       </SearchResults>

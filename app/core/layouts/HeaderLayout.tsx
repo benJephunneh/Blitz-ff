@@ -20,11 +20,9 @@ const HeaderLayout: BlitzLayout<HeaderLayoutProps> = ({
     <>
       <PageTitle title={title} />
 
-      <Header />
+      <Box w="full" position="fixed" top={0} zIndex={3} alignItems="center">
+        <Header>{subheader}</Header>
 
-      {subheader}
-
-      <Box flex="1 1 auto" w="100vw" overflowX="auto" overflowY="hidden">
         {children}
       </Box>
     </>

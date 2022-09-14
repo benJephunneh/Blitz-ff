@@ -7,11 +7,7 @@ import CustomerSearch from "app/search/CustomerSearch"
 const SearchPage: BlitzPage = () => {
   return (
     <Box mt={4} mx={4}>
-      <Heading size="md">First name search</Heading>
-
-      <Text mb={5} color="gray.500">
-        Search for a customer&apos;s first name.
-      </Text>
+      <Heading size="md">Customer search</Heading>
 
       <Card>
         <CustomerSearch />

@@ -2,6 +2,7 @@ import { Customer, Location } from "@prisma/client"
 import { createContext } from "react"
 
 export type CustomerContext = {
+  pickCustomer: (id: number) => void
   editCustomer: () => void
   deleteCustomer: () => void
   showDetails: () => void
