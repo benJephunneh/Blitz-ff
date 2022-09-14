@@ -7,7 +7,19 @@ type SubheaderProps = {
 }
 
 const Subheader = ({ children }: SubheaderProps) => {
-  return <Box position="absolute">{children}</Box>
+  return (
+    <Box
+      w="full"
+      px={3}
+      py={2}
+      bg={useColorModeValue("gray.100", "gray.700")}
+      borderBottom="1px solid"
+      borderBottomColor={useColorModeValue("blackAlpha.300", "whiteAlpha.500")}
+      zIndex={11}
+    >
+      {children}
+    </Box>
+  )
 }
 
 export default Subheader

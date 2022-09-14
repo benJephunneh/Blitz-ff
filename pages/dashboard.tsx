@@ -54,9 +54,9 @@ const Dashboard: BlitzPage = () => {
 
   return (
     <>
-      <Box bg={useColorModeValue("gray.200", "gray.600")} h="full">
-        <Container as="main" textAlign="center" py={{ base: 12, md: 20 }}>
-          <Heading size="2xl" mb={2} mx={0}>
+      <Box bg={useColorModeValue("gray.200", "gray.600")}>
+        <Container as="main" textAlign="center">
+          <Heading size="2xl" my={2}>
             {currentUser?.username}
           </Heading>
           <Text fontSize="xl" opacity="0.8">

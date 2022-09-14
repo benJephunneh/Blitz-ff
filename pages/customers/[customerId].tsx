@@ -36,8 +36,6 @@ const ShowCustomerPage: BlitzPage = () => {
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  useEffect(() => {})
-
   return (
     <Box bg={useColorModeValue("white", "gray.800")}>
       <ConfirmDeleteModal

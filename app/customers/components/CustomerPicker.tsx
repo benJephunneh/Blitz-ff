@@ -13,20 +13,22 @@ import {
   MenuList,
   useColorModeValue,
 } from "@chakra-ui/react"
+import dashboardContext from "app/dashboard/dashboardContext"
 import SearchInput from "app/search/SearchInput"
 import Link from "next/link"
 import { useContext, useState } from "react"
 import { IconType } from "react-icons"
 import { FaChevronDown } from "react-icons/fa"
-import { FcList, FcTimeline } from "react-icons/fc"
+import { FcList, FcManager, FcTimeline } from "react-icons/fc"
 import customerContext from "../contexts/customerContext"
+import getCustomer from "../queries/getCustomer"
 import getCustomers from "../queries/getCustomers"
 
 type CustomerPickerProps = {
   icon: IconType
 }
 
-const CustomerPicker = ({ icon }: CustomerPickerProps) => {
+const CustomerPicker = () => {
   const [{ customers, count }] = usePaginatedQuery(
     getCustomers,
     { orderBy: { lastname: "asc" } },
@@ -48,9 +50,9 @@ const CustomerPicker = ({ icon }: CustomerPickerProps) => {
           rightIcon={<Icon pr={1} as={FaChevronDown} />}
         >
           <HStack>
-            <Icon as={icon} w={5} h={5} />
+            <Icon as={FcManager} w={5} h={5} />
             <Heading size="sm">
-              {customer.firstname} {customer.lastname}
+              {customer?.firstname} {customer?.lastname}
             </Heading>
           </HStack>
         </MenuButton>

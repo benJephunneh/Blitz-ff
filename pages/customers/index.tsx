@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { BlitzPage, Routes } from "@blitzjs/next"
 import { useRouter } from "next/router"
-import { Container, Flex, useColorModeValue } from "@chakra-ui/react"
+import { Box, Container, Flex, useColorModeValue } from "@chakra-ui/react"
 import CustomerList from "app/customers/components/CustomerList"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 import DashboardSubheader from "app/dashboard/DashboardSubheader"
@@ -9,7 +9,7 @@ import DashboardSubheader from "app/dashboard/DashboardSubheader"
 const CustomersPage: BlitzPage = () => {
   return (
     <>
-      <Flex
+      <Box
         pt={4}
         maxH="max-content"
         overflowY="hidden"
@@ -17,7 +17,7 @@ const CustomersPage: BlitzPage = () => {
         justifyContent="space-around"
       >
         <CustomerList />
-      </Flex>
+      </Box>
     </>
   )
 }

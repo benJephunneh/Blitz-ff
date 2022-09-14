@@ -6,8 +6,10 @@ import CustomerSearch from "app/search/CustomerSearch"
 
 const SearchPage: BlitzPage = () => {
   return (
-    <Box mt={4} mx={4}>
-      <Heading size="md">Customer search</Heading>
+    <Box mx={4} bg="gray">
+      <Heading mt={0} size="md">
+        Customer search
+      </Heading>
 
       <Card>
         <CustomerSearch />
