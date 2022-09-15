@@ -81,7 +81,7 @@ const CustomerPicker = () => {
         fontWeight="semibold"
         borderRadius={12}
       >
-        <SearchInput setQuery={setQuery} />
+        <SearchInput search={setQuery} />
       </Box>
     </HStack>
   )
