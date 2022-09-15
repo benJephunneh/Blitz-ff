@@ -13,11 +13,13 @@ export const password = z
   .max(100)
   .transform((str) => str.trim())
 
+export const role = z.enum(["Owner", "Admin", "Tech"])
+
 export const Signup = z.object({
   username,
   email,
   password,
-  role: z.string(),
+  role,
 })
 
 export const Login = z.object({

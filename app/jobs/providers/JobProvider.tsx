@@ -5,7 +5,9 @@ import db from "db"
 import { ReactNode } from "react"
 import { useState } from "react"
 import JobDrawer from "../components/JobDrawer"
+import JobModalForm from "../components/JobModalForm"
 import jobContext from "../contexts/JobContext"
+import getJob from "../queries/getJob"
 
 const fetchLocations = async (customerId: number) => {
   const locations = await db.location.findMany({
@@ -46,21 +48,19 @@ const JobProvider = ({ locationId, jobId, children }: JobProviderProps) => {
   const [editingJob, setEditingJob] = useState(false)
   const [showingDetails, setShowingDetails] = useState(false)
 
-  const [customer, { refetch: refetchCustomer }] = useQuery(
-    getCustomer,
-    { id: customerId },
-    { enabled: true }
-  )
-  const [location, { refetch: refetchLocation }] = useQuery(
-    getLocation,
-    {
-      where: { id: locationId },
-    })
-  const [job, { refetch: refetchJob }] = useQuery(
-    getJob,
-    {
-      where: { id: jobId },
-    })
+  // const [customer, { refetch: refetchCustomer }] = useQuery(
+  //   getCustomer,
+  //   { id: customerId },
+  //   { enabled: true }
+  // )
+  // const [location, { refetch: refetchLocation }] = useQuery(
+  //   getLocation,
+  //   {
+  //     where: { id: locationId },
+  //   })
+  const [job, { refetch: refetchJob }] = useQuery(getJob, {
+    id: jobId,
+  })
 
   // const [customerOranizer, { refetch: refetchOrganizer }] = useQuery(getCustomerOrganizer, { id })
   // const { jobs, totalPaid, totalOwed } = useCalculateBalanceSheet(customerOrganizer?.jobs || [])
@@ -78,7 +78,7 @@ const JobProvider = ({ locationId, jobId, children }: JobProviderProps) => {
       }}
     >
       <JobModalForm
-        customerId={customerId}
+        jobId={job.id}
         isOpen={editingJob}
         onClose={() => setEditingJob(false)}
         onSuccess={() => {

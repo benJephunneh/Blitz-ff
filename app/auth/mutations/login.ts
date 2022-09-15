@@ -2,7 +2,6 @@ import { SecurePassword } from "@blitzjs/auth"
 import { resolver } from "@blitzjs/rpc"
 import { AuthenticationError } from "blitz"
 import db from "db"
-import { Role } from "types"
 import { Login } from "../validations"
 
 const SESSION_EXPIRATION_IN_HOURS = 4
@@ -30,7 +29,7 @@ export default resolver.pipe(resolver.zod(Login), async ({ username, password },
   const expiresAt = new Date()
   expiresAt.setHours(expiresAt.getHours() + SESSION_EXPIRATION_IN_HOURS)
 
-  await ctx.session.$create({ userId: user.id, role: user.role as Role })
+  await ctx.session.$create({ userId: user.id, role: user.role })
 
   return user
 })

@@ -1,14 +1,15 @@
-import { Routes } from "@blitzjs/next";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useMutation } from "@blitzjs/rpc";
-import Layout from "app/core/layouts/Layout";
-import createJob from "app/jobs/mutations/createJob";
-import { JobForm, FORM_ERROR } from "app/jobs/components/JobForm";
+import { Routes } from "@blitzjs/next"
+import Link from "next/link"
+import { useRouter } from "next/router"
+import { useMutation } from "@blitzjs/rpc"
+import Layout from "app/core/layouts/Layout"
+import createJob from "app/jobs/mutations/createJob"
+import { JobForm } from "app/jobs/components/JobForm"
+import { FORM_ERROR } from "app/core/components/forms/Form"
 
 const NewJobPage = () => {
-  const router = useRouter();
-  const [createJobMutation] = useMutation(createJob);
+  const router = useRouter()
+  const [createJobMutation] = useMutation(createJob)
 
   return (
     <Layout title={"Create New Job"}>
@@ -23,26 +24,26 @@ const NewJobPage = () => {
         // initialValues={{}}
         onSubmit={async (values) => {
           try {
-            const job = await createJobMutation(values);
-            router.push(Routes.ShowJobPage({ jobId: job.id }));
+            const job = await createJobMutation(values)
+            await router.push(Routes.ShowJobPage({ jobId: job.id }))
           } catch (error: any) {
-            console.error(error);
+            console.error(error)
             return {
               [FORM_ERROR]: error.toString(),
-            };
+            }
           }
         }}
       />
 
       <p>
-        <Link href={Routes.JobsPage()}>
+        {/* <Link href={Routes.JobsPage()}>
           <a>Jobs</a>
-        </Link>
+        </Link> */}
       </p>
     </Layout>
-  );
-};
+  )
+}
 
-NewJobPage.authenticate = true;
+NewJobPage.authenticate = true
 
-export default NewJobPage;
+export default NewJobPage

@@ -17,27 +17,28 @@ import { IconType } from "react-icons"
 import { FaChevronDown } from "react-icons/fa"
 import { FcHome } from "react-icons/fc"
 import jobContext from "../contexts/JobContext"
+import getJobs from "../queries/getJobs"
 
 type JobPickerProps = {
   icon: IconType
 }
 
-const LocationPicker = ({ icon }: JobPickerProps) => {
+const JobPicker = ({ icon }: JobPickerProps) => {
   const { job } = useContext(jobContext)
-  const [{ jobs }] = useQuery(
-    getJobs,
-    {
-      where: { locationId: location.id },
-      orderBy: [
-        { primary: "asc" },
-        { zipcode: "asc" },
-        { city: "asc" },
-        { street: "asc" },
-        { house: "asc" },
-      ],
-    },
-    { suspense: true }
-  )
+  // const [{ jobs }] = useQuery(
+  //   getJobs,
+  //   {
+  //     where: { locationId: location.id },
+  //     orderBy: [
+  //       { primary: "asc" },
+  //       { zipcode: "asc" },
+  //       { city: "asc" },
+  //       { street: "asc" },
+  //       { house: "asc" },
+  //     ],
+  //   },
+  //   { suspense: true }
+  // )
 
   return (
     <Menu>
@@ -51,15 +52,15 @@ const LocationPicker = ({ icon }: JobPickerProps) => {
       >
         <HStack>
           <Icon as={icon} w={5} h={5} />
-          <Heading size="sm">
+          {/* <Heading size="sm">
             {customer.firstname} {customer.lastname}
-          </Heading>
+          </Heading> */}
         </HStack>
       </MenuButton>
 
       <MenuList>
         <>
-          {jobs.map((job) => (
+          {/* {jobs.map((job) => (
             <Link
               key={job.id}
               href={Routes.ShowJobPage({ locationId: location.id, jobId: job.id })}
@@ -69,11 +70,11 @@ const LocationPicker = ({ icon }: JobPickerProps) => {
                 {`${job.title}`}
               </MenuItem>
             </Link>
-          ))}
+          ))} */}
         </>
       </MenuList>
     </Menu>
   )
 }
 
-export default LocationPicker
+export default JobPicker

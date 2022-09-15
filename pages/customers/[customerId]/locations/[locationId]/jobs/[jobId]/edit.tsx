@@ -1,19 +1,20 @@
-import { Suspense } from "react";
-import { Routes } from "@blitzjs/next";
-import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useQuery, useMutation } from "@blitzjs/rpc";
-import { useParam } from "@blitzjs/next";
+import { Suspense } from "react"
+import { Routes } from "@blitzjs/next"
+import Head from "next/head"
+import Link from "next/link"
+import { useRouter } from "next/router"
+import { useQuery, useMutation } from "@blitzjs/rpc"
+import { useParam } from "@blitzjs/next"
 
-import Layout from "app/core/layouts/Layout";
-import getJob from "app/jobs/queries/getJob";
-import updateJob from "app/jobs/mutations/updateJob";
-import { JobForm, FORM_ERROR } from "app/jobs/components/JobForm";
+import Layout from "app/core/layouts/Layout"
+import getJob from "app/jobs/queries/getJob"
+import updateJob from "app/jobs/mutations/updateJob"
+import { JobForm } from "app/jobs/components/JobForm"
+import { FORM_ERROR } from "app/core/components/forms/Form"
 
 export const EditJob = () => {
-  const router = useRouter();
-  const jobId = useParam("jobId", "number");
+  const router = useRouter()
+  const jobId = useParam("jobId", "number")
   const [job, { setQueryData }] = useQuery(
     getJob,
     { id: jobId },
@@ -21,8 +22,8 @@ export const EditJob = () => {
       // This ensures the query never refreshes and overwrites the form data while the user is editing.
       staleTime: Infinity,
     }
-  );
-  const [updateJobMutation] = useMutation(updateJob);
+  )
+  const [updateJobMutation] = useMutation(updateJob)
 
   return (
     <>
@@ -46,21 +47,21 @@ export const EditJob = () => {
               const updated = await updateJobMutation({
                 id: job.id,
                 ...values,
-              });
-              await setQueryData(updated);
-              router.push(Routes.ShowJobPage({ jobId: updated.id }));
+              })
+              await setQueryData(updated)
+              await router.push(Routes.ShowJobPage({ jobId: updated.id }))
             } catch (error: any) {
-              console.error(error);
+              console.error(error)
               return {
                 [FORM_ERROR]: error.toString(),
-              };
+              }
             }
           }}
         />
       </div>
     </>
-  );
-};
+  )
+}
 
 const EditJobPage = () => {
   return (
@@ -70,15 +71,15 @@ const EditJobPage = () => {
       </Suspense>
 
       <p>
-        <Link href={Routes.JobsPage()}>
+        {/* <Link href={Routes.JobsPage()}>
           <a>Jobs</a>
-        </Link>
+        </Link> */}
       </p>
     </div>
-  );
-};
+  )
+}
 
-EditJobPage.authenticate = true;
-EditJobPage.getLayout = (page) => <Layout>{page}</Layout>;
+EditJobPage.authenticate = true
+EditJobPage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default EditJobPage;
+export default EditJobPage

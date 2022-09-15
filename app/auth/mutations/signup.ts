@@ -1,7 +1,6 @@
 import { SecurePassword } from "@blitzjs/auth"
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
-import { Role } from "types"
 import { Signup } from "../validations"
 
 export default resolver.pipe(
@@ -13,7 +12,7 @@ export default resolver.pipe(
       select: { id: true, username: true, email: true, role: true },
     })
 
-    await ctx.session.$create({ userId: user.id, role: user.role as Role })
+    await ctx.session.$create({ userId: user.id, role: user.role })
     return user
   }
 )

@@ -1,3 +1,4 @@
+import { Job } from "@prisma/client"
 import { createContext } from "react"
 
 export type JobContext = {
@@ -6,13 +7,7 @@ export type JobContext = {
   refetchJob: () => void
   showDetails: () => void
 
-  job: {
-    id: number
-    title: string
-    start: Date
-    end: Date
-    locationId: number
-  }
+  job: Job
 
   // amountPaid: number
   // amountOwed: number
