@@ -10,16 +10,16 @@ import { FcSearch } from "react-icons/fc"
 import debounce from "lodash/debounce"
 
 type SearchInputProps = {
-  setQuery: (val: string) => void
+  search: (val: string) => void
   props?: ComponentPropsWithoutRef<typeof Input>
 }
 
-const SearchInput = ({ setQuery, ...props }: SearchInputProps) => {
+const SearchInput = ({ search, ...props }: SearchInputProps) => {
   const changeHandler: ChangeEventHandler<HTMLInputElement> = useCallback(
     ({ target }) => {
-      setQuery(target.value)
+      search(target.value)
     },
-    [setQuery]
+    [search]
   )
 
   const debouncedChangeHandler = useMemo(() => debounce(changeHandler, 300), [changeHandler])

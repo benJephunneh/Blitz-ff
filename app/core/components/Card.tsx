@@ -9,12 +9,12 @@ type CardProps = {
 const Card = ({ children, ...props }: CardProps) => {
   const borderColor = useColorModeValue("gray.200", "gray.800")
   const borderWidth = useColorModeValue("2px", "1px")
-  const bgColor = useColorModeValue("white", "gray.700")
+  const bgColor = useColorModeValue("transparent", "gray.700")
 
   return (
     <Box
       px={4}
-      py={6}
+      py={2}
       borderRadius="md"
       borderWidth={1}
       borderColor={borderColor}

@@ -14,7 +14,7 @@ const Subheader = ({ children }: SubheaderProps) => {
       py={2}
       bg={useColorModeValue("gray.100", "gray.700")}
       borderBottom="1px solid"
-      borderBottomColor={useColorModeValue("blackAlpha.300", "whiteAlpha.500")}
+      borderBottomColor={useColorModeValue("blackAlpha.300", "blackAlpha.100")}
       zIndex={11}
     >
       {children}

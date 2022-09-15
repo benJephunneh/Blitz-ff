@@ -5,6 +5,7 @@ export type DashboardContext = {
   pickCustomer: (id: number | undefined) => void
   deleteCustomer: () => void
   addJob: () => void
+  search: (q: string) => void
 
   customerId?: number
 }

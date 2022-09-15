@@ -3,7 +3,7 @@ import { ReactNode } from "react"
 
 type SearchResultsProps = {
   query: string
-  message: string
+  message?: string
   isLoading: boolean
   items: any[]
   children?: ReactNode
@@ -20,7 +20,7 @@ const SearchResults = ({ query, message, isLoading, items, children }: SearchRes
         </Center>
       )}
 
-      {!query && !items.length && (
+      {!query && !items.length && message && (
         <Text pl={3} fontSize="md" fontWeight="semibold">
           {message}
         </Text>

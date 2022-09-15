@@ -9,11 +9,13 @@ import SearchInput from "./SearchInput"
 import SearchResults from "./SearchResults"
 
 type CustomerSearchProps = {
+  message?: string
+  initialSearch?: string
   customerActions?: (item: Customer) => JSX.Element
 }
 
-const CustomerSearch = ({ customerActions }: CustomerSearchProps) => {
-  const [query, setQuery] = useState("")
+const CustomerSearch = ({ message, initialSearch = "", customerActions }: CustomerSearchProps) => {
+  const [query, setQuery] = useState(initialSearch)
   const [enabled, setEnabled] = useState(false)
   const [items, { status, isLoading }] = useQuery(
     findCustomer,
@@ -22,22 +24,17 @@ const CustomerSearch = ({ customerActions }: CustomerSearchProps) => {
   )
 
   return (
-    <Box>
-      <SearchInput setQuery={setQuery} />
+    <>
+      <SearchInput search={setQuery} />
 
-      <SearchResults
-        message="Start typing to search for a customer"
-        query={query}
-        items={items || []}
-        isLoading={isLoading}
-      >
+      <SearchResults message={message} query={query} items={items || []} isLoading={isLoading}>
         <SimpleGrid ml={4} columns={1} spacing={3}>
           {items?.map((item) => (
             <CustomerSearchResult key={item.id} customer={item} />
           ))}
         </SimpleGrid>
       </SearchResults>
-    </Box>
+    </>
   )
 }
 

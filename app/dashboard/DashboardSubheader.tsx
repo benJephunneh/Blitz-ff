@@ -3,6 +3,7 @@ import Subheader from "app/core/components/header/Subheader"
 import CustomerPicker from "app/customers/components/CustomerPicker"
 import { FcMindMap } from "react-icons/fc"
 import DashboardProvider from "./dashboardProvider"
+import DashboardSearch from "./DashboardSearch"
 import DashboardSubheaderActions from "./DashboardSubheaderActions"
 import NavigationPicker from "./NavigationPicker"
 
@@ -15,7 +16,10 @@ const DashboardSubheader = () => {
     <DashboardProvider>
       <Subheader>
         <HStack justify="space-between">
-          <NavigationPickerSubheader />
+          <HStack spacing={4}>
+            <NavigationPickerSubheader />
+            <DashboardSearch />
+          </HStack>
           <DashboardSubheaderActions />
         </HStack>
       </Subheader>

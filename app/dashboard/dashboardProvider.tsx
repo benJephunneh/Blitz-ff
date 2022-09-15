@@ -1,10 +1,11 @@
 import { Routes } from "@blitzjs/next"
+import { setQueryData } from "@blitzjs/rpc"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import customerContext from "app/customers/contexts/customerContext"
 import useCustomer from "app/customers/hooks/useCustomer"
 import JobModalForm from "app/jobs/components/JobModalForm"
 import { Router, useRouter } from "next/router"
-import { ReactNode, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { number } from "zod"
 import dashboardContext from "./dashboardContext"
 
@@ -21,6 +22,12 @@ const DashboardProvider = ({ locationId, children }: DashboardProviderProps) => 
   const [deletingCustomer, setDeletingCustomer] = useState(false)
   const [addingJob, setAddingJob] = useState(false)
   const [customerId, setCustomerId] = useState<number | undefined>(undefined)
+  const [query, setQuery] = useState("")
+
+  // useEffect(() => {
+  //   if (query !== "") router.push(Routes.SearchPage({ initialSearch: query }))
+  //     .catch((e) => console.log(e))
+  // }, [query, router])
 
   return (
     <Provider
@@ -29,6 +36,8 @@ const DashboardProvider = ({ locationId, children }: DashboardProviderProps) => 
         pickCustomer: (id) => setCustomerId(id),
         deleteCustomer: () => setDeletingCustomer(true),
         addJob: () => setAddingJob(true),
+        search: (q) => setQuery(q),
+
         customerId,
       }}
     >

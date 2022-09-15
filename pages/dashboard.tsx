@@ -54,8 +54,8 @@ const Dashboard: BlitzPage = () => {
 
   return (
     <>
-      <Box bg={useColorModeValue("gray.200", "gray.600")}>
-        <Container as="main" textAlign="center">
+      <Box bg={useColorModeValue("gray.200", "gray.600")} h="full">
+        <Container textAlign="center">
           <Heading size="2xl" my={2}>
             {currentUser?.username}
           </Heading>
@@ -72,7 +72,7 @@ const Dashboard: BlitzPage = () => {
       </Container> */}
 
       <footer>
-        <HStack spacing={2}>
+        <HStack spacing={2} position="fixed" left={2} bottom={2}>
           <Link
             href="https://github.com/benJephunneh/Blitz-ff"
             passHref

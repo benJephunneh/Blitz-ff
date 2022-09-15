@@ -11,8 +11,10 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { NavLinks } from "app/core/components/NavLinks"
 import getCustomer from "app/customers/queries/getCustomer"
 import getLocation from "app/locations/queries/getLocation"
+import CustomerSearch from "app/search/CustomerSearch"
 import db from "db"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -44,38 +46,38 @@ const NavigationPicker = ({ icon }: NavigationPickerProps) => {
     { where: { id: customer?.id } },
     { suspense: false, refetchOnWindowFocus: false }
   )
-  const links = [
-    {
-      name: "Schedule",
-      href: "/schedule",
-      isDisabled: true,
-    },
-    {
-      name: "Customers",
-      href: "/customers",
-      isDisabled: false,
-    },
-    {
-      name: "Locations",
-      href: `/customers/${customer?.id}`,
-      isDisabled: !customer?.id,
-    },
-    {
-      name: "Invoices",
-      href: `/customers/${customer?.id}/locations/${location?.id}/invoices`,
-      isDisabled: !customer?.id || !location?.id,
-    },
-    {
-      name: "Estimates",
-      href: `/customers/${customer?.id}/locations/${location?.id}/estimates`,
-      isDisabled: !customer?.id || !location?.id,
-    },
-  ]
+  // const links = [
+  //   {
+  //     name: "Schedule",
+  //     href: "/schedule",
+  //     isDisabled: true,
+  //   },
+  //   {
+  //     name: "Customers",
+  //     href: "/customers",
+  //     isDisabled: false,
+  //   },
+  //   {
+  //     name: "Locations",
+  //     href: `/customers/${customer?.id}`,
+  //     isDisabled: !customer?.id,
+  //   },
+  //   {
+  //     name: "Invoices",
+  //     href: `/customers/${customer?.id}/locations/${location?.id}/invoices`,
+  //     isDisabled: !customer?.id || !location?.id,
+  //   },
+  //   {
+  //     name: "Estimates",
+  //     href: `/customers/${customer?.id}/locations/${location?.id}/estimates`,
+  //     isDisabled: !customer?.id || !location?.id,
+  //   },
+  // ]
 
   // window.alert(window.location.pathname)
 
   return (
-    <Menu isLazy>
+    <Menu isLazy gutter={4}>
       <MenuButton
         as={Button}
         size="sm"
@@ -95,8 +97,11 @@ const NavigationPicker = ({ icon }: NavigationPickerProps) => {
           <Icon as={FaChevronDown} w={3} h={3} />
         </HStack>
       </MenuButton>
-      <MenuList>
-        {links.map(({ name, href, isDisabled }, ii) => (
+      <MenuList zIndex={20}>
+        {/* <MenuItem closeOnSelect={false}>
+          <CustomerSearch />
+        </MenuItem> */}
+        {NavLinks.map(({ name, href, isDisabled }, ii) => (
           <MenuItem key={ii} isDisabled={isDisabled}>
             <Link href={href} passHref>
               <Text as="a" fontWeight="semibold">
