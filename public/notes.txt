@@ -1,0 +1,27 @@
+Repair job is created:
+-Confirm permit is valid or in the works
+-Confirm estimate (creation, approval...)
+-Trigger 1/2-down invoice
+
+
+New job is created:
+-Confirm permit is valid or in the works
+-Confirm estimate (creation, approval...)
+-Trigger 1/2-down invoice
+
+
+Repair SE is scheduled
+
+
+New SE is scheduled
+
+
+
+
+
+Data migration:
+-If no customer name
+ -Use company name
+
+ -If no company name
+  -Use company name from email (e.g. *.americashomeplace.com)

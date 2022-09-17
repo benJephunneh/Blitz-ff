@@ -70,19 +70,40 @@ model Token {
 //       but enums only work in Postgres.
 //       See: https://blitzjs.com/docs/database-overview#switch-to-postgre-sql
 
+enum CustomerType {
+  Owner
+  Manager
+  Realtor
+  Builder
+}
+
+enum EmailType {
+  Personal
+  Business
+}
+
+enum PhoneType {
+  Primary
+  Secondary
+  Office
+}
+
 model Customer {
   id        Int        @id @default(autoincrement())
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   firstname String
   lastname  String
-  email            String @unique
-  phone            String @unique
+  emails            String[] @unique
+  phones            String[] @unique
   locations Location[]
-
-  @@index([firstname, lastname, email, phone])
 }
 
+enum LocationType {
+  Personal
+  Business
+  Managed
+}
 model Location {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now())
@@ -96,11 +117,10 @@ model Location {
   block      String?
   lot        String?
   parcel     String?
+  type       LocationType @default(Personal)
   customer   Customer @relation(fields: [customerId], references: [id])
   customerId Int
   jobs       Job[]
-
-  @@index([house, street, city, zipcode, block, lot, parcel])
 }
 
 model CustomerArchive {
@@ -132,6 +152,15 @@ model LocationArchive {
   archivedJobs     JobArchive[]
 }
 
+enum Permit {
+  None
+  PendingNotPaid
+  PendingPaid
+  Received
+  Active
+  Expired
+}
+
 model Job {
   id         Int       @id @default(autoincrement())
   createdAt  DateTime  @default(now())
@@ -139,10 +168,9 @@ model Job {
   title      String
   start      DateTime?
   end        DateTime?
+  // permit     Permit @default(None)
   location   Location  @relation(fields: [locationId], references: [id])
   locationId Int
-
-  @@index([title, start, end])
 }
 
 model JobArchive {
