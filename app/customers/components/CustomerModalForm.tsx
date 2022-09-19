@@ -86,7 +86,7 @@ const CustomerModalForm = ({
         firstname: customer?.firstname ?? "",
         lastname: customer?.lastname ?? "",
         email: customer?.email ?? "",
-        phone: customer?.phone ?? "",
+        // phone: customer?.phone ?? "",
       }}
       onSubmit={async (values) => {
         await onSubmit(values)
@@ -104,9 +104,9 @@ const CustomerModalForm = ({
           <GridItem colSpan={3}>
             <LabeledTextField name="email" label="Email address" type="email" />
           </GridItem>
-          <GridItem colSpan={2}>
+          {/* <GridItem colSpan={2}>
             <LabeledTextField name="phone" label="Phone number" type="phone" />
-          </GridItem>
+          </GridItem> */}
         </Grid>
       )}
       {...props}

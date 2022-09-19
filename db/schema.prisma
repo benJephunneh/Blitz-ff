@@ -1,11 +1,9 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
 }
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
@@ -13,12 +11,130 @@ generator client {
 
 // --------------------------------------
 
+enum CustomerType {
+  Owner
+  Manager
+  Realtor
+  Builder
+}
+enum EmailType {
+  Personal
+  Business
+}
+enum PhoneType {
+  Primary
+  Secondary
+  Office
+}
+enum Permit {
+  None
+  PendingNotPaid
+  PendingPaid
+  Received
+  Active
+  Expired
+}
+
+model Customer {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  firstname String
+  lastname  String
+  email     String     @unique
+  locations Location[]
+}
+
+enum LocationType {
+  Personal
+  Business
+  Managed
+}
+model Location {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  primary    Boolean  @default(true)
+  house      String?
+  street     String
+  city       String
+  state      String   @default("FL")
+  zipcode    String
+  phones  String[]
+  block      String?
+  lot        String?
+  parcel     String?
+  type       LocationType @default(Personal)
+  customer   Customer @relation(fields: [customerId], references: [id])
+  customerId Int
+  jobs       Job[]
+}
+
+model Job {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  title      String
+  start      DateTime?
+  end        DateTime?
+  // permit     Permit @default(None)
+  location   Location  @relation(fields: [locationId], references: [id])
+  locationId Int
+}
+
+
+/////////////////////////
+// ..... ARCHIVE ..... //
+/////////////////////////
+model CustomerArchive {
+  id                Int               @id @default(autoincrement())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  firstname         String
+  lastname          String
+  email            String @unique
+  archivedLocations LocationArchive[]
+}
+
+model LocationArchive {
+  id               Int             @id @default(autoincrement())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  primary          Boolean         @default(true)
+  house            String?
+  street           String
+  city             String
+  state            String          @default("FL")
+  zipcode          String
+  phones String[]
+  block            String?
+  lot              String?
+  parcel           String?
+  archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id])
+  customerId       Int
+  archivedJobs     JobArchive[]
+}
+
+model JobArchive {
+  id               Int             @id @default(autoincrement())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  title            String
+  start            DateTime?
+  end              DateTime?
+  // permit Permit @default(None)
+  archivedLocation LocationArchive @relation(fields: [locationId], references: [id])
+  locationId       Int
+}
+/////////////////////////
+// ..... ARCHIVE ..... //
+/////////////////////////
+
 enum UserRole {
   Owner
   Admin
   Tech
 }
-
 model User {
   id             Int      @id @default(autoincrement())
   createdAt      DateTime @default(now())
@@ -69,117 +185,3 @@ model Token {
 // NOTE: It's highly recommended to use an enum for the token type
 //       but enums only work in Postgres.
 //       See: https://blitzjs.com/docs/database-overview#switch-to-postgre-sql
-
-enum CustomerType {
-  Owner
-  Manager
-  Realtor
-  Builder
-}
-
-enum EmailType {
-  Personal
-  Business
-}
-
-enum PhoneType {
-  Primary
-  Secondary
-  Office
-}
-
-model Customer {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  firstname String
-  lastname  String
-  emails            String[] @unique
-  phones            String[] @unique
-  locations Location[]
-}
-
-enum LocationType {
-  Personal
-  Business
-  Managed
-}
-model Location {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  primary    Boolean  @default(true)
-  house      String?
-  street     String
-  city       String
-  state      String   @default("FL")
-  zipcode    String
-  block      String?
-  lot        String?
-  parcel     String?
-  type       LocationType @default(Personal)
-  customer   Customer @relation(fields: [customerId], references: [id])
-  customerId Int
-  jobs       Job[]
-}
-
-model CustomerArchive {
-  id                Int               @id @default(autoincrement())
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  firstname         String
-  lastname          String
-  email            String @unique
-  phone            String @unique
-  archivedLocations LocationArchive[]
-}
-
-model LocationArchive {
-  id               Int             @id @default(autoincrement())
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  primary          Boolean         @default(true)
-  house            String?
-  street           String
-  city             String
-  state            String          @default("FL")
-  zipcode          String
-  block            String?
-  lot              String?
-  parcel           String?
-  archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id])
-  customerId       Int
-  archivedJobs     JobArchive[]
-}
-
-enum Permit {
-  None
-  PendingNotPaid
-  PendingPaid
-  Received
-  Active
-  Expired
-}
-
-model Job {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  title      String
-  start      DateTime?
-  end        DateTime?
-  // permit     Permit @default(None)
-  location   Location  @relation(fields: [locationId], references: [id])
-  locationId Int
-}
-
-model JobArchive {
-  id               Int             @id @default(autoincrement())
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  title            String
-  start            DateTime?
-  end              DateTime?
-  archivedLocation LocationArchive @relation(fields: [locationId], references: [id])
-  locationId       Int
-}

@@ -1,6 +1,5 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
-import { z } from "zod"
 import { CreateCustomer } from "../validations"
 
 export default resolver.pipe(resolver.zod(CreateCustomer), resolver.authorize(), async (input) => {

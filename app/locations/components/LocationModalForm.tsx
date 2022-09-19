@@ -120,6 +120,7 @@ const LocationModalForm = ({
         city: location?.city ?? "",
         state: location?.state ?? "",
         zipcode: location?.zipcode ?? "",
+        phones: location?.phones ?? [],
         block: location?.block ?? undefined,
         lot: location?.lot ?? undefined,
         parcel: location?.parcel ?? undefined,
