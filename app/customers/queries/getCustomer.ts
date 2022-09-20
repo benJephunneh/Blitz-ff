@@ -1,6 +1,6 @@
 import { resolver } from "@blitzjs/rpc"
 import { NotFoundError } from "blitz"
-import db from "db"
+import db, { Prisma } from "db"
 import { z } from "zod"
 
 const GetCustomer = z.object({
@@ -9,28 +9,36 @@ const GetCustomer = z.object({
   id: z.number(),
 })
 
-type GetCustomerProps = {
-  id?: number
-}
+interface CustomerFindFirstArgs extends Pick<Prisma.CustomerFindFirstArgs, "where" | "include"> {}
 
-export default async function getCustomer({ id }: GetCustomerProps) {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+export default resolver.pipe(
+  resolver.authorize(),
+  // resolver.zod(GetCustomer),
 
-  if (!id) return null
+  async ({ where, include }: CustomerFindFirstArgs) => {
+    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
 
-  const customer = await db.customer.findFirst({
-    where: { id },
-    select: {
-      id: true,
-      firstname: true,
-      lastname: true,
-      companyname: true,
-      email: true,
-      // phone: true,
-    },
-  })
+    // if (!id) return null
 
-  if (!customer) throw new NotFoundError(`CustomerId ${id} not found.`)
+    const customer = await db.customer.findFirst({
+      where,
+      include: {
+        locations: {
+          where,
+        },
+      },
+      // select: {
+      //   id: true,
+      //   firstname: true,
+      //   lastname: true,
+      //   companyname: true,
+      //   email: true,
+      //   // phone: true,
+      // },
+    })
 
-  return customer
-}
+    if (!customer) throw new NotFoundError()
+
+    return customer
+  }
+)

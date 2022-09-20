@@ -2,6 +2,7 @@ import { useParam } from "@blitzjs/next"
 import { HStack } from "@chakra-ui/react"
 import { Customer } from "@prisma/client"
 import Subheader from "app/core/components/header/Subheader"
+import DashboardSearch from "app/dashboard/DashboardSearch"
 import LocationPicker from "app/locations/components/LocationPicker"
 import { useRouter } from "next/router"
 import React from "react"
@@ -29,7 +30,10 @@ const CustomerSubheader = () => {
     <CustomerProvider>
       <Subheader>
         <HStack justify="space-between">
-          <CustomerPickerSubheader />
+          <HStack spacing={4}>
+            <CustomerPickerSubheader />
+            <DashboardSearch />
+          </HStack>
           <CustomerSubheaderActions />
         </HStack>
       </Subheader>

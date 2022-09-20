@@ -66,7 +66,11 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
 
   const [customer, { refetch: refetchCustomer }] = useQuery(
     getCustomer,
-    { id: custId },
+    {
+      where: {
+        id: custId,
+      },
+    },
     {
       suspense: true,
       staleTime: Infinity,
@@ -76,8 +80,8 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
     getLocations,
     { where: { customerId: custId } },
     {
-      suspense: false,
-      enabled: false,
+      suspense: true,
+      enabled: true,
       refetchOnWindowFocus: false,
       refetchInterval: 1000,
       refetchIntervalInBackground: true,
@@ -100,6 +104,9 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
       displayName = `${customer.companyname}`
     }
   }
+
+  console.log(`Customer: ${displayName}`)
+  console.log(`Location[0]: ${JSON.stringify(locations?.locations[0])}`)
 
   return (
     <Provider
@@ -132,10 +139,13 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         customerId={custId!}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
-        onSuccess={() => {
+        onSuccess={(location) => {
           refetchCustomer().catch((e) => console.log(e))
           refetchLocations().catch((e) => console.log(e))
           setCreatingLocation(false)
+          router
+            .push(Routes.ShowLocationPage({ customerId: custId!, locationId: location.id }))
+            .catch((e) => console.log(e))
         }}
       />
 

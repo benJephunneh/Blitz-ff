@@ -3,6 +3,8 @@ type PhoneDisplayProps = {
 }
 
 const phoneDisplay = (phone: string) => {
+  if (!phone) return null
+
   let ret = ""
   if (phone.length == 7) {
     ret = `${phone.slice(0, 3)}.${phone.slice(3)}`

@@ -22,6 +22,7 @@ import SearchResults from "app/search/SearchResults"
 import Link from "next/link"
 import { useContext, useState } from "react"
 import { IconType } from "react-icons"
+import { BsSignpostSplit } from "react-icons/bs"
 import { FaChevronDown } from "react-icons/fa"
 import { FcBusinessman, FcList, FcManager, FcTimeline } from "react-icons/fc"
 import customerContext from "../contexts/customerContext"
@@ -33,7 +34,7 @@ type CustomerPickerProps = {
 }
 
 const CustomerPicker2 = () => {
-  const { customer } = useContext(customerContext)
+  const { customer, displayName, locations } = useContext(customerContext)
   const [query, setQuery] = useState("")
 
   const [items, { isLoading }] = useQuery(
@@ -41,6 +42,10 @@ const CustomerPicker2 = () => {
     { query },
     { suspense: false, enabled: !!query }
   )
+
+  locations?.map((location) => {
+    console.log(JSON.stringify(location))
+  })
 
   return (
     <HStack spacing={8} justify="left">
@@ -50,25 +55,42 @@ const CustomerPicker2 = () => {
           size="sm"
           variant="ghost"
           px={1}
-          rightIcon={<Icon pr={1} as={FaChevronDown} />}
+          rightIcon={
+            <Icon color={useColorModeValue("cyan.400", "cyan.600")} pr={1} as={FaChevronDown} />
+          }
         >
           <HStack>
-            <Icon as={FcManager} w={5} h={5} />
-            <Heading size="sm">
-              {customer.firstname} {customer.lastname}
+            <Icon
+              as={BsSignpostSplit}
+              color={useColorModeValue("brown", "burlywood")}
+              w={5}
+              h={5}
+            />
+            <Heading size="sm" opacity="0.9">
+              {displayName}
             </Heading>
           </HStack>
         </MenuButton>
 
         <MenuList>
-          <SearchInputMenu setQuery={setQuery} />
+          <MenuItem>{`Number of locations: ${locations?.length}`}</MenuItem>
+          {locations?.map((location) => (
+            <Link
+              key={location.id}
+              href={Routes.ShowLocationPage({ customerId: customer.id, locationId: location.id })}
+              passHref
+            >
+              <MenuItem as="a">{location.street}</MenuItem>
+            </Link>
+          ))}
+          {/* <SearchInputMenu setQuery={setQuery} /> */}
         </MenuList>
       </Menu>
-      <Link href={Routes.SearchPage()} passHref>
+      {/* <Link href={Routes.SearchPage()} passHref>
         <Text as="a" fontWeight="semibold">
           Search...
         </Text>
-      </Link>
+      </Link> */}
       {/* <SearchInput setQuery={setQuery} /> */}
     </HStack>
   )

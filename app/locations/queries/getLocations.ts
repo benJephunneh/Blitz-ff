@@ -3,29 +3,18 @@ import { paginate } from "blitz"
 import db, { Prisma } from "db"
 
 interface GetLocationsInput
-  extends Pick<Prisma.LocationFindManyArgs, "where" | "orderBy" | "skip" | "take" | "include"> {}
+  extends Pick<Prisma.LocationFindManyArgs, "where" | "orderBy" | "include"> {}
 
 export default resolver.pipe(
   resolver.authorize(),
 
-  async ({ where, orderBy, skip, take }: GetLocationsInput) => {
+  async ({ where, orderBy }: GetLocationsInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const {
-      items: locations,
-      hasMore,
-      nextPage,
-      count,
-    } = await paginate({
-      skip,
-      take,
-      count: () => db.location.count({ where }),
-      query: (paginateArgs) => db.location.findMany({ ...paginateArgs, where, orderBy }),
-    })
+    const locations = await db.location.findMany({ where, orderBy })
+    const count = locations.length
 
     return {
       locations,
-      nextPage,
-      hasMore,
       count,
     }
   }

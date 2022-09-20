@@ -42,6 +42,7 @@ model Customer {
   firstname String?
   lastname  String?
   companyname String?
+  displayname String
   email     String     @unique
   locations Location[]
 }
@@ -94,6 +95,7 @@ model CustomerArchive {
   firstname         String?
   lastname          String?
   companyname String?
+  displayname String
   email            String @unique
   archivedLocations LocationArchive[]
 }
