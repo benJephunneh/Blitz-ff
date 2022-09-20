@@ -90,10 +90,18 @@ const LocationList = ({ customerId }: { customerId: number }) => {
 
   const [sortMethod, setSortMethod] = useState<SortOrder>("asc")
   const [sortBy, setSortBy] = useState(initialSortBy)
-  const [{ locations }] = useQuery(getLocations, {
-    where: { customerId },
-    orderBy: sortBy,
-  })
+  const [{ locations }] = useQuery(
+    getLocations,
+    {
+      where: { customerId },
+      orderBy: sortBy,
+    },
+    {
+      refetchOnWindowFocus: false,
+      refetchInterval: 60000,
+      refetchIntervalInBackground: true,
+    }
+  )
 
   return (
     <Flex justifyContent="space-around">

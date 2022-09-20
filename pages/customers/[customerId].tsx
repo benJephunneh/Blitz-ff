@@ -7,61 +7,82 @@ import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import LocationList from "app/locations/components/LocationList"
 import {
   Box,
-  Button,
   Container,
-  Flex,
+  Heading,
+  HStack,
+  Icon,
+  Text,
   useColorModeValue,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 import CustomerSubheader from "app/customers/components/CustomerSubheader"
-import useCustomer from "app/customers/hooks/useCustomer"
-import { GetServerSideProps } from "next"
-import PrefetchQueryClient from "app/core/helpers/prefetchQueryClient"
-import getLocations from "app/locations/queries/getLocations"
-import { AuthenticationError, AuthorizationError, NotFoundError } from "blitz"
 import ConfirmDeleteModal from "app/core/components/ConfirmDeleteModal"
+import getLocation from "app/locations/queries/getLocation"
+import LocationCard from "app/locations/components/LocationCard"
+import phoneDisplay from "app/core/components/methods/phoneDisplay"
+import { FcExpand, FcPhone, FcVoicemail } from "react-icons/fc"
+import { BsMailbox } from "react-icons/bs"
 
 const ShowCustomerPage: BlitzPage = () => {
   const router = useRouter()
   const customerId = useParam("customerId", "number")
   const [customer] = useQuery(getCustomer, { id: customerId }, { refetchOnWindowFocus: false })
+  const [location] = useQuery(getLocation, { where: { customerId, primary: true } })
 
   // Moved to subheader:
   // const [editingCustomer, setEditingCustomer] = useState(false)
   // const [creatingLocation, setCreatingLocation] = useState(false)
 
-  const [deleteCustomerMutation] = useMutation(deleteCustomer)
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const textColor = useColorModeValue("009a4c", "yellow.200")
+  let heading: string
+  if (customer?.firstname) {
+    heading = `${customer.firstname}`
+
+    if (customer?.lastname) {
+      heading.concat(` ${customer.lastname}`)
+    }
+  } else {
+    heading = `${customer?.companyname}`
+  }
 
   return (
     <Box bg={useColorModeValue("white", "gray.800")}>
-      <ConfirmDeleteModal
-        title={`Delete ${customer?.firstname} ${customer?.lastname}?`}
-        description="Are you sure you want to delete this customer and their history?  All associated locations, jobs, invoices, and estimates will also be deleted."
-        isOpen={isOpen}
-        onClose={onClose}
-        onConfirm={async () => {
-          await deleteCustomerMutation({ id: customer!.id }).then(() =>
-            router.push(Routes.CustomersPage())
-          )
-        }}
-      />
-
+      {customer && (
+        <LocationCard my={4} mx={4}>
+          <Heading ml={4} fontStyle="italic">
+            {heading}
+          </Heading>
+          <HStack spacing={10} mt={4}>
+            <HStack ml={4} spacing={6}>
+              <Icon as={BsMailbox} w={8} h={8} />
+              <Text ml={8} mt={4} fontWeight="semibold" fontSize="xl" opacity="0.8">
+                {location?.house} {location?.street}
+                <br />
+                {location?.city}, {location?.state} {location?.zipcode}
+              </Text>
+            </HStack>
+            <VStack spacing={0}>
+              <HStack mt={4}>
+                <Icon as={FcPhone} />
+                <Text fontSize="sm">{phoneDisplay(location.phones.at(0)!)}</Text>
+              </HStack>
+              <HStack>
+                <Icon as={FcVoicemail} />
+                <Text as="a" fontSize="sm">
+                  {customer.email}
+                </Text>
+              </HStack>
+            </VStack>
+          </HStack>
+        </LocationCard>
+      )}
       <VStack>
         {/*
           <HStack w="inherit">
             <Menu>
               <MenuButton as={Button} variant="link" rightIcon={<FcExpand size={10} />}>
-            <Heading
-              ml={4}
-              fontStyle="italic"
-              textColor={useColorModeValue("#009a4c", "yellow.200")}
-            >
-              {firstname} {lastname}
-            </Heading>
               </MenuButton>
               <MenuList>
                 <MenuItem
@@ -117,7 +138,7 @@ const ShowCustomerPage: BlitzPage = () => {
 
         <LocationList customerId={customer!.id} />
 
-        <Button
+        {/* <Button
           alignSelf="flex-end"
           justifySelf="right"
           borderTopRightRadius={0}
@@ -128,7 +149,7 @@ const ShowCustomerPage: BlitzPage = () => {
           onClick={onOpen}
         >
           Delete {`${customer!.firstname} ${customer!.lastname}`}
-        </Button>
+        </Button> */}
       </VStack>
     </Box>
   )

@@ -51,7 +51,7 @@ const ModalForm: FormComponent<ModalFormProps> = ({
 }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside">
-      <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px)" />
+      <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px) invert(10%)" />
       <FinalForm
         initialValues={initialValues}
         validate={validateZodSchema(schema)}

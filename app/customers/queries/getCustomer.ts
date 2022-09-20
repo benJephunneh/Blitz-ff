@@ -20,7 +20,14 @@ export default async function getCustomer({ id }: GetCustomerProps) {
 
   const customer = await db.customer.findFirst({
     where: { id },
-    select: { id: true, firstname: true, lastname: true, email: true, phone: true },
+    select: {
+      id: true,
+      firstname: true,
+      lastname: true,
+      companyname: true,
+      email: true,
+      // phone: true,
+    },
   })
 
   if (!customer) throw new NotFoundError(`CustomerId ${id} not found.`)

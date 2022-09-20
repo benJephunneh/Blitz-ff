@@ -37,7 +37,7 @@ const ConfirmDeleteModal = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay backdropFilter="blur(2px) hue-rotate={(90deg)" />
+      <ModalOverlay backdropFilter="blur(2px) invert(10%) hue-rotate(90deg)" />
       <ModalContent>
         <ModalCloseButton />
 

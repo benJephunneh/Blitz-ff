@@ -89,6 +89,18 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
   // const [customerOranizer, { refetch: refetchOrganizer }] = useQuery(getCustomerOrganizer, { id })
   // const { jobs, totalPaid, totalOwed } = useCalculateBalanceSheet(customerOrganizer?.jobs || [])
 
+  let displayName = ""
+  if (customer) {
+    if (customer.firstname) {
+      displayName = `${customer.firstname}`
+      if (customer.lastname) {
+        displayName.concat(` ${customer.lastname}`)
+      }
+    } else {
+      displayName = `${customer.companyname}`
+    }
+  }
+
   return (
     <Provider
       value={{
@@ -99,6 +111,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         createLocation: () => setCreatingLocation(true),
 
         customer: customer as Customer,
+        displayName: displayName,
         locations: locations?.locations,
 
         refetchCustomer,

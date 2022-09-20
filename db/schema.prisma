@@ -39,8 +39,9 @@ model Customer {
   id        Int        @id @default(autoincrement())
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  firstname String
-  lastname  String
+  firstname String?
+  lastname  String?
+  companyname String?
   email     String     @unique
   locations Location[]
 }
@@ -90,8 +91,9 @@ model CustomerArchive {
   id                Int               @id @default(autoincrement())
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
-  firstname         String
-  lastname          String
+  firstname         String?
+  lastname          String?
+  companyname String?
   email            String @unique
   archivedLocations LocationArchive[]
 }

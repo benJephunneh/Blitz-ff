@@ -20,6 +20,7 @@ export default resolver.pipe(
         OR: [
           { firstname: { contains: search, mode: "insensitive" } },
           { lastname: { contains: search, mode: "insensitive" } },
+          { companyname: { contains: search, mode: "insensitive" } },
           { email: { contains: search, mode: "insensitive" } },
           // { phone: { contains: search, mode: "insensitive" } },
         ],

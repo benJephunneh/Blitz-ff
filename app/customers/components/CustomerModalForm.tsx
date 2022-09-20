@@ -85,6 +85,7 @@ const CustomerModalForm = ({
       initialValues={{
         firstname: customer?.firstname ?? "",
         lastname: customer?.lastname ?? "",
+        companyname: customer?.companyname ?? "",
         email: customer?.email ?? "",
         // phone: customer?.phone ?? "",
       }}
@@ -100,6 +101,9 @@ const CustomerModalForm = ({
           </GridItem>
           <GridItem colSpan={3}>
             <LabeledTextField name="lastname" label="Last name" />
+          </GridItem>
+          <GridItem colSpan={3}>
+            <LabeledTextField name="companyname" label="Company name" />
           </GridItem>
           <GridItem colSpan={3}>
             <LabeledTextField name="email" label="Email address" type="email" />

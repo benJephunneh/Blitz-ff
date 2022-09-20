@@ -9,6 +9,7 @@ export type CustomerContext = {
   createLocation: () => void
 
   customer: Customer
+  displayName: string
   locations?: Location[]
 
   // amountPaid: number

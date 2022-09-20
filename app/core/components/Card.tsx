@@ -19,7 +19,7 @@ const Card = ({ children, ...props }: CardProps) => {
       borderWidth={1}
       borderColor={borderColor}
       bg={bgColor}
-      w="full"
+      maxW="max-content"
       overflow="hidden"
       display="block"
       {...props}
