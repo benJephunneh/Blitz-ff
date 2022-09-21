@@ -8,7 +8,7 @@ export default resolver.pipe(resolver.zod(CreateCustomer), resolver.authorize(),
   if (input.firstname) {
     displayname = input.firstname
     if (input.lastname) {
-      displayname.concat(input.lastname)
+      displayname.concat(` ${input.lastname}`)
     }
   } else if (input.companyname) {
     displayname = input.companyname

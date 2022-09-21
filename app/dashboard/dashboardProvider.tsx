@@ -1,8 +1,9 @@
 import { Routes } from "@blitzjs/next"
-import { setQueryData } from "@blitzjs/rpc"
+import { setQueryData, useMutation } from "@blitzjs/rpc"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import customerContext from "app/customers/contexts/customerContext"
 import useCustomer from "app/customers/hooks/useCustomer"
+import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import JobModalForm from "app/jobs/components/JobModalForm"
 import { Router, useRouter } from "next/router"
 import { ReactNode, useEffect, useState } from "react"
@@ -12,14 +13,14 @@ import dashboardContext from "./dashboardContext"
 const { Provider } = dashboardContext
 
 type DashboardProviderProps = {
-  locationId?: number
+  // locationId?: number
   children?: ReactNode
 }
 
-const DashboardProvider = ({ locationId, children }: DashboardProviderProps) => {
+const DashboardProvider = ({ children }: DashboardProviderProps) => {
   const router = useRouter()
   const [addingCustomer, setAddingCustomer] = useState(false)
-  const [deletingCustomer, setDeletingCustomer] = useState(false)
+  // const [deletingCustomer, setDeletingCustomer] = useState(false)
   const [addingJob, setAddingJob] = useState(false)
   const [customerId, setCustomerId] = useState<number | undefined>(undefined)
   const [query, setQuery] = useState("")
@@ -29,12 +30,18 @@ const DashboardProvider = ({ locationId, children }: DashboardProviderProps) => 
   //     .catch((e) => console.log(e))
   // }, [query, router])
 
+  useEffect(() => {
+    router
+      .push(Routes.ShowCustomerPage({ customerId: customerId! }))
+      .catch((e) => console.log(`dashboardProvider useEffect error: ${e}`))
+  }, [customerId, router])
+
   return (
     <Provider
       value={{
         addCustomer: () => setAddingCustomer(true),
         pickCustomer: (id) => setCustomerId(id),
-        deleteCustomer: () => setDeletingCustomer(true),
+        // deleteCustomer: () => setDeletingCustomer(true),
         addJob: () => setAddingJob(true),
         search: (q) => setQuery(q),
 
@@ -48,19 +55,22 @@ const DashboardProvider = ({ locationId, children }: DashboardProviderProps) => 
           setAddingCustomer(false)
           router
             .push(Routes.ShowCustomerPage({ customerId: customer.id }))
-            .catch((e) => console.log(e))
+            .catch((e) => console.log(`dashboardProvider CustomerModal error: ${e}`))
         }}
       />
 
-      <JobModalForm
+      {/* <JobModalForm
         locationId={locationId}
         isOpen={!!locationId && addingJob}
         onClose={() => setAddingJob(false)}
         onSuccess={(job) => {
           setAddingJob(false)
-          router.push(Routes.ShowJobPage({ jobId: job.id })).catch((e) => console.log(e))
+          router
+            .push(Routes.ShowJobPage({ jobId: job.id }))
+            .catch((e) => console.log(`dashboardProvider JobModal error: ${e}`))
         }}
-      />
+      /> */}
+
       {children}
     </Provider>
   )

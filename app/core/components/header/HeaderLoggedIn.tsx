@@ -21,7 +21,7 @@ const HeaderLoggedIn = () => {
           setCreatingCustomer(false)
           router
             .push(Routes.ShowCustomerPage({ customerId: customer.id }))
-            .catch((e) => console.log(e))
+            .catch((e) => console.log(`HeaderLoggedIn error: ${e}`))
         }}
       />
 

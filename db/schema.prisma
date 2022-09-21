@@ -4,6 +4,7 @@ datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
 }
+
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
@@ -17,15 +18,18 @@ enum CustomerType {
   Realtor
   Builder
 }
+
 enum EmailType {
   Personal
   Business
 }
+
 enum PhoneType {
   Primary
   Secondary
   Office
 }
+
 enum Permit {
   None
   PendingNotPaid
@@ -36,15 +40,15 @@ enum Permit {
 }
 
 model Customer {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  firstname String?
-  lastname  String?
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  firstname   String?
+  lastname    String?
   companyname String?
   displayname String
-  email     String     @unique
-  locations Location[]
+  email       String     @unique
+  locations   Location[]
 }
 
 enum LocationType {
@@ -52,22 +56,23 @@ enum LocationType {
   Business
   Managed
 }
+
 model Location {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  primary    Boolean  @default(true)
+  id         Int          @id @default(autoincrement())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  primary    Boolean      @default(true)
   house      String?
   street     String
   city       String
-  state      String   @default("FL")
+  state      String       @default("FL")
   zipcode    String
-  phones  String[]
+  phones     String[]
   block      String?
   lot        String?
   parcel     String?
   type       LocationType @default(Personal)
-  customer   Customer @relation(fields: [customerId], references: [id])
+  customer   Customer     @relation(fields: [customerId], references: [id])
   customerId Int
   jobs       Job[]
 }
@@ -84,7 +89,6 @@ model Job {
   locationId Int
 }
 
-
 /////////////////////////
 // ..... ARCHIVE ..... //
 /////////////////////////
@@ -94,9 +98,9 @@ model CustomerArchive {
   updatedAt         DateTime          @updatedAt
   firstname         String?
   lastname          String?
-  companyname String?
-  displayname String
-  email            String @unique
+  companyname       String?
+  displayname       String
+  email             String            @unique
   archivedLocations LocationArchive[]
 }
 
@@ -110,7 +114,7 @@ model LocationArchive {
   city             String
   state            String          @default("FL")
   zipcode          String
-  phones String[]
+  phones           String[]
   block            String?
   lot              String?
   parcel           String?
@@ -130,6 +134,7 @@ model JobArchive {
   archivedLocation LocationArchive @relation(fields: [locationId], references: [id])
   locationId       Int
 }
+
 /////////////////////////
 // ..... ARCHIVE ..... //
 /////////////////////////
@@ -139,6 +144,7 @@ enum UserRole {
   Admin
   Tech
 }
+
 model User {
   id             Int      @id @default(autoincrement())
   createdAt      DateTime @default(now())
@@ -146,7 +152,7 @@ model User {
   username       String   @unique
   email          String   @unique
   hashedPassword String?
-  role           UserRole   @default(Tech)
+  role           UserRole @default(Tech)
 
   tokens   Token[]
   sessions Session[]
@@ -172,9 +178,9 @@ enum TokenType {
 }
 
 model Token {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   hashedToken String
   type        TokenType
   expiresAt   DateTime

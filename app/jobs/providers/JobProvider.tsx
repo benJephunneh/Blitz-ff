@@ -82,7 +82,7 @@ const JobProvider = ({ locationId, jobId, children }: JobProviderProps) => {
         isOpen={editingJob}
         onClose={() => setEditingJob(false)}
         onSuccess={() => {
-          refetchJob().catch((e) => console.log(e))
+          refetchJob().catch((e) => console.log(`JobProvider JobModal error: ${e}`))
           setEditingJob(false)
         }}
       />

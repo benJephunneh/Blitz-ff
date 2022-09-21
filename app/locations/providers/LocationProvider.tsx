@@ -49,17 +49,30 @@ const LocationProvider = ({ customerId, locationId, children }: LocationProvider
   const [editingLocation, setEditingLocation] = useState(false)
   const [showingDetails, setShowingDetails] = useState(false)
 
-  const [customer, { refetch: refetchCustomer }] = useQuery(
-    getCustomer,
-    { id: customerId },
-    { enabled: true }
-  )
+  // const [customer, { refetch: refetchCustomer }] = useQuery(
+  //   getCustomer, {
+  //   where: {
+  //     id: customerId
+  //   },
+  //   include: {
+  //     locations: true
+  //   }
+  // }, {
+  //   enabled: true
+  // })
+  // const locations = customer.locations
+
   const [location, { refetch: refetchLocation }] = useQuery(
     getLocation,
     {
-      where: { id: locationId },
+      where: {
+        id: locationId,
+      },
     },
-    { suspense: false })
+    {
+      suspense: false,
+    }
+  )
 
   // const [customerOranizer, { refetch: refetchOrganizer }] = useQuery(getCustomerOrganizer, { id })
   // const { jobs, totalPaid, totalOwed } = useCalculateBalanceSheet(customerOrganizer?.jobs || [])
@@ -71,7 +84,7 @@ const LocationProvider = ({ customerId, locationId, children }: LocationProvider
         showDetails: () => setShowingDetails(true),
         createLocation: () => setEditingLocation(true),
 
-        location: location!,
+        location: location,
 
         refetchLocation,
       }}
@@ -81,7 +94,7 @@ const LocationProvider = ({ customerId, locationId, children }: LocationProvider
         isOpen={editingLocation}
         onClose={() => setEditingLocation(false)}
         onSuccess={() => {
-          refetchLocation().catch((e) => console.log(e))
+          refetchLocation().catch((e) => console.log(`LocationProvider modal error: ${e}`))
           setEditingLocation(false)
         }}
       />

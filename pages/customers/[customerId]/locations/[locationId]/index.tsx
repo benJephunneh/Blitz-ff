@@ -29,12 +29,12 @@ const ShowLocationPage: BlitzPage = () => {
   // const p = processParams(params)
 
   const router = useRouter()
-  const { customerId, locationId } = useParams('number')
+  const { customerId, locationId } = useParams("number")
   // console.log("from location index:")
   // console.log(`   customerId: ${customerId}`)
   // console.log(`   locationId: ${locationId}`)
-  const [location] = useQuery(getLocation, { id: 1 }, { suspense: false })
-  const [customer] = useQuery(getCustomer, { id: customerId }, { suspense: false })
+  const [location] = useQuery(getLocation, { where: { id: 1 } }, { suspense: false })
+  const [customer] = useQuery(getCustomer, { where: { id: customerId } }, { suspense: false })
 
   const [editingLocation, setEditingLocation] = useState(false)
   const [editLocationMutation] = useMutation(updateLocation)
@@ -43,10 +43,16 @@ const ShowLocationPage: BlitzPage = () => {
   return (
     <>
       <Flex w="100vw" bg={useColorModeValue("white", "gray.800")}>
-
-        <Box h={100} w={500} bg={useColorModeValue('gray.200', 'gray.700')} borderWidth={2} borderRadius={8} borderColor={useColorModeValue('gray.100', 'gray.900')}>
-          <Box m={10} justifyContent='space-around'>
-            <Text fontWeight='semibold' size='sm'>
+        <Box
+          h={100}
+          w={500}
+          bg={useColorModeValue("gray.200", "gray.700")}
+          borderWidth={2}
+          borderRadius={8}
+          borderColor={useColorModeValue("gray.100", "gray.900")}
+        >
+          <Box m={10} justifyContent="space-around">
+            <Text fontWeight="semibold" size="sm">
               {`${location?.house} ${location?.street} ${location?.city}  ${location?.zipcode}`}
             </Text>
           </Box>
@@ -97,7 +103,7 @@ const ShowLocationPage: BlitzPage = () => {
 
           </Box> */}
 
-          <Container w='90vw' justifyContent='space-around' mt={6}>
+          <Container w="90vw" justifyContent="space-around" mt={6}>
             <pre>{JSON.stringify(customer, null, 2)}</pre>
             <pre>{JSON.stringify(location, null, 2)}</pre>
           </Container>
@@ -128,9 +134,10 @@ const ShowLocationPage: BlitzPage = () => {
 }
 
 ShowLocationPage.authenticate = { redirectTo: Routes.Home() }
-ShowLocationPage.getLayout = (page) =>
+ShowLocationPage.getLayout = (page) => (
   <HeaderLayout title="Location page" subheader={<LocationSubheader />}>
     {page}
   </HeaderLayout>
+)
 
 export default ShowLocationPage

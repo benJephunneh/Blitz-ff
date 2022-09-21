@@ -38,14 +38,32 @@ const NavigationPicker = ({ icon }: NavigationPickerProps) => {
 
   const [customer] = useQuery(
     getCustomer,
-    { id: customerId },
-    { suspense: false, refetchOnWindowFocus: false }
+    {
+      where: {
+        id: customerId,
+      },
+      include: {
+        locations: true,
+      },
+    },
+    {
+      suspense: false,
+      refetchOnWindowFocus: false,
+    }
   )
-  const [location] = useQuery(
-    getLocation,
-    { where: { id: customer?.id } },
-    { suspense: false, refetchOnWindowFocus: false }
-  )
+
+  const locations = customer?.locations
+
+  // const [location] = useQuery(
+  //   getLocation, {
+  //   where: {
+  //     id: customer?.id
+  //   },
+  // }, {
+  //   suspense: false,
+  //   refetchOnWindowFocus: false,
+  // })
+
   // const links = [
   //   {
   //     name: "Schedule",

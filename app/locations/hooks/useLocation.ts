@@ -8,7 +8,18 @@ type UseLocationOptions = {
 }
 
 const useLocation = ({ id, suspense, enabled }: UseLocationOptions) => {
-  const location = useQuery(getLocation, { where: { id }, suspense, enabled })
+  const location = useQuery(
+    getLocation,
+    {
+      where: {
+        id,
+      },
+    },
+    {
+      suspense,
+      enabled,
+    }
+  )
 
   return location
 }

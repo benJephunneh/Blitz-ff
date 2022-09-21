@@ -1,29 +1,12 @@
 import { useSession } from "@blitzjs/auth"
-import { Routes } from "@blitzjs/next"
-import {
-  Box,
-  Container,
-  Flex,
-  Grid,
-  GridItem,
-  Heading,
-  HStack,
-  SimpleGrid,
-  Spacer,
-  Text,
-  useColorModeValue,
-  useDisclosure,
-} from "@chakra-ui/react"
-import { Router, useRouter } from "next/router"
+import { Box, Heading, HStack, useColorModeValue } from "@chakra-ui/react"
+import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { useRef } from "react"
 import { useState } from "react"
-import HamburgerDrawer from "../HamburgerDrawer"
 import HeaderActions from "./HeaderActions"
 import HeaderCrumbs from "./HeaderCrumbs"
 import HeaderLoggedIn from "./HeaderLoggedIn"
 import HeaderLoggedOut from "./HeaderLoggedOut"
-import HeaderLogo from "./HeaderLogo"
 
 type HeaderProps = {
   children?: JSX.Element | null
@@ -51,7 +34,7 @@ const Header = ({ children }: HeaderProps) => {
       // console.log(`else pathname: ${pathname}`)
       setShowBreadcrumbs(false)
     }
-  }, [pathname]) // eslint-disable-line
+  }, [pathname])
 
   return (
     <>

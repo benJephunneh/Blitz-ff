@@ -32,8 +32,16 @@ const CustomerModalForm = ({
 
   const [customer, { isLoading }] = useQuery(
     getCustomer,
-    { id: customerId },
-    { suspense: !!customerId, enabled: !!customerId, staleTime: Infinity }
+    {
+      where: {
+        id: customerId,
+      },
+    },
+    {
+      suspense: !!customerId,
+      enabled: !!customerId,
+      staleTime: Infinity,
+    }
   )
   // console.log(`customerId: ${customerId}`)
   // console.log(`isLoading: ${isLoading}`)

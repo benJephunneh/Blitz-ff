@@ -88,7 +88,8 @@ const ShowCustomerPage: BlitzPage = () => {
 
   const numInvoices = 0
 
-  console.log(`location input: ${JSON.stringify(locations)}`)
+  if (!locations) console.log(`No locations for ${customer.firstname} ${customer.lastname}.`)
+  else console.log(`${locations.length} locations for ${customer.firstname} ${customer.lastname}.`)
 
   return (
     <Box bg={useColorModeValue("white", "gray.800")} p={4}>

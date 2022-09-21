@@ -7,7 +7,7 @@ export type LocationContext = {
   refetchLocation: () => void
   showDetails: () => void
 
-  location: Location
+  location?: Location
   // location: {
   //   id: number
   //   house?: string | null

@@ -135,7 +135,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         isOpen={editingCustomer}
         onClose={() => setEditingCustomer(false)}
         onSuccess={() => {
-          refetchCustomer().catch((e) => console.log(e))
+          refetchCustomer().catch((e) => console.log(`customerProvider CustomerModal error: ${e}`))
           setEditingCustomer(false)
         }}
       />
@@ -145,7 +145,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
         onSuccess={(location) => {
-          refetchCustomer().catch((e) => console.log(e))
+          refetchCustomer().catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
           // refetchLocations().catch((e) => console.log(e))
           setCreatingLocation(false)
           router

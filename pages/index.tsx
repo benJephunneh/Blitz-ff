@@ -1,24 +1,20 @@
-import { Suspense, useState } from "react"
+import { useState } from "react"
 
 import Image from "next/image"
 import Link from "next/link"
 
 import { BlitzPage, Routes } from "@blitzjs/next"
 
-import { Box, Button, ButtonGroup, Container, HStack, VStack } from "@chakra-ui/react"
+import { Box, Button, ButtonGroup, HStack, VStack } from "@chakra-ui/react"
 import { FaPlus } from "react-icons/fa"
 
 import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
 import NewUserModalForm from "app/auth/components/NewUserModalForm"
-import logo from "public/logo.png"
-import abstLogo from 'public/abst logo.png'
-import Layout from "app/core/layouts/Layout"
+import abstLogo from "public/abst logo.png"
 import { useMutation } from "@blitzjs/rpc"
 import logout from "app/auth/mutations/logout"
 import { useRouter } from "next/router"
-import { customerId } from "app/locations/validations"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
-import { Chakra } from "Chakra"
 
 const UserInfo = () => {
   const router = useRouter()
@@ -112,17 +108,23 @@ const UserInfo = () => {
   )
 }
 
-interface HomeProps {
-  cookies?: string
-}
+// interface HomeProps {
+//   cookies?: string
+// }
 
-const Home: BlitzPage = ({ cookies }: HomeProps) => {
+const Home: BlitzPage = () => {
   return (
-    <VStack alignItems='space-between'>
-      <HStack justifyContent='space-between'>
+    <VStack alignItems="space-between">
+      <HStack justifyContent="space-between">
         <Box ml={10}>
           <div className="logo">
-            <Image src={`${abstLogo.src}`} alt="blitzjs" width="460px" height="116px" layout="fixed" />
+            <Image
+              src={`${abstLogo.src}`}
+              alt="blitzjs"
+              width="460px"
+              height="116px"
+              layout="fixed"
+            />
           </div>
         </Box>
         <Box>
@@ -164,25 +166,17 @@ const Home: BlitzPage = ({ cookies }: HomeProps) => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <Button as='a' size='sm' variant='solid'>
+          <Button as="a" size="sm" variant="solid">
             Documentation
           </Button>
         </Link>
-        <Link
-          href="https://github.com/blitz-js/blitz"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Button as='a' size='sm' variant='solid'>
+        <Link href="https://github.com/blitz-js/blitz" target="_blank" rel="noopener noreferrer">
+          <Button as="a" size="sm" variant="solid">
             Github Repo
           </Button>
         </Link>
-        <Link
-          href="https://discord.blitzjs.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Button as='a' size='sm' variant='solid'>
+        <Link href="https://discord.blitzjs.com" target="_blank" rel="noopener noreferrer">
+          <Button as="a" size="sm" variant="solid">
             Discord Community
           </Button>
         </Link>

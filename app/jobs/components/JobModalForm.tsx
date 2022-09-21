@@ -37,7 +37,11 @@ const JobModalForm = ({
     { id: jobId },
     { suspense: false, enabled: !!jobId }
   )
-  const [location] = useQuery(getLocation, { id: locationId })
+  const [location] = useQuery(getLocation, {
+    where: {
+      id: locationId,
+    },
+  })
 
   const onSubmit = (values) => {
     if (job) {

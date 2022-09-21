@@ -11,7 +11,7 @@ export default resolver.pipe(
     if (data.firstname) {
       displayname = data.firstname
       if (data.lastname) {
-        displayname.concat(data.lastname)
+        displayname.concat(` ${data.lastname}`)
       }
     } else if (data.companyname) {
       displayname = data.companyname

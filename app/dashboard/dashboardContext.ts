@@ -3,7 +3,7 @@ import { createContext } from "react"
 export type DashboardContext = {
   addCustomer: () => void
   pickCustomer: (id: number | undefined) => void
-  deleteCustomer: () => void
+  // deleteCustomer: () => void
   addJob: () => void
   search: (q: string) => void
 
