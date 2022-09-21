@@ -17,7 +17,7 @@ export type CustomerContext = {
   // balance: number
 
   refetchCustomer: () => void
-  refetchLocations: () => void
+  // refetchLocations: () => void
 }
 
 const customerContext = createContext<CustomerContext>({} as CustomerContext)

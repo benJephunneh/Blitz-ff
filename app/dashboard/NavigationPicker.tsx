@@ -97,7 +97,7 @@ const NavigationPicker = ({ icon }: NavigationPickerProps) => {
           <Icon as={FaChevronDown} w={3} h={3} />
         </HStack>
       </MenuButton>
-      <MenuList zIndex={20}>
+      <MenuList>
         {/* <MenuItem closeOnSelect={false}>
           <CustomerSearch />
         </MenuItem> */}

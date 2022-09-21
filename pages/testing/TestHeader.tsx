@@ -6,7 +6,7 @@ type TestHeaderProps = {
 
 const TestHeader = () => {
   return (
-    <Box w="full" bg="tomato" zIndex={10}>
+    <Box w="full" bg="tomato">
       <HStack justify="space-between">
         <Box>Top</Box>
         <Box>This</Box>

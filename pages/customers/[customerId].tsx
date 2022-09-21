@@ -88,11 +88,13 @@ const ShowCustomerPage: BlitzPage = () => {
 
   const numInvoices = 0
 
+  console.log(`location input: ${JSON.stringify(locations)}`)
+
   return (
     <Box bg={useColorModeValue("white", "gray.800")} p={4}>
       <HStack spacing={4} alignItems="start">
         {customer && (
-          <CustomerCard customer={customer} location={locations.at(0)} />
+          <CustomerCard customer={customer} location={locations?.at(0)} />
           // <LocationCard my={4} mx={4}>
           //   <Heading ml={4} fontStyle="italic">
           //     {heading}

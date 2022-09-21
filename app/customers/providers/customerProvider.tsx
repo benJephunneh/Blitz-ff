@@ -70,23 +70,28 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
       where: {
         id: custId,
       },
+      include: {
+        locations: true,
+      },
     },
     {
       suspense: true,
+      refetchOnWindowFocus: false,
       staleTime: Infinity,
     }
   )
-  const [locations, { refetch: refetchLocations }] = useQuery(
-    getLocations,
-    { where: { customerId: custId } },
-    {
-      suspense: true,
-      enabled: true,
-      refetchOnWindowFocus: false,
-      refetchInterval: 1000,
-      refetchIntervalInBackground: true,
-    }
-  )
+  const locations = customer.locations
+  // const [locations, { refetch: refetchLocations }] = useQuery(
+  //   getLocations,
+  //   { where: { customerId: custId } },
+  //   {
+  //     suspense: true,
+  //     enabled: true,
+  //     refetchOnWindowFocus: false,
+  //     refetchInterval: 1000,
+  //     refetchIntervalInBackground: true,
+  //   }
+  // )
 
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
 
@@ -106,7 +111,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
   }
 
   console.log(`Customer: ${displayName}`)
-  console.log(`Location[0]: ${JSON.stringify(locations?.locations[0])}`)
+  console.log(`Location[0]: ${JSON.stringify(locations?.at(0))}`)
 
   return (
     <Provider
@@ -119,10 +124,10 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
 
         customer: customer as Customer,
         displayName: displayName,
-        locations: locations?.locations,
+        locations: locations,
 
         refetchCustomer,
-        refetchLocations,
+        // refetchLocations,
       }}
     >
       <CustomerModalForm
@@ -141,7 +146,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         onClose={() => setCreatingLocation(false)}
         onSuccess={(location) => {
           refetchCustomer().catch((e) => console.log(e))
-          refetchLocations().catch((e) => console.log(e))
+          // refetchLocations().catch((e) => console.log(e))
           setCreatingLocation(false)
           router
             .push(Routes.ShowLocationPage({ customerId: custId!, locationId: location.id }))

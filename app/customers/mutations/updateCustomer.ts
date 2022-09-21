@@ -7,6 +7,16 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ id, ...data }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    let displayName = ""
+    if (data.firstname) {
+      displayName = data.firstname
+      if (data.lastname) {
+        displayName.concat(data.lastname)
+      }
+    } else if (data.companyname) {
+      displayName = data.companyname
+    }
+
     const customer = await db.customer.update({ where: { id }, data })
     await db.customerArchive.update({ where: { id }, data })
 

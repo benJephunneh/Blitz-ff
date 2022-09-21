@@ -12,6 +12,8 @@ import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import LabeledCheckboxField from "app/core/components/forms/LabeledCheckboxField"
 import { FcButtingIn } from "react-icons/fc"
 import { unknown, z } from "zod"
+import LabeledSelectField from "app/core/components/forms/LabeledSelectField"
+import { LocationType } from "@prisma/client"
 
 type Location = PromiseReturnType<typeof createLocation>
 
@@ -38,8 +40,16 @@ const LocationModalForm = ({
   const [editLocationMutation] = useMutation(updateLocation)
   const [location, { isLoading }] = useQuery(
     getLocation,
-    { id: locationId },
-    { suspense: false, enabled: !!locationId, staleTime: Infinity }
+    {
+      where: {
+        id: locationId,
+      },
+    },
+    {
+      suspense: false,
+      enabled: !!locationId,
+      staleTime: Infinity,
+    }
   )
 
   // let mutation: MutateFunction<Location, unknown, {}, unknown>
@@ -105,6 +115,8 @@ const LocationModalForm = ({
     }
   }
 
+  const locationTypes = Object.values(LocationType)
+
   return (
     <ModalForm
       size="xl"
@@ -124,6 +136,7 @@ const LocationModalForm = ({
         block: location?.block ?? undefined,
         lot: location?.lot ?? undefined,
         parcel: location?.parcel ?? undefined,
+        type: location?.type ?? "Personal",
         customerId,
       }}
       onSubmit={(values) => {
@@ -137,7 +150,7 @@ const LocationModalForm = ({
           templateAreas={`'house street street street street'
                           'city city state zipcode zipcode'
                           'block lot parcel parcel parcel'
-                          'email email phone phone .'
+                          'phones phones . type type'
                           'primary primary primary . .'`}
           templateColumns="repeat(5, 1fr)"
           gap={2}
@@ -169,11 +182,17 @@ const LocationModalForm = ({
             <LabeledTextField name="parcel" label="Parcel" />
           </GridItem>
 
-          <GridItem area="email">
-            <LabeledTextField name="email" type="email" label="Email" />
+          <GridItem area="phones">
+            <LabeledTextField name="phones" label="Phone" />
           </GridItem>
-          <GridItem area="phone">
-            <LabeledTextField name="phone" label="Phone" />
+          <GridItem area="type">
+            <LabeledSelectField name="type" label="Location type" defaultValue={location?.type}>
+              {locationTypes.map((lt, ii) => (
+                <option key={ii} value={lt}>
+                  {lt.toString()}
+                </option>
+              ))}
+            </LabeledSelectField>
           </GridItem>
 
           <GridItem area="primary">

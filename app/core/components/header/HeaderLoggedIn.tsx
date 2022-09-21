@@ -1,15 +1,46 @@
+import { Routes } from "@blitzjs/next"
 import { useMutation } from "@blitzjs/rpc"
 import { Box, Button, useColorModeValue } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
+import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import { useRouter } from "next/router"
 import { useState } from "react"
+import { FaPlus } from "react-icons/fa"
 
 const HeaderLoggedIn = () => {
   const router = useRouter()
+  const [creatingCustomer, setCreatingCustomer] = useState(false)
   const [logoutMutation] = useMutation(logout)
 
   return (
     <Box justifyContent="flex-end">
+      <CustomerModalForm
+        isOpen={creatingCustomer}
+        onClose={() => setCreatingCustomer(false)}
+        onSuccess={(customer) => {
+          setCreatingCustomer(false)
+          router
+            .push(Routes.ShowCustomerPage({ customerId: customer.id }))
+            .catch((e) => console.log(e))
+        }}
+      />
+
+      <Button
+        mr={2}
+        size="sm"
+        variant="outline"
+        textColor={useColorModeValue("cyan.600", "cyan.600")}
+        borderColor={useColorModeValue("cyan.600", "cyan.600")}
+        borderWidth={1}
+        borderStyle="dashed"
+        onClick={async () => {
+          setCreatingCustomer(true)
+        }}
+        _hover={{ bg: useColorModeValue("blackAlpha.100", "gray.900") }}
+        leftIcon={<FaPlus size={10} />}
+      >
+        New customer
+      </Button>
       <Button
         size="sm"
         variant="outline"
