@@ -70,43 +70,48 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
       where: {
         id: custId,
       },
+      include: {
+        locations: true,
+      },
     },
     {
       suspense: true,
+      refetchOnWindowFocus: false,
       staleTime: Infinity,
     }
   )
-  const [locations, { refetch: refetchLocations }] = useQuery(
-    getLocations,
-    { where: { customerId: custId } },
-    {
-      suspense: true,
-      enabled: true,
-      refetchOnWindowFocus: false,
-      refetchInterval: 1000,
-      refetchIntervalInBackground: true,
-    }
-  )
+  const locations = customer.locations
+  // const [locations, { refetch: refetchLocations }] = useQuery(
+  //   getLocations,
+  //   { where: { customerId: custId } },
+  //   {
+  //     suspense: true,
+  //     enabled: true,
+  //     refetchOnWindowFocus: false,
+  //     refetchInterval: 1000,
+  //     refetchIntervalInBackground: true,
+  //   }
+  // )
 
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
 
   // const [customerOranizer, { refetch: refetchOrganizer }] = useQuery(getCustomerOrganizer, { id })
   // const { jobs, totalPaid, totalOwed } = useCalculateBalanceSheet(customerOrganizer?.jobs || [])
 
-  let displayName = ""
-  if (customer) {
-    if (customer.firstname) {
-      displayName = `${customer.firstname}`
-      if (customer.lastname) {
-        displayName.concat(` ${customer.lastname}`)
-      }
-    } else {
-      displayName = `${customer.companyname}`
-    }
-  }
+  // let displayName = ""
+  // if (customer) {
+  //   if (customer.firstname) {
+  //     displayName = `${customer.firstname}`
+  //     if (customer.lastname) {
+  //       displayName.concat(` ${customer.lastname}`)
+  //     }
+  //   } else {
+  //     displayName = `${customer.companyname}`
+  //   }
+  // }
 
-  console.log(`Customer: ${displayName}`)
-  console.log(`Location[0]: ${JSON.stringify(locations?.locations[0])}`)
+  console.log(`Customer: ${customer.displayname}`)
+  console.log(`Location[0]: ${JSON.stringify(locations?.at(0))}`)
 
   return (
     <Provider
@@ -118,11 +123,11 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         createLocation: () => setCreatingLocation(true),
 
         customer: customer as Customer,
-        displayName: displayName,
-        locations: locations?.locations,
+        displayName: customer.displayname,
+        locations: locations,
 
         refetchCustomer,
-        refetchLocations,
+        // refetchLocations,
       }}
     >
       <CustomerModalForm
@@ -141,7 +146,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         onClose={() => setCreatingLocation(false)}
         onSuccess={(location) => {
           refetchCustomer().catch((e) => console.log(e))
-          refetchLocations().catch((e) => console.log(e))
+          // refetchLocations().catch((e) => console.log(e))
           setCreatingLocation(false)
           router
             .push(Routes.ShowLocationPage({ customerId: custId!, locationId: location.id }))

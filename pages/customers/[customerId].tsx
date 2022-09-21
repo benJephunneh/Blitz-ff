@@ -75,16 +75,16 @@ const ShowCustomerPage: BlitzPage = () => {
   // const [creatingLocation, setCreatingLocation] = useState(false)
 
   const textColor = useColorModeValue("009a4c", "yellow.200")
-  let heading: string
-  if (customer?.firstname) {
-    heading = `${customer.firstname}`
+  // let heading: string
+  // if (customer?.firstname) {
+  //   heading = `${customer.firstname}`
 
-    if (customer?.lastname) {
-      heading.concat(` ${customer.lastname}`)
-    }
-  } else {
-    heading = `${customer?.companyname}`
-  }
+  //   if (customer?.lastname) {
+  //     heading.concat(` ${customer.lastname}`)
+  //   }
+  // } else {
+  //   heading = `${customer?.companyname}`
+  // }
 
   const numInvoices = 0
 
@@ -92,7 +92,7 @@ const ShowCustomerPage: BlitzPage = () => {
     <Box bg={useColorModeValue("white", "gray.800")} p={4}>
       <HStack spacing={4} alignItems="start">
         {customer && (
-          <CustomerCard customer={customer} location={locations.at(0)} />
+          <CustomerCard customer={customer} location={locations?.at(0)} />
           // <LocationCard my={4} mx={4}>
           //   <Heading ml={4} fontStyle="italic">
           //     {heading}

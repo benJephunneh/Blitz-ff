@@ -21,7 +21,10 @@ import { FcHome, FcPhone } from "react-icons/fc"
 import { MdAlternateEmail } from "react-icons/md"
 
 type CustomerCardProps = {
-  customer: Pick<Customer, "id" | "firstname" | "lastname" | "companyname" | "email">
+  customer: Pick<
+    Customer,
+    "id" | "firstname" | "lastname" | "displayname" | "companyname" | "email"
+  >
   location?: Pick<Location, "id" | "house" | "street" | "city" | "state" | "zipcode" | "phones">
   props?: SpaceProps
 }
@@ -30,15 +33,17 @@ const CustomerCard = ({ customer, location, ...props }: CustomerCardProps) => {
   const route = Routes.ShowLocationPage
   const tagBgColor = useColorModeValue("khaki", "blue.700")
 
-  let displayName = ""
-  if (customer.firstname) {
-    displayName = `${customer.firstname}`
-    if (customer.lastname) {
-      displayName.concat(` ${customer.lastname}`)
-    }
-  } else if (customer.companyname) {
-    displayName = `${customer.companyname}`
-  }
+  // let displayName = ""
+  // if (customer.firstname) {
+  //   displayName = `${customer.firstname}`
+  //   if (customer.lastname) {
+  //     displayName.concat(` ${customer.lastname}`)
+  //   }
+  // } else if (customer.companyname) {
+  //   displayName = `${customer.companyname}`
+  // }
+
+  console.log(`location input: ${JSON.stringify(location)}`)
 
   return (
     <LinkBox
@@ -55,12 +60,13 @@ const CustomerCard = ({ customer, location, ...props }: CustomerCardProps) => {
       <VStack spacing={5}>
         <Heading fontStyle="italic" size="2xl">
           <>
-            {location && (
+            {location ? (
               <Link href={route({ customerId: customer.id, locationId: location.id })} passHref>
-                <LinkOverlay>{displayName}</LinkOverlay>
+                <LinkOverlay>{customer.displayname}</LinkOverlay>
               </Link>
+            ) : (
+              <>{customer.displayname}</>
             )}
-            {!location && { displayName }}
           </>
         </Heading>
 

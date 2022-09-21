@@ -37,15 +37,15 @@ const CustomerPicker2 = () => {
   const { customer, displayName, locations } = useContext(customerContext)
   const [query, setQuery] = useState("")
 
-  const [items, { isLoading }] = useQuery(
-    findCustomer,
-    { query },
-    { suspense: false, enabled: !!query }
-  )
+  // const [items, { isLoading }] = useQuery(
+  //   findCustomer,
+  //   { query },
+  //   { suspense: false, enabled: !!query }
+  // )
 
-  locations?.map((location) => {
-    console.log(JSON.stringify(location))
-  })
+  // locations?.map((location) => {
+  //   console.log(JSON.stringify(location))
+  // })
 
   return (
     <HStack spacing={8} justify="left">
@@ -58,6 +58,7 @@ const CustomerPicker2 = () => {
           rightIcon={
             <Icon color={useColorModeValue("cyan.400", "cyan.600")} pr={1} as={FaChevronDown} />
           }
+          zIndex={10}
         >
           <HStack>
             <Icon
@@ -72,7 +73,7 @@ const CustomerPicker2 = () => {
           </HStack>
         </MenuButton>
 
-        <MenuList>
+        <MenuList zIndex={10}>
           <MenuItem>{`Number of locations: ${locations?.length}`}</MenuItem>
           {locations?.map((location) => (
             <Link
@@ -80,7 +81,9 @@ const CustomerPicker2 = () => {
               href={Routes.ShowLocationPage({ customerId: customer.id, locationId: location.id })}
               passHref
             >
-              <MenuItem as="a">{location.street}</MenuItem>
+              <MenuItem as="a">
+                {location.house} {location.street}, {location.city} {location.zipcode}
+              </MenuItem>
             </Link>
           ))}
           {/* <SearchInputMenu setQuery={setQuery} /> */}

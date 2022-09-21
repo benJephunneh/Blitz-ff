@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
 
   return (
-    <ChakraProvider>
+    <ChakraProvider portalZIndex={4}>
       <ErrorBoundary FallbackComponent={RootErrorFallback}>
         <Suspense fallback={<LayoutLoader />}>
           {getLayout(

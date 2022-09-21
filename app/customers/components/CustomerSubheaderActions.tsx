@@ -1,3 +1,4 @@
+import { Routes } from "@blitzjs/next"
 import {
   Button,
   HStack,
@@ -19,9 +20,10 @@ import customerContext from "../contexts/customerContext"
 import CustomerModalForm from "./CustomerModalForm"
 
 const CustomerSubheaderActions = () => {
+  const router = useRouter()
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [creatingLocation, setCreatingLocation] = useState(false)
-  const { customer, showDetails, editCustomer, deleteCustomer, refetchCustomer, refetchLocations } =
+  const { customer, showDetails, editCustomer, deleteCustomer, refetchCustomer } =
     useContext(customerContext)
 
   return (
@@ -37,7 +39,9 @@ const CustomerSubheaderActions = () => {
         customerId={customer.id}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
-        onSuccess={() => refetchLocations()}
+        onSuccess={(location) =>
+          router.push(Routes.ShowLocationPage({ customerId: customer.id, locationId: location.id }))
+        }
       />
 
       <HStack>

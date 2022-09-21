@@ -24,8 +24,10 @@ CREATE TABLE "Customer" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "firstname" TEXT NOT NULL,
-    "lastname" TEXT NOT NULL,
+    "firstname" TEXT,
+    "lastname" TEXT,
+    "companyname" TEXT,
+    "displayname" TEXT NOT NULL,
     "email" TEXT NOT NULL,
 
     CONSTRAINT "Customer_pkey" PRIMARY KEY ("id")
@@ -70,8 +72,10 @@ CREATE TABLE "CustomerArchive" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "firstname" TEXT NOT NULL,
-    "lastname" TEXT NOT NULL,
+    "firstname" TEXT,
+    "lastname" TEXT,
+    "companyname" TEXT,
+    "displayname" TEXT NOT NULL,
     "email" TEXT NOT NULL,
 
     CONSTRAINT "CustomerArchive_pkey" PRIMARY KEY ("id")
