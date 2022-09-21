@@ -45,6 +45,8 @@ const CustomerCard = ({ customer, location, ...props }: CustomerCardProps) => {
 
   console.log(`location input: ${JSON.stringify(location)}`)
 
+  console.log(`location input: ${JSON.stringify(location)}`)
+
   return (
     <LinkBox
       py={2}

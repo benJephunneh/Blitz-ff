@@ -88,6 +88,8 @@ const ShowCustomerPage: BlitzPage = () => {
 
   const numInvoices = 0
 
+  console.log(`location input: ${JSON.stringify(locations)}`)
+
   return (
     <Box bg={useColorModeValue("white", "gray.800")} p={4}>
       <HStack spacing={4} alignItems="start">
