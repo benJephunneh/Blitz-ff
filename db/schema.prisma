@@ -1,5 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
@@ -28,6 +29,14 @@ enum PhoneType {
   Primary
   Secondary
   Office
+}
+
+enum StashType {
+  Customer
+  Location
+  Job
+  Invoice
+  Estimate
 }
 
 enum Permit {
@@ -89,9 +98,19 @@ model Job {
   locationId Int
 }
 
+model Stash {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  body      String?
+  type      StashType @default(Customer)
+  expiresAt DateTime
+}
+
 /////////////////////////
 // ..... ARCHIVE ..... //
 /////////////////////////
+
 model CustomerArchive {
   id                Int               @id @default(autoincrement())
   createdAt         DateTime          @default(now())

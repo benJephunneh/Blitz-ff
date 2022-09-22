@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Location" ALTER COLUMN "phones" SET NOT NULL,
+ALTER COLUMN "phones" SET DATA TYPE TEXT;
+
+-- AlterTable
+ALTER TABLE "LocationArchive" ALTER COLUMN "phones" SET NOT NULL,
+ALTER COLUMN "phones" SET DATA TYPE TEXT;
