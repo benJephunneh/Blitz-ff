@@ -1,4 +1,4 @@
-import { HStack } from "@chakra-ui/react"
+import { HStack, Spacer } from "@chakra-ui/react"
 import Subheader from "app/core/components/header/Subheader"
 import CustomerPicker from "app/customers/components/CustomerPicker"
 import { FcMindMap } from "react-icons/fc"
@@ -20,7 +20,8 @@ const DashboardSubheader = () => {
             <NavigationPickerSubheader />
             <DashboardSearch />
           </HStack>
-          <DashboardSubheaderActions />
+          <Spacer />
+          {/* <DashboardSubheaderActions /> */}
         </HStack>
       </Subheader>
     </DashboardProvider>

@@ -22,7 +22,7 @@ export const NavLinks = [
   {
     name: "Customers",
     href: "/customers",
-    isDisabled: true,
+    isDisabled: false,
   },
   {
     name: "Locations",
