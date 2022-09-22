@@ -37,6 +37,7 @@ specifiers:
   react-final-form: 6.5.9
   react-icons: 4.4.0
   react-lorem-ipsum: 1.4.10
+  superjson: 1.10.0
   ts-jest: 28.0.7
   typescript: ^4.8.2
   zod: 3.17.3
@@ -58,6 +59,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-final-form: 6.5.9_b76tjmhm4bpbaoui6lan2hu4pm
   react-icons: registry.npmmirror.com/react-icons/4.4.0_react@18.2.0
+  superjson: 1.10.0
   zod: 3.17.3
 
 devDependencies:
@@ -6128,6 +6130,16 @@ packages:
       keygrip: 1.1.0
     dev: false
 
+  /copy-anything/3.0.2:
+    resolution:
+      {
+        integrity: sha512-CzATjGXzUQ0EvuvgOCI6A4BGOo2bcVx8B+eC2nF862iv9fopnPQwlrbACakNCHRIJbCSBj+J/9JeDf60k64MkA==,
+      }
+    engines: { node: ">=12.13" }
+    dependencies:
+      is-what: 4.1.7
+    dev: false
+
   /copy-descriptor/0.1.1:
     resolution:
       {
@@ -9020,6 +9032,14 @@ packages:
     dependencies:
       call-bind: 1.0.2
     dev: true
+
+  /is-what/4.1.7:
+    resolution:
+      {
+        integrity: sha512-DBVOQNiPKnGMxRMLIYSwERAS5MVY1B7xYiGnpgctsOFvVDz9f9PFXXxMcTOHuoqYp4NK9qFYQaIC1NRRxLMpBQ==,
+      }
+    engines: { node: ">=12.13" }
+    dev: false
 
   /is-windows/1.0.2:
     resolution:
@@ -13015,6 +13035,16 @@ packages:
       {
         integrity: sha512-xGPXiFVl4YED9Jh7Euv2V220mriG9u4B2TA6Ybjc1catrstKD2PpIdU3U0RKpkVBC2EhmL/F0sPCr9vrFTNRag==,
       }
+    dev: false
+
+  /superjson/1.10.0:
+    resolution:
+      {
+        integrity: sha512-ks6I5fm5KXUbDqt4Epe1VwkKDaC9+kIj5HF7yhiHjChFne0EkFqsnTv1mdHE2IT6fq2CzLC3zeA/fw0BRIoNwA==,
+      }
+    engines: { node: ">=10" }
+    dependencies:
+      copy-anything: 3.0.2
     dev: false
 
   /superjson/1.8.0_supports-color@8.1.1:
