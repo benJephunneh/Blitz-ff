@@ -31,6 +31,9 @@ import { BsMailbox } from "react-icons/bs"
 import Link from "next/link"
 import CustomerCard from "app/customers/components/CustomerCard"
 import InvoicesCard from "../../app/customers/components/InvoicesCard"
+import PrefetchQueryClient from "app/core/helpers/prefetchQueryClient"
+import { AuthenticationError, AuthorizationError, NotFoundError } from "blitz"
+import { GetServerSideProps } from "next"
 
 const ShowCustomerPage: BlitzPage = () => {
   const router = useRouter()
@@ -247,5 +250,36 @@ ShowCustomerPage.getLayout = (page) => (
     {page}
   </HeaderLayout>
 )
+
+// export async function getServerSideProps(ctx) {
+//   const client = new PrefetchQueryClient(ctx)
+
+//   try {
+//     const customerId = ctx.params?.customerId as string
+//     await client.prefetchQuery(getCustomer, { where: { id: customerId } })
+//   } catch (e) {
+//     if (e instanceof AuthenticationError) {
+//       return {
+//         redirect: {
+//           destination: Routes.Home(),
+//           permanent: false,
+//         },
+//       }
+//     } else if (
+//       e instanceof NotFoundError ||
+//       e instanceof AuthorizationError
+//     ) {
+//       return { notFound: true }
+//     } else {
+//       throw e
+//     }
+//   }
+
+//   return {
+//     props: {
+//       dehydratedState: client.dehydrate(),
+//     },
+//   }
+// }
 
 export default ShowCustomerPage

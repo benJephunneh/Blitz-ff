@@ -15,6 +15,8 @@ import { useMutation } from "@blitzjs/rpc"
 import logout from "app/auth/mutations/logout"
 import { useRouter } from "next/router"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
+import { SessionContext } from "@blitzjs/auth"
+import { gSSP } from "app/blitz-server"
 
 const UserInfo = () => {
   const router = useRouter()
@@ -196,7 +198,7 @@ const Home: BlitzPage = () => {
 }
 
 Home.suppressFirstRenderFlicker = true
-Home.redirectAuthenticatedTo = Routes.Dashboard()
+// Home.redirectAuthenticatedTo = Routes.Dashboard()
 Home.getLayout = (page) => <HeaderLayout title="ABST">{page}</HeaderLayout>
 
 export default Home

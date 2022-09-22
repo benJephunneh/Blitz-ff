@@ -15,10 +15,10 @@ const DashboardSearch = () => {
     <LinkBox>
       <Link href={Routes.SearchPage()} passHref>
         <LinkOverlay>
-          <Icon as={FcSearch} mr={2} />
-          <Text as="a" fontWeight="semibold">
-            Go to search
-          </Text>
+          <HStack>
+            <Icon as={FcSearch} mr={2} />
+            <Text fontWeight="semibold">Go to search</Text>
+          </HStack>
         </LinkOverlay>
       </Link>
     </LinkBox>

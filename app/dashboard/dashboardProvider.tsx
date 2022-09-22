@@ -30,22 +30,16 @@ const DashboardProvider = ({ children }: DashboardProviderProps) => {
   //     .catch((e) => console.log(e))
   // }, [query, router])
 
-  useEffect(() => {
-    router
-      .push(Routes.ShowCustomerPage({ customerId: customerId! }))
-      .catch((e) => console.log(`dashboardProvider useEffect error: ${e}`))
-  }, [customerId, router])
-
   return (
     <Provider
       value={{
         addCustomer: () => setAddingCustomer(true),
-        pickCustomer: (id) => setCustomerId(id),
+        // pickCustomer: (id) => setCustomerId(id),
         // deleteCustomer: () => setDeletingCustomer(true),
         addJob: () => setAddingJob(true),
         search: (q) => setQuery(q),
 
-        customerId,
+        // customerId,
       }}
     >
       <CustomerModalForm

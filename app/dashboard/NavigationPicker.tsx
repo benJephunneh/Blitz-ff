@@ -13,9 +13,6 @@ import {
 } from "@chakra-ui/react"
 import { NavLinks } from "app/core/components/NavLinks"
 import getCustomer from "app/customers/queries/getCustomer"
-import getLocation from "app/locations/queries/getLocation"
-import CustomerSearch from "app/search/CustomerSearch"
-import db from "db"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useContext, useState } from "react"
@@ -34,35 +31,25 @@ const NavigationPicker = ({ icon }: NavigationPickerProps) => {
   const normalBg = useColorModeValue("blackAlpha.100", "blackAlpha.400")
   const bg = hovered ? hoveredBg : normalBg
   const borderColor = useColorModeValue("gray.50", "blackAlpha.50")
-  const { customerId } = useContext(dashboardContext)
+  const { addCustomer, addJob, search } = useContext(dashboardContext)
 
-  const [customer] = useQuery(
-    getCustomer,
-    {
-      where: {
-        id: customerId,
-      },
-      include: {
-        locations: true,
-      },
-    },
-    {
-      suspense: false,
-      refetchOnWindowFocus: false,
-    }
-  )
-
-  const locations = customer?.locations
-
-  // const [location] = useQuery(
-  //   getLocation, {
-  //   where: {
-  //     id: customer?.id
+  // const [customer] = useQuery(
+  //   getCustomer,
+  //   {
+  //     where: {
+  //       id: customerId,
+  //     },
+  //     include: {
+  //       locations: true,
+  //     },
   //   },
-  // }, {
-  //   suspense: false,
-  //   refetchOnWindowFocus: false,
-  // })
+  //   {
+  //     suspense: false,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // )
+
+  // const locations = customer?.locations
 
   // const links = [
   //   {
