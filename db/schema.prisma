@@ -67,7 +67,7 @@ model Location {
   city       String
   state      String       @default("FL")
   zipcode    String
-  phones     String[]
+  phones     String
   block      String?
   lot        String?
   parcel     String?
@@ -114,7 +114,7 @@ model LocationArchive {
   city             String
   state            String          @default("FL")
   zipcode          String
-  phones           String[]
+  phones           String
   block            String?
   lot              String?
   parcel           String?

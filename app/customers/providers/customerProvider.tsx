@@ -50,13 +50,20 @@ type CustomerProviderProps = {
 
 const CustomerProvider = ({ children }: CustomerProviderProps) => {
   const router = useRouter()
+
   const customerId = useParam("customerId", "number")
+  const [custId, setCustId] = useState(customerId)
+
   const [editingCustomer, setEditingCustomer] = useState(false)
+  const [deletingCustomer, setDeletingCustomer] = useState(false)
+
   const [showingDetails, setShowingDetails] = useState(false)
   const [creatingLocation, setCreatingLocation] = useState(false)
-  const [deletingCustomer, setDeletingCustomer] = useState(false)
-  const [custId, setCustId] = useState(customerId)
   const [searchQuery, setSearchQuery] = useState("")
+
+  useEffect(() => {
+    setCustId(customerId)
+  }, [customerId])
 
   const [searchResults, { refetch: refetchSearch }] = useQuery(
     findCustomer,
@@ -135,8 +142,9 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         isOpen={editingCustomer}
         onClose={() => setEditingCustomer(false)}
         onSuccess={() => {
-          refetchCustomer().catch((e) => console.log(`customerProvider CustomerModal error: ${e}`))
-          setEditingCustomer(false)
+          refetchCustomer()
+            .then(() => setEditingCustomer(false))
+            .catch((e) => console.log(`customerProvider CustomerModal error: ${e}`))
         }}
       />
 
@@ -145,12 +153,13 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
         onSuccess={(location) => {
-          refetchCustomer().catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
-          // refetchLocations().catch((e) => console.log(e))
-          setCreatingLocation(false)
-          router
-            .push(Routes.ShowLocationPage({ customerId: custId!, locationId: location.id }))
-            .catch((e) => console.log(e))
+          refetchCustomer() //
+            // refetchLocations()
+            .then(() => setCreatingLocation(false))
+            .then(() =>
+              router.push(Routes.ShowLocationPage({ customerId: custId!, locationId: location.id }))
+            )
+            .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
         }}
       />
 
@@ -160,9 +169,9 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         isOpen={deletingCustomer}
         onClose={() => setDeletingCustomer(false)}
         onConfirm={async () => {
-          await deleteCustomerMutation({ id: customer!.id }).then(() =>
-            router.push(Routes.CustomersPage())
-          )
+          await deleteCustomerMutation({ id: customer!.id })
+            .then(() => router.push(Routes.CustomersPage()))
+            .catch((e) => console.log(`customerProvider DeleteModal error: ${e}`))
         }}
       />
 

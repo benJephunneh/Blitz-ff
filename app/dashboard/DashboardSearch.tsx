@@ -8,7 +8,7 @@ import { FcSearch } from "react-icons/fc"
 import dashboardContext from "./dashboardContext"
 
 const DashboardSearch = () => {
-  const { search } = useContext(dashboardContext)
+  const { search } = useContext(dashboardContext) // When the input box is working in the subheader, this will run the search.
 
   return (
     // <SearchInput search={search} />
@@ -17,7 +17,9 @@ const DashboardSearch = () => {
         <LinkOverlay>
           <HStack>
             <Icon as={FcSearch} mr={2} />
-            <Text fontWeight="semibold">Go to search</Text>
+            <Text noOfLines={1} fontWeight="semibold">
+              Go to search
+            </Text>
           </HStack>
         </LinkOverlay>
       </Link>

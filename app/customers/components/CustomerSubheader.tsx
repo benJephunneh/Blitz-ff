@@ -19,14 +19,13 @@ const LocationPickerSubheader = () => {
 }
 
 const CustomerSubheader = () => {
-  const customerId = useParam("customerId", "number")
-
   return (
     <CustomerProvider>
       <Subheader>
         <HStack justify="space-between">
           <HStack spacing={4}>
-            <CustomerPickerSubheader />
+            {/* <CustomerPickerSubheader /> */}
+            <LocationPickerSubheader />
             <DashboardSearch />
           </HStack>
           <CustomerSubheaderActions />

@@ -19,9 +19,13 @@ export default resolver.pipe(
       where: {
         OR: [
           { firstname: { contains: search, mode: "insensitive" } },
+          { firstname: { search, mode: "insensitive" } },
           { lastname: { contains: search, mode: "insensitive" } },
+          { lastname: { search, mode: "insensitive" } },
           { companyname: { contains: search, mode: "insensitive" } },
+          { companyname: { search, mode: "insensitive" } },
           { email: { contains: search, mode: "insensitive" } },
+          { email: { search, mode: "insensitive" } },
           // { phone: { contains: search, mode: "insensitive" } },
         ],
       },

@@ -1,11 +1,16 @@
 import { z } from "zod"
 
-export const firstname = z.string().optional()
-export const lastname = z.string().optional()
-export const companyname = z.string().optional()
+const firstname = z.string().optional()
+const lastname = z.string().optional()
+const companyname = z.string().optional()
 export const email = z.string().email()
+// .refine((query) => useQuery(checkUniquity, { query }, { suspense: true }), {
+// checkUniquity({ email }).catch((e) => console.log(`checkUniquity error: ${e}`)),
+// message: "Email is not unique.",
+// })
+// const email = await emailSchema.parseAsync(query)
 // export const phone = z.string().min(7).max(10)
-export const id = z.number()
+const id = z.number()
 
 export const CreateCustomer = z.object({
   firstname,
