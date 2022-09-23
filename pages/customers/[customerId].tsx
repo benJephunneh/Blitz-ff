@@ -8,6 +8,7 @@ import LocationList from "app/locations/components/LocationList"
 import {
   Badge,
   Box,
+  Button,
   Container,
   Heading,
   HStack,
@@ -34,6 +35,7 @@ import InvoicesCard from "../../app/customers/components/InvoicesCard"
 import PrefetchQueryClient from "app/core/helpers/prefetchQueryClient"
 import { AuthenticationError, AuthorizationError, NotFoundError } from "blitz"
 import { GetServerSideProps } from "next"
+import { FaPlus } from "react-icons/fa"
 
 const ShowCustomerPage: BlitzPage = () => {
   const router = useRouter()
@@ -240,6 +242,9 @@ const ShowCustomerPage: BlitzPage = () => {
           Delete {`${customer!.firstname} ${customer!.lastname}`}
         </Button>
       </VStack> */}
+      <Button colorScheme="red" justifySelf="end" alignSelf="end" rightIcon={<FaPlus />}>
+        Stash
+      </Button>
     </Box>
   )
 }
