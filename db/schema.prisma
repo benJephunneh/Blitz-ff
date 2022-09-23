@@ -31,14 +31,6 @@ enum PhoneType {
   Office
 }
 
-enum StashType {
-  Customer
-  Location
-  Job
-  Invoice
-  Estimate
-}
-
 enum Permit {
   None
   PendingNotPaid
@@ -58,6 +50,7 @@ model Customer {
   displayname String
   email       String
   locations   Location[]
+  stashes     Stash[]
 }
 
 enum LocationType {
@@ -84,6 +77,7 @@ model Location {
   customer   Customer     @relation(fields: [customerId], references: [id])
   customerId Int
   jobs       Job[]
+  stashes    Stash[]
 }
 
 model Job {
@@ -96,16 +90,99 @@ model Job {
   // permit     Permit @default(None)
   location   Location  @relation(fields: [locationId], references: [id])
   locationId Int
+  stashes    Stash[]
+}
+
+enum StashType {
+  Customer
+  Location
+  Job
+  Invoice
+  Estimate
 }
 
 model Stash {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  body      String?
-  type      StashType @default(Customer)
-  expiresAt DateTime
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  body       String
+  // type       StashType @default(Customer)
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId Int?
+  location   Location? @relation(fields: [locationId], references: [id])
+  locationId Int?
+  job        Job?      @relation(fields: [jobId], references: [id])
+  jobId      Int?
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+  token      Token[]
 }
+
+//////////////////////
+// ..... USER ..... //
+//////////////////////
+
+enum UserRole {
+  Owner
+  Admin
+  Tech
+}
+
+model User {
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  username       String   @unique
+  email          String   @unique
+  hashedPassword String?
+  role           UserRole @default(Tech)
+
+  sessions Session[]
+  Token    Token[]
+  stashes  Stash[]
+}
+
+model Session {
+  id                 Int       @id @default(autoincrement())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  expiresAt          DateTime?
+  handle             String    @unique
+  hashedSessionToken String?
+  antiCSRFToken      String?
+  publicData         String?
+  privateData        String?
+
+  user   User? @relation(fields: [userId], references: [id])
+  userId Int?
+}
+
+enum TokenType {
+  RESET_PASSWORD
+  STASH_EXPIRATION
+}
+
+model Token {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  hashedToken String
+  type        TokenType
+  expiresAt   DateTime
+  sentTo      String?
+
+  user    User   @relation(fields: [userId], references: [id])
+  userId  Int
+  stash   Stash? @relation(fields: [stashId], references: [id])
+  stashId Int?
+  // @@unique([hashedToken, type])
+
+  @@unique([hashedToken])
+}
+
+// NOTE: It's highly recommended to use an enum for the token type
+//       but enums only work in Postgres.
+//       See: https://blitzjs.com/docs/database-overview#switch-to-postgre-sql
 
 /////////////////////////
 // ..... ARCHIVE ..... //
@@ -157,60 +234,3 @@ model JobArchive {
 /////////////////////////
 // ..... ARCHIVE ..... //
 /////////////////////////
-
-enum UserRole {
-  Owner
-  Admin
-  Tech
-}
-
-model User {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  username       String   @unique
-  email          String   @unique
-  hashedPassword String?
-  role           UserRole @default(Tech)
-
-  tokens   Token[]
-  sessions Session[]
-}
-
-model Session {
-  id                 Int       @id @default(autoincrement())
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  expiresAt          DateTime?
-  handle             String    @unique
-  hashedSessionToken String?
-  antiCSRFToken      String?
-  publicData         String?
-  privateData        String?
-
-  user   User? @relation(fields: [userId], references: [id])
-  userId Int?
-}
-
-enum TokenType {
-  RESET_PASSWORD
-}
-
-model Token {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  hashedToken String
-  type        TokenType
-  expiresAt   DateTime
-  sentTo      String
-
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-
-  @@unique([hashedToken, type])
-}
-
-// NOTE: It's highly recommended to use an enum for the token type
-//       but enums only work in Postgres.
-//       See: https://blitzjs.com/docs/database-overview#switch-to-postgre-sql

@@ -7,14 +7,24 @@ interface GetStashesInput
 
 export default resolver.pipe(
   resolver.authorize(),
-
-  async ({ where, orderBy }: GetStashesInput) => {
+  async ({ where, orderBy, skip = 0, take = 100 }: GetStashesInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const stashes = await db.stash.findMany({ where, orderBy })
-    const count = stashes.length
+    const {
+      items: stashes,
+      hasMore,
+      nextPage,
+      count,
+    } = await paginate({
+      skip,
+      take,
+      count: () => db.stash.count({ where }),
+      query: (paginateArgs) => db.stash.findMany({ ...paginateArgs, where, orderBy }),
+    })
 
     return {
       stashes,
+      nextPage,
+      hasMore,
       count,
     }
   }
