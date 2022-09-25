@@ -10,6 +10,7 @@ import {
   Box,
   Button,
   Container,
+  Flex,
   Heading,
   HStack,
   Icon,
@@ -36,6 +37,7 @@ import PrefetchQueryClient from "app/core/helpers/prefetchQueryClient"
 import { AuthenticationError, AuthorizationError, NotFoundError } from "blitz"
 import { GetServerSideProps } from "next"
 import { FaPlus } from "react-icons/fa"
+import { useState } from "react"
 
 const ShowCustomerPage: BlitzPage = () => {
   const router = useRouter()
@@ -61,6 +63,8 @@ const ShowCustomerPage: BlitzPage = () => {
     }
   )
   const locations = customer.locations
+
+  const [isStashing, setIsStashing] = useState(false)
 
   // const [location] = useQuery(
   //   getLocation, {
@@ -98,7 +102,7 @@ const ShowCustomerPage: BlitzPage = () => {
 
   return (
     <Box bg={useColorModeValue("white", "gray.800")} p={4}>
-      <HStack spacing={4} alignItems="start">
+      <Flex alignItems="start">
         {customer && (
           <CustomerCard customer={customer} location={locations?.at(0)} />
           // <LocationCard my={4} mx={4}>
@@ -136,6 +140,8 @@ const ShowCustomerPage: BlitzPage = () => {
           // </LocationCard>
         )}
 
+        <Spacer />
+
         <InvoicesCard invoices="asdf" />
 
         {/* <LinkBox
@@ -169,7 +175,7 @@ const ShowCustomerPage: BlitzPage = () => {
             <Badge variant='solid' colorScheme='yellow'>###</Badge>
           </HStack>
         </LinkBox> */}
-      </HStack>
+      </Flex>
       {/*
       <VStack>
           <HStack w="inherit">
@@ -242,9 +248,17 @@ const ShowCustomerPage: BlitzPage = () => {
           Delete {`${customer!.firstname} ${customer!.lastname}`}
         </Button>
       </VStack> */}
-      <Button colorScheme="red" justifySelf="end" alignSelf="end" rightIcon={<FaPlus />}>
-        Stash
-      </Button>
+      <form>
+        <Button
+          type="submit"
+          colorScheme="telegram"
+          justifySelf="end"
+          alignSelf="end"
+          rightIcon={<FaPlus />}
+        >
+          Stash
+        </Button>
+      </form>
     </Box>
   )
 }

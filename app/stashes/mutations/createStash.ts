@@ -27,7 +27,52 @@ export default resolver.pipe(
             body: JSON.stringify(body),
           },
         })
+        // Create Quirrel queue
         break
+      case "Location":
+        stash = await db.stash.create({
+          data: {
+            userId: ctx.session.userId,
+            locationId: id,
+            type,
+            body: JSON.stringify(body),
+          },
+        })
+        // Create Quirrel queue
+        break
+      case "Job":
+        stash = await db.stash.create({
+          data: {
+            userId: ctx.session.userId,
+            jobId: id,
+            type,
+            body: JSON.stringify(body),
+          },
+        })
+        // Create Quirrel queue
+        break
+      // case "Invoice":
+      //   stash = await db.stash.create({
+      //     data: {
+      //       userId: ctx.session.userId,
+      //       invoiceId: id,
+      //       type,
+      //       body: JSON.stringify(body),
+      //     },
+      //   })
+      //   // Create Quirrel queue
+      //   break
+      // case "Estimate":
+      //   stash = await db.stash.create({
+      //     data: {
+      //       userId: ctx.session.userId,
+      //       estimateId: id,
+      //       type,
+      //       body: JSON.stringify(body),
+      //     },
+      //   })
+      //   // Create Quirrel queue
+      //   break
 
       default:
         break
