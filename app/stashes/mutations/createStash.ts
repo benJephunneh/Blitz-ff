@@ -4,7 +4,7 @@ import { CreateJob } from "app/jobs/validations"
 import { CreateLocation } from "app/locations/validations"
 import db, { CustomerStash, JobStash, LocationStash, Prisma, StashType } from "db"
 import { z } from "zod"
-import stashContentSchema from "../schema/stashContentSchema"
+import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
 
 const customerZod = CreateCustomer
 const locationZod = CreateLocation
@@ -12,11 +12,10 @@ const jobZod = CreateJob
 
 export const CreateStash = z.object({
   // id: z.number(), // This is ID of page that created the stash (i.e. customer page 1, or job page 12, etc.).
-  // body: stashContentSchema.nullable(),
+  body: stashContentSchema.nullable(),
   customerId: z.number().optional(),
   locationId: z.number().optional(),
   jobId: z.number().optional(),
-  body: z.string(),
   type: z.nativeEnum(StashType),
   // customer: customerZod.partial(),
   // location: locationZod.partial(),
@@ -38,8 +37,8 @@ export default resolver.pipe(
             userId: ctx.session.userId,
             customerId,
             type,
-            // body: JSON.stringify(body),
-            body,
+            body: JSON.stringify(body),
+            // body,
           },
         })
         // await db.customerStash.create({
@@ -57,6 +56,7 @@ export default resolver.pipe(
             locationId,
             type,
             body: JSON.stringify(body),
+            // body,
           },
         })
         // await db.locationStash.create({
@@ -75,6 +75,7 @@ export default resolver.pipe(
             jobId,
             type,
             body: JSON.stringify(body),
+            // body,
           },
         })
         // await db.jobStash.create({

@@ -5,7 +5,7 @@ import { CreateLocation } from "app/locations/validations"
 import { NotFoundError } from "blitz"
 import db, { StashType } from "db"
 import { z } from "zod"
-import stashContentSchema from "../schema/stashContentSchema"
+import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
 
 const customerZod = CreateCustomer
 const locationZod = CreateLocation
@@ -15,9 +15,9 @@ const UpdateStash = z.object({
   id: z.number(),
   body: stashContentSchema.nullable(),
   type: z.nativeEnum(StashType),
-  customer: customerZod.partial(),
-  location: locationZod.partial(),
-  job: jobZod.partial(),
+  customer: customerZod.partial().optional(),
+  location: locationZod.partial().optional(),
+  job: jobZod.partial().optional(),
 })
 
 export default resolver.pipe(

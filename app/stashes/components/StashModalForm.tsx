@@ -35,8 +35,8 @@ const StashModalForm = ({
   stashId,
   ...props
 }: StashModalProps) => {
-  const [newStashMutation] = useMutation(updateStash)
-  const [editStashMutation] = useMutation(createStash)
+  const [newStashMutation] = useMutation(createStash)
+  const [editStashMutation] = useMutation(updateStash)
 
   // const stash = useQuery(
   //   getStash,
@@ -78,7 +78,7 @@ const StashModalForm = ({
       submitText={stashId ? "Update" : "Create"}
       initialValues={{
         customerId: customerId ?? undefined,
-        locationid: locationId ?? undefined,
+        locationId: locationId ?? undefined,
         jobId: jobId ?? undefined,
         type: stashType,
       }}

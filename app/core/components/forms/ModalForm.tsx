@@ -85,7 +85,7 @@ const ModalForm: FormComponent<ModalFormProps> = ({
               <ModalFooter>
                 <HStack>
                   <Button
-                    onClick={() => phorm.form.change("stashing", "false")}
+                    // onClick={() => phorm.form.change("stashing", "false")}
                     disabled={phorm.submitting}
                     type="submit"
                   >
