@@ -14,6 +14,7 @@ import {
   Heading,
   HStack,
   Icon,
+  Input,
   LinkBox,
   LinkOverlay,
   Spacer,
@@ -38,6 +39,8 @@ import { AuthenticationError, AuthorizationError, NotFoundError } from "blitz"
 import { GetServerSideProps } from "next"
 import { FaPlus } from "react-icons/fa"
 import { useState } from "react"
+import StashModalForm from "app/stashes/components/StashModalForm"
+import getStash from "app/stashes/queries/getStash"
 
 const ShowCustomerPage: BlitzPage = () => {
   const router = useRouter()
@@ -58,8 +61,8 @@ const ShowCustomerPage: BlitzPage = () => {
     },
     {
       refetchOnWindowFocus: false,
-      refetchInterval: 2000,
-      refetchIntervalInBackground: true,
+      // refetchInterval: 2000,
+      // refetchIntervalInBackground: true,
     }
   )
   const locations = customer.locations
@@ -100,8 +103,25 @@ const ShowCustomerPage: BlitzPage = () => {
   if (!locations) console.log(`No locations for ${customer.firstname} ${customer.lastname}.`)
   else console.log(`${locations.length} locations for ${customer.firstname} ${customer.lastname}.`)
 
+  const [stashing, setStashing] = useState(false)
+  // const stash = useQuery(
+  //   getStash, {
+  //   where: {
+  //     customerId
+  //   }
+  // })
+
   return (
     <Box bg={useColorModeValue("white", "gray.800")} p={4}>
+      <StashModalForm
+        customerId={customerId}
+        isOpen={stashing}
+        onClose={() => setStashing(false)}
+        onSuccess={() => {
+          setStashing(false)
+        }}
+      />
+
       <Flex alignItems="start">
         {customer && (
           <CustomerCard customer={customer} location={locations?.at(0)} />
@@ -248,17 +268,15 @@ const ShowCustomerPage: BlitzPage = () => {
           Delete {`${customer!.firstname} ${customer!.lastname}`}
         </Button>
       </VStack> */}
-      <form>
-        <Button
-          type="submit"
-          colorScheme="telegram"
-          justifySelf="end"
-          alignSelf="end"
-          rightIcon={<FaPlus />}
-        >
-          Stash
-        </Button>
-      </form>
+      <Button
+        colorScheme="telegram"
+        justifySelf="end"
+        alignSelf="end"
+        rightIcon={<FaPlus />}
+        onClick={() => setStashing(true)}
+      >
+        Stash
+      </Button>
     </Box>
   )
 }

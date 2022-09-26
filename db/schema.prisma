@@ -41,31 +41,32 @@ enum Permit {
 }
 
 model Customer {
-  id            Int             @id @default(autoincrement())
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  firstname     String?
-  lastname      String?
-  companyname   String?
-  displayname   String
-  email         String
-  locations     Location[]
-  LocationStash LocationStash[]
-}
-
-model CustomerStash {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   firstname   String?
   lastname    String?
   companyname String?
-  displayname String?
-  email       String?
-  // locations   Location[]
-  stash       Stash    @relation(fields: [stashId], references: [id])
-  stashId     Int      @unique
+  displayname String
+  email       String
+  locations   Location[]
+  // LocationStash LocationStash[]
+  stash       Stash[]
 }
+
+// model CustomerStash {
+//   id          Int      @id @default(autoincrement())
+//   createdAt   DateTime @default(now())
+//   updatedAt   DateTime @updatedAt
+//   firstname   String?
+//   lastname    String?
+//   companyname String?
+//   displayname String?
+//   email       String?
+//   // locations   Location[]
+//   stash       Stash    @relation(fields: [stashId], references: [id])
+//   stashId     Int      @unique
+// }
 
 enum LocationType {
   Personal
@@ -91,31 +92,31 @@ model Location {
   customer   Customer     @relation(fields: [customerId], references: [id])
   customerId Int
   jobs       Job[]
-  jobStash   JobStash[]
-  // stash      Stash[]
+  // jobStash   JobStash[]
+  stash      Stash[]
 }
 
-model LocationStash {
-  id         Int          @id @default(autoincrement())
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  primary    Boolean      @default(true)
-  house      String?
-  street     String?
-  city       String?
-  state      String?      @default("FL")
-  zipcode    String?
-  phones     String?
-  block      String?
-  lot        String?
-  parcel     String?
-  type       LocationType @default(Personal)
-  customer   Customer     @relation(fields: [customerId], references: [id])
-  customerId Int
-  // jobs       Job[]
-  stash      Stash        @relation(fields: [stashId], references: [id])
-  stashId    Int          @unique
-}
+// model LocationStash {
+//   id         Int          @id @default(autoincrement())
+//   createdAt  DateTime     @default(now())
+//   updatedAt  DateTime     @updatedAt
+//   primary    Boolean      @default(true)
+//   house      String?
+//   street     String?
+//   city       String?
+//   state      String?      @default("FL")
+//   zipcode    String?
+//   phones     String?
+//   block      String?
+//   lot        String?
+//   parcel     String?
+//   type       LocationType @default(Personal)
+//   customer   Customer     @relation(fields: [customerId], references: [id])
+//   customerId Int
+//   // jobs       Job[]
+//   stash      Stash        @relation(fields: [stashId], references: [id])
+//   stashId    Int          @unique
+// }
 
 model Job {
   id         Int       @id @default(autoincrement())
@@ -128,21 +129,22 @@ model Job {
   location   Location  @relation(fields: [locationId], references: [id])
   locationId Int
   // stash           Stash[]
+  stash      Stash[]
 }
 
-model JobStash {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  title      String?
-  start      DateTime?
-  end        DateTime?
-  // permit     Permit @default(None)
-  location   Location  @relation(fields: [locationId], references: [id])
-  locationId Int
-  stash      Stash     @relation(fields: [stashId], references: [id])
-  stashId    Int       @unique
-}
+// model JobStash {
+//   id         Int       @id @default(autoincrement())
+//   createdAt  DateTime  @default(now())
+//   updatedAt  DateTime  @updatedAt
+//   title      String?
+//   start      DateTime?
+//   end        DateTime?
+//   // permit     Permit @default(None)
+//   location   Location  @relation(fields: [locationId], references: [id])
+//   locationId Int
+//   stash      Stash     @relation(fields: [stashId], references: [id])
+//   stashId    Int       @unique
+// }
 
 enum StashType {
   Customer
@@ -153,19 +155,22 @@ enum StashType {
 }
 
 model Stash {
-  id         Int            @id @default(autoincrement())
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   body       String
-  type       StashType      @default(Customer)
-  user       User           @relation(fields: [userId], references: [id])
-  customer   CustomerStash?
-  location   LocationStash?
-  job        JobStash?
+  type       StashType @default(Customer)
+  user       User      @relation(fields: [userId], references: [id])
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  location   Location? @relation(fields: [locationId], references: [id])
+  job        Job?      @relation(fields: [jobId], references: [id])
   userId     Int
   customerId Int?
   locationId Int?
   jobId      Int?
+  // customer   CustomerStash?
+  // location   LocationStash?
+  // job        JobStash?
 }
 
 /////////////////////////

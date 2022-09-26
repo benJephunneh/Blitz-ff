@@ -18,6 +18,7 @@ import {
   UnorderedList,
 } from "@chakra-ui/react"
 import { FormComponent } from "./FormComponent"
+import { FaPlus } from "react-icons/fa"
 export { FORM_ERROR } from "final-form"
 
 type ModalFormProps = {
@@ -56,36 +57,44 @@ const ModalForm: FormComponent<ModalFormProps> = ({
         initialValues={initialValues}
         validate={validateZodSchema(schema)}
         onSubmit={onSubmit}
-        render={(form) => (
-          <form onSubmit={form.handleSubmit} {...props}>
+        render={(phorm) => (
+          <form onSubmit={phorm.handleSubmit} {...props}>
             <ModalContent>
               <ModalHeader>{title}</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
-                {form.submitError && (
+                {phorm.submitError && (
                   <Alert status="error" mb={6}>
                     <AlertIcon />
-                    {Array.isArray(form.submitError) ? (
+                    {Array.isArray(phorm.submitError) ? (
                       <UnorderedList>
-                        {form.submitError.map((error, i) => (
+                        {phorm.submitError.map((error, i) => (
                           <ListItem key={i}>{error}</ListItem>
                         ))}
                       </UnorderedList>
                     ) : (
-                      form.submitError
+                      phorm.submitError
                     )}
                   </Alert>
                 )}
 
                 {/* Form fields supplied as children are rendered here */}
-                <Stack spacing={4}>{render(form)}</Stack>
+                <Stack spacing={4}>{render(phorm)}</Stack>
               </ModalBody>
 
               <ModalFooter>
                 <HStack>
-                  <Button isLoading={form.submitting} type="submit">
+                  <Button
+                    onClick={() => phorm.form.change("stashing", "false")}
+                    disabled={phorm.submitting}
+                    type="submit"
+                  >
                     {submitText}
                   </Button>
+                  {/* <Button onClick={() => phorm.form.change("stashing", "true")} disabled={phorm.submitting} type='submit'
+                    variant='outline' colorScheme='red' rightIcon={<FaPlus />}>
+                    Stash
+                  </Button> */}
                   <Button onClick={onClose}>Cancel</Button>
                 </HStack>
               </ModalFooter>

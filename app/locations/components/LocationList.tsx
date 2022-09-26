@@ -98,8 +98,8 @@ const LocationList = ({ customerId }: { customerId: number }) => {
     },
     {
       refetchOnWindowFocus: false,
-      refetchInterval: 60000,
-      refetchIntervalInBackground: true,
+      // refetchInterval: 60000,
+      // refetchIntervalInBackground: true,
     }
   )
 

@@ -14,6 +14,7 @@ import CustomerModalForm from "../components/CustomerModalForm"
 import customerContext from "../contexts/customerContext"
 import useCustomer from "../hooks/useCustomer"
 import deleteCustomer from "../mutations/deleteCustomer"
+import updateCustomer from "../mutations/updateCustomer"
 import findCustomer from "../queries/findCustomer"
 import getCustomer from "../queries/getCustomer"
 
@@ -56,6 +57,8 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
 
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [deletingCustomer, setDeletingCustomer] = useState(false)
+
+  const [editCustomerMutation] = useMutation(updateCustomer)
 
   const [showingDetails, setShowingDetails] = useState(false)
   const [creatingLocation, setCreatingLocation] = useState(false)

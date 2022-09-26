@@ -3,17 +3,19 @@ import { FORM_ERROR } from "final-form"
 import createCustomer from "../mutations/createCustomer"
 import updateCustomer from "../mutations/updateCustomer"
 import getCustomer from "../queries/getCustomer"
-import { CreateCustomer } from "../validations"
+import { CreateCustomer, UpdateCustomer } from "../validations"
 import { Grid, GridItem, ModalProps } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
-import { Customer } from "@prisma/client"
+import { Customer, Stash } from "@prisma/client"
+import { useState } from "react"
+import createStash from "app/stashes/mutations/createStash"
 
 type CustomerModalFormProps = {
   isOpen: boolean
   onClose: () => void
-  onSuccess?: (customer: Customer) => void
+  onSuccess?: (customer: Customer | Stash) => void
   customerId?: number
   mutationType?: MutationType
   props?: Partial<ModalProps>
@@ -29,6 +31,8 @@ const CustomerModalForm = ({
 }: CustomerModalFormProps) => {
   const [newCustomerMutation] = useMutation(createCustomer)
   const [editCustomerMutation] = useMutation(updateCustomer)
+  const [newCustomerStashMutation] = useMutation(createStash)
+  const [stashing, setStashing] = useState(false)
 
   const [customer, { isLoading }] = useQuery(
     getCustomer,
@@ -71,9 +75,15 @@ const CustomerModalForm = ({
   const onSubmit = (values) => {
     if (customer) {
       return editCustomerMutation({ id: customer.id, ...values })
+      // } else if (values.stashing) {
+      //   return newCustomerStashMutation(values)
     }
     return newCustomerMutation(values)
   }
+
+  // const onStash = (values) => {
+  //   return newCustomerStashMutation(values)
+  // }
 
   const handleError = (error) => {
     console.log(`Error doing something with customer modal: ${error.toString()}`)
@@ -87,7 +97,7 @@ const CustomerModalForm = ({
       size="lg"
       isOpen={isOpen}
       onClose={onClose}
-      schema={CreateCustomer}
+      schema={customerId ? UpdateCustomer : CreateCustomer}
       title={customerId ? "Edit customer" : "New customer"}
       submitText={customerId ? "Update" : "Create"}
       initialValues={{
@@ -99,8 +109,8 @@ const CustomerModalForm = ({
       }}
       onSubmit={async (values) => {
         await onSubmit(values)
-          .then((customer) => onSuccess?.(customer))
-          .catch((error) => handleError(error))
+          .then((customer) => onSuccess?.(customer)) // onSuccess( customer || stash )
+          .catch((e) => handleError(e))
       }}
       render={() => (
         <Grid templateColumns="repeat(5, 1fr)" gap={2}>

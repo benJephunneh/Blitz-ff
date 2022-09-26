@@ -1,18 +1,26 @@
 import { NotFoundError } from "blitz"
 import { resolver } from "@blitzjs/rpc"
-import db from "db"
+import db, { Prisma } from "db"
 import { z } from "zod"
 
-const GetStash = z.object({
-  // This accepts type of undefined, but is required at runtime
-  id: z.number().optional().refine(Boolean, "Required"),
-})
+// const GetStash = z.object({
+//   // This accepts type of undefined, but is required at runtime
+//   id: z.number().optional().refine(Boolean, "Required"),
+// })
 
-export default resolver.pipe(resolver.zod(GetStash), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const stash = await db.stash.findFirst({ where: { id } })
+interface GetStashProps extends Pick<Prisma.StashFindFirstArgs, "where" | "select"> {}
 
-  if (!stash) throw new NotFoundError()
+export default resolver.pipe(
+  // resolver.zod(GetStash),
+  resolver.authorize(),
+  async ({ where }: GetStashProps) => {
+    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    const stash = await db.stash.findFirst({
+      where,
+    })
 
-  return stash
-})
+    if (!stash) return null
+
+    return stash
+  }
+)
