@@ -1,10 +1,9 @@
 import { useContext } from "react"
 
-import TextField from "app/components/forms/components/text-field"
-import ModalForm from "app/components/forms/components/modal-form"
-
-import addLinkSchema from "../schemas/add-link-schema"
-import editorContext from "../contexts/editor-context"
+import editorContext from "../contexts/editorContext"
+import ModalForm from "../../forms/ModalForm"
+import addLinkSchema from "../schema/addLinkSchema"
+import TextField from "../../forms/components/TextField"
 
 const EditorAddLink = () => {
   const { editor, addingLink, toggleAddingLink } = useContext(editorContext)

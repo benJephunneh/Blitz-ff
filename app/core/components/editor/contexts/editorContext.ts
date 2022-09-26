@@ -6,9 +6,9 @@ type EditorContext = {
   editor: Editor
 
   addingLink: boolean
-  toggleAddingLink: () => void
-
   addingImage: boolean
+
+  toggleAddingLink: () => void
   toggleAddingImage: () => void
 }
 

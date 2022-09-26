@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import { Input, ModalProps, SimpleGrid } from "@chakra-ui/react"
 import { Stash, StashType } from "@prisma/client"
+import EditorField from "app/core/components/editor/components/EditorField"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import ModalForm from "app/core/components/forms/ModalForm"
 import { FORM_ERROR } from "final-form"
 import createStash, { CreateStash } from "../mutations/createStash"
-import updateStash from "../mutations/updateStash"
+import updateStash, { UpdateStash } from "../mutations/updateStash"
 import getStash from "../queries/getStash"
 
 type StashModalProps = {
@@ -73,7 +74,7 @@ const StashModalForm = ({
       size="md"
       isOpen={isOpen}
       onClose={onClose}
-      schema={CreateStash}
+      schema={stashId ? UpdateStash : CreateStash}
       title={stashId ? "Edit stash" : "New stash"}
       submitText={stashId ? "Update" : "Create"}
       initialValues={{
@@ -89,8 +90,20 @@ const StashModalForm = ({
       }}
       render={() => (
         <SimpleGrid>
-          <LabeledTextField name="id" label="Id" value={customerId} />
-          <LabeledTextField name="body" label="Body" />
+          {/* <LabeledTextField name="id" label="Id" value={customerId} /> */}
+          {/* <LabeledTextField name="body" label="Body" /> */}
+          <EditorField
+            name="body"
+            fontSize="md"
+            label="Stash notes"
+            features={{
+              heading: true,
+              horizontalRule: true,
+            }}
+            barMenu
+            bubbleMenu
+            floatingMenu
+          />
         </SimpleGrid>
       )}
       {...props}

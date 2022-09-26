@@ -3,7 +3,7 @@ import jsonSchema from "./jsonSchema"
 
 const stashContentSchema = z.object({
   type: z.string(),
-  body: z.array(jsonSchema),
+  content: z.array(jsonSchema),
 })
 
 export default stashContentSchema

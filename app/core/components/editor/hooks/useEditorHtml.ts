@@ -1,10 +1,8 @@
-import type { EditorFeatures } from "../helpers/get-editor-extensions"
+import type { EditorFeatures } from "../helpers/getEditorExtensions"
 
 import { useMemo } from "react"
-
 import { generateHTML } from "@tiptap/react"
-
-import getEditorExtensions from "../helpers/get-editor-extensions"
+import getEditorExtensions from "../helpers/getEditorExtensions"
 
 export type EditorHtmlOptions = {
   snippet?: boolean

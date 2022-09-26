@@ -1,9 +1,8 @@
 import type { FC, ReactElement } from "react"
-import type { EditorFeatures } from "../helpers/get-editor-extensions"
+import type { EditorFeatures } from "../helpers/getEditorExtensions"
 
 import { useContext } from "react"
 
-import { IconButton } from "@chakra-ui/button"
 import {
   FaBold,
   FaItalic,
@@ -14,11 +13,9 @@ import {
   FaImage,
   FaRulerHorizontal,
 } from "react-icons/fa"
-import { HStack } from "@chakra-ui/layout"
-import Icon from "@chakra-ui/icon"
-import { useColorModeValue } from "@chakra-ui/react"
+import { HStack, Icon, IconButton, useColorModeValue } from "@chakra-ui/react"
 
-import editorContext from "../contexts/editor-context"
+import editorContext from "../contexts/editorContext"
 
 type EditorBarMenuButtonProps = {
   onClick: () => void

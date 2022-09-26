@@ -1,15 +1,13 @@
-import type { UseFieldConfig } from "react-final-form"
 import type { Editor } from "@tiptap/react"
-import type { EditorFeatures } from "../helpers/get-editor-extensions"
+import type { EditorFeatures } from "../helpers/getEditorExtensions"
+import type { UseFieldConfig } from "react-final-form"
 
 import { useState, useEffect } from "react"
-
-import { useEditor } from "@tiptap/react"
 import { useField } from "react-final-form"
+import { useEditor } from "@tiptap/react"
 
-import getFieldErrorMessage from "app/components/forms/helpers/get-field-error-message"
-
-import getEditorExtensions from "../helpers/get-editor-extensions"
+import getEditorExtensions from "../helpers/getEditorExtensions"
+import getFieldErrorMessage from "../../forms/helpers/getFieldErrorMessage"
 
 type UseEditorFieldOptions = {
   fieldProps?: UseFieldConfig<string>

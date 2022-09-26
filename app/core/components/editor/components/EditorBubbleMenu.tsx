@@ -1,18 +1,15 @@
 import type { FC, ReactElement } from "react"
-import type { EditorFeatures } from "../helpers/get-editor-extensions"
+import type { EditorFeatures } from "../helpers/getEditorExtensions"
 
 import React, { useContext } from "react"
 
 import "tippy.js/dist/svg-arrow.css"
 import { isTextSelection, BubbleMenu } from "@tiptap/react"
 import { roundArrow } from "tippy.js"
-import { IconButton } from "@chakra-ui/button"
 import { FaBold, FaItalic, FaHeading, FaQuoteLeft, FaLink, FaStrikethrough } from "react-icons/fa"
-import { HStack } from "@chakra-ui/layout"
-import Icon from "@chakra-ui/icon"
-import { DarkMode } from "@chakra-ui/react"
+import { DarkMode, HStack, Icon, IconButton } from "@chakra-ui/react"
 
-import editorContext from "../contexts/editor-context"
+import editorContext from "../contexts/editorContext"
 
 type EditorBubbleMenuButtonProps = {
   onClick: () => void

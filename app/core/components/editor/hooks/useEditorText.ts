@@ -1,11 +1,9 @@
-import type { EditorFeatures } from "../helpers/get-editor-extensions"
+import type { EditorFeatures } from "../helpers/getEditorExtensions"
 import type { HtmlToTextOptions } from "html-to-text"
 
 import { useMemo } from "react"
-
 import { convert } from "html-to-text"
-
-import useEditorHtml from "./use-editor-html"
+import useEditorHtml from "./useEditorHtml"
 
 const useEditorText = (
   content: string,

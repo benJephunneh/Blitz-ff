@@ -1,10 +1,8 @@
 import { useContext } from "react"
-
-import TextField from "app/components/forms/components/text-field"
-import ModalForm from "app/components/forms/components/modal-form"
-
-import addImageSchema from "../schemas/add-image-schema"
-import editorContext from "../contexts/editor-context"
+import editorContext from "../contexts/editorContext"
+import ModalForm from "../../forms/ModalForm"
+import addImageSchema from "../schema/addImageSchema"
+import TextField from "../../forms/components/TextField"
 
 const EditorAddImage = () => {
   const { editor, addingImage, toggleAddingImage } = useContext(editorContext)

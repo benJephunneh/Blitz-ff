@@ -2,7 +2,7 @@ import { resolver } from "@blitzjs/rpc"
 import { CreateCustomer } from "app/customers/validations"
 import { CreateJob } from "app/jobs/validations"
 import { CreateLocation } from "app/locations/validations"
-import db, { CustomerStash, JobStash, LocationStash, Prisma, StashType } from "db"
+import db, { StashType } from "db"
 import { z } from "zod"
 import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
 
@@ -38,7 +38,6 @@ export default resolver.pipe(
             customerId,
             type,
             body: JSON.stringify(body),
-            // body,
           },
         })
         // await db.customerStash.create({
@@ -56,7 +55,6 @@ export default resolver.pipe(
             locationId,
             type,
             body: JSON.stringify(body),
-            // body,
           },
         })
         // await db.locationStash.create({
@@ -75,7 +73,6 @@ export default resolver.pipe(
             jobId,
             type,
             body: JSON.stringify(body),
-            // body,
           },
         })
         // await db.jobStash.create({

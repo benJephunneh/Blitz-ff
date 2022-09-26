@@ -10,7 +10,7 @@ import {
 import { forwardRef, PropsWithoutRef } from "react"
 import { ComponentPropsWithoutRef } from "react"
 import { useField } from "react-final-form"
-import getFieldErrorMessage from "./getFieldErrorMessage"
+import getFieldErrorMessage from "./helpers/getFieldErrorMessage"
 
 interface LabeledCheckboxFieldProps extends ComponentPropsWithoutRef<typeof Checkbox> {
   name: string

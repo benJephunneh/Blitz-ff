@@ -67,8 +67,6 @@ const ShowCustomerPage: BlitzPage = () => {
   )
   const locations = customer.locations
 
-  const [isStashing, setIsStashing] = useState(false)
-
   // const [location] = useQuery(
   //   getLocation, {
   //   where: {

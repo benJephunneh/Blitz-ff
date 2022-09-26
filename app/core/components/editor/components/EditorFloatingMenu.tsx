@@ -1,14 +1,12 @@
 import type { FC, ReactElement } from "react"
-import type { EditorFeatures } from "../helpers/get-editor-extensions"
+import type { EditorFeatures } from "../helpers/getEditorExtensions"
 
 import React, { useContext } from "react"
-
-import { FloatingMenu } from "@tiptap/react"
-import { IconButton } from "@chakra-ui/button"
+import { HStack, IconButton } from "@chakra-ui/react"
 import { FaImage, FaRulerHorizontal } from "react-icons/fa"
-import { HStack } from "@chakra-ui/layout"
+import { FloatingMenu } from "@tiptap/react"
 
-import editorContext from "../contexts/editor-context"
+import editorContext from "../contexts/editorContext"
 
 type EditorBubbleMenuButtonProps = {
   onClick: () => void

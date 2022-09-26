@@ -11,7 +11,7 @@ const customerZod = CreateCustomer
 const locationZod = CreateLocation
 const jobZod = CreateJob
 
-const UpdateStash = z.object({
+export const UpdateStash = z.object({
   id: z.number(),
   body: stashContentSchema.nullable(),
   type: z.nativeEnum(StashType),

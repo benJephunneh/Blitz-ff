@@ -1,24 +1,28 @@
 import type { FC } from "react"
 import type { UseFieldConfig } from "react-final-form"
-import type { BoxProps } from "@chakra-ui/layout"
-import type { EditorFeatures } from "../helpers/get-editor-extensions"
+import type { EditorFeatures } from "../helpers/getEditorExtensions"
 
 import React from "react"
 
-import { Box } from "@chakra-ui/layout"
-import { EditorContent } from "@tiptap/react"
-import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/form-control"
+import {
+  Box,
+  BoxProps,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  useColorMode,
+} from "@chakra-ui/react"
 import styled from "@emotion/styled"
 import { css } from "@emotion/react"
-import { useColorMode } from "@chakra-ui/react"
+import { EditorContent } from "@tiptap/react"
 
-import useEditorField from "../hooks/use-editor-field"
+import useEditorField from "../hooks/useEditorField"
 import EditorActionsProvider from "../providers/editor-actions-provider"
 
-import EditorFloatingMenu from "./editor-floating-menu"
-import EditorBubbleMenu from "./editor-bubble-menu"
-import EditorHtml from "./editor-html"
-import EditorBarMenu from "./editor-bar-menu"
+import EditorFloatingMenu from "./EditorFloatingMenu"
+import EditorBubbleMenu from "./EditorBubbleMenu"
+import EditorHtml from "./EditorHtml"
+import EditorBarMenu from "./EditorBarMenu"
 
 const FakeInput = styled(Box)`
   .ProseMirror {
