@@ -85,16 +85,22 @@ const ModalForm: FormComponent<ModalFormProps> = ({
               <ModalFooter>
                 <HStack>
                   <Button
-                    // onClick={() => phorm.form.change("stashing", "false")}
+                    onClick={() => phorm.form.change("stashing", "false")}
                     disabled={phorm.submitting}
                     type="submit"
                   >
                     {submitText}
                   </Button>
-                  {/* <Button onClick={() => phorm.form.change("stashing", "true")} disabled={phorm.submitting} type='submit'
-                    variant='outline' colorScheme='red' rightIcon={<FaPlus />}>
+                  <Button
+                    onClick={() => phorm.form.change("stashing", "true")}
+                    disabled={phorm.submitting}
+                    type="submit"
+                    variant="outline"
+                    colorScheme="red"
+                    rightIcon={<FaPlus />}
+                  >
                     Stash
-                  </Button> */}
+                  </Button>
                   <Button onClick={onClose}>Cancel</Button>
                 </HStack>
               </ModalFooter>

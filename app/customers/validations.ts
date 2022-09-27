@@ -1,9 +1,11 @@
+import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
 import { z } from "zod"
 
-const firstname = z.string().optional()
-const lastname = z.string().optional()
-const companyname = z.string().optional()
-export const email = z.string().email()
+const firstname = z.string()
+const lastname = z.string()
+const companyname = z.string()
+export const email = z.string() // .email()
+const notes = stashContentSchema.nullable()
 // .refine((query) => useQuery(checkUniquity, { query }, { suspense: true }), {
 // checkUniquity({ email }).catch((e) => console.log(`checkUniquity error: ${e}`)),
 // message: "Email is not unique.",
@@ -17,10 +19,20 @@ export const CreateCustomer = z.object({
   lastname,
   companyname,
   email,
-  // phone,
+  notes,
+})
+export const CreateCustomerStash = z.object({
+  firstname: firstname.optional(),
+  lastname: lastname.optional(),
+  companyname: companyname.optional(),
+  email: email.optional(),
+  notes,
 })
 
 export const UpdateCustomer = CreateCustomer.extend({
+  id,
+})
+export const UpdateCustomerStash = CreateCustomerStash.extend({
   id,
 })
 

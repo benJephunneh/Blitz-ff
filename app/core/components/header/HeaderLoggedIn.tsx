@@ -6,7 +6,10 @@ import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import { FaPlus } from "react-icons/fa"
-import { Customer, CustomerStash, Stash } from "db"
+import { Customer, CustomerStash } from "db"
+import createCustomer from "app/customers/mutations/createCustomer"
+import { TypeOf, z } from "zod"
+import { CreateCustomer, CreateCustomerStash } from "app/customers/validations"
 
 const HeaderLoggedIn = () => {
   const router = useRouter()
@@ -23,12 +26,13 @@ const HeaderLoggedIn = () => {
           setCreatingCustomer(false)
           if (customer as Customer) {
             router
-              .push(Routes.ShowCustomerPage({ customerId: customer.id }))
+              .push(Routes.CustomersPage())
+              // .push(Routes.ShowCustomerPage({ customerId: customer.id }))
               .catch((e) => console.log(`HeaderLoggedIn createCustomer error: ${e}`))
-            // } else if (customer as Stash) {
-            //   router
-            //     .push(Routes.CustomersPage())
-            //     .catch((e) => console.log(`HeaderLoggedIn stashCustomer error: ${e}`))
+          } else if (customer as CustomerStash) {
+            router
+              .push(Routes.CustomersPage())
+              .catch((e) => console.log(`HeaderLoggedIn stashCustomer error: ${e}`))
           }
         }}
       />

@@ -8,14 +8,16 @@ import { Grid, GridItem, ModalProps } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
-import { Customer, Stash } from "@prisma/client"
+import { Customer, CustomerStash } from "@prisma/client"
 import { useState } from "react"
 import createStash from "app/stashes/mutations/createStash"
+import createCustomerStash from "../mutations/createCustomerStash"
+import EditorField from "app/core/components/editor/components/EditorField"
 
 type CustomerModalFormProps = {
   isOpen: boolean
   onClose: () => void
-  onSuccess?: (customer: Customer | Stash) => void
+  onSuccess?: (customer: Customer | CustomerStash) => void
   customerId?: number
   mutationType?: MutationType
   props?: Partial<ModalProps>
@@ -31,7 +33,7 @@ const CustomerModalForm = ({
 }: CustomerModalFormProps) => {
   const [newCustomerMutation] = useMutation(createCustomer)
   const [editCustomerMutation] = useMutation(updateCustomer)
-  const [newCustomerStashMutation] = useMutation(createStash)
+  const [newCustomerStashMutation] = useMutation(createCustomerStash)
   const [stashing, setStashing] = useState(false)
 
   const [customer, { isLoading }] = useQuery(
@@ -75,8 +77,8 @@ const CustomerModalForm = ({
   const onSubmit = (values) => {
     if (customer) {
       return editCustomerMutation({ id: customer.id, ...values })
-      // } else if (values.stashing) {
-      //   return newCustomerStashMutation(values)
+    } else if (values.stashing) {
+      return newCustomerStashMutation(values)
     }
     return newCustomerMutation(values)
   }
@@ -105,7 +107,6 @@ const CustomerModalForm = ({
         lastname: customer?.lastname ?? "",
         companyname: customer?.companyname ?? "",
         email: customer?.email ?? "",
-        // phone: customer?.phone ?? "",
       }}
       onSubmit={async (values) => {
         await onSubmit(values)
@@ -113,23 +114,37 @@ const CustomerModalForm = ({
           .catch((e) => handleError(e))
       }}
       render={() => (
-        <Grid templateColumns="repeat(5, 1fr)" gap={2}>
-          <GridItem colSpan={2}>
-            <LabeledTextField name="firstname" label="First name" />
-          </GridItem>
-          <GridItem colSpan={3}>
-            <LabeledTextField name="lastname" label="Last name" />
-          </GridItem>
-          <GridItem colSpan={3}>
-            <LabeledTextField name="companyname" label="Company name" />
-          </GridItem>
-          <GridItem colSpan={3}>
-            <LabeledTextField name="email" label="Email address" type="email" />
-          </GridItem>
-          {/* <GridItem colSpan={2}>
+        <>
+          <Grid templateColumns="repeat(5, 1fr)" gap={2}>
+            <GridItem colSpan={2}>
+              <LabeledTextField name="firstname" label="First name" />
+            </GridItem>
+            <GridItem colSpan={3}>
+              <LabeledTextField name="lastname" label="Last name" />
+            </GridItem>
+            <GridItem colSpan={3}>
+              <LabeledTextField name="companyname" label="Company name" />
+            </GridItem>
+            <GridItem colSpan={3}>
+              <LabeledTextField name="email" label="Email address" type="email" />
+            </GridItem>
+            {/* <GridItem colSpan={2}>
             <LabeledTextField name="phone" label="Phone number" type="phone" />
           </GridItem> */}
-        </Grid>
+          </Grid>
+          <EditorField
+            name="notes"
+            fontSize="md"
+            label="Stash notes"
+            features={{
+              heading: true,
+              horizontalRule: true,
+            }}
+            barMenu
+            bubbleMenu
+            floatingMenu
+          />
+        </>
       )}
       {...props}
     />
