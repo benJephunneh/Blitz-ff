@@ -7,6 +7,7 @@ import HeaderActions from "./HeaderActions"
 import HeaderCrumbs from "./HeaderCrumbs"
 import HeaderLoggedIn from "./HeaderLoggedIn"
 import HeaderLoggedOut from "./HeaderLoggedOut"
+import HeaderProvider from "./HeaderProvider"
 
 type HeaderProps = {
   children?: JSX.Element | null

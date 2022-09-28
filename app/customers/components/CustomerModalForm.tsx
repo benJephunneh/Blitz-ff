@@ -18,6 +18,7 @@ type CustomerModalFormProps = {
   isOpen: boolean
   onClose: () => void
   onSuccess?: (customer: Customer | CustomerStash) => void
+  stashId?: number
   customerId?: number
   mutationType?: MutationType
   props?: Partial<ModalProps>
@@ -27,6 +28,7 @@ const CustomerModalForm = ({
   isOpen,
   onClose,
   onSuccess,
+  stashId,
   customerId,
   mutationType = "New",
   ...props

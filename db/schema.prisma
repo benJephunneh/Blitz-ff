@@ -40,6 +40,14 @@ enum Permit {
   Expired
 }
 
+enum StashType {
+  Customer
+  Location
+  Job
+  Invoice
+  Estimate
+}
+
 model Customer {
   id          Int        @id @default(autoincrement())
   createdAt   DateTime   @default(now())
@@ -55,17 +63,18 @@ model Customer {
 }
 
 model CustomerStash {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  stashType   StashType @default(Customer)
   firstname   String?
   lastname    String?
   companyname String?
   displayname String?
   email       String?
   notes       String
-  user        User     @relation(fields: [userId], references: [id])
-  userId      Int      @unique
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int       @unique
   // locations   Location[]
 }
 
@@ -101,6 +110,7 @@ model Location {
 //   id         Int          @id @default(autoincrement())
 //   createdAt  DateTime     @default(now())
 //   updatedAt  DateTime     @updatedAt
+//   stashType StashType @default(Location)
 //   primary    Boolean      @default(true)
 //   house      String?
 //   street     String?
@@ -137,6 +147,7 @@ model Job {
 //   id         Int       @id @default(autoincrement())
 //   createdAt  DateTime  @default(now())
 //   updatedAt  DateTime  @updatedAt
+//   stashType StashType @default(Job)
 //   title      String?
 //   start      DateTime?
 //   end        DateTime?
@@ -146,14 +157,6 @@ model Job {
 //   stash      Stash     @relation(fields: [stashId], references: [id])
 //   stashId    Int       @unique
 // }
-
-enum StashType {
-  Customer
-  Location
-  Job
-  Invoice
-  Estimate
-}
 
 // model Stash {
 //   id              Int            @id @default(autoincrement())

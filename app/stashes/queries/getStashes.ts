@@ -2,29 +2,25 @@ import { paginate } from "blitz"
 import { resolver } from "@blitzjs/rpc"
 import db, { Prisma } from "db"
 
-interface GetStashesInput
-  extends Pick<Prisma.StashFindManyArgs, "where" | "orderBy" | "skip" | "take"> {}
+interface GetCustomerStashesInput
+  extends Pick<Prisma.CustomerStashFindManyArgs, "where" | "orderBy"> {}
+// interface GetLocationStashesInput extends Pick<Prisma.LocationStashFindManyArgs, "where" | "orderBy"> {}
+// interface GetJobStashesInput extends Pick<Prisma.JobStashFindManyArgs, "where" | "orderBy"> {}
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetStashesInput) => {
+  async ({ where, orderBy }: GetCustomerStashesInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const {
-      items: stashes,
-      hasMore,
-      nextPage,
-      count,
-    } = await paginate({
-      skip,
-      take,
-      count: () => db.stash.count({ where }),
-      query: (paginateArgs) => db.stash.findMany({ ...paginateArgs, where, orderBy }),
-    })
+    let count = await db.customerStash.count()
+    const customerStashes = await db.customerStash.findMany({ where, orderBy })
+
+    // count += await.locationStash.count()
+    // const locationStashes = await db.locationStash.findMany({ where, orderBy })
+    // count += await.jobStash.count()
+    // const jobStashes = await db.jobStash.findMany({ where, orderBy })
 
     return {
-      stashes,
-      nextPage,
-      hasMore,
+      customerStashes,
       count,
     }
   }
