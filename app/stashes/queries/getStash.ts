@@ -16,9 +16,10 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ id, stashType }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    let stash
     switch (stashType) {
       case "Customer":
-        let stash = await db.customerStash.findFirst({
+        stash = await db.customerStash.findFirst({
           where: { id },
         })
         break
@@ -32,22 +33,20 @@ export default resolver.pipe(
       //     where: { id },
       //   })
       //   break
-      case "Customer":
-        stash = await db.customerStash.findFirst({
-          where: { id },
-        })
-        break
-      case "Customer":
-        stash = await db.customerStash.findFirst({
-          where: { id },
-        })
-        break
+      // case "Invoice":
+      //   stash = await db.invoiceStash.findFirst({
+      //     where: { id },
+      //   })
+      //   break
+      // case "Estimate":
+      //   stash = await db.estimateStash.findFirst({
+      //     where: { id },
+      //   })
+      //   break
 
       default:
         break
     }
-
-    if (!stash) return null
 
     return stash
   }

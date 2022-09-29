@@ -4,7 +4,7 @@ import { z } from "zod"
 const firstname = z.string()
 const lastname = z.string()
 const companyname = z.string()
-export const email = z.string() // .email()
+export const email = z.string().email()
 const notes = stashContentSchema.nullable()
 // .refine((query) => useQuery(checkUniquity, { query }, { suspense: true }), {
 // checkUniquity({ email }).catch((e) => console.log(`checkUniquity error: ${e}`)),
@@ -19,15 +19,16 @@ export const CreateCustomer = z.object({
   lastname,
   companyname,
   email,
-  notes,
 })
-export const CreateCustomerStash = z.object({
-  firstname: firstname.optional(),
-  lastname: lastname.optional(),
-  companyname: companyname.optional(),
-  email: email.optional(),
-  notes,
-})
+
+export const CreateCustomerStash = CreateCustomer.partial().extend({ notes })
+// export const CreateCustomerStash = z.object({
+//   firstname: firstname.optional(),
+//   lastname: lastname.optional(),
+//   companyname: companyname.optional(),
+//   email: email.optional(), // nullable() ?
+//   notes,
+// })
 
 export const UpdateCustomer = CreateCustomer.extend({
   id,

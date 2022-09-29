@@ -3,7 +3,7 @@ import { FORM_ERROR } from "final-form"
 import createCustomer from "../mutations/createCustomer"
 import updateCustomer from "../mutations/updateCustomer"
 import getCustomer from "../queries/getCustomer"
-import { CreateCustomer, UpdateCustomer } from "../validations"
+import { CreateCustomerStash, UpdateCustomer, UpdateCustomerStash } from "../validations"
 import { Grid, GridItem, ModalProps } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
@@ -13,11 +13,16 @@ import { useState } from "react"
 import createStash from "app/stashes/mutations/createStash"
 import createCustomerStash from "../mutations/createCustomerStash"
 import EditorField from "app/core/components/editor/components/EditorField"
+import getStash from "app/stashes/queries/getStash"
+import { z } from "zod"
+import deleteStash from "app/stashes/mutations/deleteStash"
+import updateCustomerStash from "../mutations/updateCustomerStash"
+import updateStash from "app/stashes/mutations/updateStash"
 
 type CustomerModalFormProps = {
   isOpen: boolean
   onClose: () => void
-  onSuccess?: (customer: Customer | CustomerStash) => void
+  onSuccess?: (customer: Customer | CustomerStash | void) => void
   stashId?: number
   customerId?: number
   mutationType?: MutationType
@@ -33,12 +38,15 @@ const CustomerModalForm = ({
   mutationType = "New",
   ...props
 }: CustomerModalFormProps) => {
-  const [newCustomerMutation] = useMutation(createCustomer)
-  const [editCustomerMutation] = useMutation(updateCustomer)
-  const [newCustomerStashMutation] = useMutation(createCustomerStash)
+  const [createCustomerMutation] = useMutation(createCustomer)
+  const [updateCustomerMutation] = useMutation(updateCustomer)
+  const [createStashMutation] = useMutation(createStash)
+  const [updateStashMutation] = useMutation(updateStash)
+  const [deleteStashMutation] = useMutation(deleteStash)
   const [stashing, setStashing] = useState(false)
+  const stashType = "Customer"
 
-  const [customer, { isLoading }] = useQuery(
+  const [customer, { refetch: refetchCustomer }] = useQuery(
     getCustomer,
     {
       where: {
@@ -49,11 +57,27 @@ const CustomerModalForm = ({
       suspense: !!customerId,
       enabled: !!customerId,
       staleTime: Infinity,
+      refetchOnWindowFocus: false,
     }
   )
+
+  const [customerStash, { refetch: refetchStash }] = useQuery(
+    getStash,
+    {
+      id: stashId,
+      stashType,
+    },
+    {
+      enabled: !!stashId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  )
+
   // console.log(`customerId: ${customerId}`)
   // console.log(`isLoading: ${isLoading}`)
   // console.log(`customer.id: ${customer?.id}`)
+  // console.log(`customerStash ${customerStash.id}`)
 
   // let mutation: MutateFunction<Customer, unknown, {}, unknown>
   // let { id, firstname, lastname } = {} as Customer
@@ -76,18 +100,35 @@ const CustomerModalForm = ({
   //   lastname,
   // }
 
-  const onSubmit = (values) => {
-    if (customer) {
-      return editCustomerMutation({ id: customer.id, ...values })
-    } else if (values.stashing) {
-      return newCustomerStashMutation(values)
+  const onSubmit = async (values) => {
+    console.log(JSON.stringify(values))
+    console.log("Entered onSubmit")
+    console.log(`values.stashing: ${values.stashing}`)
+    let customerRet
+    if (!!values.stashing) {
+      console.log("\tstashing")
+      if (customerStash) {
+        console.log("\t\tupdate stash")
+        customerRet = await updateStashMutation({ id: stashId, stashType, ...values })
+      } else {
+        console.log("\t\tcreate stash")
+        customerRet = await createStashMutation({ stashType, ...values })
+      }
+      // await refetchStash()
+    } else {
+      console.log("\tnot stashing")
+      if (customer) {
+        console.log("\t\tupdating customer")
+        customerRet = await updateCustomerMutation({ id: customer.id, ...values })
+      } else {
+        console.log("\t\tcreating customer")
+        customerRet = await createCustomerMutation(values)
+        if (customerStash && customerRet) await deleteStashMutation({ id: stashId!, stashType })
+      }
+      // await refetchCustomer()
     }
-    return newCustomerMutation(values)
+    return customerRet
   }
-
-  // const onStash = (values) => {
-  //   return newCustomerStashMutation(values)
-  // }
 
   const handleError = (error) => {
     console.log(`Error doing something with customer modal: ${error.toString()}`)
@@ -96,20 +137,23 @@ const CustomerModalForm = ({
     }
   }
 
+  const initialValus = {
+    firstname: customerStash?.firstname || customer?.firstname || undefined,
+    lastname: customerStash?.lastname || customer?.lastname || undefined,
+    companyname: customerStash?.companyname || customer?.companyname || undefined,
+    email: customerStash?.email || customer?.email || undefined,
+    notes: customerStash?.notes ? JSON.parse(customerStash.notes) : null,
+  }
+
   return (
     <ModalForm
       size="lg"
       isOpen={isOpen}
       onClose={onClose}
-      schema={customerId ? UpdateCustomer : CreateCustomer}
+      schema={customerId ? UpdateCustomer : CreateCustomerStash}
       title={customerId ? "Edit customer" : "New customer"}
       submitText={customerId ? "Update" : "Create"}
-      initialValues={{
-        firstname: customer?.firstname ?? "",
-        lastname: customer?.lastname ?? "",
-        companyname: customer?.companyname ?? "",
-        email: customer?.email ?? "",
-      }}
+      initialValues={initialValus}
       onSubmit={async (values) => {
         await onSubmit(values)
           .then((customer) => onSuccess?.(customer)) // onSuccess( customer || stash )

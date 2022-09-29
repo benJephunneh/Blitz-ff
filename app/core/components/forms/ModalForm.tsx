@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react"
 import { FormComponent } from "./FormComponent"
 import { FaPlus } from "react-icons/fa"
+import { FcClock } from "react-icons/fc"
 export { FORM_ERROR } from "final-form"
 
 type ModalFormProps = {
@@ -85,19 +86,19 @@ const ModalForm: FormComponent<ModalFormProps> = ({
               <ModalFooter>
                 <HStack>
                   <Button
-                    onClick={() => phorm.form.change("stashing", "false")}
+                    onClick={() => phorm.form.change("stashing", false)}
                     disabled={phorm.submitting}
                     type="submit"
                   >
                     {submitText}
                   </Button>
                   <Button
-                    onClick={() => phorm.form.change("stashing", "true")}
+                    onClick={() => phorm.form.change("stashing", true)}
                     disabled={phorm.submitting}
                     type="submit"
                     variant="outline"
                     colorScheme="red"
-                    rightIcon={<FaPlus />}
+                    rightIcon={<FcClock size={20} />}
                   >
                     Stash
                   </Button>

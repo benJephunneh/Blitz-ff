@@ -5,12 +5,15 @@ import {
   Button,
   ButtonGroup,
   HStack,
+  Icon,
   keyframes,
   LinkOverlay,
   Menu,
   MenuButton,
+  MenuIcon,
   MenuItem,
   MenuList,
+  Spacer,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
@@ -27,12 +30,14 @@ import { motion } from "framer-motion"
 import getStashes from "app/stashes/queries/getStashes"
 import Link from "next/link"
 import LocationModalForm from "app/locations/components/LocationModalForm"
+import { FcDeleteRow } from "react-icons/fc"
+import deleteStash from "app/stashes/mutations/deleteStash"
 
 const HeaderLoggedIn = () => {
   const router = useRouter()
   const [logoutMutation] = useMutation(logout)
 
-  const [creatingCustomer, setCreatingCustomer] = useState(false)
+  const [editingCustomer, setEditingCustomer] = useState(false)
   const [stashingCustomer, setStashingCustomer] = useState(false)
   const [stashId, setStashId] = useState<number>()
   const [{ customerStashes, count: numStashes }, { refetch: refetchStashes }] = useQuery(
@@ -43,11 +48,19 @@ const HeaderLoggedIn = () => {
     }
   )
 
+  const [editingLocation, setEditingLocation] = useState(false)
+  const [editingJob, setEditingJob] = useState(false)
+  const [editingInvoice, setEditingInvoice] = useState(false)
+  const [editingEstimate, setEditingEstimate] = useState(false)
+
   const stashKeyframes = keyframes`
     from { background-color: red; color: white }
     to { background-color: white; color: red }
     `
   const stashAnimation = `${stashKeyframes} 1s alternate infinite`
+
+  // const parsed = JSON.parse(customerStashes[0]!.notes)
+  // console.log(parsed.content[0].content[0].text)
 
   return (
     <Box justifyContent="flex-end">
@@ -71,19 +84,19 @@ const HeaderLoggedIn = () => {
         }}
       />
 
-      <LocationModalForm
-        stashId={stashId}
-        isOpen={editingLocation}
-        onClose={() => setEditingLocation(false)}
-        onSuccess={(location) => {
-          refetchStashes()
-            .then(() => setEditingLocation(false))
-            // .then(() =>
-            //   router.push(Routes.ShowLocationPage({ customerId: custId!, locationId: location.id }))
-            // )
-            .catch((e) => console.log(`HeaderLogggedIn LocationModal error: ${e}`))
-        }}
-      />
+      {/* <LocationModalForm
+				stashId={stashId}
+				isOpen={editingLocation}
+				onClose={() => setEditingLocation(false)}
+				onSuccess={(location) => {
+					refetchStashes()
+						.then(() => setEditingLocation(false))
+						// .then(() =>
+						//   router.push(Routes.ShowLocationPage({ customerId: custId!, locationId: location.id }))
+						// )
+						.catch((e) => console.log(`HeaderLogggedIn LocationModal error: ${e}`))
+				}}
+			/> */}
 
       <HStack spacing={4}>
         <Menu isLazy>
@@ -102,14 +115,24 @@ const HeaderLoggedIn = () => {
               <MenuItem
                 key={ii}
                 fontWeight="semibold"
-                onClick={() => editStash(cStash.id, cStash.stashType)}
+                onClick={() => {
+                  setStashId(cStash.id)
+                  setEditingCustomer(true)
+                }}
+                textOverflow="ellipsis"
               >
-                {cStash.displayname}: {JSON.stringify(cStash.notes, null, 1)}
+                <Text textOverflow="ellipsis">
+                  {cStash.displayname}: {JSON.parse(cStash.notes).content[0].content[0].text}
+                </Text>
+                <Spacer />
+                <Icon
+                  as={FcDeleteRow}
+                  h={6}
+                  w={6}
+                  onClick={() => deleteStash({ id: cStash.id, stashType: cStash.stashType })}
+                />
               </MenuItem>
             ))}
-            <MenuItem>asdfasdf</MenuItem>
-            <MenuItem>023f0 9f</MenuItem>
-            <MenuItem>jasd0f</MenuItem>
           </MenuList>
         </Menu>
         <ButtonGroup spacing={4} alignItems="center">
@@ -120,8 +143,9 @@ const HeaderLoggedIn = () => {
             borderColor={useColorModeValue("cyan.600", "cyan.600")}
             borderWidth={1}
             borderStyle="dashed"
-            onClick={async () => {
-              setCreatingCustomer(true)
+            onClick={() => {
+              setStashId(undefined)
+              setEditingCustomer(true)
             }}
             _hover={{ bg: useColorModeValue("blackAlpha.100", "gray.900") }}
             leftIcon={<FaPlus size={10} />}

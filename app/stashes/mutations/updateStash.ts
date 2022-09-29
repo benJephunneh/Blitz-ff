@@ -13,8 +13,8 @@ const jobZod = CreateJob
 
 export const UpdateStash = z.object({
   id: z.number(),
-  body: stashContentSchema.nullable(),
-  type: z.nativeEnum(StashType),
+  notes: stashContentSchema.nullable(),
+  stashType: z.nativeEnum(StashType),
   customer: customerZod.partial().optional(),
   location: locationZod.partial().optional(),
   job: jobZod.partial().optional(),
@@ -24,42 +24,57 @@ export default resolver.pipe(
   resolver.zod(UpdateStash),
   resolver.authorize(),
 
-  async ({ id, body, type, customer, location, job }, ctx) => {
+  async ({ id, notes, stashType, customer, location, job }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    console.log(JSON.stringify(customer))
 
-    const oldStash = await db.stash.findUnique({ where: { id } })
-    if (!oldStash) return new NotFoundError()
-
-    // Take stash type to update other model:
-    switch (oldStash.type) {
+    let stash
+    switch (stashType) {
       case "Customer":
+        // console.log(JSON.stringify(customer))
+
         await db.customerStash.update({
           where: { id },
           data: {
-            ...customer,
+            userId: ctx.session.userId,
+            notes: JSON.stringify(notes),
+            stashType,
+            firstname: customer?.firstname,
+            lastname: customer?.lastname,
+            companyname: customer?.companyname,
+            email: customer?.email,
           },
         })
         break
-      case "Location":
-        await db.locationStash.update({
-          where: { id },
-          data: {
-            ...location,
-          },
-        })
-        break
-      case "Job":
-        await db.jobStash.update({
-          where: { id },
-          data: {
-            ...job,
-          },
-        })
-        break
+      // case "Location":
+      //   await db.locationStash.update({
+      //     where: { id },
+      //     data: {
+      //       userId: ctx.session.userId,
+      //       notes: JSON.stringify(notes),
+      //       stashType,
+      //       ...location,
+      //     },
+      //   })
+      //   break
+      // case "Job":
+      //   await db.jobStash.update({
+      //     where: { id },
+      //     data: {
+      //       userId: ctx.session.userId,
+      //       notes: JSON.stringify(notes),
+      //       stashType,
+      //       ...job,
+      //     },
+      //   })
+      //   break
       // case "Invoice":
       //   await db.invoiceStash.update({
       //     where: { id },
       //     data: {
+      //       userId: ctx.session.userId,
+      //       notes: JSON.stringify(notes),
+      //       stashType,
       //       ...invoice,
       //     },
       //   })
@@ -68,6 +83,9 @@ export default resolver.pipe(
       //   await db.estimateStash.update({
       //     where: { id },
       //     data: {
+      //       userId: ctx.session.userId,
+      //       notes: JSON.stringify(notes),
+      //       stashType,
       //       ...estimate,
       //     },
       //   })
@@ -76,15 +94,6 @@ export default resolver.pipe(
       default:
         break
     }
-
-    const stash = await db.stash.update({
-      where: { id },
-      data: {
-        userId: ctx.session.userId,
-        body: JSON.stringify(body),
-        type,
-      },
-    })
 
     return stash
   }
