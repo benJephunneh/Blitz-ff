@@ -1,4 +1,5 @@
 import { Routes, useParams } from "@blitzjs/next"
+import { useQuery } from "@blitzjs/rpc"
 import {
   Box,
   Breadcrumb,
@@ -6,11 +7,28 @@ import {
   BreadcrumbLink,
   useColorModeValue,
 } from "@chakra-ui/react"
+import getCustomer from "app/customers/queries/getCustomer"
 import { useRouter } from "next/router"
+import { useState } from "react"
 
 const HeaderCrumbs = () => {
   const pathname = window.location.pathname
   const paths = pathname.split("/")
+  const { customerId, locationId, jobId } = useParams("number")
+  const [customer] = useQuery(
+    getCustomer,
+    {
+      where: {
+        id: customerId,
+      },
+    },
+    {
+      enabled: !!customerId,
+      refetchOnWindowFocus: false,
+    }
+  )
+  const [displayname, setDisplayname] = useState<string>()
+  // console.log(JSON.stringify(customer))
   // Parse pathname (regex) to array, then map to BreadcrumItems
   // const pages = new RegExp('^\/?(\w*)\/?', 'g')
   // const example = '/dash/cust/loc/inv/est'
@@ -31,6 +49,17 @@ const HeaderCrumbs = () => {
   const textColorMode = useColorModeValue("cyan.500", "cyan.300")
   // const textColor = paths?.slice(1).length == 1 ? textColorMode : 'blue'
   const lightDarkTextColor = useColorModeValue("blackAlpha.600", "gray.300")
+
+  const displayCrumb = (path: string) => {
+    // Not working to render customer name
+    if (displayname === "customers") {
+      setDisplayname(customer?.displayname)
+    } else {
+      setDisplayname(path)
+    }
+
+    return displayname
+  }
 
   return (
     <Box
@@ -55,6 +84,7 @@ const HeaderCrumbs = () => {
                 textColor={ii + 1 == paths?.slice(1).length ? textColorMode : lightDarkTextColor}
                 fontSize={ii + 1 == paths?.slice(1).length ? "xl" : "md"}
               >
+                {/* {displayCrumb(path)} */}
                 {path}
               </BreadcrumbLink>
             </BreadcrumbItem>

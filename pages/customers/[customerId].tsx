@@ -52,11 +52,7 @@ const ShowCustomerPage: BlitzPage = () => {
         id: customerId,
       },
       include: {
-        locations: {
-          where: {
-            primary: true,
-          },
-        },
+        locations: true,
       },
     },
     {
@@ -65,6 +61,7 @@ const ShowCustomerPage: BlitzPage = () => {
       // refetchIntervalInBackground: true,
     }
   )
+  // console.log(JSON.stringify(customer))
   const locations = customer.locations
 
   // const [location] = useQuery(
@@ -98,8 +95,8 @@ const ShowCustomerPage: BlitzPage = () => {
 
   const numInvoices = 0
 
-  if (!locations) console.log(`No locations for ${customer.firstname} ${customer.lastname}.`)
-  else console.log(`${locations.length} locations for ${customer.firstname} ${customer.lastname}.`)
+  // if (locations) console.log(`No locations for ${customer.firstname} ${customer.lastname}.`)
+  // else console.log(`${locations.length} locations for ${customer.firstname} ${customer.lastname}.`)
 
   const [stashing, setStashing] = useState(false)
   // const stash = useQuery(

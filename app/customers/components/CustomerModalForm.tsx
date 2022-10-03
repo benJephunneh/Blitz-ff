@@ -24,8 +24,10 @@ type CustomerModalFormProps = {
   onClose: () => void
   onSuccess?: (customer: Customer | CustomerStash | void) => void
   stashId?: number
+  // customerStash?: CustomerStash // | LocationStash
   customerId?: number
   mutationType?: MutationType
+  disableStash?: boolean
   props?: Partial<ModalProps>
 }
 
@@ -34,8 +36,10 @@ const CustomerModalForm = ({
   onClose,
   onSuccess,
   stashId,
+  // customerStash,
   customerId,
   mutationType = "New",
+  disableStash,
   ...props
 }: CustomerModalFormProps) => {
   const [createCustomerMutation] = useMutation(createCustomer)
@@ -46,7 +50,11 @@ const CustomerModalForm = ({
   const [stashing, setStashing] = useState(false)
   const stashType = "Customer"
 
-  const [customer, { refetch: refetchCustomer }] = useQuery(
+  // console.log('CustomerModalForm inputs:')
+  // console.log(`\tcustomerId: ${customerId}`)
+  // console.log(`\tstash: ${JSON.stringify(stashId)}`)
+
+  const [customer] = useQuery(
     getCustomer,
     {
       where: {
@@ -54,9 +62,9 @@ const CustomerModalForm = ({
       },
     },
     {
-      suspense: !!customerId,
+      // suspense: !!customerId,
       enabled: !!customerId,
-      staleTime: Infinity,
+      // staleTime: Infinity,
       refetchOnWindowFocus: false,
     }
   )
@@ -68,6 +76,7 @@ const CustomerModalForm = ({
       stashType,
     },
     {
+      suspense: !!stashId,
       enabled: !!stashId,
       staleTime: Infinity,
       refetchOnWindowFocus: false,
@@ -101,29 +110,39 @@ const CustomerModalForm = ({
   // }
 
   const onSubmit = async (values) => {
-    console.log(JSON.stringify(values))
-    console.log("Entered onSubmit")
-    console.log(`values.stashing: ${values.stashing}`)
+    // console.log(JSON.stringify(values))
+    // console.log("Entered onSubmit")
+    // console.log(`values.stashing: ${values.stashing}`)
+
+    // const customerSubmission = (({ firstname, lastname, companyname, email }) => ({ firstname, lastname, companyname, email }))(values)
+    const { notes, ...customerSubmission } = values
+
     let customerRet
     if (!!values.stashing) {
-      console.log("\tstashing")
+      // console.log("\tstashing")
       if (customerStash) {
-        console.log("\t\tupdate stash")
-        customerRet = await updateStashMutation({ id: stashId, stashType, ...values })
+        // console.log("\t\tupdate stash")
+        customerRet = await updateStashMutation({
+          id: customerStash.id,
+          stashType,
+          customer: customerSubmission,
+          notes,
+        })
       } else {
-        console.log("\t\tcreate stash")
-        customerRet = await createStashMutation({ stashType, ...values })
+        // console.log("\t\tcreate stash")
+        customerRet = await createStashMutation({ stashType, customer: customerSubmission, notes })
       }
-      // await refetchStash()
+      await refetchStash()
     } else {
-      console.log("\tnot stashing")
+      // console.log("\tnot stashing")
       if (customer) {
-        console.log("\t\tupdating customer")
+        // console.log("\t\tupdating customer")
         customerRet = await updateCustomerMutation({ id: customer.id, ...values })
       } else {
-        console.log("\t\tcreating customer")
+        // console.log("\t\tcreating customer")
         customerRet = await createCustomerMutation(values)
-        if (customerStash && customerRet) await deleteStashMutation({ id: stashId!, stashType })
+        if (customerStash && customerRet)
+          await deleteStashMutation({ id: customerStash.id, stashType })
       }
       // await refetchCustomer()
     }
@@ -137,7 +156,7 @@ const CustomerModalForm = ({
     }
   }
 
-  const initialValus = {
+  const initialValues = {
     firstname: customerStash?.firstname || customer?.firstname || undefined,
     lastname: customerStash?.lastname || customer?.lastname || undefined,
     companyname: customerStash?.companyname || customer?.companyname || undefined,
@@ -150,13 +169,15 @@ const CustomerModalForm = ({
       size="lg"
       isOpen={isOpen}
       onClose={onClose}
+      disableStash={disableStash}
       schema={customerId ? UpdateCustomer : CreateCustomerStash}
       title={customerId ? "Edit customer" : "New customer"}
       submitText={customerId ? "Update" : "Create"}
-      initialValues={initialValus}
-      onSubmit={async (values) => {
-        await onSubmit(values)
+      initialValues={initialValues}
+      onSubmit={(values) => {
+        onSubmit(values)
           .then((customer) => onSuccess?.(customer)) // onSuccess( customer || stash )
+          // .then(() => refetchStash())
           .catch((e) => handleError(e))
       }}
       render={() => (

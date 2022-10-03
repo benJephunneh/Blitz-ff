@@ -7,10 +7,8 @@ import {
   HStack,
   Icon,
   keyframes,
-  LinkOverlay,
   Menu,
   MenuButton,
-  MenuIcon,
   MenuItem,
   MenuList,
   Spacer,
@@ -22,41 +20,40 @@ import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { FaPlus } from "react-icons/fa"
-import { Customer, CustomerStash, StashType } from "db"
-import createCustomer from "app/customers/mutations/createCustomer"
-import { TypeOf, z } from "zod"
-import { CreateCustomer, CreateCustomerStash } from "app/customers/validations"
-import { motion } from "framer-motion"
 import getStashes from "app/stashes/queries/getStashes"
-import Link from "next/link"
-import LocationModalForm from "app/locations/components/LocationModalForm"
-import { FcDeleteRow } from "react-icons/fc"
+import { FcFullTrash } from "react-icons/fc"
 import deleteStash from "app/stashes/mutations/deleteStash"
+import db, { CustomerStash } from "db"
+import getStash from "app/stashes/queries/getStash"
+import { z } from "zod"
+import { CreateCustomer, CreateCustomerStash } from "app/customers/validations"
 
 const HeaderLoggedIn = () => {
   const router = useRouter()
   const [logoutMutation] = useMutation(logout)
+  const [deleteStashMutation] = useMutation(deleteStash)
 
   const [editingCustomer, setEditingCustomer] = useState(false)
-  const [stashingCustomer, setStashingCustomer] = useState(false)
+  // const [stashingCustomer, setStashingCustomer] = useState(false)
   const [stashId, setStashId] = useState<number>()
+  // const [customerStash, setCustomerStash] = useState<CustomerStash>()
   const [{ customerStashes, count: numStashes }, { refetch: refetchStashes }] = useQuery(
     getStashes,
     {},
     {
       refetchOnWindowFocus: false,
+      // refetchInterval: 2000,
+      // refetchIntervalInBackground: true,
     }
   )
 
-  const [editingLocation, setEditingLocation] = useState(false)
-  const [editingJob, setEditingJob] = useState(false)
-  const [editingInvoice, setEditingInvoice] = useState(false)
-  const [editingEstimate, setEditingEstimate] = useState(false)
+  // const [editingLocation, setEditingLocation] = useState(false)
+  // const [editingJob, setEditingJob] = useState(false)
+  // const [editingInvoice, setEditingInvoice] = useState(false)
+  // const [editingEstimate, setEditingEstimate] = useState(false)
 
-  const stashKeyframes = keyframes`
-    from { background-color: red; color: white }
-    to { background-color: white; color: red }
-    `
+  const stashKeyframes = keyframes`from { background-color: red; color: white }
+       to { background-color: white; color: red }`
   const stashAnimation = `${stashKeyframes} 1s alternate infinite`
 
   // const parsed = JSON.parse(customerStashes[0]!.notes)
@@ -66,20 +63,21 @@ const HeaderLoggedIn = () => {
     <Box justifyContent="flex-end">
       <CustomerModalForm
         stashId={stashId}
+        // customerStash={customerStash}
         isOpen={editingCustomer}
         onClose={() => setEditingCustomer(false)}
         onSuccess={async (customer) => {
+          console.log(`CreateCustomer._type: ${CreateCustomer._type}`)
           setEditingCustomer(false)
-          if (customer as Customer) {
-            await refetchStashes()
-            router
-              .push(Routes.CustomersPage())
-              // .push(Routes.ShowCustomerPage({ customerId: customer.id }))
-              .catch((e) => console.log(`HeaderLoggedIn createCustomer error: ${e}`))
-          } else if (customer as CustomerStash) {
-            router
-              .push(Routes.CustomersPage())
-              .catch((e) => console.log(`HeaderLoggedIn stashCustomer error: ${e}`))
+          await refetchStashes()
+          if (customer) {
+            if ("notes" in customer) {
+              refetchStashes().catch((e) => console.log(`HeaderLoggedIn createStash error: ${e}`))
+            } else {
+              router
+                .push(Routes.ShowCustomerPage({ customerId: customer.id }))
+                .catch((e) => console.log(`HeaderLoggedIn createCustomer error: ${e}`))
+            }
           }
         }}
       />
@@ -99,7 +97,7 @@ const HeaderLoggedIn = () => {
 			/> */}
 
       <HStack spacing={4}>
-        <Menu isLazy>
+        <Menu isLazy closeOnSelect={false}>
           <Button
             as={MenuButton}
             size="sm"
@@ -112,24 +110,27 @@ const HeaderLoggedIn = () => {
           <MenuList>
             {customerStashes.map((cStash, ii) => (
               // <MenuItem key={ii} fontWeight='semibold' onClick={() => editStash(cStash.id, cStash.stashType)}>
-              <MenuItem
-                key={ii}
-                fontWeight="semibold"
-                onClick={() => {
-                  setStashId(cStash.id)
-                  setEditingCustomer(true)
-                }}
-                textOverflow="ellipsis"
-              >
-                <Text textOverflow="ellipsis">
+              <MenuItem key={ii} fontWeight="semibold" textOverflow="ellipsis">
+                <Text
+                  textOverflow="ellipsis"
+                  onClick={() => {
+                    setStashId(cStash.id)
+                    // setCustomerStash(cStash)
+                    setEditingCustomer(true)
+                  }}
+                >
                   {cStash.displayname}: {JSON.parse(cStash.notes).content[0].content[0].text}
                 </Text>
                 <Spacer />
                 <Icon
-                  as={FcDeleteRow}
-                  h={6}
-                  w={6}
-                  onClick={() => deleteStash({ id: cStash.id, stashType: cStash.stashType })}
+                  as={FcFullTrash}
+                  h={5}
+                  w={5}
+                  onClick={async () => {
+                    deleteStashMutation({ id: cStash.id, stashType: cStash.stashType })
+                      .then(() => refetchStashes())
+                      .catch((e) => console.log(`Error deleting stash: ${e}`))
+                  }}
                 />
               </MenuItem>
             ))}

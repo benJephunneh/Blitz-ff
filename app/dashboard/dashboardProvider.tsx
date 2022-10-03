@@ -42,7 +42,7 @@ const DashboardProvider = ({ children }: DashboardProviderProps) => {
         // customerId,
       }}
     >
-      <CustomerModalForm
+      {/* <CustomerModalForm
         isOpen={addingCustomer}
         onClose={() => setAddingCustomer(false)}
         onSuccess={(customer) => {
@@ -51,7 +51,7 @@ const DashboardProvider = ({ children }: DashboardProviderProps) => {
             .push(Routes.ShowCustomerPage({ customerId: customer.id }))
             .catch((e) => console.log(`dashboardProvider CustomerModal error: ${e}`))
         }}
-      />
+      /> */}
 
       {/* <JobModalForm
         locationId={locationId}

@@ -120,8 +120,8 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
   //   }
   // }
 
-  console.log(`Customer: ${customer.displayname}`)
-  console.log(`Location[0]: ${JSON.stringify(locations?.at(0))}`)
+  // console.log(`Customer: ${customer.displayname}`)
+  // console.log(`Location[0]: ${JSON.stringify(locations?.at(0))}`)
 
   return (
     <Provider
@@ -144,10 +144,10 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         customerId={custId}
         isOpen={editingCustomer}
         onClose={() => setEditingCustomer(false)}
+        disableStash={true}
         onSuccess={() => {
-          refetchCustomer()
-            .then(() => setEditingCustomer(false))
-            .catch((e) => console.log(`customerProvider CustomerModal error: ${e}`))
+          setEditingCustomer(false)
+          refetchCustomer().catch((e) => console.log(`customerProvider CustomerModal error: ${e}`))
         }}
       />
 

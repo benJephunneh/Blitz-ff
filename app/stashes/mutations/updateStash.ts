@@ -31,9 +31,20 @@ export default resolver.pipe(
     let stash
     switch (stashType) {
       case "Customer":
+        let displayname = ""
+        if (customer?.firstname) {
+          if (customer?.lastname) {
+            displayname = `${customer.firstname} ${customer.lastname}`
+          } else {
+            displayname = customer.firstname
+          }
+        } else if (customer?.companyname) {
+          displayname = customer.companyname
+        }
+
         // console.log(JSON.stringify(customer))
 
-        await db.customerStash.update({
+        stash = await db.customerStash.update({
           where: { id },
           data: {
             userId: ctx.session.userId,
@@ -42,6 +53,7 @@ export default resolver.pipe(
             firstname: customer?.firstname,
             lastname: customer?.lastname,
             companyname: customer?.companyname,
+            displayname,
             email: customer?.email,
           },
         })

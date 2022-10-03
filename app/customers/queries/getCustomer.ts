@@ -22,18 +22,19 @@ export default resolver.pipe(
 
     const customer = await db.customer.findFirst({
       where,
-      include: {
-        locations: {
-          where,
-        },
-      },
+      include,
+      // include: {
+      //   locations: {
+      //     where,
+      //   },
+      // },
       // select: {
       //   id: true,
       //   firstname: true,
       //   lastname: true,
       //   companyname: true,
+      //   displayname: true,
       //   email: true,
-      //   // phone: true,
       // },
     })
 

@@ -28,6 +28,7 @@ type ModalFormProps = {
   size?: ModalProps["size"]
   title: string
   submitText: string
+  disableStash?: boolean
   /** All your form fields */
   // children?: ReactNode
   /** Text to display in the submit button */
@@ -43,6 +44,7 @@ const ModalForm: FormComponent<ModalFormProps> = ({
   size,
   title,
   submitText,
+  disableStash,
 
   schema,
   initialValues,
@@ -86,15 +88,18 @@ const ModalForm: FormComponent<ModalFormProps> = ({
               <ModalFooter>
                 <HStack>
                   <Button
-                    onClick={() => phorm.form.change("stashing", false)}
-                    disabled={phorm.submitting}
+                    onClick={() => {
+                      console.log("Submitting")
+                      phorm.form.change("stashing", false)
+                    }}
+                    disabled={phorm.pristine || phorm.submitting}
                     type="submit"
                   >
                     {submitText}
                   </Button>
                   <Button
                     onClick={() => phorm.form.change("stashing", true)}
-                    disabled={phorm.submitting}
+                    disabled={disableStash || phorm.pristine || phorm.submitting}
                     type="submit"
                     variant="outline"
                     colorScheme="red"

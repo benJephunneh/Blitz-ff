@@ -1,17 +1,153 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-datasource db {
-  provider = "postgres"
-  url      = env("DATABASE_URL")
-}
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
 }
 
-// --------------------------------------
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  firstname   String?
+  lastname    String?
+  companyname String?
+  displayname String
+  email       String
+  locations   Location[]
+}
+
+model CustomerStash {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  firstname   String?
+  lastname    String?
+  companyname String?
+  displayname String?
+  email       String?
+  notes       String
+  userId      Int
+  stashType   StashType @default(Customer)
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model Location {
+  id         Int          @id @default(autoincrement())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  primary    Boolean      @default(true)
+  house      String?
+  street     String
+  city       String
+  state      String       @default("FL")
+  zipcode    String
+  phones     String
+  block      String?
+  lot        String?
+  parcel     String?
+  type       LocationType @default(Personal)
+  customer   Customer     @relation(fields: [customerId], references: [id])
+  customerId Int
+  jobs       Job[]
+}
+
+model Job {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  title      String
+  start      DateTime?
+  end        DateTime?
+  locationId Int
+  location   Location  @relation(fields: [locationId], references: [id])
+}
+
+model CustomerArchive {
+  id                Int               @id @default(autoincrement())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  firstname         String?
+  lastname          String?
+  companyname       String?
+  displayname       String
+  email             String
+  archivedLocations LocationArchive[]
+}
+
+model LocationArchive {
+  id               Int             @id @default(autoincrement())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  primary          Boolean         @default(true)
+  house            String?
+  street           String
+  city             String
+  state            String          @default("FL")
+  zipcode          String
+  phones           String
+  block            String?
+  lot              String?
+  parcel           String?
+  customerId       Int
+  archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id])
+  archivedJobs     JobArchive[]
+}
+
+model JobArchive {
+  id               Int             @id @default(autoincrement())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  title            String
+  start            DateTime?
+  end              DateTime?
+  locationId       Int
+  archivedLocation LocationArchive @relation(fields: [locationId], references: [id])
+}
+
+model User {
+  id              Int             @id @default(autoincrement())
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  username        String          @unique
+  email           String          @unique
+  hashedPassword  String?
+  role            UserRole        @default(Tech)
+  customerStashes CustomerStash[]
+  sessions        Session[]
+  tokens          Token[]
+}
+
+model Session {
+  id                 Int       @id @default(autoincrement())
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  expiresAt          DateTime?
+  handle             String    @unique
+  hashedSessionToken String?
+  antiCSRFToken      String?
+  publicData         String?
+  privateData        String?
+  userId             Int?
+  user               User?     @relation(fields: [userId], references: [id])
+}
+
+model Token {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  hashedToken String
+  type        TokenType
+  expiresAt   DateTime
+  sentTo      String
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@unique([hashedToken, type])
+}
 
 enum CustomerType {
   Owner
@@ -48,185 +184,11 @@ enum StashType {
   Estimate
 }
 
-model Customer {
-  id          Int        @id @default(autoincrement())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  firstname   String?
-  lastname    String?
-  companyname String?
-  displayname String
-  email       String
-  locations   Location[]
-  // LocationStash LocationStash[]
-  // stash       Stash[]
-}
-
-model CustomerStash {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  stashType   StashType @default(Customer)
-  firstname   String?
-  lastname    String?
-  companyname String?
-  displayname String?
-  email       String?
-  notes       String
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int
-  // locations   Location[]
-}
-
 enum LocationType {
   Personal
   Business
   Managed
 }
-
-model Location {
-  id         Int          @id @default(autoincrement())
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  primary    Boolean      @default(true)
-  house      String?
-  street     String
-  city       String
-  state      String       @default("FL")
-  zipcode    String
-  phones     String
-  block      String?
-  lot        String?
-  parcel     String?
-  type       LocationType @default(Personal)
-  customer   Customer     @relation(fields: [customerId], references: [id])
-  customerId Int
-  jobs       Job[]
-  // jobStash   JobStash[]
-  // stash      Stash[]
-}
-
-// model LocationStash {
-//   id         Int          @id @default(autoincrement())
-//   createdAt  DateTime     @default(now())
-//   updatedAt  DateTime     @updatedAt
-//   stashType StashType @default(Location)
-//   primary    Boolean      @default(true)
-//   house      String?
-//   street     String?
-//   city       String?
-//   state      String?      @default("FL")
-//   zipcode    String?
-//   phones     String?
-//   block      String?
-//   lot        String?
-//   parcel     String?
-//   type       LocationType @default(Personal)
-//   customer   Customer     @relation(fields: [customerId], references: [id])
-//   customerId Int
-//   // jobs       Job[]
-//   stash      Stash        @relation(fields: [stashId], references: [id])
-//   stashId    Int          @unique
-// }
-
-model Job {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  title      String
-  start      DateTime?
-  end        DateTime?
-  // permit     Permit @default(None)
-  location   Location  @relation(fields: [locationId], references: [id])
-  locationId Int
-  // stash           Stash[]
-  // stash      Stash[]
-}
-
-// model JobStash {
-//   id         Int       @id @default(autoincrement())
-//   createdAt  DateTime  @default(now())
-//   updatedAt  DateTime  @updatedAt
-//   stashType StashType @default(Job)
-//   title      String?
-//   start      DateTime?
-//   end        DateTime?
-//   // permit     Permit @default(None)
-//   location   Location  @relation(fields: [locationId], references: [id])
-//   locationId Int
-//   stash      Stash     @relation(fields: [stashId], references: [id])
-//   stashId    Int       @unique
-// }
-
-// model Stash {
-//   id              Int            @id @default(autoincrement())
-//   createdAt       DateTime       @default(now())
-//   updatedAt       DateTime       @updatedAt
-//   notes           String
-//   user            User           @relation(fields: [userId], references: [id])
-//   customer        Customer?      @relation(fields: [customerId], references: [id])
-//   location        Location?      @relation(fields: [locationId], references: [id])
-//   job             Job?           @relation(fields: [jobId], references: [id])
-//   userId          Int
-//   customerId      Int?
-//   locationId      Int?
-//   jobId           Int?
-// }
-
-/////////////////////////
-// ..... ARCHIVE ..... //
-//////////////////////////////
-
-model CustomerArchive {
-  id                Int               @id @default(autoincrement())
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  firstname         String?
-  lastname          String?
-  companyname       String?
-  displayname       String
-  email             String
-  archivedLocations LocationArchive[]
-}
-
-model LocationArchive {
-  id               Int             @id @default(autoincrement())
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  primary          Boolean         @default(true)
-  house            String?
-  street           String
-  city             String
-  state            String          @default("FL")
-  zipcode          String
-  phones           String
-  block            String?
-  lot              String?
-  parcel           String?
-  archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id])
-  customerId       Int
-  archivedJobs     JobArchive[]
-}
-
-model JobArchive {
-  id               Int             @id @default(autoincrement())
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  title            String
-  start            DateTime?
-  end              DateTime?
-  // permit Permit @default(None)
-  archivedLocation LocationArchive @relation(fields: [locationId], references: [id])
-  locationId       Int
-}
-
-//////////////////////////////
-// ..... ARCHIVE ..... //
-/////////////////////////
-
-///////////////////////
-// ..... USER ..... //
-///////////////////////////
 
 enum UserRole {
   Owner
@@ -234,58 +196,6 @@ enum UserRole {
   Tech
 }
 
-model User {
-  id             Int      @id @default(autoincrement())
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  username       String   @unique
-  email          String   @unique
-  hashedPassword String?
-  role           UserRole @default(Tech)
-
-  tokens          Token[]
-  sessions        Session[]
-  customerStashes CustomerStash[]
-}
-
-model Session {
-  id                 Int       @id @default(autoincrement())
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  expiresAt          DateTime?
-  handle             String    @unique
-  hashedSessionToken String?
-  antiCSRFToken      String?
-  publicData         String?
-  privateData        String?
-
-  user   User? @relation(fields: [userId], references: [id])
-  userId Int?
-}
-
 enum TokenType {
   RESET_PASSWORD
 }
-
-model Token {
-  id          Int       @id @default(autoincrement())
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  hashedToken String
-  type        TokenType
-  expiresAt   DateTime
-  sentTo      String
-
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-
-  @@unique([hashedToken, type])
-}
-
-// NOTE: It's highly recommended to use an enum for the token type
-//       but enums only work in Postgres.
-//       See: https://blitzjs.com/docs/database-overview#switch-to-postgre-sql
-
-////////////////////////////
-// ..... USER ..... //
-//////////////////////

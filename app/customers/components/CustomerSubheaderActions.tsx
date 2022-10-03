@@ -14,7 +14,7 @@ import { useRouter } from "next/router"
 import { useContext } from "react"
 import { useState } from "react"
 import { FaArrowRight, FaPlus } from "react-icons/fa"
-import { FcDoughnutChart, FcFullTrash } from "react-icons/fc"
+import { FcDoughnutChart, FcEditImage, FcFullTrash } from "react-icons/fc"
 import { TiEdit } from "react-icons/ti"
 import customerContext from "../contexts/customerContext"
 import CustomerModalForm from "./CustomerModalForm"
@@ -28,21 +28,21 @@ const CustomerSubheaderActions = () => {
 
   return (
     <>
-      <CustomerModalForm
+      {/* <CustomerModalForm
         customerId={customer.id}
         isOpen={editingCustomer}
         onClose={() => setEditingCustomer(false)}
         onSuccess={() => refetchCustomer()}
-      />
+      /> */}
 
-      <LocationModalForm
+      {/* <LocationModalForm
         customerId={customer.id}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
         onSuccess={(location) =>
           router.push(Routes.ShowLocationPage({ customerId: customer.id, locationId: location.id }))
         }
-      />
+      /> */}
 
       <HStack>
         <Button
@@ -63,14 +63,15 @@ const CustomerSubheaderActions = () => {
         </Button>
         <SettingsMenuButton>
           <MenuList>
-            <MenuItem icon={<TiEdit />} onClick={editCustomer} fontWeight="semibold">
+            <MenuItem icon={<FcEditImage size={15} />} onClick={editCustomer} fontWeight="semibold">
               Edit customer
             </MenuItem>
             <MenuItem
-              icon={<FcFullTrash />}
+              icon={<FcFullTrash size={15} />}
               onClick={deleteCustomer}
               fontWeight="semibold"
-              bgColor="red.600"
+              color="red"
+              bgColor="blackAlpha.200"
             >
               Delete customer
             </MenuItem>

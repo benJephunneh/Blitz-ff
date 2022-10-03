@@ -1,4 +1,6 @@
+import { S } from "@blitzjs/auth/dist/index-57d74361"
 import { resolver } from "@blitzjs/rpc"
+import { Debug } from "@prisma/client/runtime"
 import { CreateCustomer } from "app/customers/validations"
 import { CreateJob } from "app/jobs/validations"
 import { CreateLocation } from "app/locations/validations"
@@ -24,29 +26,28 @@ export default resolver.pipe(
 
   async ({ notes, stashType, customer, location, job }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    // console.log(`customer input to createStash: ${JSON.stringify(customer)}`)
 
     let stash
     switch (stashType) {
       case "Customer":
-        let displayname = ""
-        if (customer?.firstname) {
-          if (customer?.lastname) {
-            displayname = `${customer.firstname} ${customer.lastname}`
-          } else {
-            displayname = customer.firstname
-          }
-        } else if (customer?.companyname) {
-          displayname = customer.companyname
-        }
+        let displayname
+        if (customer!.firstname) {
+          displayname = customer!.firstname
+          if (customer!.lastname) displayname += ` ${customer!.lastname}`
+        } else if (customer!.companyname) displayname = customer!.companyname
 
         stash = await db.customerStash.create({
           data: {
             userId: ctx.session.userId,
             notes: JSON.stringify(notes),
+            displayname,
             stashType,
             ...customer,
           },
         })
+
+        // type s = z.infer<typeof stash>
         // Create Quirrel queue
         break
       // case "Location":
@@ -65,6 +66,8 @@ export default resolver.pipe(
       //     ...location,
       //   },
       // })
+
+      // type s = zz.infer<typeof stash>
       // Create Quirrel queue
       // break
       // case "Job":
@@ -83,6 +86,8 @@ export default resolver.pipe(
       //     ...job,
       //   },
       // })
+
+      // type s = zz.infer<typeof stash>
       // Create Quirrel queue
       // break
       // case "Invoice":
@@ -94,6 +99,8 @@ export default resolver.pipe(
       //       notes: JSON.stringify(notes),
       //     },
       //   })
+
+      // type s = zz.infer<typeof stash>
       //   // Create Quirrel queue
       //   break
       // case "Estimate":
@@ -105,6 +112,8 @@ export default resolver.pipe(
       //       notes: JSON.stringify(notes),
       //     },
       //   })
+
+      // type s = zz.infer<typeof stash>
       //   // Create Quirrel queue
       //   break
 

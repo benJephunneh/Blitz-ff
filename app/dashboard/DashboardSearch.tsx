@@ -17,7 +17,7 @@ const DashboardSearch = () => {
         <LinkOverlay>
           <HStack>
             <Icon as={FcSearch} mr={2} />
-            <Text noOfLines={1} fontWeight="semibold">
+            <Text noOfLines={1} fontWeight="semibold" textOverflow="ellipsis">
               Go to search
             </Text>
           </HStack>

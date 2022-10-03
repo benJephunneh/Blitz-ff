@@ -21,7 +21,7 @@ const DashboardSubheader = () => {
             <DashboardSearch />
           </HStack>
           <Spacer />
-          {/* <DashboardSubheaderActions /> */}
+          <DashboardSubheaderActions />
         </HStack>
       </Subheader>
     </DashboardProvider>
