@@ -6569,7 +6569,7 @@ packages:
       supports-color:
         optional: true
     dependencies:
-      ms: registry.npmmirror.com/ms/2.0.0
+      ms: 2.0.0
       supports-color: 8.1.1
     dev: false
 

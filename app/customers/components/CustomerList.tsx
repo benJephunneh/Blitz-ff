@@ -51,11 +51,17 @@ const CustomersList = () => {
   const linkText = useColorModeValue("gray.800", "gray.200")
   const [customerSelection, setCustomerSelection] = useState(0)
   const page = Number(router.query.page) || 0
-  const [{ customers, hasMore }] = usePaginatedQuery(getCustomers, {
-    orderBy: { lastname: sortMethod },
-    skip: ITEMS_PER_PAGE * page,
-    take: ITEMS_PER_PAGE,
-  })
+  const [{ customers, hasMore }] = usePaginatedQuery(
+    getCustomers,
+    {
+      orderBy: { lastname: sortMethod },
+      skip: ITEMS_PER_PAGE * page,
+      take: ITEMS_PER_PAGE,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  )
 
   const goToPreviousPage = () => router.push({ query: { page: page - 1 } })
   const goToNextPage = () => router.push({ query: { page: page + 1 } })

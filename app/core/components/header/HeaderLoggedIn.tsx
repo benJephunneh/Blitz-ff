@@ -67,7 +67,6 @@ const HeaderLoggedIn = () => {
         isOpen={editingCustomer}
         onClose={() => setEditingCustomer(false)}
         onSuccess={async (customer) => {
-          console.log(`CreateCustomer._type: ${CreateCustomer._type}`)
           setEditingCustomer(false)
           await refetchStashes()
           if (customer) {

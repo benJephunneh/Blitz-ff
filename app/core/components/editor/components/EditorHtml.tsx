@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/layout"
+import { Box } from "@chakra-ui/react"
 import styled from "@emotion/styled"
 
 const verticalMargin = (val: number) => `calc(var(--chakra-lineHeights-base) * ${val}em)`

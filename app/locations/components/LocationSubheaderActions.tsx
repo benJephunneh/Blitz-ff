@@ -25,8 +25,8 @@ const LocationSubheaderActions = () => {
   return (
     <>
       <LocationModalForm
-        customerId={location.customerId}
-        locationId={location.id}
+        customerId={location!.customerId}
+        locationId={location?.id}
         isOpen={editingLocation}
         onClose={() => setEditingLocation(false)}
         onSuccess={() => refetchLocation()}

@@ -9,7 +9,7 @@ import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import { Customer, CustomerStash } from "@prisma/client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import createStash from "app/stashes/mutations/createStash"
 import createCustomerStash from "../mutations/createCustomerStash"
 import EditorField from "app/core/components/editor/components/EditorField"
@@ -18,6 +18,7 @@ import { z } from "zod"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import updateCustomerStash from "../mutations/updateCustomerStash"
 import updateStash from "app/stashes/mutations/updateStash"
+import useStash from "app/stashes/hooks/useStash"
 
 type CustomerModalFormProps = {
   isOpen: boolean
@@ -47,7 +48,6 @@ const CustomerModalForm = ({
   const [createStashMutation] = useMutation(createStash)
   const [updateStashMutation] = useMutation(updateStash)
   const [deleteStashMutation] = useMutation(deleteStash)
-  const [stashing, setStashing] = useState(false)
   const stashType = "Customer"
 
   // console.log('CustomerModalForm inputs:')
@@ -68,6 +68,7 @@ const CustomerModalForm = ({
       refetchOnWindowFocus: false,
     }
   )
+  // const customerStash = useStash(stashId, stashType)
 
   const [customerStash, { refetch: refetchStash }] = useQuery(
     getStash,
@@ -128,11 +129,11 @@ const CustomerModalForm = ({
           customer: customerSubmission,
           notes,
         })
+        await refetchStash()
       } else {
         // console.log("\t\tcreate stash")
         customerRet = await createStashMutation({ stashType, customer: customerSubmission, notes })
       }
-      await refetchStash()
     } else {
       // console.log("\tnot stashing")
       if (customer) {

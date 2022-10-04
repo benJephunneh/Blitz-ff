@@ -16,13 +16,12 @@ export const EditCustomer = () => {
   const router = useRouter()
   const customerId = useParam("customerId", "number")
   const [customer, { setQueryData }] = useQuery(
-    getCustomer,
-    { id: customerId },
-    {
-      // This ensures the query never refreshes and overwrites the form data while the user is editing.
-      staleTime: Infinity,
-    }
-  )
+    getCustomer, {
+    where: { id: customerId }
+  }, {
+    // This ensures the query never refreshes and overwrites the form data while the user is editing.
+    staleTime: Infinity,
+  })
   const [updateCustomerMutation] = useMutation(updateCustomer)
   const onSubmit = async (values) => {
     await new Promise((resolve) => {
@@ -47,7 +46,7 @@ export const EditCustomer = () => {
           //  - Tip: extract mutation's schema into a shared `validations.ts` file and
           //         then import and use it here
           schema={UpdateCustomer}
-          initialValues={customer!}
+          initialValues={customer}
           onSubmit={(values) => {
             onSubmit(values)
               .then((updated) => setQueryData(updated!))

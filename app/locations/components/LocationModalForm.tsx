@@ -127,12 +127,12 @@ const LocationModalForm = ({
       submitText={locationId ? "Update" : "Create"}
       initialValues={{
         primary: location?.primary ?? true,
-        house: location?.house ?? "",
+        house: location?.house ?? undefined,
         street: location?.street ?? "",
         city: location?.city ?? "",
         state: location?.state ?? "",
         zipcode: location?.zipcode ?? "",
-        phones: location?.phones ?? [],
+        phones: location?.phones ?? "",
         block: location?.block ?? undefined,
         lot: location?.lot ?? undefined,
         parcel: location?.parcel ?? undefined,

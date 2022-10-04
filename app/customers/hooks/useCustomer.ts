@@ -10,7 +10,7 @@ type UseCustomerOptions = {
 const useCustomer = ({ id, suspense, enabled }: UseCustomerOptions) => {
   const [customer, { refetch: refetchCustomer }] = useQuery(
     getCustomer,
-    { id },
+    { where: { id } },
     { suspense, enabled }
   )
 

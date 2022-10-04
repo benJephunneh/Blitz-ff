@@ -90,7 +90,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
       staleTime: Infinity,
     }
   )
-  const locations = customer.locations
+  const locations = customer["locations"]
   // const [locations, { refetch: refetchLocations }] = useQuery(
   //   getLocations,
   //   { where: { customerId: custId } },

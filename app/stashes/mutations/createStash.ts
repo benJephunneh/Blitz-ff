@@ -4,6 +4,7 @@ import { Debug } from "@prisma/client/runtime"
 import { CreateCustomer } from "app/customers/validations"
 import { CreateJob } from "app/jobs/validations"
 import { CreateLocation } from "app/locations/validations"
+import { subMinutes } from "date-fns"
 import db, { StashType } from "db"
 import { z } from "zod"
 import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
@@ -46,6 +47,16 @@ export default resolver.pipe(
             ...customer,
           },
         })
+
+        console.log("updatedAt > now - 2min?")
+        console.log(`\tupdatedAt: ${stash.updatedAt}`)
+        console.log(`\tnow - 2min: ${subMinutes(Date.now(), 2)}`)
+        console.log(`\t${stash.updatedAt > subMinutes(Date.now(), 2) ? true : false}`)
+
+        // await fetch("http://localhost:3000/api/setupStashDelete", {
+        //   method: "POST",
+        //   body: displayname,
+        // })
 
         // type s = z.infer<typeof stash>
         // Create Quirrel queue

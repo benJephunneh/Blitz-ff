@@ -39,7 +39,7 @@ import { AuthenticationError, AuthorizationError, NotFoundError } from "blitz"
 import { GetServerSideProps } from "next"
 import { FaPlus } from "react-icons/fa"
 import { useState } from "react"
-import StashModalForm from "app/stashes/components/StashModalForm"
+// import StashModalForm from "app/stashes/components/StashModalForm"
 import getStash from "app/stashes/queries/getStash"
 
 const ShowCustomerPage: BlitzPage = () => {
@@ -62,7 +62,7 @@ const ShowCustomerPage: BlitzPage = () => {
     }
   )
   // console.log(JSON.stringify(customer))
-  const locations = customer.locations
+  const locations = customer["locations"]
 
   // const [location] = useQuery(
   //   getLocation, {
@@ -108,14 +108,14 @@ const ShowCustomerPage: BlitzPage = () => {
 
   return (
     <Box bg={useColorModeValue("white", "gray.800")} p={4}>
-      <StashModalForm
+      {/* <StashModalForm
         customerId={customerId}
         isOpen={stashing}
         onClose={() => setStashing(false)}
         onSuccess={() => {
           setStashing(false)
         }}
-      />
+      /> */}
 
       <Flex alignItems="start">
         {customer && (
@@ -263,7 +263,7 @@ const ShowCustomerPage: BlitzPage = () => {
           Delete {`${customer!.firstname} ${customer!.lastname}`}
         </Button>
       </VStack> */}
-      <Button
+      {/* <Button
         colorScheme="telegram"
         justifySelf="end"
         alignSelf="end"
@@ -271,7 +271,7 @@ const ShowCustomerPage: BlitzPage = () => {
         onClick={() => setStashing(true)}
       >
         Stash
-      </Button>
+      </Button> */}
     </Box>
   )
 }
