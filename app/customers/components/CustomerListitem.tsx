@@ -41,7 +41,7 @@ const CustomerListItem = ({ customerId, children }: CustomerListItemProps) => {
         onSuccess={async (_location) => {
           setCreatingLocation(false)
           await router.push(
-            Routes.ShowLocationPage({ customerId: customerId!, locationId: _location.id })
+            Routes.ShowLocationPage({ customerId: customerId!, locationId: _location!.id })
           )
         }}
       />

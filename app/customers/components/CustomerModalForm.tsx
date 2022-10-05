@@ -3,7 +3,7 @@ import { FORM_ERROR } from "final-form"
 import createCustomer from "../mutations/createCustomer"
 import updateCustomer from "../mutations/updateCustomer"
 import getCustomer from "../queries/getCustomer"
-import { CreateCustomerStash, UpdateCustomer } from "../validations"
+import { CreateCustomer, UpdateCustomer } from "../validations"
 import { Grid, GridItem, ModalProps, Text, useColorModeValue } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
@@ -183,7 +183,8 @@ const CustomerModalForm = ({
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
-      schema={customerId ? UpdateCustomer : CreateCustomerStash}
+      schema={CreateCustomer.partial()}
+      // schema={customerId ? UpdateCustomer : CreateCustomer.partial()}
       title={customerId ? "Edit customer" : "New customer"}
       submitText={customerId ? "Update" : "Create"}
       initialValues={initialValues}

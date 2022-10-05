@@ -27,7 +27,7 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
   const [locations, { refetch: refetchLocations }] = useQuery(
     getLocations,
     {
-      where: { customerId: customer.id },
+      where: { customerId: customer?.id },
       orderBy: [
         { primary: "asc" },
         { zipcode: "asc" },
@@ -56,7 +56,7 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
         <HStack>
           <Icon as={icon} w={5} h={5} />
           <Heading size="sm">
-            {customer.firstname} {customer.lastname}
+            {customer?.firstname} {customer?.lastname}
           </Heading>
         </HStack>
       </MenuButton>
@@ -66,7 +66,7 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
           {locations?.locations.map((location) => (
             <Link
               key={location.id}
-              href={Routes.ShowLocationPage({ customerId: customer.id, locationId: location.id })}
+              href={Routes.ShowLocationPage({ customerId: customer?.id, locationId: location.id })}
               passHref
             >
               <MenuItem as="a" fontWeight="semibold" fontSize="sm" icon={<FcHome />}>

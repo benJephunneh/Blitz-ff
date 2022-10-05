@@ -1,10 +1,10 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
 import UniquityError from "../errors/uniquityError"
-import { CreateCustomer, CreateCustomerStash } from "../validations"
+import { CreateCustomer } from "../validations"
 
 export default resolver.pipe(
-  resolver.zod(CreateCustomerStash),
+  resolver.zod(CreateCustomer),
   resolver.authorize(),
 
   async ({ firstname, lastname, companyname, email, notes }, ctx) => {

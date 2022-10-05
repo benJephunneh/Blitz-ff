@@ -3,7 +3,7 @@ import { z } from "zod"
 
 const firstname = z.string()
 const lastname = z.string()
-const companyname = z.string().optional()
+const companyname = z.string()
 export const email = z.string().email()
 const notes = stashContentSchema // .nullable()
 // .refine((query) => useQuery(checkUniquity, { query }, { suspense: true }), {
@@ -17,32 +17,14 @@ const id = z.number()
 export const CreateCustomer = z.object({
   firstname,
   lastname,
-  companyname,
+  companyname: companyname.optional(),
   email,
 })
-export interface ICustomer {
-  firstname: string
-  lastname: string
-  companyname: string | undefined
-  displayname: string
-  email: string
-}
-
-export const CreateCustomerStash = CreateCustomer.partial().extend({
-  notes,
-})
-export interface ICustomerStash extends Partial<ICustomer> {
-  notes: string
-  userId: number
-}
-
-export type CustomerCreation = ICustomer | ICustomerStash
-export declare function CustomerOrStash(): CustomerCreation
 
 export const UpdateCustomer = CreateCustomer.extend({
   id,
 })
-export const UpdateCustomerStash = CreateCustomerStash.extend({
+export const UpdateCustomerStash = CreateCustomer.partial().extend({
   id,
 })
 
@@ -53,3 +35,18 @@ export const DeleteCustomer = z.object({
 export const ArchiveCustomer = z.object({
   id,
 })
+// export interface ICustomer {
+//   firstname: string
+//   lastname: string
+//   companyname: string | undefined
+//   displayname: string
+//   email: string
+// }
+
+// export interface ICustomerStash extends Partial<ICustomer> {
+//   notes: string
+//   userId: number
+// }
+
+// export type CustomerCreation = ICustomer | ICustomerStash
+// export declare function CustomerOrStash(): CustomerCreation

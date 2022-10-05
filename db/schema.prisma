@@ -116,8 +116,9 @@ model LocationArchive {
   block            String?
   lot              String?
   parcel           String?
-  customerId       Int
+  locationType     LocationType    @default(Personal)
   archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id])
+  customerId       Int
   archivedJobs     JobArchive[]
 }
 

@@ -18,15 +18,11 @@ import {
 import logout from "app/auth/mutations/logout"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { FaPlus } from "react-icons/fa"
 import getStashes from "app/stashes/queries/getStashes"
 import { FcFullTrash } from "react-icons/fc"
 import deleteStash from "app/stashes/mutations/deleteStash"
-import db, { CustomerStash } from "db"
-import getStash from "app/stashes/queries/getStash"
-import { z } from "zod"
-import { CreateCustomer, CreateCustomerStash } from "app/customers/validations"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 
 const HeaderLoggedIn = () => {

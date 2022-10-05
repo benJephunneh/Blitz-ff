@@ -1,25 +1,22 @@
-import { S } from "@blitzjs/auth/dist/index-57d74361"
 import { resolver } from "@blitzjs/rpc"
-import { Debug } from "@prisma/client/runtime"
-import { CreateCustomer, CreateCustomerStash } from "app/customers/validations"
+import { CreateCustomer } from "app/customers/validations"
 import { CreateJob } from "app/jobs/validations"
-import { CreateLocation, CreateLocationStash } from "app/locations/validations"
-import { subMinutes } from "date-fns"
+import { CreateLocation } from "app/locations/validations"
 import db, { StashType } from "db"
 import { z } from "zod"
 import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
 
-const customerZod = CreateCustomer
-const locationZod = CreateLocationStash
-const jobZod = CreateJob
+const customerZod = CreateCustomer.partial()
+const locationZod = CreateLocation.partial()
+const jobZod = CreateJob.partial()
 
 export const CreateStash = z.object({
   notes: stashContentSchema, // .nullable(),
   stashType: z.nativeEnum(StashType),
   customerId: z.number().optional(),
-  customer: customerZod.partial().optional(),
-  location: locationZod.partial().optional(),
-  job: jobZod.partial().optional(),
+  customer: customerZod.optional(),
+  location: locationZod.optional(),
+  job: jobZod.optional(),
 })
 
 type CreateStashProps = {
@@ -61,10 +58,10 @@ export default resolver.pipe(
       case "Location":
         stash = await db.locationStash.create({
           data: {
-            userId: ctx.session.userId,
-            notes: JSON.stringify(notes),
-            customerId,
             stashType,
+            notes: JSON.stringify(notes),
+            customerId: customerId!,
+            userId: ctx.session.userId,
             ...location,
           },
         })

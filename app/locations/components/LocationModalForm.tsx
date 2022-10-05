@@ -193,7 +193,10 @@ const LocationModalForm = ({
         })
       } else {
         console.log("\tcreating location")
-        locationRet = await createLocationMutation(values)
+        locationRet = await createLocationMutation({
+          customerId,
+          locationInput: locationSubmission,
+        })
         if (locationStash && locationRet) {
           await deleteStashMutation({
             id: locationStash.id,
@@ -226,6 +229,7 @@ const LocationModalForm = ({
     lot: locationStash?.lot || location?.lot || undefined,
     parcel: locationStash?.parcel || location?.parcel || undefined,
     locationType: locationStash?.locationType || location?.locationType || "Personal",
+    notes: locationStash?.notes ? JSON.parse(locationStash.notes) : null,
     customerId,
   }
 
@@ -287,7 +291,7 @@ const LocationModalForm = ({
               <LabeledTextField name="phones" label="Phone" />
             </GridItem>
             <GridItem area="locationType">
-              <LabeledSelectField name="locationType" label="Location type" defaultValue="Personal">
+              <LabeledSelectField name="locationType" label="Location type">
                 {locationTypes.map((lt, ii) => (
                   <option key={ii} value={lt}>
                     {lt}

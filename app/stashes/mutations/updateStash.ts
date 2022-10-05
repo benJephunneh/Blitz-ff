@@ -15,6 +15,7 @@ export const UpdateStash = z.object({
   id: z.number(),
   notes: stashContentSchema.nullable(),
   stashType: z.nativeEnum(StashType),
+  customerId: z.number().optional(),
   customer: customerZod.partial().optional(),
   location: locationZod.partial().optional(),
   job: jobZod.partial().optional(),
@@ -24,7 +25,7 @@ export default resolver.pipe(
   resolver.zod(UpdateStash),
   resolver.authorize(),
 
-  async ({ id, notes, stashType, customer, location, job }, ctx) => {
+  async ({ id, notes, stashType, customerId, customer, location, job }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     console.log(JSON.stringify(customer))
 
@@ -58,17 +59,17 @@ export default resolver.pipe(
           },
         })
         break
-      // case "Location":
-      //   await db.locationStash.update({
-      //     where: { id },
-      //     data: {
-      //       userId: ctx.session.userId,
-      //       notes: JSON.stringify(notes),
-      //       stashType,
-      //       ...location,
-      //     },
-      //   })
-      //   break
+      case "Location":
+        await db.locationStash.update({
+          where: { id },
+          data: {
+            userId: ctx.session.userId,
+            notes: JSON.stringify(notes),
+            stashType,
+            ...location,
+          },
+        })
+        break
       // case "Job":
       //   await db.jobStash.update({
       //     where: { id },
