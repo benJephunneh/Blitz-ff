@@ -156,12 +156,9 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
         onSuccess={(location) => {
+          setCreatingLocation(false)
           refetchCustomer() //
-            // refetchLocations()
-            .then(() => setCreatingLocation(false))
-            .then(() =>
-              router.push(Routes.ShowLocationPage({ customerId: custId!, locationId: location.id }))
-            )
+            // .then(() => router.push(Routes.ShowLocationPage({ customerId: custId!, locationId: location.id })))
             .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
         }}
       />

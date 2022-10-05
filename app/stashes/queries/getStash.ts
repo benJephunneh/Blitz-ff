@@ -1,6 +1,6 @@
 import { NotFoundError } from "blitz"
 import { resolver } from "@blitzjs/rpc"
-import db, { Prisma, StashType } from "db"
+import db, { LocationStash, Prisma, StashType } from "db"
 import { z } from "zod"
 
 const GetStash = z.object({
@@ -22,12 +22,13 @@ export default resolver.pipe(
         stash = await db.customerStash.findFirst({
           where: { id },
         })
+
         break
-      // case "Location":
-      //   const stash = await db.locationStash.findFirst({
-      //     where: { id },
-      //   })
-      //   break
+      case "Location":
+        stash = await db.locationStash.findFirst({
+          where: { id },
+        })
+        break
       // case "Job":
       //   const stash = await db.jobStash.findFirst({
       //     where: { id },
@@ -48,6 +49,19 @@ export default resolver.pipe(
         break
     }
 
+    // if (!stash) throw new NotFoundError()
+
+    // const user = await db.user.findFirst({
+    //   where: { id },
+    //   select: { id: true, username: true, email: true, role: true },
+    // })
+
+    // if (!user) throw new NotFoundError()
+
+    // return {
+    //   stash,
+    //   user,
+    // }
     return stash
   }
 )

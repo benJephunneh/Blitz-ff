@@ -5,7 +5,7 @@ const firstname = z.string()
 const lastname = z.string()
 const companyname = z.string().optional()
 export const email = z.string().email()
-const notes = stashContentSchema.nullable()
+const notes = stashContentSchema // .nullable()
 // .refine((query) => useQuery(checkUniquity, { query }, { suspense: true }), {
 // checkUniquity({ email }).catch((e) => console.log(`checkUniquity error: ${e}`)),
 // message: "Email is not unique.",
@@ -31,8 +31,9 @@ export interface ICustomer {
 export const CreateCustomerStash = CreateCustomer.partial().extend({
   notes,
 })
-export interface ICustomerStash extends ICustomer {
+export interface ICustomerStash extends Partial<ICustomer> {
   notes: string
+  userId: number
 }
 
 export type CustomerCreation = ICustomer | ICustomerStash

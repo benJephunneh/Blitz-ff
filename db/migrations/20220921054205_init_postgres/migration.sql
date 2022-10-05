@@ -48,7 +48,7 @@ CREATE TABLE "Location" (
     "block" TEXT,
     "lot" TEXT,
     "parcel" TEXT,
-    "type" "LocationType" NOT NULL DEFAULT 'Personal',
+    "locationType" "LocationType" NOT NULL DEFAULT 'Personal',
     "customerId" INTEGER NOT NULL,
 
     CONSTRAINT "Location_pkey" PRIMARY KEY ("id")

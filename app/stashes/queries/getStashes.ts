@@ -12,15 +12,17 @@ export default resolver.pipe(
   async ({ where, orderBy }: GetCustomerStashesInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     let count = await db.customerStash.count()
-    const customerStashes = await db.customerStash.findMany({ where, orderBy })
+    const customerStashes = await db.customerStash.findMany()
 
-    // count += await.locationStash.count()
-    // const locationStashes = await db.locationStash.findMany({ where, orderBy })
-    // count += await.jobStash.count()
+    count += await db.locationStash.count()
+    const locationStashes = await db.locationStash.findMany()
+
+    // count += await db.jobStash.count()
     // const jobStashes = await db.jobStash.findMany({ where, orderBy })
 
     return {
       customerStashes,
+      locationStashes,
       count,
     }
   }

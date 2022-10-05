@@ -1,31 +1,38 @@
 import { S } from "@blitzjs/auth/dist/index-57d74361"
 import { resolver } from "@blitzjs/rpc"
 import { Debug } from "@prisma/client/runtime"
-import { CreateCustomer } from "app/customers/validations"
+import { CreateCustomer, CreateCustomerStash } from "app/customers/validations"
 import { CreateJob } from "app/jobs/validations"
-import { CreateLocation } from "app/locations/validations"
+import { CreateLocation, CreateLocationStash } from "app/locations/validations"
 import { subMinutes } from "date-fns"
 import db, { StashType } from "db"
 import { z } from "zod"
 import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
 
 const customerZod = CreateCustomer
-const locationZod = CreateLocation
+const locationZod = CreateLocationStash
 const jobZod = CreateJob
 
 export const CreateStash = z.object({
-  notes: stashContentSchema.nullable(),
+  notes: stashContentSchema, // .nullable(),
   stashType: z.nativeEnum(StashType),
+  customerId: z.number().optional(),
   customer: customerZod.partial().optional(),
   location: locationZod.partial().optional(),
   job: jobZod.partial().optional(),
 })
 
+type CreateStashProps = {
+  input: any
+  stashType: StashType
+}
+
 export default resolver.pipe(
   resolver.zod(CreateStash),
   resolver.authorize(),
 
-  async ({ notes, stashType, customer, location, job }, ctx) => {
+  async ({ notes, stashType, customerId, customer, location, job }, ctx) => {
+    // async ({ input, stashType }: CreateStashProps, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     // console.log(`customer input to createStash: ${JSON.stringify(customer)}`)
 
@@ -48,39 +55,23 @@ export default resolver.pipe(
           },
         })
 
-        console.log("updatedAt > now - 2min?")
-        console.log(`\tupdatedAt: ${stash.updatedAt}`)
-        console.log(`\tnow - 2min: ${subMinutes(Date.now(), 2)}`)
-        console.log(`\t${stash.updatedAt > subMinutes(Date.now(), 2) ? true : false}`)
-
-        // await fetch("http://localhost:3000/api/setupStashDelete", {
-        //   method: "POST",
-        //   body: displayname,
-        // })
+        // type s = z.infer<typeof stash>
+        // Create Quirrel queue
+        break
+      case "Location":
+        stash = await db.locationStash.create({
+          data: {
+            userId: ctx.session.userId,
+            notes: JSON.stringify(notes),
+            customerId,
+            stashType,
+            ...location,
+          },
+        })
 
         // type s = z.infer<typeof stash>
         // Create Quirrel queue
         break
-      // case "Location":
-      //   stash = await db.locationStash.create({
-      //     data: {
-      //       userId: ctx.session.userId,
-      //       notes: JSON.stringify(notes),
-      //       stashType,
-      //       ...location,
-      //     },
-      //   })
-      // await db.locationStash.create({
-      //   data: {
-      //     customerId: location.customerId!,
-      //     stashId: stash.id,
-      //     ...location,
-      //   },
-      // })
-
-      // type s = zz.infer<typeof stash>
-      // Create Quirrel queue
-      // break
       // case "Job":
       //   stash = await db.jobStash.create({
       //     data: {

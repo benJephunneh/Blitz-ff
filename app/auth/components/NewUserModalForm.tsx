@@ -34,6 +34,7 @@ const NewUserModalForm: FC<NewUserModalFormProps> = ({ isOpen, onClose, onSucces
 
   return (
     <ModalForm
+      disableStash={true}
       isOpen={isOpen}
       onClose={onClose}
       size="lg"

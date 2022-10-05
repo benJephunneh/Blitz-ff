@@ -3,32 +3,28 @@ import { FORM_ERROR } from "final-form"
 import createCustomer from "../mutations/createCustomer"
 import updateCustomer from "../mutations/updateCustomer"
 import getCustomer from "../queries/getCustomer"
-import { CreateCustomerStash, UpdateCustomer, UpdateCustomerStash } from "../validations"
-import { Grid, GridItem, ModalProps } from "@chakra-ui/react"
+import { CreateCustomerStash, UpdateCustomer } from "../validations"
+import { Grid, GridItem, ModalProps, Text, useColorModeValue } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import { Customer, CustomerStash } from "@prisma/client"
-import { useEffect, useState } from "react"
 import createStash from "app/stashes/mutations/createStash"
-import createCustomerStash from "../mutations/createCustomerStash"
 import EditorField from "app/core/components/editor/components/EditorField"
 import getStash from "app/stashes/queries/getStash"
-import { z } from "zod"
 import deleteStash from "app/stashes/mutations/deleteStash"
-import updateCustomerStash from "../mutations/updateCustomerStash"
 import updateStash from "app/stashes/mutations/updateStash"
-import useStash from "app/stashes/hooks/useStash"
+import getUser from "app/users/queries/getUser"
 
 type CustomerModalFormProps = {
   isOpen: boolean
   onClose: () => void
   onSuccess?: (customer: Customer | CustomerStash | void) => void
-  stashId?: number
   // customerStash?: CustomerStash // | LocationStash
   customerId?: number
-  mutationType?: MutationType
+  stashId?: number
   disableStash?: boolean
+  mutationType?: MutationType
   props?: Partial<ModalProps>
 }
 
@@ -36,11 +32,10 @@ const CustomerModalForm = ({
   isOpen,
   onClose,
   onSuccess,
-  stashId,
-  // customerStash,
   customerId,
-  mutationType = "New",
+  stashId,
   disableStash,
+  mutationType = "New",
   ...props
 }: CustomerModalFormProps) => {
   const [createCustomerMutation] = useMutation(createCustomer)
@@ -83,6 +78,19 @@ const CustomerModalForm = ({
       refetchOnWindowFocus: false,
     }
   )
+
+  const [user] = useQuery(
+    getUser,
+    {
+      id: customerStash?.userId,
+    },
+    {
+      enabled: !!customerStash,
+      suspense: !!customerStash,
+    }
+  )
+
+  const textFootnoteColor = useColorModeValue("gray.500", "gray.300")
 
   // console.log(`customerId: ${customerId}`)
   // console.log(`isLoading: ${isLoading}`)
@@ -132,7 +140,11 @@ const CustomerModalForm = ({
         await refetchStash()
       } else {
         // console.log("\t\tcreate stash")
-        customerRet = await createStashMutation({ stashType, customer: customerSubmission, notes })
+        customerRet = await createStashMutation({
+          stashType,
+          customer: customerSubmission,
+          notes,
+        })
       }
     } else {
       // console.log("\tnot stashing")
@@ -212,6 +224,11 @@ const CustomerModalForm = ({
             bubbleMenu
             floatingMenu
           />
+          {stashId && (
+            <Text fontSize="xs" color={textFootnoteColor}>
+              Stashed by {user?.username}
+            </Text>
+          )}
         </>
       )}
       {...props}

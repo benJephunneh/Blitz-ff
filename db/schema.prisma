@@ -9,15 +9,16 @@ datasource db {
 }
 
 model Customer {
-  id          Int        @id @default(autoincrement())
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  firstname   String?
-  lastname    String?
-  companyname String?
-  displayname String
-  email       String
-  locations   Location[]
+  id              Int             @id @default(autoincrement())
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  firstname       String?
+  lastname        String?
+  companyname     String?
+  displayname     String
+  email           String
+  locations       Location[]
+  locationStashes LocationStash[]
 }
 
 model CustomerStash {
@@ -29,30 +30,53 @@ model CustomerStash {
   companyname String?
   displayname String?
   email       String?
-  notes       String
-  userId      Int
   stashType   StashType @default(Customer)
   user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  notes       String
 }
 
 model Location {
-  id         Int          @id @default(autoincrement())
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  primary    Boolean      @default(true)
-  house      String?
-  street     String
-  city       String
-  state      String       @default("FL")
-  zipcode    String
-  phones     String
-  block      String?
-  lot        String?
-  parcel     String?
-  type       LocationType @default(Personal)
-  customer   Customer     @relation(fields: [customerId], references: [id])
-  customerId Int
-  jobs       Job[]
+  id           Int          @id @default(autoincrement())
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  primary      Boolean      @default(true)
+  house        String?
+  street       String
+  city         String
+  state        String       @default("FL")
+  zipcode      String
+  phones       String
+  block        String?
+  lot          String?
+  parcel       String?
+  locationType LocationType @default(Personal)
+  customer     Customer     @relation(fields: [customerId], references: [id])
+  customerId   Int
+  jobs         Job[]
+}
+
+model LocationStash {
+  id           Int          @id @default(autoincrement())
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  primary      Boolean      @default(true)
+  house        String?
+  street       String?
+  city         String?
+  state        String?      @default("FL")
+  zipcode      String?
+  phones       String?
+  block        String?
+  lot          String?
+  parcel       String?
+  locationType LocationType @default(Personal)
+  customer     Customer     @relation(fields: [customerId], references: [id])
+  customerId   Int
+  stashType    StashType    @default(Location)
+  user         User         @relation(fields: [userId], references: [id])
+  userId       Int
+  notes        String
 }
 
 model Job {
@@ -117,6 +141,7 @@ model User {
   hashedPassword  String?
   role            UserRole        @default(Tech)
   customerStashes CustomerStash[]
+  locationStashes LocationStash[]
   sessions        Session[]
   tokens          Token[]
 }

@@ -1,19 +1,26 @@
+import { UserRole } from "@prisma/client"
 import { z } from "zod"
 
-export const username = z.string()
-
-export const email = z
+const id = z.number()
+const username = z.string()
+const email = z
   .string()
   .email()
   .transform((str) => str.toLowerCase().trim())
-
-export const password = z
+const password = z
   .string()
   .min(10)
   .max(100)
   .transform((str) => str.trim())
 
-export const role = z.enum(["Owner", "Admin", "Tech"])
+const role = z.nativeEnum(UserRole)
+
+export interface IUser {
+  id: number
+  username: string
+  email: string
+  role: UserRole
+}
 
 export const Signup = z.object({
   username,

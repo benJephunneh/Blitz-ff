@@ -23,7 +23,7 @@ const CustomerSubheaderActions = () => {
   const router = useRouter()
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [creatingLocation, setCreatingLocation] = useState(false)
-  const { customer, showDetails, editCustomer, deleteCustomer, refetchCustomer } =
+  const { customer, showDetails, editCustomer, deleteCustomer, refetchCustomer, createLocation } =
     useContext(customerContext)
 
   return (
@@ -55,9 +55,7 @@ const CustomerSubheaderActions = () => {
           borderColor={useColorModeValue("cyan.800", "blue.200")}
           alignSelf="start"
           justifySelf="end"
-          onClick={() => {
-            setCreatingLocation(true)
-          }}
+          onClick={createLocation}
         >
           Create location
         </Button>

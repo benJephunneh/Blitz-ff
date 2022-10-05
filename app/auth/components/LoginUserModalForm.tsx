@@ -29,6 +29,7 @@ const LoginUserModalForm: FC<LoginUserModalFormProps> = ({ isOpen, onClose, onSu
 
   return (
     <ModalForm
+      disableStash={true}
       isOpen={isOpen}
       onClose={onClose}
       size="lg"
