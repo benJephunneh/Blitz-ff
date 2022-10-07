@@ -2,6 +2,7 @@ import { BlitzLayout } from "@blitzjs/next"
 import { Box, Flex, Grid, GridItem } from "@chakra-ui/react"
 import { useState } from "react"
 import Header from "../components/header/Header"
+import HeaderProvider from "../components/header/HeaderProvider"
 import PageTitle from "../components/PageTitle"
 
 type HeaderLayoutProps = {
@@ -18,19 +19,21 @@ const HeaderLayout: BlitzLayout<HeaderLayoutProps> = ({
   children,
 }) => {
   return (
-    <Flex direction="column">
-      <PageTitle title={title} />
+    <HeaderProvider>
+      <Flex direction="column">
+        <PageTitle title={title} />
 
-      <Grid position="sticky" top={0} shadow="md">
-        <GridItem rowSpan={1}>
-          <Header />
-        </GridItem>
+        <Grid position="sticky" top={0} shadow="md">
+          <GridItem rowSpan={1}>
+            <Header />
+          </GridItem>
 
-        {subheader && <GridItem rowSpan={1}>{subheader}</GridItem>}
-      </Grid>
+          {subheader && <GridItem rowSpan={1}>{subheader}</GridItem>}
+        </Grid>
 
-      {children}
-    </Flex>
+        {children}
+      </Flex>
+    </HeaderProvider>
   )
 }
 

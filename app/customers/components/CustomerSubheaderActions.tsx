@@ -8,6 +8,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react"
+import headerContext from "app/core/components/header/headerContext"
 import SettingsMenuButton from "app/core/components/SettingsMenuButton"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import { useRouter } from "next/router"
@@ -21,10 +22,10 @@ import CustomerModalForm from "./CustomerModalForm"
 
 const CustomerSubheaderActions = () => {
   const router = useRouter()
-  const [editingCustomer, setEditingCustomer] = useState(false)
-  const [creatingLocation, setCreatingLocation] = useState(false)
-  const { customer, showDetails, editCustomer, deleteCustomer, refetchCustomer, createLocation } =
-    useContext(customerContext)
+  // const [editingCustomer, setEditingCustomer] = useState(false)
+  // const [creatingLocation, setCreatingLocation] = useState(false)
+  const { editCustomer, deleteCustomer } = useContext(headerContext)
+  const { showDetails, createLocation } = useContext(customerContext)
 
   return (
     <>

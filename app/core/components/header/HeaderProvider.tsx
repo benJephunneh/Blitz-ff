@@ -1,16 +1,16 @@
-import { BlitzCtx } from "@blitzjs/auth"
-import { Ctx, Routes } from "@blitzjs/next"
+import { useSession } from "@blitzjs/auth"
+import { Routes, useParams } from "@blitzjs/next"
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
 import NewUserModalForm from "app/auth/components/NewUserModalForm"
 import login from "app/auth/mutations/login"
 import logout from "app/auth/mutations/logout"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
-import LocationModalForm from "app/locations/components/LocationModalForm"
+import deleteCustomer from "app/customers/mutations/deleteCustomer"
+import getCustomer from "app/customers/queries/getCustomer"
 import deleteStash from "app/stashes/mutations/deleteStash"
-import getStash from "app/stashes/queries/getStash"
 import getStashes from "app/stashes/queries/getStashes"
-import db, { StashType } from "db"
+import { StashType } from "db"
 import { useRouter } from "next/router"
 import { ReactNode, useEffect, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
@@ -33,25 +33,41 @@ type StashProps = {
 const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const router = useRouter()
 
+  // User
+  const session = useSession({ suspense: false })
+  const isLoggedIn = !!session.userId
   const [loggingIn, setLoggingIn] = useState(false)
   const [signingUp, setSigningUp] = useState(false)
 
+  // Customer
+  const { customerId, locationId } = useParams("number")
+  const [customer, { refetch: refetchCustomer }] = useQuery(
+    getCustomer,
+    {
+      where: { id: customerId },
+    },
+    {
+      enabled: !!customerId,
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+    }
+  )
+
   const [creatingCustomer, setCreatingCustomer] = useState(false)
   const [editingCustomer, setEditingCustomer] = useState(false)
+  const [deletingCustomer, setDeletingCustomer] = useState(false)
+  const [deleteCustomerMutation] = useMutation(deleteCustomer)
 
-  const [editingLocation, setEditingLocation] = useState(false)
-  const [editingJob, setEditingJob] = useState(false)
-  const [editingEstimate, setEditingEstimate] = useState(false)
-
+  // Stash
   const [{ customerStashes, count: numStashes }, { refetch: refetchStashes }] = useQuery(
     getStashes,
     {},
     {
-      suspense: true,
-      enabled: true,
+      // suspense: true,
+      // enabled: true,
       refetchOnWindowFocus: false,
-      refetchInterval: 2000,
-      refetchIntervalInBackground: true,
+      // refetchInterval: 2000,
+      // refetchIntervalInBackground: true,
     }
   )
   const [stashId, setStashId] = useState<number>()
@@ -110,11 +126,15 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         signUp: () => setSigningUp(true),
         logOut: () => logoutMutation(),
         createCustomer: () => setCreatingCustomer(true),
+        editCustomer: () => setEditingCustomer(true),
+        deleteCustomer: () => setDeletingCustomer(true),
+        refetchCustomer,
         editStash: (id) => {
           setStashId(id)
           setEditingStash(true)
         },
 
+        customer,
         customerStashes,
         numStashes,
 
@@ -136,6 +156,34 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
           await router.push(Routes.Dashboard())
         }}
       />
+
+      {isLoggedIn && (
+        <>
+          <CustomerModalForm
+            // customer={customer}
+            customerId={customerId}
+            isOpen={editingCustomer}
+            onClose={() => setEditingCustomer(false)}
+            disableStash={true}
+            onSuccess={() => {
+              setEditingCustomer(false)
+              refetchCustomer().catch((e) => console.log(`Header CustomerModalForm error: ${e}`))
+            }}
+          />
+
+          <ConfirmDeleteModal
+            title={`Delete ${customer?.firstname} ${customer?.lastname}?`}
+            description="Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
+            isOpen={deletingCustomer}
+            onClose={() => setDeletingCustomer(false)}
+            onConfirm={async () => {
+              await deleteCustomerMutation({ id: customer!.id })
+                .then(() => router.push(Routes.CustomersPage()))
+                .catch((e) => console.log(`customerProvider DeleteModal error: ${e}`))
+            }}
+          />
+        </>
+      )}
 
       {children}
     </Provider>

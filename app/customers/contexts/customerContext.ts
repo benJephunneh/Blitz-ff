@@ -2,22 +2,25 @@ import { Customer, Location } from "@prisma/client"
 import { createContext } from "react"
 
 export type CustomerContext = {
-  pickCustomer: (id: number) => void
-  editCustomer: () => void
-  deleteCustomer: () => void
+  // pickCustomer: (id: number) => void
+  // editCustomer: () => void
+  // deleteCustomer: () => void
   showDetails: () => void
   createLocation: () => void
+  // pickLocation: (id: number) => void
+  gotoLocation: (id: number) => void
 
-  customer: Customer
-  displayName: string
+  // customer: Customer
+  // displayname: string
   locations?: Location[]
+  // locationId?: number
 
   // amountPaid: number
   // amountOwed: number
   // balance: number
 
-  refetchCustomer: () => void
-  // refetchLocations: () => void
+  // refetchCustomer: () => void
+  refetchLocations: () => void
 }
 
 const customerContext = createContext<CustomerContext>({} as CustomerContext)

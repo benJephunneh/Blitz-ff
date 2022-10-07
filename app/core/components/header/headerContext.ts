@@ -1,13 +1,16 @@
-import { CustomerStash, StashType } from "@prisma/client"
+import { Customer, CustomerStash, StashType } from "@prisma/client"
 import { createContext } from "react"
 
 export type HeaderContext = {
-  logIn: () => void
   signUp: () => void
+  logIn: () => void
   logOut: () => void
   createCustomer: () => void
+  editCustomer: () => void
+  deleteCustomer: () => void
   editStash: (id: number) => void
 
+  customer?: Customer
   customerStashes: CustomerStash[]
   numStashes: number
   // locationStashes: LocationStash[]
@@ -15,6 +18,7 @@ export type HeaderContext = {
   // invoiceStashes: InvoiceStash[]
   // estimateStashes: EstimateStash[]
 
+  refetchCustomer: () => void
   refetchStashes: () => void
 }
 

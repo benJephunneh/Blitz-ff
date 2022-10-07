@@ -72,9 +72,7 @@ const LocationModalForm = ({
   const [location] = useQuery(
     getLocation,
     {
-      where: {
-        id: locationId,
-      },
+      where: { id: locationId },
     },
     {
       enabled: !!locationId,
@@ -173,7 +171,7 @@ const LocationModalForm = ({
           location: locationSubmission,
           notes,
         })
-        await refetchStash()
+        refetchStash().catch((e) => console.log(`Location update error: ${e}`))
       } else {
         console.log("\tcreating stash")
         locationRet = await createStashMutation({

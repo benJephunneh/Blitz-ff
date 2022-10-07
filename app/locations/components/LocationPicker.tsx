@@ -23,26 +23,28 @@ type LocationPickerProps = {
 }
 
 const LocationPicker = ({ icon }: LocationPickerProps) => {
-  const { customer } = useContext(customerContext)
-  const [locations, { refetch: refetchLocations }] = useQuery(
-    getLocations,
-    {
-      where: { customerId: customer?.id },
-      orderBy: [
-        { primary: "asc" },
-        { zipcode: "asc" },
-        { city: "asc" },
-        { street: "asc" },
-        { house: "asc" },
-      ],
-    },
-    {
-      suspense: false,
-      refetchOnWindowFocus: false,
-      refetchInterval: 2000,
-      refetchIntervalInBackground: true,
-    }
-  )
+  const { customer, locations, gotoLocation } = useContext(customerContext)
+  // const [locations, { refetch: refetchLocations }] = useQuery(
+  //   getLocations,
+  //   {
+  //     where: { customerId: customer?.id },
+  //     orderBy: [
+  //       { primary: "desc" },
+  //       { zipcode: "asc" },
+  //       { city: "asc" },
+  //       { street: "asc" },
+  //       { house: "asc" },
+  //     ],
+  //   },
+  //   {
+  //     suspense: false,
+  //     refetchOnWindowFocus: false,
+  //     refetchInterval: 2000,
+  //     refetchIntervalInBackground: true,
+  //   }
+  // )
+
+  // const primaryLocation = locations?.locations.at(0)
 
   return (
     <Menu>
@@ -56,25 +58,30 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
         <HStack>
           <Icon as={icon} w={5} h={5} />
           <Heading size="sm">
-            {customer?.firstname} {customer?.lastname}
+            Location list
+            {/* {`${primaryLocation?.house} ${primaryLocation?.street}, ${primaryLocation?.city}  ${primaryLocation?.zipcode}`} */}
+            {/* {customer?.firstname} {customer?.lastname} */}
           </Heading>
         </HStack>
       </MenuButton>
 
       <MenuList>
-        <>
-          {locations?.locations.map((location) => (
-            <Link
-              key={location.id}
-              href={Routes.ShowLocationPage({ customerId: customer?.id, locationId: location.id })}
-              passHref
-            >
-              <MenuItem as="a" fontWeight="semibold" fontSize="sm" icon={<FcHome />}>
-                {`${location.house} ${location.street}, ${location.city}  ${location.zipcode}`}
-              </MenuItem>
-            </Link>
-          ))}
-        </>
+        {locations?.map((location) => (
+          // <Link
+          //   key={location.id}
+          //   href={Routes.ShowLocationPage({ customerId: customer?.id, locationId: location.id })}
+          //   passHref
+          // >
+          <MenuItem
+            key={location.id}
+            fontWeight="semibold"
+            fontSize="sm"
+            onClick={() => gotoLocation(location.id)}
+          >
+            {`${location.house} ${location.street}, ${location.city}  ${location.zipcode}`}
+          </MenuItem>
+          // </Link>
+        ))}
       </MenuList>
     </Menu>
   )

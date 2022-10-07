@@ -41,8 +41,8 @@ const ShowLocationPage: BlitzPage = () => {
   const [deleteLocationMutation] = useMutation(deleteLocation)
 
   return (
-    <>
-      <Flex w="100vw" bg={useColorModeValue("white", "gray.800")}>
+    <Box bg={useColorModeValue("white", "gray.800")}>
+      <Flex alignItems="start">
         <Box
           h={100}
           w={500}
@@ -129,7 +129,7 @@ const ShowLocationPage: BlitzPage = () => {
           </Button>
         </VStack>
       </Flex>
-    </>
+    </Box>
   )
 }
 

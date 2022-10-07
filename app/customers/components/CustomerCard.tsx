@@ -1,4 +1,5 @@
-import { Routes } from "@blitzjs/next"
+import { Routes, useParam, useParams } from "@blitzjs/next"
+import { useQuery } from "@blitzjs/rpc"
 import {
   Heading,
   HStack,
@@ -17,8 +18,11 @@ import {
 import { Customer, Location } from "@prisma/client"
 import phoneDisplay from "app/core/components/methods/phoneDisplay"
 import Link from "next/link"
+import { useContext, useState } from "react"
 import { FcHome, FcPhone } from "react-icons/fc"
 import { MdAlternateEmail } from "react-icons/md"
+import customerContext from "../contexts/customerContext"
+import getCustomer from "../queries/getCustomer"
 
 type CustomerCardProps = {
   customer: Pick<
@@ -30,28 +34,53 @@ type CustomerCardProps = {
 }
 
 const CustomerCard = ({ customer, location, ...props }: CustomerCardProps) => {
-  const route = Routes.ShowLocationPage
-  const tagBgColor = useColorModeValue("khaki", "blue.700")
-
-  // let displayName = ""
-  // if (customer.firstname) {
-  //   displayName = `${customer.firstname}`
-  //   if (customer.lastname) {
-  //     displayName.concat(` ${customer.lastname}`)
+  // const { customerId, locationId } = useParams('number')
+  // const [location, setLocation] = useState<Location>()
+  // console.log(`customerId: ${customerId}`)
+  // const [customer] = useQuery(
+  //   getCustomer, {
+  //   where: { id: customerId },
+  //   include: {
+  //     locations: {
+  //       orderBy: {
+  //         primary: 'desc'
+  //       }
+  //     }
   //   }
-  // } else if (customer.companyname) {
-  //   displayName = `${customer.companyname}`
+  // }, {
+  //   enabled: !!customerId,
+  //   refetchOnWindowFocus: false,
+  //   // refetchInterval: 2000,
+  //   // refetchIntervalInBackground: true,
+  // })
+
+  const locations: Location[] = customer!["locations"]
+  // function findLocation(l) {
+  //   return l.id === locationId
   // }
+
+  // if (1 in locations) {
+  //   if (!locationId) setLocation(locations.at(0)!) // set to primary location
+  //   else {
+  //     const ii = locations.findIndex(findLocation)
+  //     setLocation(locations.at(ii)!)
+  //   }
+  // }
+
+  const tagBgColor = useColorModeValue("khaki", "blue.700")
+  // console.log(`customerId: ${customer}`)
 
   return (
     <LinkBox
       py={2}
-      px={4}
+      px={2}
       display="inline"
       borderWidth={1}
       borderRadius="md"
       position="relative"
       transition="border 50ms ease"
+      bg={useColorModeValue("blackAlpha.100", "gray.600")}
+      borderColor={useColorModeValue("gray.50", "gray.700")}
       _hover={{ borderColor: "blue.400" }}
       {...props}
     >
@@ -59,11 +88,17 @@ const CustomerCard = ({ customer, location, ...props }: CustomerCardProps) => {
         <Heading fontStyle="italic" size="2xl">
           <>
             {location ? (
-              <Link href={route({ customerId: customer.id, locationId: location.id })} passHref>
-                <LinkOverlay>{customer.displayname}</LinkOverlay>
+              <Link
+                href={Routes.ShowLocationPage({
+                  customerId: customer!.id,
+                  locationId: location.id,
+                })}
+                passHref
+              >
+                <LinkOverlay>{customer!.displayname}</LinkOverlay>
               </Link>
             ) : (
-              <>{customer.displayname}</>
+              <>{customer!.displayname}</>
             )}
           </>
         </Heading>
@@ -82,11 +117,17 @@ const CustomerCard = ({ customer, location, ...props }: CustomerCardProps) => {
             <HStack display="block" alignSelf="end">
               <Tag size="sm" bg={tagBgColor} opacity="0.9">
                 <TagLeftIcon as={FcPhone} />
-                <TagLabel>{phoneDisplay(location.phones[0]!)}</TagLabel>
+                <TagLabel>{phoneDisplay(location.phones!)}</TagLabel>
               </Tag>
-              <Tag as="a" href={`mailto:${customer.email}`} size="sm" bg={tagBgColor} opacity="0.9">
+              <Tag
+                as="a"
+                href={`mailto:${customer!.email}`}
+                size="sm"
+                bg={tagBgColor}
+                opacity="0.9"
+              >
                 <TagLeftIcon as={MdAlternateEmail} color="cyan.400" />
-                <TagLabel>{customer.email}</TagLabel>
+                <TagLabel>{customer!.email}</TagLabel>
               </Tag>
             </HStack>
           </SimpleGrid>

@@ -49,12 +49,10 @@ const CustomerModalForm = ({
   // console.log(`\tcustomerId: ${customerId}`)
   // console.log(`\tstash: ${JSON.stringify(stashId)}`)
 
-  const [customer] = useQuery(
+  const [customer, { setQueryData }] = useQuery(
     getCustomer,
     {
-      where: {
-        id: customerId,
-      },
+      where: { id: customerId },
     },
     {
       // suspense: !!customerId,
