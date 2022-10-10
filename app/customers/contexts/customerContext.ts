@@ -13,6 +13,7 @@ export type CustomerContext = {
   // customer: Customer
   // displayname: string
   locations?: Location[]
+  location?: Location
   // locationId?: number
 
   // amountPaid: number

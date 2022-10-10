@@ -10,7 +10,7 @@ import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import getStashes from "app/stashes/queries/getStashes"
-import { StashType } from "db"
+import { Customer, StashType } from "db"
 import { useRouter } from "next/router"
 import { ReactNode, useEffect, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
@@ -40,11 +40,17 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [signingUp, setSigningUp] = useState(false)
 
   // Customer
-  const { customerId, locationId } = useParams("number")
+  const { customerId } = useParams("number")
   const [customer, { refetch: refetchCustomer }] = useQuery(
     getCustomer,
     {
       where: { id: customerId },
+      include: {
+        locations: {
+          select: { id: true },
+          orderBy: { primary: "desc" },
+        },
+      },
     },
     {
       enabled: !!customerId,
@@ -57,6 +63,19 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [deletingCustomer, setDeletingCustomer] = useState(false)
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
+
+  // Location
+  const [locationIds, setLocationIds] = useState<[{ id: number }]>()
+  const [locationId, setLocationId] = useState<number>()
+  useEffect(() => {
+    setLocationIds(customer ? customer["locations"] : [])
+  }, [customer])
+  useEffect(() => {
+    // Can't have just any re-render changing chosen locationId.
+    // if (!router.isReady) return
+    setLocationId(locationIds?.length && locationIds.at(0)?.id)
+    // console.log(`locationId (HeaderProvider): ${locationId}`)
+  }, [customerId]) // eslint-disable-line
 
   // Stash
   const [{ customerStashes, count: numStashes }, { refetch: refetchStashes }] = useQuery(
@@ -122,22 +141,29 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   return (
     <Provider
       value={{
-        logIn: () => setLoggingIn(true),
         signUp: () => setSigningUp(true),
+        logIn: () => setLoggingIn(true),
         logOut: () => logoutMutation(),
+        // gotoCustomer: (id) => router.push(Routes.ShowCustomerPage({ customerId: id })),
         createCustomer: () => setCreatingCustomer(true),
         editCustomer: () => setEditingCustomer(true),
         deleteCustomer: () => setDeletingCustomer(true),
-        refetchCustomer,
+
+        pickLocation: (id) => setLocationId(id),
+
         editStash: (id) => {
           setStashId(id)
           setEditingStash(true)
         },
 
         customer,
+        locationId,
+        locationIds,
         customerStashes,
         numStashes,
 
+        // refetchCustomer,
+        refetchCustomer,
         refetchStashes,
       }}
     >
@@ -165,14 +191,20 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             isOpen={editingCustomer}
             onClose={() => setEditingCustomer(false)}
             disableStash={true}
-            onSuccess={() => {
+            onSuccess={(customer) => {
               setEditingCustomer(false)
-              refetchCustomer().catch((e) => console.log(`Header CustomerModalForm error: ${e}`))
+              if (customer) {
+                if (!("notes" in customer)) {
+                  refetchCustomer().catch((e) =>
+                    console.log(`Header CustomerModalForm error: ${e}`)
+                  )
+                }
+              }
             }}
           />
 
           <ConfirmDeleteModal
-            title={`Delete ${customer?.firstname} ${customer?.lastname}?`}
+            title={`Delete ${customer?.firstname} ${customer?.lastname} ? `}
             description="Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
             isOpen={deletingCustomer}
             onClose={() => setDeletingCustomer(false)}

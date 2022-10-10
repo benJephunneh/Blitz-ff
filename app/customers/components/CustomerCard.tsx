@@ -16,7 +16,9 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Customer, Location } from "@prisma/client"
+import headerContext from "app/core/components/header/headerContext"
 import phoneDisplay from "app/core/components/methods/phoneDisplay"
+import getLocation from "app/locations/queries/getLocation"
 import Link from "next/link"
 import { useContext, useState } from "react"
 import { FcHome, FcPhone } from "react-icons/fc"
@@ -25,18 +27,23 @@ import customerContext from "../contexts/customerContext"
 import getCustomer from "../queries/getCustomer"
 
 type CustomerCardProps = {
-  customer: Pick<
-    Customer,
-    "id" | "firstname" | "lastname" | "displayname" | "companyname" | "email"
-  >
-  location?: Pick<Location, "id" | "house" | "street" | "city" | "state" | "zipcode" | "phones">
+  // customer: Pick<
+  //   Customer,
+  //   "id" | "firstname" | "lastname" | "displayname" | "companyname" | "email"
+  // >
+  // location?: Pick<Location, "id" | "house" | "street" | "city" | "state" | "zipcode" | "phones">
   props?: SpaceProps
 }
 
-const CustomerCard = ({ customer, location, ...props }: CustomerCardProps) => {
-  // const { customerId, locationId } = useParams('number')
-  // const [location, setLocation] = useState<Location>()
-  // console.log(`customerId: ${customerId}`)
+const CustomerCard = ({ ...props }: CustomerCardProps) => {
+  const { customer, locationId } = useContext(headerContext)
+  const [location] = useQuery(getLocation, {
+    where: {
+      id: locationId,
+    },
+  })
+  // console.log(`customer (CustomerCard): ${JSON.stringify(customer)}`)
+  // console.log(`location (CustomerCard): ${JSON.stringify(location)}`)
   // const [customer] = useQuery(
   //   getCustomer, {
   //   where: { id: customerId },
@@ -53,19 +60,6 @@ const CustomerCard = ({ customer, location, ...props }: CustomerCardProps) => {
   //   // refetchInterval: 2000,
   //   // refetchIntervalInBackground: true,
   // })
-
-  const locations: Location[] = customer!["locations"]
-  // function findLocation(l) {
-  //   return l.id === locationId
-  // }
-
-  // if (1 in locations) {
-  //   if (!locationId) setLocation(locations.at(0)!) // set to primary location
-  //   else {
-  //     const ii = locations.findIndex(findLocation)
-  //     setLocation(locations.at(ii)!)
-  //   }
-  // }
 
   const tagBgColor = useColorModeValue("khaki", "blue.700")
   // console.log(`customerId: ${customer}`)

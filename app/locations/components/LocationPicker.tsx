@@ -10,6 +10,7 @@ import {
   MenuItem,
   MenuList,
 } from "@chakra-ui/react"
+import headerContext from "app/core/components/header/headerContext"
 import customerContext from "app/customers/contexts/customerContext"
 import Link from "next/link"
 import { useContext } from "react"
@@ -23,7 +24,8 @@ type LocationPickerProps = {
 }
 
 const LocationPicker = ({ icon }: LocationPickerProps) => {
-  const { customer, locations, gotoLocation } = useContext(customerContext)
+  const { pickLocation } = useContext(headerContext)
+  const { locations, gotoLocation } = useContext(customerContext)
   // const [locations, { refetch: refetchLocations }] = useQuery(
   //   getLocations,
   //   {
@@ -76,7 +78,7 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
             key={location.id}
             fontWeight="semibold"
             fontSize="sm"
-            onClick={() => gotoLocation(location.id)}
+            onClick={() => pickLocation(location.id)}
           >
             {`${location.house} ${location.street}, ${location.city}  ${location.zipcode}`}
           </MenuItem>

@@ -60,7 +60,7 @@ export default resolver.pipe(
         })
         break
       case "Location":
-        await db.locationStash.update({
+        stash = await db.locationStash.update({
           where: { id },
           data: {
             userId: ctx.session.userId,

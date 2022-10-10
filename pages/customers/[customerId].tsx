@@ -9,9 +9,13 @@ import customerContext from "app/customers/contexts/customerContext"
 import { useQuery } from "@blitzjs/rpc"
 import getCustomer from "app/customers/queries/getCustomer"
 import headerContext from "app/core/components/header/headerContext"
+import getLocation from "app/locations/queries/getLocation"
 
 const ShowCustomerPage: BlitzPage = () => {
-  const { customer } = useContext(headerContext)
+  const { customer, locationId } = useContext(headerContext)
+  const [location] = useQuery(getLocation, { where: { id: locationId } })
+  // const { location } = useContext(customerContext)
+  // console.log(`location ([customerId]): ${JSON.stringify(location)}`)
 
   const textColor = useColorModeValue("009a4c", "yellow.200")
   const [stashing, setStashing] = useState(false)
@@ -28,7 +32,7 @@ const ShowCustomerPage: BlitzPage = () => {
       /> */}
 
       <Flex alignItems="start" p={4}>
-        <CustomerCard customer={customer!} location={location} />
+        <CustomerCard />
         {/* <LocationCard my={4} mx={4}>
             <Heading ml={4} fontStyle="italic">
               {heading}

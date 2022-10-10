@@ -15,8 +15,8 @@ const notes = stashContentSchema // .nullable()
 const id = z.number()
 
 export const CreateCustomer = z.object({
-  firstname,
-  lastname,
+  firstname: firstname.optional(),
+  lastname: lastname.optional(),
   companyname: companyname.optional(),
   email,
 })

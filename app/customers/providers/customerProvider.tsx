@@ -3,10 +3,11 @@ import { useMutation, useQuery } from "@blitzjs/rpc"
 import ConfirmDeleteModal from "app/core/components/ConfirmDeleteModal"
 import headerContext from "app/core/components/header/headerContext"
 import LocationModalForm from "app/locations/components/LocationModalForm"
+import getLocation from "app/locations/queries/getLocation"
 import getLocations from "app/locations/queries/getLocations"
-import { Customer } from "db"
+import { Customer, Location } from "db"
 import { useRouter } from "next/router"
-import { ReactNode, useContext } from "react"
+import { ReactNode, useContext, useEffect } from "react"
 import { useState } from "react"
 import CustomerDrawer from "../components/CustomerDrawer"
 import CustomerModalForm from "../components/CustomerModalForm"
@@ -23,11 +24,28 @@ type CustomerProviderProps = {
 
 const CustomerProvider = ({ children }: CustomerProviderProps) => {
   const router = useRouter()
-  const { customer } = useContext(headerContext)
+  const { customer, pickLocation, locationId, refetchStashes } = useContext(headerContext)
+  // const [location, setLocation] = useState<Location>()
+
+  // Location
+  // console.log(`locationId (customerProvider): ${locationId}`)
+  const [location, { refetch: refetchLocation }] = useQuery(
+    getLocation,
+    {
+      where: { id: locationId },
+    },
+    {
+      suspense: true,
+      enabled: !!locationId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  )
   const [locations, { refetch: refetchLocations }] = useQuery(
     getLocations,
     {
       where: { customerId: customer!.id },
+      orderBy: { primary: "desc" },
     },
     {
       enabled: !!customer,
@@ -35,32 +53,28 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
     }
   )
 
+  // useEffect(() => {
+  //   refetchLocation().catch((e) => console.log(e))
+  // }, [locationId]) // eslint-disable-line
+  // console.log(`location (customerProvider): ${JSON.stringify(location)}`)
+
   const [showingDetails, setShowingDetails] = useState(false)
   const [creatingLocation, setCreatingLocation] = useState(false)
-  const [searchQuery, setSearchQuery] = useState("")
 
+  // Search
+  const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, { refetch: refetchSearch }] = useQuery(
     findCustomer,
-    { query: searchQuery },
-    { suspense: false, enabled: !!searchQuery }
+    {
+      query: searchQuery,
+    },
+    {
+      suspense: false,
+      enabled: !!searchQuery,
+    }
   )
 
   // const { jobs, totalPaid, totalOwed } = useCalculateBalanceSheet(customerOrganizer?.jobs || [])
-
-  // let displayName = ""
-  // if (customer) {
-  //   if (customer.firstname) {
-  //     displayName = `${customer.firstname}`
-  //     if (customer.lastname) {
-  //       displayName.concat(` ${customer.lastname}`)
-  //     }
-  //   } else {
-  //     displayName = `${customer.companyname}`
-  //   }
-  // }
-
-  // console.log(`Customer: ${customer.displayname}`)
-  // console.log(`Location[0]: ${JSON.stringify(locations?.at(0))}`)
 
   return (
     <Provider
@@ -76,7 +90,8 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
 
         // customer: customer as Customer,
         // displayname: customer!.displayname,
-        locations: locations,
+        locations,
+        location,
         // locationId: locationId,
 
         // refetchCustomer,
@@ -89,10 +104,14 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         onClose={() => setCreatingLocation(false)}
         onSuccess={(location) => {
           setCreatingLocation(false)
-          // refetchCustomer()
-          router
-            .push(Routes.ShowLocationPage({ customerId: customer!.id, locationId: location!.id }))
-            .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
+          if ("notes" in location) refetchStashes()
+          else {
+            pickLocation(location!.id)
+            // refetchCustomer()
+            router
+              .push(Routes.ShowLocationPage({ customerId: customer!.id, locationId: location.id }))
+              .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
+          }
         }}
       />
 

@@ -9,13 +9,15 @@ const GetCustomer = z.object({
   id: z.number(),
 })
 
-interface CustomerFindFirstArgs extends Pick<Prisma.CustomerFindFirstArgs, "where" | "include"> {}
+interface CustomerFindFirstArgs
+  extends Pick<Prisma.CustomerFindFirstArgs, "where" | "include" | "select"> {}
 
 export default resolver.pipe(
   resolver.authorize(),
   // resolver.zod(GetCustomer),
 
-  async ({ where, include }: CustomerFindFirstArgs) => {
+  // async ({ id }) => {
+  async ({ where, include, select }: CustomerFindFirstArgs) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
 
     // if (!id) return null
@@ -23,6 +25,12 @@ export default resolver.pipe(
     const customer = await db.customer.findFirst({
       where,
       include,
+      // include: {
+      //   locations: {
+      //     select: { id: true },
+      //     orderBy: { primary: "desc" },
+      //   },
+      // },
       // include: {
       //   locations: {
       //     where,
@@ -36,6 +44,9 @@ export default resolver.pipe(
       //   displayname: true,
       //   email: true,
       // },
+    })
+    const locationCount = await db.location.count({
+      where: { customerId: customer?.id },
     })
 
     if (!customer) throw new NotFoundError()

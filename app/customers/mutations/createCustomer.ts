@@ -9,16 +9,7 @@ export default resolver.pipe(
 
   async (input) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    let displayname = ""
-    if (input.firstname) {
-      if (input.lastname) {
-        displayname = `${input.firstname} ${input.lastname}`
-      } else {
-        displayname = input.firstname
-      }
-    } else if (input.companyname) {
-      displayname = input.companyname
-    }
+    const displayname = `${input.firstname} ${input.lastname}`
 
     const email = await db.customer.findFirst({
       where: {

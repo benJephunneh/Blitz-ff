@@ -42,7 +42,7 @@ type Location = PromiseReturnType<typeof createLocation>
 type LocationModalFormProps = {
   isOpen: boolean
   onClose: () => void
-  onSuccess?: (location: Location | LocationStash | void) => void
+  onSuccess?: (location: Location | LocationStash) => void
   customerId: number
   locationId?: number
   stashId?: number
