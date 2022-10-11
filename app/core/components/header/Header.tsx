@@ -41,7 +41,7 @@ const Header = ({ children }: HeaderProps) => {
     <>
       {/* <HamburgerDrawer isOpen={drawerIsOpen} onClose={() => setDrawerIsOpen(false)} /> */}
 
-      <Box position="sticky" top={0} zIndex={3}>
+      <Box position="sticky" top={0}>
         <HStack
           px={3}
           py={2}

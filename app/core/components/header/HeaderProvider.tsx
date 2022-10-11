@@ -8,9 +8,14 @@ import logout from "app/auth/mutations/logout"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
+import LocationModalForm from "app/locations/components/LocationModalForm"
+import deleteLocation from "app/locations/mutations/deleteLocation"
+import updateLocation from "app/locations/mutations/updateLocation"
+import createStash from "app/stashes/mutations/createStash"
 import deleteStash from "app/stashes/mutations/deleteStash"
+import updateStash from "app/stashes/mutations/updateStash"
 import getStashes from "app/stashes/queries/getStashes"
-import { Customer, StashType } from "db"
+import db, { Customer, CustomerStash, Location, LocationStash, StashType } from "db"
 import { useRouter } from "next/router"
 import { ReactNode, useEffect, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
@@ -65,78 +70,77 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
 
   // Location
+  const [creatingLocation, setCreatingLocation] = useState(false)
+  const [editingLocation, setEditingLocation] = useState(false)
+  const [deletingLocation, setDeletingLocation] = useState(false)
+  const updateLocationMutation = useMutation(updateLocation)
+  const deleteLocationMutation = useMutation(deleteLocation)
   const [locationIds, setLocationIds] = useState<[{ id: number }]>()
   const [locationId, setLocationId] = useState<number>()
+  // const [location, setLocation] = useState<Location>()
   useEffect(() => {
     setLocationIds(customer ? customer["locations"] : [])
   }, [customer])
   useEffect(() => {
-    // Can't have just any re-render changing chosen locationId.
-    // if (!router.isReady) return
     setLocationId(locationIds?.length && locationIds.at(0)?.id)
-    // console.log(`locationId (HeaderProvider): ${locationId}`)
-  }, [customerId]) // eslint-disable-line
+  }, [customerId, locationIds])
+  // useEffect(() => {
+  //   // Can't have just any re-render changing chosen locationId.
+  //   // if (!router.isReady) return
+  //   async () => {
+  //     let l = await db.location.findFirstOrThrow({ where: { id: locationId } })
+  //     setLocation(l)
+  //   }
+  //   // setLocation()
+  //   // setLocation(locationIds?.length && locationIds.at(0)?.id)
+  //   // console.log(`locationId (HeaderProvider): ${locationId}`)
+  // }, [locationId]) // eslint-disable-line
 
   // Stash
-  const [{ customerStashes, count: numStashes }, { refetch: refetchStashes }] = useQuery(
-    getStashes,
-    {},
-    {
-      // suspense: true,
-      // enabled: true,
-      refetchOnWindowFocus: false,
-      // refetchInterval: 2000,
-      // refetchIntervalInBackground: true,
-    }
-  )
+  const [{ customerStashes, locationStashes, count: numStashes }, { refetch: refetchStashes }] =
+    useQuery(
+      getStashes,
+      {},
+      {
+        suspense: true,
+        staleTime: Infinity,
+        // enabled: true,
+        refetchOnWindowFocus: false,
+        // refetchInterval: 2000,
+        // refetchIntervalInBackground: true,
+      }
+    )
   const [stashId, setStashId] = useState<number>()
+  const [stashType, setStashType] = useState<StashType>()
   const [editingStash, setEditingStash] = useState(false)
   const [deletingStash, setDeletingStash] = useState(false)
+  const [createStashMutation] = useMutation(createStash)
+  const [updateStashMutation] = useMutation(updateStash)
   const [deleteStashMutation] = useMutation(deleteStash)
+  const [customerStash, setCustomerStash] = useState<CustomerStash>()
+  const [locationStash, setLocationStash] = useState<LocationStash>()
+  useEffect(() => {
+    if (!setEditingStash) return
+
+    switch (stashType) {
+      case "Customer":
+        setCustomerStash(customerStashes.find((cs) => cs.id === stashId))
+        // setEditingStash(true)
+        break
+      case "Location":
+        setLocationStash(locationStashes.find((ls) => ls.id === stashId))
+        // setEditingStash(true)
+        break
+
+      default:
+        setCustomerStash(undefined)
+        setLocationStash(undefined)
+        break
+    }
+  }, [customerStashes, editingStash, locationStashes, stashId, stashType])
 
   const [loginMutation] = useMutation(login)
   const [logoutMutation] = useMutation(logout)
-
-  useEffect(() => {
-    // stashId got set
-    // editingStash is true
-    // load stash:
-    async function gs(id: number, stashType: StashType) {
-      switch (stashType) {
-        case "Customer":
-          // return await db.customerStash.findFirst({
-          //   where: { id }
-          // })
-          setStashId(id)
-          setEditingCustomer(true)
-          setEditingStash(false)
-          break
-        // case 'Location':
-        //   return await db.locationStash.findFirst({
-        //     where: { id }
-        //   })
-        //   break;
-        // case 'Job':
-        //   return await db.jobStash.findFirst({
-        //     where: { id }
-        //   })
-        //   break;
-        // case 'Invoice':
-        //   return await db.invoiceStash.findFirst({
-        //     where: { id }
-        //   })
-        //   break;
-        // case 'Estimate':
-        //   return await db.estimateStash.findFirst({
-        //     where: { id }
-        //   })
-        //   break;
-        default:
-          break
-      }
-    }
-    // open appropriate modal
-  }, [editingStash])
 
   return (
     <Provider
@@ -145,21 +149,31 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         logIn: () => setLoggingIn(true),
         logOut: () => logoutMutation(),
         // gotoCustomer: (id) => router.push(Routes.ShowCustomerPage({ customerId: id })),
-        createCustomer: () => setCreatingCustomer(true),
+        createCustomer: async () => {
+          setStashId(undefined)
+          setStashType(undefined)
+          setCreatingCustomer(true)
+        },
         editCustomer: () => setEditingCustomer(true),
         deleteCustomer: () => setDeletingCustomer(true),
 
+        createLocation: () => setCreatingLocation(true),
+        editLocation: () => setEditingLocation(true),
+        deleteLocation: () => setDeletingLocation(true),
         pickLocation: (id) => setLocationId(id),
 
-        editStash: (id) => {
+        editStash: (id, type) => {
           setStashId(id)
+          setStashType(type)
           setEditingStash(true)
         },
 
         customer,
+        // location,
         locationId,
         locationIds,
         customerStashes,
+        locationStashes,
         numStashes,
 
         // refetchCustomer,
@@ -186,19 +200,58 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
       {isLoggedIn && (
         <>
           <CustomerModalForm
-            // customer={customer}
-            customerId={customerId}
-            isOpen={editingCustomer}
-            onClose={() => setEditingCustomer(false)}
-            disableStash={true}
-            onSuccess={(customer) => {
-              setEditingCustomer(false)
+            // customerId={customerId}
+            customer={editingCustomer ? customer : undefined}
+            customerStash={customerStash}
+            isOpen={creatingCustomer || editingCustomer || editingStash}
+            onClose={() => {
+              creatingCustomer && setCreatingCustomer(false)
+              editingCustomer && setEditingCustomer(false)
+              editingStash && setEditingStash(false)
+            }}
+            // disableStash={true}
+            onSuccess={async (customer) => {
               if (customer) {
-                if (!("notes" in customer)) {
-                  refetchCustomer().catch((e) =>
-                    console.log(`Header CustomerModalForm error: ${e}`)
-                  )
+                if ("notes" in customer) await refetchStashes()
+                else {
+                  if (creatingCustomer) {
+                    setLocationId(undefined)
+                    await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
+                  }
+                  editingCustomer && (await refetchCustomer())
+                  // await refetchCustomer()
+                  //   .catch((e) =>
+                  //     console.log(`Header CustomerModalForm error: ${e}`)
+                  //   )
                 }
+              }
+              creatingCustomer && setCreatingCustomer(false)
+              editingCustomer && setEditingCustomer(false)
+              editingStash && setEditingStash(false)
+            }}
+          />
+
+          <LocationModalForm
+            customerId={customer?.id}
+            // location={editingLocation ? location : undefined}
+            locationId={creatingLocation ? undefined : locationId}
+            locationStash={editingStash ? locationStash : undefined}
+            isOpen={creatingLocation || editingLocation || editingStash}
+            onClose={() => {
+              creatingLocation && setCreatingLocation(false)
+              editingLocation && setEditingLocation(false)
+              editingStash && setEditingStash(false)
+            }}
+            onSuccess={(location) => {
+              setCreatingLocation(false)
+              if ("notes" in location) {
+                refetchStashes().catch((e) => console.log(e))
+              } else {
+                setLocationId(location.id)
+                // refetchCustomer()
+                // router
+                //   .push(Routes.ShowLocationPage({ customerId: customer!.id, locationId: location.id }))
+                //   .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
               }
             }}
           />

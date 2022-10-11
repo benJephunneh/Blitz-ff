@@ -16,6 +16,7 @@ import {
   ModalProps,
   Stack,
   UnorderedList,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { FormComponent } from "./FormComponent"
 import { FaPlus } from "react-icons/fa"
@@ -53,6 +54,8 @@ const ModalForm: FormComponent<ModalFormProps> = ({
   children,
   ...props
 }) => {
+  const modalBgColor = useColorModeValue("gray.50", "gray.900")
+  const modalHeaderColor = useColorModeValue("black.900", "cyan.300")
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside">
       <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px) invert(10%)" />
@@ -62,8 +65,8 @@ const ModalForm: FormComponent<ModalFormProps> = ({
         onSubmit={onSubmit}
         render={(phorm) => (
           <form onSubmit={phorm.handleSubmit} {...props}>
-            <ModalContent>
-              <ModalHeader>{title}</ModalHeader>
+            <ModalContent bg={modalBgColor}>
+              <ModalHeader textColor={modalHeaderColor}>{title}</ModalHeader>
               <ModalCloseButton />
               <ModalBody>
                 {phorm.submitError && (

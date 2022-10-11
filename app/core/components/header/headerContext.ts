@@ -1,4 +1,4 @@
-import { Customer, CustomerStash, StashType } from "@prisma/client"
+import { Customer, CustomerStash, Location, LocationStash, StashType } from "@prisma/client"
 import { createContext } from "react"
 
 export type HeaderContext = {
@@ -17,12 +17,18 @@ export type HeaderContext = {
   // Location
   locationId?: number
   locationIds?: Array<{ id: number }>
+  location?: Location
+  createLocation: () => void
+  editLocation: () => void
+  deleteLocation: () => void
+  // pickLocation: (l: Location) => void
   pickLocation: (id: number | undefined) => void
 
   // Stash
   customerStashes: CustomerStash[]
+  locationStashes: LocationStash[]
   numStashes: number
-  editStash: (id: number) => void
+  editStash: (id: number | undefined, type: StashType | undefined) => void
 
   // locationStashes: LocationStash[]
   // jobStashes: JobStash[]

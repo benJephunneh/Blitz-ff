@@ -6,7 +6,7 @@ export type CustomerContext = {
   // editCustomer: () => void
   // deleteCustomer: () => void
   showDetails: () => void
-  createLocation: () => void
+  // createLocation: () => void
   // pickLocation: (id: number) => void
   gotoLocation: (id: number) => void
 

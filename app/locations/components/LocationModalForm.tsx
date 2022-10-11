@@ -43,9 +43,11 @@ type LocationModalFormProps = {
   isOpen: boolean
   onClose: () => void
   onSuccess?: (location: Location | LocationStash) => void
-  customerId: number
+  customerId?: number
   locationId?: number
-  stashId?: number
+  // stashId?: number
+  // location?: Location
+  locationStash?: LocationStash
   disableStash?: boolean
   mutationType?: MutationType
   props?: Partial<ModalProps>
@@ -57,9 +59,11 @@ const LocationModalForm = ({
   onSuccess,
   customerId,
   locationId,
-  stashId,
+  // stashId,
+  // location,
+  locationStash,
   disableStash,
-  mutationType = "New",
+  // mutationType = "New",
   ...props
 }: LocationModalFormProps) => {
   const [createLocationMutation] = useMutation(createLocation)
@@ -76,24 +80,24 @@ const LocationModalForm = ({
     },
     {
       enabled: !!locationId,
-      // staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    }
-  )
-
-  const [locationStash, { refetch: refetchStash }] = useQuery(
-    getStash,
-    {
-      id: stashId,
-      stashType,
-    },
-    {
-      suspense: !!stashId,
-      enabled: !!stashId,
       staleTime: Infinity,
       refetchOnWindowFocus: false,
     }
   )
+
+  // const [locationStash, { refetch: refetchStash }] = useQuery(
+  //   getStash,
+  //   {
+  //     id: stashId,
+  //     stashType,
+  //   },
+  //   {
+  //     suspense: !!stashId,
+  //     enabled: !!stashId,
+  //     staleTime: Infinity,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // )
 
   const [user] = useQuery(
     getUser,
@@ -103,10 +107,11 @@ const LocationModalForm = ({
     {
       enabled: !!locationStash,
       suspense: !!locationStash,
+      refetchOnWindowFocus: false,
     }
   )
 
-  const textFootnoteColor = useColorModeValue("gray.500", "gray.300")
+  const textFootnoteColor = useColorModeValue("red", "cyan.200")
 
   // let mutation: MutateFunction<Location, unknown, {}, unknown>
   // let { id, house, street, city, state, zipcode, block, lot, parcel, primary } = {} as Location
@@ -158,42 +163,42 @@ const LocationModalForm = ({
   // }
 
   const onSubmit = async (values) => {
-    const { notes, ...locationSubmission } = values
+    const { notes, ...formSubmission } = values
 
     let locationRet
     if (values.stashing) {
-      console.log("stashing")
+      // console.log("stashing")
       if (locationStash) {
-        console.log("\tupdating stash")
+        // console.log("\tupdating stash")
         locationRet = await updateStashMutation({
           id: locationStash.id,
           stashType,
-          location: locationSubmission,
+          location: formSubmission,
           notes,
         })
-        refetchStash().catch((e) => console.log(`Location update error: ${e}`))
+        // refetchStash().catch((e) => console.log(`Location update error: ${e}`))
       } else {
-        console.log("\tcreating stash")
+        // console.log("\tcreating stash")
         locationRet = await createStashMutation({
           customerId,
           stashType,
-          location: locationSubmission,
+          location: formSubmission,
           notes,
         })
       }
     } else {
-      console.log("not stashing")
+      // console.log("not stashing")
       if (location) {
-        console.log("\tupdating location")
+        // console.log("\tupdating location")
         locationRet = await updateLocationMutation({
-          id: locationId,
+          id: location.id,
           ...values,
         })
       } else {
-        console.log("\tcreating location")
+        // console.log("\tcreating location")
         locationRet = await createLocationMutation({
-          customerId,
-          locationInput: locationSubmission,
+          customerId: customerId!,
+          locationInput: formSubmission,
         })
         if (locationStash && locationRet) {
           await deleteStashMutation({
@@ -228,7 +233,7 @@ const LocationModalForm = ({
     parcel: locationStash?.parcel || location?.parcel || undefined,
     locationType: locationStash?.locationType || location?.locationType || "Personal",
     notes: locationStash?.notes ? JSON.parse(locationStash.notes) : null,
-    customerId,
+    // customerId,
   }
 
   return (
@@ -237,9 +242,9 @@ const LocationModalForm = ({
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
-      schema={locationId ? UpdateLocation : CreateLocationStash}
-      title={locationId ? "Edit location" : "New location"}
-      submitText={locationId ? "Update" : "Create"}
+      schema={CreateLocationStash}
+      title={location || locationStash ? "Edit location" : "New location"}
+      submitText={location || locationStash ? "Update" : "Create"}
       initialValues={initialValues}
       onSubmit={(values) => {
         onSubmit(values)
@@ -320,7 +325,7 @@ const LocationModalForm = ({
             bubbleMenu
             floatingMenu
           />
-          {stashId && (
+          {locationStash && (
             <Text fontSize="xs" color={textFootnoteColor}>
               Stashed by {user?.username}
             </Text>

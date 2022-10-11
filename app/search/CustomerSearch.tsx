@@ -5,6 +5,7 @@ import CustomerCard from "app/customers/components/CustomerCard"
 import CustomerSearchResult from "app/customers/components/CustomerSearchResult"
 import { useEffect, useState } from "react"
 import findCustomer from "../customers/queries/findCustomer"
+import search from "./queries/search"
 import SearchInput from "./SearchInput"
 import SearchResults from "./SearchResults"
 
@@ -18,7 +19,8 @@ const CustomerSearch = ({ message, initialSearch = "", customerActions }: Custom
   const [query, setQuery] = useState(initialSearch)
   const [enabled, setEnabled] = useState(false)
   const [items, { status, isLoading }] = useQuery(
-    findCustomer,
+    // findCustomer,
+    search,
     { query },
     { suspense: false, enabled: !!query }
   )

@@ -20,21 +20,13 @@ export const CreateCustomer = z.object({
   companyname: companyname.optional(),
   email,
 })
+export const UpdateCustomer = CreateCustomer.extend({ id })
 
-export const UpdateCustomer = CreateCustomer.extend({
-  id,
-})
-export const UpdateCustomerStash = CreateCustomer.partial().extend({
-  id,
-})
+export const CreateCustomerStash = CreateCustomer.partial().extend({ notes })
+export const UpdateCustomerStash = CreateCustomerStash.extend({ id })
 
-export const DeleteCustomer = z.object({
-  id,
-})
-
-export const ArchiveCustomer = z.object({
-  id,
-})
+export const DeleteCustomer = z.object({ id })
+export const ArchiveCustomer = z.object({ id })
 // export interface ICustomer {
 //   firstname: string
 //   lastname: string

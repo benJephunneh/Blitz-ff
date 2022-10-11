@@ -15,8 +15,7 @@ export const block = z.string()
 export const lot = z.string()
 export const parcel = z.string()
 export const locationType = z.nativeEnum(LocationType)
-// export const type = z.enum(["Personal", "Business", "Managed"])
-export const customerId = z.number()
+// export const customerId = z.number()
 const notes = stashContentSchema // .nullable()
 const stashType = z.nativeEnum(StashType)
 
@@ -34,8 +33,8 @@ export const CreateLocation = z.object({
   locationType,
   // customerId,
 })
+export const UpdateLocation = CreateLocation.extend({ id })
 
-// export const CreateLocationStash = CreateLocation.partial().extend({
 export const CreateLocationStash = z.object({
   primary,
   house: house.optional(),
@@ -48,20 +47,10 @@ export const CreateLocationStash = z.object({
   lot: lot.optional(),
   parcel: parcel.optional(),
   locationType,
+  notes,
 })
 
-export const UpdateLocation = CreateLocation.extend({
-  id,
-})
+export const UpdateLocationStash = CreateLocationStash.extend({ id })
 
-export const UpdateLocationStash = CreateLocationStash.partial().extend({
-  id,
-})
-
-export const DeleteLocation = z.object({
-  id,
-})
-
-export const ArchiveLocation = z.object({
-  id,
-})
+export const DeleteLocation = z.object({ id })
+export const ArchiveLocation = z.object({ id })

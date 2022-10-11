@@ -24,8 +24,9 @@ const CustomerSubheaderActions = () => {
   const router = useRouter()
   // const [editingCustomer, setEditingCustomer] = useState(false)
   // const [creatingLocation, setCreatingLocation] = useState(false)
-  const { editCustomer, deleteCustomer } = useContext(headerContext)
-  const { showDetails, createLocation } = useContext(customerContext)
+  const { editCustomer, deleteCustomer, editLocation, deleteLocation } = useContext(headerContext)
+  const { showDetails } = useContext(customerContext)
+  const { createLocation } = useContext(headerContext)
 
   return (
     <>
@@ -65,6 +66,9 @@ const CustomerSubheaderActions = () => {
             <MenuItem icon={<FcEditImage size={15} />} onClick={editCustomer} fontWeight="semibold">
               Edit customer
             </MenuItem>
+            <MenuItem icon={<FcEditImage size={15} />} onClick={editLocation} fontWeight="semibold">
+              Edit location
+            </MenuItem>
             <MenuItem
               icon={<FcFullTrash size={15} />}
               onClick={deleteCustomer}
@@ -73,6 +77,15 @@ const CustomerSubheaderActions = () => {
               bgColor="blackAlpha.200"
             >
               Delete customer
+            </MenuItem>
+            <MenuItem
+              icon={<FcFullTrash size={15} />}
+              onClick={deleteLocation}
+              fontWeight="semibold"
+              color="red"
+              bgColor="blackAlpha.200"
+            >
+              Delete location
             </MenuItem>
           </MenuList>
         </SettingsMenuButton>

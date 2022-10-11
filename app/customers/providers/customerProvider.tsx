@@ -28,19 +28,18 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
   // const [location, setLocation] = useState<Location>()
 
   // Location
-  // console.log(`locationId (customerProvider): ${locationId}`)
-  const [location, { refetch: refetchLocation }] = useQuery(
-    getLocation,
-    {
-      where: { id: locationId },
-    },
-    {
-      suspense: true,
-      enabled: !!locationId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    }
-  )
+  // const [location, { refetch: refetchLocation }] = useQuery(
+  //   getLocation,
+  //   {
+  //     where: { id: locationId },
+  //   },
+  //   {
+  //     suspense: !!locationId,
+  //     enabled: !!locationId,
+  //     staleTime: Infinity,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // )
   const [locations, { refetch: refetchLocations }] = useQuery(
     getLocations,
     {
@@ -83,7 +82,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         // editCustomer: () => setEditingCustomer(true),
         // deleteCustomer: () => setDeletingCustomer(true),
         showDetails: () => setShowingDetails(true),
-        createLocation: () => setCreatingLocation(true),
+        // createLocation: () => setCreatingLocation(true),
         // pickLocation: (id) => setLocationId(id),
         gotoLocation: async (id) =>
           await router.push(Routes.ShowLocationPage({ customerId: customer!.id, locationId: id })),
@@ -91,14 +90,14 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         // customer: customer as Customer,
         // displayname: customer!.displayname,
         locations,
-        location,
+        // location,
         // locationId: locationId,
 
         // refetchCustomer,
         refetchLocations,
       }}
     >
-      <LocationModalForm
+      {/* <LocationModalForm
         customerId={customer!.id}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
@@ -113,7 +112,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
               .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
           }
         }}
-      />
+      /> */}
 
       <CustomerDrawer onClose={() => setShowingDetails(false)} isOpen={showingDetails} />
 

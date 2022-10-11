@@ -1,13 +1,16 @@
 import { Routes, useParam, useParams } from "@blitzjs/next"
 import { useQuery } from "@blitzjs/rpc"
 import {
+  Button,
   Heading,
   HStack,
   Icon,
+  IconButton,
   LinkBox,
   LinkOverlay,
   SimpleGrid,
   SpaceProps,
+  Spacer,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -20,9 +23,10 @@ import headerContext from "app/core/components/header/headerContext"
 import phoneDisplay from "app/core/components/methods/phoneDisplay"
 import getLocation from "app/locations/queries/getLocation"
 import Link from "next/link"
-import { useContext, useState } from "react"
-import { FcHome, FcPhone } from "react-icons/fc"
-import { MdAlternateEmail } from "react-icons/md"
+import { useContext, useEffect, useState } from "react"
+import { FaEdit } from "react-icons/fa"
+import { FcEditImage, FcHome, FcPhone } from "react-icons/fc"
+import { MdAlternateEmail, MdOutlineEditLocation } from "react-icons/md"
 import customerContext from "../contexts/customerContext"
 import getCustomer from "../queries/getCustomer"
 
@@ -36,13 +40,23 @@ type CustomerCardProps = {
 }
 
 const CustomerCard = ({ ...props }: CustomerCardProps) => {
-  const { customer, locationId } = useContext(headerContext)
-  const [location] = useQuery(getLocation, {
-    where: {
-      id: locationId,
+  const { customer, locationId, editLocation } = useContext(headerContext)
+  const [location, { refetch: refetchLocation }] = useQuery(
+    getLocation,
+    {
+      where: { id: locationId },
     },
-  })
-  // console.log(`customer (CustomerCard): ${JSON.stringify(customer)}`)
+    {
+      enabled: !!locationId,
+      refetchOnWindowFocus: false,
+      refetchInterval: 5000,
+    }
+  )
+  // useEffect(() => {
+  //   async () => await refetchLocation()
+  // }, [locationId]) // eslint-disable-line
+
+  //// console.log(`customer (CustomerCard): ${JSON.stringify(customer)}`)
   // console.log(`location (CustomerCard): ${JSON.stringify(location)}`)
   // const [customer] = useQuery(
   //   getCustomer, {
@@ -69,18 +83,29 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
       py={2}
       px={2}
       display="inline"
-      borderWidth={1}
       borderRadius="md"
+      borderRightRadius={0}
+      borderRightWidth={3}
       position="relative"
       transition="border 50ms ease"
-      bg={useColorModeValue("blackAlpha.100", "gray.600")}
       borderColor={useColorModeValue("gray.50", "gray.700")}
       _hover={{ borderColor: "blue.400" }}
       {...props}
     >
       <VStack spacing={5}>
+        <IconButton
+          icon={<MdOutlineEditLocation size={25} />}
+          as={Button}
+          position="fixed"
+          size="xs"
+          aria-label="Edit location"
+          alignSelf="start"
+          onClick={editLocation}
+          bg="transparent"
+          zIndex="overlay"
+        />
         <Heading fontStyle="italic" size="2xl">
-          <>
+          {/* <>
             {location ? (
               <Link
                 href={Routes.ShowLocationPage({
@@ -94,13 +119,14 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
             ) : (
               <>{customer!.displayname}</>
             )}
-          </>
+          </> */}
+          {customer!.displayname}
         </Heading>
 
         {location && (
-          <SimpleGrid columns={2}>
-            <HStack spacing={4} ml={4}>
-              <Icon as={FcHome} w={8} h={8} />
+          <SimpleGrid columns={2} mt={5}>
+            <HStack ml={4}>
+              <Icon as={FcHome} w={8} h={8} mr={4} />
               <Text fontWeight="semibold" opacity="0.8">
                 {location.house} {location.street}
                 <br />
@@ -121,7 +147,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
                 opacity="0.9"
               >
                 <TagLeftIcon as={MdAlternateEmail} color="cyan.400" />
-                <TagLabel>{customer!.email}</TagLabel>
+                <TagLabel _hover={{ textDecoration: "underline" }}>{customer!.email}</TagLabel>
               </Tag>
             </HStack>
           </SimpleGrid>

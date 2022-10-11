@@ -1,5 +1,18 @@
 import { BlitzPage, Routes, useParam } from "@blitzjs/next"
-import { Box, Flex, Spacer, useColorModeValue } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Flex,
+  Grid,
+  GridItem,
+  HStack,
+  Icon,
+  IconButton,
+  Spacer,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 import CustomerSubheader from "app/customers/components/CustomerSubheader"
 import CustomerCard from "app/customers/components/CustomerCard"
@@ -10,15 +23,16 @@ import { useQuery } from "@blitzjs/rpc"
 import getCustomer from "app/customers/queries/getCustomer"
 import headerContext from "app/core/components/header/headerContext"
 import getLocation from "app/locations/queries/getLocation"
+import { FcAdvertising, FcDoughnutChart, FcElectricalSensor, FcPlus } from "react-icons/fc"
+import { FaEgg } from "react-icons/fa"
 
 const ShowCustomerPage: BlitzPage = () => {
-  const { customer, locationId } = useContext(headerContext)
-  const [location] = useQuery(getLocation, { where: { id: locationId } })
+  // const { customer, locationId } = useContext(headerContext)
+  // const [location] = useQuery(getLocation, { where: { id: locationId } })
   // const { location } = useContext(customerContext)
   // console.log(`location ([customerId]): ${JSON.stringify(location)}`)
 
   const textColor = useColorModeValue("009a4c", "yellow.200")
-  const [stashing, setStashing] = useState(false)
 
   return (
     <Box bg={useColorModeValue("white", "gray.800")}>
@@ -32,7 +46,24 @@ const ShowCustomerPage: BlitzPage = () => {
       /> */}
 
       <Flex alignItems="start" p={4}>
-        <CustomerCard />
+        <HStack borderRadius="md" bg={useColorModeValue("blackAlpha.100", "gray.600")}>
+          <CustomerCard />
+          <VStack alignContent="space-between">
+            <ButtonGroup isAttached flexDirection="column" variant="ghost" alignItems="start">
+              <Button aria-label="adfe" rightIcon={<FcPlus />}>
+                Jobs
+              </Button>
+              {/* <Spacer /> */}
+              <Button aria-label="adfk" rightIcon={<FcPlus />}>
+                Estimates
+              </Button>
+              {/* <Spacer /> */}
+              <Button aria-label="asdf" rightIcon={<FcPlus />}>
+                Invoices
+              </Button>
+            </ButtonGroup>
+          </VStack>
+        </HStack>
         {/* <LocationCard my={4} mx={4}>
             <Heading ml={4} fontStyle="italic">
               {heading}

@@ -3,8 +3,15 @@ import { FORM_ERROR } from "final-form"
 import createCustomer from "../mutations/createCustomer"
 import updateCustomer from "../mutations/updateCustomer"
 import getCustomer from "../queries/getCustomer"
-import { CreateCustomer, UpdateCustomer } from "../validations"
-import { Grid, GridItem, ModalProps, Text, useColorModeValue } from "@chakra-ui/react"
+import { CreateCustomer, CreateCustomerStash, UpdateCustomer } from "../validations"
+import {
+  Grid,
+  GridItem,
+  ModalProps,
+  Text,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
@@ -20,11 +27,12 @@ type CustomerModalFormProps = {
   isOpen: boolean
   onClose: () => void
   onSuccess?: (customer: Customer | CustomerStash | void) => void
-  // customerStash?: CustomerStash // | LocationStash
-  customerId?: number
-  stashId?: number
+  // customerId?: number
+  // stashId?: number
+  customer?: Customer
+  customerStash?: CustomerStash // | LocationStash
   disableStash?: boolean
-  mutationType?: MutationType
+  // mutationType?: MutationType
   props?: Partial<ModalProps>
 }
 
@@ -32,10 +40,12 @@ const CustomerModalForm = ({
   isOpen,
   onClose,
   onSuccess,
-  customerId,
-  stashId,
+  // customerId,
+  // stashId,
+  customer,
+  customerStash,
   disableStash,
-  mutationType = "New",
+  // mutationType = "New",
   ...props
 }: CustomerModalFormProps) => {
   const [createCustomerMutation] = useMutation(createCustomer)
@@ -49,33 +59,34 @@ const CustomerModalForm = ({
   // console.log(`\tcustomerId: ${customerId}`)
   // console.log(`\tstash: ${JSON.stringify(stashId)}`)
 
-  const [customer, { setQueryData }] = useQuery(
-    getCustomer,
-    {
-      where: { id: customerId },
-    },
-    {
-      // suspense: !!customerId,
-      enabled: !!customerId,
-      // staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    }
-  )
+  // const [customer, { setQueryData }] = useQuery(
+  //   getCustomer,
+  //   {
+  //     where: { id: customerId },
+  //   },
+  //   {
+  //     // suspense: !!customerId,
+  //     enabled: !!customerId,
+  //     // staleTime: Infinity,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // )
+
   // const customerStash = useStash(stashId, stashType)
 
-  const [customerStash, { refetch: refetchStash }] = useQuery(
-    getStash,
-    {
-      id: stashId,
-      stashType,
-    },
-    {
-      suspense: !!stashId,
-      enabled: !!stashId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    }
-  )
+  // const [customerStash, { refetch: refetchStash }] = useQuery(
+  //   getStash,
+  //   {
+  //     id: stashId,
+  //     stashType,
+  //   },
+  //   {
+  //     suspense: !!stashId,
+  //     enabled: !!stashId,
+  //     staleTime: Infinity,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // )
 
   const [user] = useQuery(
     getUser,
@@ -85,10 +96,11 @@ const CustomerModalForm = ({
     {
       enabled: !!customerStash,
       suspense: !!customerStash,
+      refetchOnWindowFocus: false,
     }
   )
 
-  const textFootnoteColor = useColorModeValue("gray.500", "gray.300")
+  const textFootnoteColor = useColorModeValue("red", "cyan.200")
 
   // console.log(`customerId: ${customerId}`)
   // console.log(`isLoading: ${isLoading}`)
@@ -121,26 +133,26 @@ const CustomerModalForm = ({
     // console.log("Entered onSubmit")
     // console.log(`values.stashing: ${values.stashing}`)
 
-    // const customerSubmission = (({ firstname, lastname, companyname, email }) => ({ firstname, lastname, companyname, email }))(values)
-    const { notes, ...customerSubmission } = values
+    // const formSubmission = (({ firstname, lastname, companyname, email }) => ({ firstname, lastname, companyname, email }))(values)
+    const { notes, ...formSubmission } = values
 
     let customerRet
-    if (!!values.stashing) {
+    if (values.stashing) {
       // console.log("\tstashing")
       if (customerStash) {
         // console.log("\t\tupdate stash")
         customerRet = await updateStashMutation({
           id: customerStash.id,
           stashType,
-          customer: customerSubmission,
+          customer: formSubmission,
           notes,
         })
-        await refetchStash()
+        // await refetchStash()
       } else {
         // console.log("\t\tcreate stash")
         customerRet = await createStashMutation({
           stashType,
-          customer: customerSubmission,
+          customer: formSubmission,
           notes,
         })
       }
@@ -148,12 +160,18 @@ const CustomerModalForm = ({
       // console.log("\tnot stashing")
       if (customer) {
         // console.log("\t\tupdating customer")
-        customerRet = await updateCustomerMutation({ id: customer.id, ...values })
+        customerRet = await updateCustomerMutation({
+          id: customer.id,
+          ...values,
+        })
       } else {
         // console.log("\t\tcreating customer")
         customerRet = await createCustomerMutation(values)
         if (customerStash && customerRet)
-          await deleteStashMutation({ id: customerStash.id, stashType })
+          await deleteStashMutation({
+            id: customerStash.id,
+            stashType,
+          })
       }
       // await refetchCustomer()
     }
@@ -175,16 +193,18 @@ const CustomerModalForm = ({
     notes: customerStash?.notes ? JSON.parse(customerStash.notes) : null,
   }
 
+  const a = useDisclosure()
+
   return (
     <ModalForm
       size="lg"
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
-      schema={CreateCustomer.partial()}
+      schema={CreateCustomerStash}
       // schema={customerId ? UpdateCustomer : CreateCustomer.partial()}
-      title={customerId ? "Edit customer" : "New customer"}
-      submitText={customerId ? "Update" : "Create"}
+      title={customer || customerStash ? "Edit customer" : "New customer"}
+      submitText={customer || customerStash ? "Update" : "Create"}
       initialValues={initialValues}
       onSubmit={(values) => {
         onSubmit(values)
@@ -223,7 +243,7 @@ const CustomerModalForm = ({
             bubbleMenu
             floatingMenu
           />
-          {stashId && (
+          {customerStash && (
             <Text fontSize="xs" color={textFootnoteColor}>
               Stashed by {user?.username}
             </Text>

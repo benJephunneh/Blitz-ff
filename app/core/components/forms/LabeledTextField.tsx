@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
+import { FormControl, FormLabel, Input, useColorModeValue } from "@chakra-ui/react"
 import { forwardRef, ComponentPropsWithoutRef, PropsWithoutRef } from "react"
 import { useField, UseFieldConfig } from "react-final-form"
 
@@ -33,7 +33,14 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
     return (
       <FormControl {...outerProps}>
         <FormLabel {...labelProps}>{label}</FormLabel>
-        <Input {...input} disabled={submitting} {...props} ref={ref} />
+        <Input
+          {...input}
+          disabled={submitting}
+          {...props}
+          ref={ref}
+          bg={useColorModeValue("white", "gray.700")}
+          borderColor={useColorModeValue("whiteAlpha.50", "gray.800")}
+        />
 
         {touched && normalizedError && (
           <div role="alert" style={{ color: "red" }}>
