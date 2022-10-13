@@ -30,6 +30,7 @@ const Header = ({ children }: HeaderProps) => {
   const [showBreadcrumbs, setShowBreadcrumbs] = useState(isLoggedIn)
 
   useEffect(() => {
+    if (!router.isReady) return
     if (pathname != "/dashboard" && pathname != "/") {
       // console.log(`if pathname: ${pathname}`)
       // const paths = pathname.split('/')
@@ -40,7 +41,7 @@ const Header = ({ children }: HeaderProps) => {
       // console.log(`else pathname: ${pathname}`)
       setShowBreadcrumbs(false)
     }
-  }, [pathname])
+  }, [router.isReady, pathname])
 
   const { colorMode, toggleColorMode } = useColorMode()
   const iconColor = useColorModeValue("gray.700", "gray.200")
@@ -77,13 +78,7 @@ const Header = ({ children }: HeaderProps) => {
             </Box>
           </HStack>
           {isLoggedOut && <HeaderLoggedOut />}
-          {isLoggedIn && (
-            <>
-              <HeaderProvider>
-                <HeaderLoggedIn />
-              </HeaderProvider>
-            </>
-          )}
+          {isLoggedIn && <HeaderLoggedIn />}
         </HStack>
       </Box>
     </>

@@ -4,8 +4,7 @@ import LocationPicker from "app/locations/components/LocationPicker"
 import SubheaderSearch from "app/search/components/SubheaderSearch"
 import React from "react"
 import { FcTimeline } from "react-icons/fc"
-import CustomerProvider from "../providers/CustomerProvider"
-import CustomerSubheaderActions from "./CustomerSubheaderActions"
+import SubheaderProvider from "./providers/SubheaderProvider"
 
 // const CustomerPickerSubheader = () => {
 //   return <CustomerPicker2 />
@@ -15,9 +14,9 @@ import CustomerSubheaderActions from "./CustomerSubheaderActions"
 //   return <LocationPicker icon={FcTimeline} />
 // }
 
-const CustomerSubheader = () => {
+const SubheaderStack = () => {
   return (
-    <CustomerProvider>
+    <SubheaderProvider>
       <Subheader>
         <HStack justify="space-between">
           <HStack spacing={4}>
@@ -26,11 +25,11 @@ const CustomerSubheader = () => {
             <LocationPicker icon={FcTimeline} />
             <SubheaderSearch />
           </HStack>
-          <CustomerSubheaderActions />
+          {/* <SubheaderActions /> */}
         </HStack>
       </Subheader>
-    </CustomerProvider>
+    </SubheaderProvider>
   )
 }
 
-export default CustomerSubheader
+export default SubheaderStack

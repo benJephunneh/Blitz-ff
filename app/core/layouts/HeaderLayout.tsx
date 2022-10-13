@@ -23,24 +23,38 @@ const HeaderLayout: BlitzLayout<HeaderLayoutProps> = ({
 }) => {
   const session = useSession()
   const isLoggedIn = !!session.userId
+  const isLoggedOut = !session.userId && !session.isLoading
 
   return (
     <UserProvider>
-      <HeaderProvider>
-        <Flex direction="column">
-          <PageTitle title={title} />
+      <Flex direction="column">
+        <PageTitle title={title} />
 
-          <Grid position="sticky" top={0} shadow="md">
-            <GridItem rowSpan={1}>
-              <Header />
-            </GridItem>
+        {isLoggedIn && (
+          <HeaderProvider>
+            <Grid position="sticky" top={0} shadow="md">
+              <GridItem rowSpan={1}>
+                <Header />
+              </GridItem>
 
-            {isLoggedIn && subheader && <GridItem rowSpan={1}>{subheader}</GridItem>}
-          </Grid>
+              {subheader && <GridItem rowSpan={1}>{subheader}</GridItem>}
+            </Grid>
 
-          {children}
-        </Flex>
-      </HeaderProvider>
+            {children}
+          </HeaderProvider>
+        )}
+        {isLoggedOut && (
+          <>
+            <Grid position="sticky" top={0} shadow="md">
+              <GridItem rowSpan={1}>
+                <Header />
+              </GridItem>
+            </Grid>
+
+            {children}
+          </>
+        )}
+      </Flex>
     </UserProvider>
   )
 }
