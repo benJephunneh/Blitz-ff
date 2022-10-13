@@ -16,7 +16,7 @@ export const lot = z.string()
 export const parcel = z.string()
 export const locationType = z.nativeEnum(LocationType)
 // export const customerId = z.number()
-const notes = stashContentSchema // .nullable()
+const notes = stashContentSchema
 const stashType = z.nativeEnum(StashType)
 
 export const CreateLocation = z.object({
@@ -31,7 +31,7 @@ export const CreateLocation = z.object({
   lot: lot.optional(),
   parcel: parcel.optional(),
   locationType,
-  // customerId,
+  notes: notes.nullable(),
 })
 export const UpdateLocation = CreateLocation.extend({ id })
 

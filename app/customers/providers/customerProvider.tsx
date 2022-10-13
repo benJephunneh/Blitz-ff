@@ -49,6 +49,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
     {
       enabled: !!customer,
       refetchOnWindowFocus: false,
+      refetchInterval: 5000,
     }
   )
 

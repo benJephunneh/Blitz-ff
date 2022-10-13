@@ -16,6 +16,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import headerContext from "app/core/components/header/headerContext"
 import SearchInput from "app/search/SearchInput"
 import SearchInputMenu from "app/search/SearchInputMenu"
 import SearchResults from "app/search/SearchResults"
@@ -34,8 +35,10 @@ type CustomerPickerProps = {
 }
 
 const CustomerPicker2 = () => {
-  const { customer, displayName, locations } = useContext(customerContext)
+  const { customer } = useContext(headerContext)
+  const { locations } = useContext(customerContext)
   const [query, setQuery] = useState("")
+  const displayname = customer?.displayname
 
   // const [items, { isLoading }] = useQuery(
   //   findCustomer,
@@ -58,7 +61,7 @@ const CustomerPicker2 = () => {
           rightIcon={
             <Icon color={useColorModeValue("cyan.400", "cyan.600")} pr={1} as={FaChevronDown} />
           }
-          zIndex={10}
+          // zIndex={10}
         >
           <HStack>
             <Icon
@@ -68,17 +71,17 @@ const CustomerPicker2 = () => {
               h={5}
             />
             <Heading size="sm" opacity="0.9">
-              {displayName}
+              {displayname}
             </Heading>
           </HStack>
         </MenuButton>
 
-        <MenuList zIndex={10}>
+        <MenuList>
           <MenuItem>{`Number of locations: ${locations?.length}`}</MenuItem>
           {locations?.map((location) => (
             <Link
               key={location.id}
-              href={Routes.ShowLocationPage({ customerId: customer.id, locationId: location.id })}
+              href={Routes.ShowLocationPage({ customerId: customer!.id, locationId: location.id })}
               passHref
             >
               <MenuItem as="a">

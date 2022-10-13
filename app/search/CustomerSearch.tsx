@@ -19,8 +19,8 @@ const CustomerSearch = ({ message, initialSearch = "", customerActions }: Custom
   const [query, setQuery] = useState(initialSearch)
   const [enabled, setEnabled] = useState(false)
   const [items, { status, isLoading }] = useQuery(
-    // findCustomer,
-    search,
+    findCustomer,
+    // search,
     { query },
     { suspense: false, enabled: !!query }
   )

@@ -46,24 +46,32 @@ const ShowCustomerPage: BlitzPage = () => {
       /> */}
 
       <Flex alignItems="start" p={4}>
-        <HStack borderRadius="md" bg={useColorModeValue("blackAlpha.100", "gray.600")}>
-          <CustomerCard />
-          <VStack alignContent="space-between">
+        {/* <HStack borderRadius="md" bg={useColorModeValue("blackAlpha.100", "gray.600")}> */}
+        <CustomerCard />
+        {/* <Grid templateRows='repeat(3, 1fr)' gap={6} w={50} h='full'>
+            {/* <Box bg='gray' h={5} w={50} borderWidth={1} />
+            <Box bg='tomato' h={5} w={50} borderWidth={1} />
+            <Box bg='cyan' h={5} w={50} borderWidth={1} /> */}
+        {/* <GridItem h='100%' bg='gray' rowSpan={1} />
+            <GridItem h='100%' bg='tomato' />
+            <GridItem h='100%' bg='cyan' />
+          </Grid> */}
+        {/* <VStack alignContent="space-between">
             <ButtonGroup isAttached flexDirection="column" variant="ghost" alignItems="start">
               <Button aria-label="adfe" rightIcon={<FcPlus />}>
                 Jobs
               </Button>
-              {/* <Spacer /> */}
               <Button aria-label="adfk" rightIcon={<FcPlus />}>
                 Estimates
               </Button>
-              {/* <Spacer /> */}
               <Button aria-label="asdf" rightIcon={<FcPlus />}>
                 Invoices
               </Button>
             </ButtonGroup>
-          </VStack>
-        </HStack>
+          </VStack> */}
+        {/* <Spacer /> */}
+        {/* <Spacer /> */}
+        {/* </HStack> */}
         {/* <LocationCard my={4} mx={4}>
             <Heading ml={4} fontStyle="italic">
               {heading}

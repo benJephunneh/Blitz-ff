@@ -202,7 +202,6 @@ const CustomerModalForm = ({
       onClose={onClose}
       disableStash={disableStash}
       schema={CreateCustomerStash}
-      // schema={customerId ? UpdateCustomer : CreateCustomer.partial()}
       title={customer || customerStash ? "Edit customer" : "New customer"}
       submitText={customer || customerStash ? "Update" : "Create"}
       initialValues={initialValues}

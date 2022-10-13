@@ -1,22 +1,23 @@
 import { resolver } from "@blitzjs/rpc"
-import { CreateCustomer } from "app/customers/validations"
-import { CreateJob } from "app/jobs/validations"
-import { CreateLocation } from "app/locations/validations"
+import { CreateCustomerStash } from "app/customers/validations"
+import { CreateJobStash } from "app/jobs/validations"
+import { CreateLocationStash } from "app/locations/validations"
 import db, { StashType } from "db"
 import { z } from "zod"
 import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
 
-const customerZod = CreateCustomer.partial()
-const locationZod = CreateLocation.partial()
-const jobZod = CreateJob.partial()
+// const customerZod = CreateCustomer.partial()
+// const locationZod = CreateLocation.partial()
+// const jobZod = CreateJob.partial()
 
 export const CreateStash = z.object({
   notes: stashContentSchema, // .nullable(),
   stashType: z.nativeEnum(StashType),
   customerId: z.number().optional(),
-  customer: customerZod.optional(),
-  location: locationZod.optional(),
-  job: jobZod.optional(),
+  locationId: z.number().optional(),
+  customer: CreateCustomerStash,
+  location: CreateLocationStash,
+  job: CreateJobStash,
 })
 
 type CreateStashProps = {
@@ -28,7 +29,7 @@ export default resolver.pipe(
   resolver.zod(CreateStash),
   resolver.authorize(),
 
-  async ({ notes, stashType, customerId, customer, location, job }, ctx) => {
+  async ({ notes, stashType, customerId, locationId, customer, location, job }, ctx) => {
     // async ({ input, stashType }: CreateStashProps, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     // console.log(`customer input to createStash: ${JSON.stringify(customer)}`)
@@ -52,43 +53,31 @@ export default resolver.pipe(
           },
         })
 
-        // type s = z.infer<typeof stash>
-        // Create Quirrel queue
         break
       case "Location":
         stash = await db.locationStash.create({
           data: {
-            stashType,
-            notes: JSON.stringify(notes),
-            customerId: customerId!,
             userId: ctx.session.userId,
+            notes: JSON.stringify(notes),
+            stashType,
+            customerId: customerId!,
             ...location,
           },
         })
 
-        // type s = z.infer<typeof stash>
-        // Create Quirrel queue
         break
-      // case "Job":
-      //   stash = await db.jobStash.create({
-      //     data: {
-      //       userId: ctx.session.userId,
-      //       notes: JSON.stringify(notes),
-      //       stashType,
-      //       ...job,
-      //     },
-      //   })
-      // await db.jobStash.create({
-      //   data: {
-      //     locationId: job.locationId!,
-      //     stashId: stash.id,
-      //     ...job,
-      //   },
-      // })
+      case "Job":
+        stash = await db.jobStash.create({
+          data: {
+            userId: ctx.session.userId,
+            notes: JSON.stringify(notes),
+            stashType,
+            locationId: locationId!,
+            ...job,
+          },
+        })
 
-      // type s = zz.infer<typeof stash>
-      // Create Quirrel queue
-      // break
+        break
       // case "Invoice":
       //   stash = await db.stash.create({
       //     data: {

@@ -19,6 +19,7 @@ model Customer {
   email           String
   locations       Location[]
   locationStashes LocationStash[]
+  notes           String?
 }
 
 model CustomerStash {
@@ -54,6 +55,8 @@ model Location {
   customer     Customer     @relation(fields: [customerId], references: [id])
   customerId   Int
   jobs         Job[]
+  jobStashes   JobStash[]
+  notes        String?
 }
 
 model LocationStash {
@@ -88,6 +91,23 @@ model Job {
   end        DateTime?
   locationId Int
   location   Location  @relation(fields: [locationId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+  notes      String?
+}
+
+model JobStash {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  title      String?
+  start      DateTime?
+  end        DateTime?
+  locationId Int
+  location   Location  @relation(fields: [locationId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int
+  notes      String
 }
 
 model CustomerArchive {
@@ -141,8 +161,10 @@ model User {
   email           String          @unique
   hashedPassword  String?
   role            UserRole        @default(Tech)
+  jobs            Job[]
   customerStashes CustomerStash[]
   locationStashes LocationStash[]
+  jobStashes      JobStash[]
   sessions        Session[]
   tokens          Token[]
 }

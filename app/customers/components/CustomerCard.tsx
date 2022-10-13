@@ -1,6 +1,7 @@
 import { Routes, useParam, useParams } from "@blitzjs/next"
 import { useQuery } from "@blitzjs/rpc"
 import {
+  Box,
   Button,
   Heading,
   HStack,
@@ -11,6 +12,11 @@ import {
   SimpleGrid,
   SpaceProps,
   Spacer,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -21,12 +27,28 @@ import {
 import { Customer, Location } from "@prisma/client"
 import headerContext from "app/core/components/header/headerContext"
 import phoneDisplay from "app/core/components/methods/phoneDisplay"
+import JobPanel from "app/jobs/components/JobPanel"
 import getLocation from "app/locations/queries/getLocation"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { useContext, useEffect, useState } from "react"
+import { BsReceipt } from "react-icons/bs"
 import { FaEdit } from "react-icons/fa"
-import { FcEditImage, FcHome, FcPhone } from "react-icons/fc"
+import { FcAdvertising, FcEditImage, FcHome, FcMoneyTransfer, FcPhone } from "react-icons/fc"
+import {
+  GiAk47,
+  GiArrest,
+  GiBanknote,
+  GiBleedingWound,
+  GiBulldozer,
+  GiCalculator,
+  GiChoice,
+  GiFarmTractor,
+  GiMoneyStack,
+  GiTreasureMap,
+} from "react-icons/gi"
 import { MdAlternateEmail, MdOutlineEditLocation } from "react-icons/md"
+import { TbBackhoe } from "react-icons/tb"
 import customerContext from "../contexts/customerContext"
 import getCustomer from "../queries/getCustomer"
 
@@ -41,6 +63,7 @@ type CustomerCardProps = {
 
 const CustomerCard = ({ ...props }: CustomerCardProps) => {
   const { customer, locationId, editLocation } = useContext(headerContext)
+  const router = useRouter()
   const [location, { refetch: refetchLocation }] = useQuery(
     getLocation,
     {
@@ -75,21 +98,22 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
   //   // refetchIntervalInBackground: true,
   // })
 
-  const tagBgColor = useColorModeValue("khaki", "blue.700")
+  const tagBgColor = useColorModeValue("white", "gray.800")
+  const tabBgColor = useColorModeValue("white", "gray.800")
   // console.log(`customerId: ${customer}`)
 
   return (
-    <LinkBox
+    <Box
       py={2}
       px={2}
       display="inline"
+      borderWidth={1}
       borderRadius="md"
-      borderRightRadius={0}
-      borderRightWidth={3}
       position="relative"
       transition="border 50ms ease"
       borderColor={useColorModeValue("gray.50", "gray.700")}
-      _hover={{ borderColor: "blue.400" }}
+      bg={useColorModeValue("blackAlpha.100", "gray.600")}
+      // _hover={{ borderColor: "blue.400" }}
       {...props}
     >
       <VStack spacing={5}>
@@ -102,7 +126,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
           alignSelf="start"
           onClick={editLocation}
           bg="transparent"
-          zIndex="overlay"
+          // zIndex="overlay"
         />
         <Heading fontStyle="italic" size="2xl">
           {/* <>
@@ -126,7 +150,17 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
         {location && (
           <SimpleGrid columns={2} mt={5}>
             <HStack ml={4}>
-              <Icon as={FcHome} w={8} h={8} mr={4} />
+              <Link
+                href={`http://maps.google.com/maps?q=${location.house}+${location.street.replace(
+                  " ",
+                  "+"
+                )},+${location.city.replace(" ", "+")},+${location.state.replace(" ", "+")}`}
+                passHref
+              >
+                <a target="_blank" rel="noopener noreferrer">
+                  <Icon as={GiTreasureMap} w={8} h={8} mr={4} />
+                </a>
+              </Link>
               <Text fontWeight="semibold" opacity="0.8">
                 {location.house} {location.street}
                 <br />
@@ -152,8 +186,38 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
             </HStack>
           </SimpleGrid>
         )}
+
+        <Tabs variant="enclosed" alignSelf="start" w="full" isLazy>
+          <TabList>
+            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }}>
+              <Icon as={GiBulldozer} mr={2} h={6} w={6} />
+              Jobs
+            </Tab>
+            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }}>
+              <Icon as={GiCalculator} mr={2} h={6} w={6} />
+              Estimates
+            </Tab>
+            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }}>
+              <Icon as={GiBleedingWound} color="red" mr={2} h={6} w={6} />
+              {/* x icon when open/unpaid invoices, y icon when none/paid */}
+              Invoices
+            </Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <JobPanel />
+            </TabPanel>
+            <TabPanel>
+              <Icon as={GiChoice} mr={2} />
+              Pending approval:
+            </TabPanel>
+            <TabPanel>
+              <p>Three</p>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
       </VStack>
-    </LinkBox>
+    </Box>
   )
 }
 

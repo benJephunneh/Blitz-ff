@@ -22,10 +22,8 @@ const JobDrawer = ({ isOpen, onClose }: JobDrawerProps) => {
     <Drawer placement="right" size="xl" onClose={onClose} isOpen={isOpen}>
       <DrawerOverlay backdropFilter="blur(2xp)" />
       <DrawerContent>
-        <DrawerCloseButton zIndex={2} />
-        <DrawerHeader borderBottomWidth={1}>
-          {job.title}
-        </DrawerHeader>
+        <DrawerCloseButton />
+        <DrawerHeader borderBottomWidth={1}>{job.title}</DrawerHeader>
         <DrawerBody p={0}>
           <Spinner />
         </DrawerBody>

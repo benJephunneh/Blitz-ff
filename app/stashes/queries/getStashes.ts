@@ -17,12 +17,16 @@ export default resolver.pipe(
     count += await db.locationStash.count()
     const locationStashes = await db.locationStash.findMany()
 
+    count += await db.jobStash.count()
+    const jobStashes = await db.jobStash.findMany()
+
     // count += await db.jobStash.count()
     // const jobStashes = await db.jobStash.findMany({ where, orderBy })
 
     return {
       customerStashes,
       locationStashes,
+      jobStashes,
       count,
     }
   }

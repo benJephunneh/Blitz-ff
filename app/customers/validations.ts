@@ -5,7 +5,7 @@ const firstname = z.string()
 const lastname = z.string()
 const companyname = z.string()
 export const email = z.string().email()
-const notes = stashContentSchema // .nullable()
+const notes = stashContentSchema
 // .refine((query) => useQuery(checkUniquity, { query }, { suspense: true }), {
 // checkUniquity({ email }).catch((e) => console.log(`checkUniquity error: ${e}`)),
 // message: "Email is not unique.",
@@ -15,14 +15,21 @@ const notes = stashContentSchema // .nullable()
 const id = z.number()
 
 export const CreateCustomer = z.object({
-  firstname: firstname.optional(),
-  lastname: lastname.optional(),
+  firstname,
+  lastname,
   companyname: companyname.optional(),
   email,
+  notes: notes.nullable(),
 })
 export const UpdateCustomer = CreateCustomer.extend({ id })
 
-export const CreateCustomerStash = CreateCustomer.partial().extend({ notes })
+export const CreateCustomerStash = z.object({
+  firstname: firstname.optional(),
+  lastname: lastname.optional(),
+  companyname: companyname.optional(),
+  email: email.optional(),
+  notes,
+})
 export const UpdateCustomerStash = CreateCustomerStash.extend({ id })
 
 export const DeleteCustomer = z.object({ id })

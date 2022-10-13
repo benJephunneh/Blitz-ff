@@ -15,7 +15,7 @@ import createStash from "app/stashes/mutations/createStash"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import updateStash from "app/stashes/mutations/updateStash"
 import getStashes from "app/stashes/queries/getStashes"
-import db, { Customer, CustomerStash, Location, LocationStash, StashType } from "db"
+import db, { Customer, CustomerStash, JobStash, Location, LocationStash, StashType } from "db"
 import { useRouter } from "next/router"
 import { ReactNode, useEffect, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
@@ -97,30 +97,33 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   // }, [locationId]) // eslint-disable-line
 
   // Stash
-  const [{ customerStashes, locationStashes, count: numStashes }, { refetch: refetchStashes }] =
-    useQuery(
-      getStashes,
-      {},
-      {
-        suspense: true,
-        staleTime: Infinity,
-        // enabled: true,
-        refetchOnWindowFocus: false,
-        // refetchInterval: 2000,
-        // refetchIntervalInBackground: true,
-      }
-    )
+  const [
+    { customerStashes, locationStashes, jobStashes, count: numStashes },
+    { refetch: refetchStashes },
+  ] = useQuery(
+    getStashes,
+    {},
+    {
+      suspense: true,
+      staleTime: Infinity,
+      // enabled: true,
+      refetchOnWindowFocus: false,
+      // refetchInterval: 2000,
+      // refetchIntervalInBackground: true,
+    }
+  )
+  const [customerStash, setCustomerStash] = useState<CustomerStash>()
+  const [locationStash, setLocationStash] = useState<LocationStash>()
+  const [jobStash, setJobStash] = useState<JobStash>()
   const [stashId, setStashId] = useState<number>()
   const [stashType, setStashType] = useState<StashType>()
   const [editingStash, setEditingStash] = useState(false)
-  const [deletingStash, setDeletingStash] = useState(false)
-  const [createStashMutation] = useMutation(createStash)
-  const [updateStashMutation] = useMutation(updateStash)
-  const [deleteStashMutation] = useMutation(deleteStash)
-  const [customerStash, setCustomerStash] = useState<CustomerStash>()
-  const [locationStash, setLocationStash] = useState<LocationStash>()
+  // const [deletingStash, setDeletingStash] = useState(false)
+  // const [createStashMutation] = useMutation(createStash)
+  // const [updateStashMutation] = useMutation(updateStash)
+  // const [deleteStashMutation] = useMutation(deleteStash)
   useEffect(() => {
-    if (!setEditingStash) return
+    if (!editingStash) return
 
     switch (stashType) {
       case "Customer":
@@ -131,13 +134,16 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         setLocationStash(locationStashes.find((ls) => ls.id === stashId))
         // setEditingStash(true)
         break
+      case "Job":
+        setJobStash(jobStashes.find((js) => js.id === stashId))
+        break
 
       default:
         setCustomerStash(undefined)
         setLocationStash(undefined)
         break
     }
-  }, [customerStashes, editingStash, locationStashes, stashId, stashType])
+  }, [customerStashes, editingStash, locationStashes, jobStashes, stashId, stashType])
 
   const [loginMutation] = useMutation(login)
   const [logoutMutation] = useMutation(logout)
@@ -174,6 +180,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         locationIds,
         customerStashes,
         locationStashes,
+        jobStash,
+        // estimateStash,
+        // invoiceStash,
         numStashes,
 
         // refetchCustomer,
@@ -202,14 +211,14 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
           <CustomerModalForm
             // customerId={customerId}
             customer={editingCustomer ? customer : undefined}
-            customerStash={customerStash}
+            customerStash={editingStash ? customerStash : undefined}
             isOpen={creatingCustomer || editingCustomer || editingStash}
             onClose={() => {
               creatingCustomer && setCreatingCustomer(false)
               editingCustomer && setEditingCustomer(false)
               editingStash && setEditingStash(false)
             }}
-            // disableStash={true}
+            disableStash={editingCustomer}
             onSuccess={async (customer) => {
               if (customer) {
                 if ("notes" in customer) await refetchStashes()
@@ -243,7 +252,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               editingStash && setEditingStash(false)
             }}
             onSuccess={(location) => {
-              setCreatingLocation(false)
               if ("notes" in location) {
                 refetchStashes().catch((e) => console.log(e))
               } else {
@@ -253,6 +261,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
                 //   .push(Routes.ShowLocationPage({ customerId: customer!.id, locationId: location.id }))
                 //   .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
               }
+              creatingLocation && setCreatingLocation(false)
+              editingLocation && setEditingLocation(false)
+              editingStash && setEditingStash(false)
             }}
           />
 

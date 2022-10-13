@@ -22,9 +22,9 @@ const LocationDrawer = ({ isOpen, onClose }: LocationDrawerProps) => {
     <Drawer placement="right" size="xl" onClose={onClose} isOpen={isOpen}>
       <DrawerOverlay backdropFilter="blur(2xp)" />
       <DrawerContent>
-        <DrawerCloseButton zIndex={2} />
+        <DrawerCloseButton />
         <DrawerHeader borderBottomWidth={1}>
-          {location?.house} {location?.street}, {location?.city}  {location?.zipcode}
+          {location?.house} {location?.street}, {location?.city} {location?.zipcode}
         </DrawerHeader>
         <DrawerBody p={0}>
           <Spinner />
