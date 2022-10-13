@@ -18,7 +18,7 @@ import createStash from "app/stashes/mutations/createStash"
 import updateStash from "app/stashes/mutations/updateStash"
 
 type JobModalFormProps = {
-  locationId: number
+  locationId?: number
   jobId?: number
   job?: Job
   jobStash?: JobStash
@@ -120,6 +120,13 @@ const JobModalForm = ({
     return {
       [FORM_ERROR]: `Job modal error: ${error.toString()}`,
     }
+  }
+
+  const initialValues = {
+    title: jobStash?.title || job?.title || undefined,
+    start: jobStash?.start || job?.start || undefined,
+    end: jobStash?.end || job?.end || undefined,
+    notes: jobStash ? JSON.parse(jobStash.notes) : job?.notes ? JSON.parse(job.notes) : null,
   }
 
   return (

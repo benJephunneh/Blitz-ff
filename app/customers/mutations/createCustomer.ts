@@ -1,15 +1,16 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
 import UniquityError from "../errors/uniquityError"
-import { CreateCustomer } from "../validations"
+import { CreateCustomerSkeleton, notes } from "../validations"
 
 export default resolver.pipe(
-  resolver.zod(CreateCustomer),
+  resolver.zod(CreateCustomerSkeleton.extend({ notes: notes.nullable() })),
   resolver.authorize(),
 
   async (input) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const displayname = `${input.firstname} ${input.lastname}`
+    const { notes, ...values } = input
 
     const email = await db.customer.findFirst({
       where: {
@@ -25,13 +26,15 @@ export default resolver.pipe(
     const customer = await db.customer.create({
       data: {
         displayname,
-        ...input,
+        notes: JSON.stringify(notes),
+        ...values,
       },
     })
     await db.customerArchive.create({
       data: {
         displayname,
-        ...input,
+        notes: JSON.stringify(notes),
+        ...values,
       },
     })
 

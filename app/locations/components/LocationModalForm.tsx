@@ -43,7 +43,7 @@ type LocationModalFormProps = {
   isOpen: boolean
   onClose: () => void
   onSuccess?: (location: Location | LocationStash) => void
-  customerId: number
+  customerId?: number // Always necessary, but HeaderProvider needs to instantiate the form when customer might not yet be defined.
   locationId?: number
   // stashId?: number
   // location?: Location
@@ -197,7 +197,7 @@ const LocationModalForm = ({
       } else {
         // console.log("\tcreating location")
         locationRet = await createLocationMutation({
-          customerId,
+          customerId: customerId!,
           locationInput: formSubmission,
         })
         if (locationStash && locationRet) {

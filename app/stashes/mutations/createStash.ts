@@ -1,7 +1,7 @@
 import { resolver } from "@blitzjs/rpc"
-import { CreateCustomerStash } from "app/customers/validations"
-import { CreateJobStash } from "app/jobs/validations"
-import { CreateLocationStash } from "app/locations/validations"
+import { CreateCustomerSkeleton, CreateCustomerStash, notes } from "app/customers/validations"
+import { CreateJobSkeleton, CreateJobStash } from "app/jobs/validations"
+import { CreateLocationSkeleton, CreateLocationStash } from "app/locations/validations"
 import db, { StashType } from "db"
 import { z } from "zod"
 import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
@@ -9,15 +9,18 @@ import stashContentSchema from "../../core/components/editor/schema/stashContent
 // const customerZod = CreateCustomer.partial()
 // const locationZod = CreateLocation.partial()
 // const jobZod = CreateJob.partial()
+const customerZod = CreateCustomerSkeleton.partial()
+const locationZod = CreateLocationSkeleton.partial()
+const jobZod = CreateJobSkeleton.partial()
 
 export const CreateStash = z.object({
   notes: stashContentSchema, // .nullable(),
   stashType: z.nativeEnum(StashType),
   customerId: z.number().optional(),
   locationId: z.number().optional(),
-  customer: CreateCustomerStash,
-  location: CreateLocationStash,
-  job: CreateJobStash,
+  customer: customerZod.optional(),
+  location: locationZod.optional(),
+  job: jobZod.optional(),
 })
 
 type CreateStashProps = {

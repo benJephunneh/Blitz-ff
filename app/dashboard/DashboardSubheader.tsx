@@ -1,30 +1,32 @@
 import { HStack, Spacer } from "@chakra-ui/react"
-import Subheader from "app/core/components/header/Subheader"
+import Subheader from "app/core/components/header/subheader/Subheader"
 import CustomerPicker from "app/customers/components/CustomerPicker"
+import SubheaderSearch from "app/search/components/SubheaderSearch"
 import { FcMindMap } from "react-icons/fc"
 import DashboardProvider from "./DashboardProvider"
 import DashboardSearch from "./DashboardSearch"
 import DashboardSubheaderActions from "./DashboardSubheaderActions"
 import NavigationPicker from "./NavigationPicker"
 
-const NavigationPickerSubheader = () => {
-  return <NavigationPicker icon={FcMindMap} />
-}
+// const NavigationPickerSubheader = () => {
+//   return <NavigationPicker icon={FcMindMap} />
+// }
 
 const DashboardSubheader = () => {
   return (
-    <DashboardProvider>
-      <Subheader>
-        <HStack justify="space-between">
-          <HStack spacing={4}>
-            <NavigationPickerSubheader />
-            <DashboardSearch />
-          </HStack>
-          <Spacer />
-          {/* <DashboardSubheaderActions /> */}
+    // <DashboardProvider>
+    <Subheader>
+      <HStack justify="space-between">
+        <HStack spacing={4}>
+          {/* <NavigationPickerSubheader /> */}
+          <NavigationPicker icon={FcMindMap} />
+          <SubheaderSearch />
         </HStack>
-      </Subheader>
-    </DashboardProvider>
+        <Spacer />
+        {/* <DashboardSubheaderActions /> */}
+      </HStack>
+    </Subheader>
+    // </DashboardProvider>
   )
 }
 

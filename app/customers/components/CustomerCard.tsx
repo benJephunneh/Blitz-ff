@@ -51,6 +51,7 @@ import { MdAlternateEmail, MdOutlineEditLocation } from "react-icons/md"
 import { TbBackhoe } from "react-icons/tb"
 import customerContext from "../contexts/customerContext"
 import getCustomer from "../queries/getCustomer"
+import InvoicesCard from "./InvoicesCard"
 
 type CustomerCardProps = {
   // customer: Pick<
@@ -205,14 +206,14 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
           </TabList>
           <TabPanels>
             <TabPanel>
-              <JobPanel />
+              <JobPanel locationId={location?.id} />
             </TabPanel>
             <TabPanel>
               <Icon as={GiChoice} mr={2} />
               Pending approval:
             </TabPanel>
             <TabPanel>
-              <p>Three</p>
+              <InvoicesCard invoices="asdf" />
             </TabPanel>
           </TabPanels>
         </Tabs>

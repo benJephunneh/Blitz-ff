@@ -10,9 +10,11 @@ import { createContext } from "react"
 
 export type HeaderContext = {
   // User
-  signUp: () => void
-  logIn: () => void
-  logOut: () => void
+  // signUp: () => void
+  // logIn: () => void
+  // logOut: () => void
+  // isLoggedIn: boolean
+  // isLoggedOut: boolean
 
   // Customer
   customer?: Customer

@@ -1,10 +1,14 @@
 import { useSession } from "@blitzjs/auth"
-import { Box, Heading, HStack, useColorModeValue } from "@chakra-ui/react"
+import { Box, Heading, HStack, Icon, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import userContext from "app/auth/components/contexts/userContext"
 import { useRouter } from "next/router"
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
 import { useState } from "react"
+import { GiMoon, GiSun } from "react-icons/gi"
 import HeaderActions from "./HeaderActions"
+import headerContext from "./headerContext"
 import HeaderCrumbs from "./HeaderCrumbs"
+import HeaderIconButton from "./HeaderIconButton"
 import HeaderLoggedIn from "./HeaderLoggedIn"
 import HeaderLoggedOut from "./HeaderLoggedOut"
 import HeaderProvider from "./HeaderProvider"
@@ -14,15 +18,16 @@ type HeaderProps = {
 }
 
 const Header = ({ children }: HeaderProps) => {
+  const { isLoggedIn, isLoggedOut } = useContext(userContext)
   const router = useRouter()
   const pathname = router.pathname
-  const [drawerIsOpen, setDrawerIsOpen] = useState(false)
-  const toggleDrawer = () => setDrawerIsOpen((state) => !state)
+  // const [drawerIsOpen, setDrawerIsOpen] = useState(false)
+  // const toggleDrawer = () => setDrawerIsOpen((state) => !state)
 
-  const session = useSession({ suspense: false })
-  const isLoggedIn = !!session.userId
-  const isLoggedOut = !session.userId && !session.isLoading
-  const [showBreadcrumbs, setShowBreadcrumbs] = useState(false)
+  // const session = useSession({ suspense: false })
+  // const isLoggedIn = !!session.userId
+  // const isLoggedOut = !session.userId && !session.isLoading
+  const [showBreadcrumbs, setShowBreadcrumbs] = useState(isLoggedIn)
 
   useEffect(() => {
     if (pathname != "/dashboard" && pathname != "/") {
@@ -36,6 +41,9 @@ const Header = ({ children }: HeaderProps) => {
       setShowBreadcrumbs(false)
     }
   }, [pathname])
+
+  const { colorMode, toggleColorMode } = useColorMode()
+  const iconColor = useColorModeValue("gray.700", "gray.200")
 
   return (
     <>
@@ -51,7 +59,13 @@ const Header = ({ children }: HeaderProps) => {
           justify="space-between"
         >
           <HStack spacing={8}>
-            <HeaderActions toggleDrawer={toggleDrawer} />
+            <HeaderIconButton
+              label={colorMode === "dark" ? "Bright" : "Dark"}
+              onClick={toggleColorMode}
+              icon={
+                <Icon as={colorMode === "dark" ? GiSun : GiMoon} color={iconColor} w={8} h={8} />
+              }
+            />
             <Box justifySelf="flex-start">
               {showBreadcrumbs ? (
                 <HeaderCrumbs />
@@ -63,7 +77,13 @@ const Header = ({ children }: HeaderProps) => {
             </Box>
           </HStack>
           {isLoggedOut && <HeaderLoggedOut />}
-          {isLoggedIn && <HeaderLoggedIn />}
+          {isLoggedIn && (
+            <>
+              <HeaderProvider>
+                <HeaderLoggedIn />
+              </HeaderProvider>
+            </>
+          )}
         </HStack>
       </Box>
     </>

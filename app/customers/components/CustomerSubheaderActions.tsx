@@ -66,9 +66,6 @@ const CustomerSubheaderActions = () => {
             <MenuItem icon={<FcEditImage size={15} />} onClick={editCustomer} fontWeight="semibold">
               Edit customer
             </MenuItem>
-            <MenuItem icon={<FcEditImage size={15} />} onClick={editLocation} fontWeight="semibold">
-              Edit location
-            </MenuItem>
             <MenuItem
               icon={<FcFullTrash size={15} />}
               onClick={deleteCustomer}

@@ -24,3 +24,5 @@ const useCustomerForm = ({ id }: UseCustomerFormProps) => {
     setCustomerId(id)
   }, [id])
 }
+
+export default useCustomerForm

@@ -1,6 +1,6 @@
 import { useParams } from "@blitzjs/next"
 import { HStack } from "@chakra-ui/react"
-import Subheader from "app/core/components/header/Subheader"
+import Subheader from "app/core/components/header/subheader/Subheader"
 import JobPicker from "app/locations/components/LocationPicker"
 import React from "react"
 import { FcTimeline } from "react-icons/fc"
@@ -14,7 +14,7 @@ const JobPickerSubheader = () => {
 const JobSubheader = () => {
   // const locationId = useParam("locationId", "number")
   // const customerId = useParam('customerId', 'number')
-  const { customerId, locationId, jobId } = useParams('number')
+  const { customerId, locationId, jobId } = useParams("number")
 
   console.log(`locationId: ${locationId}`)
   console.log(`customerId: ${customerId}`)
@@ -25,7 +25,8 @@ const JobSubheader = () => {
       <Subheader>
         <HStack justify="space-between">
           <JobPickerSubheader />
-          <JobSubheaderActions />
+          {/* <JobSubheaderActions /> */}
+          <JobPicker icon={FcTimeline} />
         </HStack>
       </Subheader>
     </JobProvider>

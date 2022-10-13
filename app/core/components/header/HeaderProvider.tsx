@@ -1,6 +1,7 @@
 import { useSession } from "@blitzjs/auth"
 import { Routes, useParams } from "@blitzjs/next"
 import { useMutation, useQuery } from "@blitzjs/rpc"
+import userContext from "app/auth/components/contexts/userContext"
 import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
 import NewUserModalForm from "app/auth/components/NewUserModalForm"
 import login from "app/auth/mutations/login"
@@ -17,7 +18,7 @@ import updateStash from "app/stashes/mutations/updateStash"
 import getStashes from "app/stashes/queries/getStashes"
 import db, { Customer, CustomerStash, JobStash, Location, LocationStash, StashType } from "db"
 import { useRouter } from "next/router"
-import { ReactNode, useEffect, useState } from "react"
+import { ReactNode, useContext, useEffect, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
 import headerContext from "./headerContext"
 
@@ -37,12 +38,14 @@ type StashProps = {
 
 const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const router = useRouter()
+  const { isLoggedIn, isLoggedOut } = useContext(userContext)
 
   // User
-  const session = useSession({ suspense: false })
-  const isLoggedIn = !!session.userId
-  const [loggingIn, setLoggingIn] = useState(false)
-  const [signingUp, setSigningUp] = useState(false)
+  // const session = useSession({ suspense: false })
+  // const isLoggedIn = !!session.userId
+  // const isLoggedOut = !session.userId && !session.isLoading
+  // const [loggingIn, setLoggingIn] = useState(false)
+  // const [signingUp, setSigningUp] = useState(false)
 
   // Customer
   const { customerId } = useParams("number")
@@ -151,9 +154,12 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   return (
     <Provider
       value={{
-        signUp: () => setSigningUp(true),
-        logIn: () => setLoggingIn(true),
-        logOut: () => logoutMutation(),
+        // signUp: () => setSigningUp(true),
+        // logIn: () => setLoggingIn(true),
+        // logOut: () => logoutMutation(),
+        // isLoggedIn,
+        // isLoggedOut,
+
         // gotoCustomer: (id) => router.push(Routes.ShowCustomerPage({ customerId: id })),
         createCustomer: async () => {
           setStashId(undefined)
@@ -190,7 +196,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         refetchStashes,
       }}
     >
-      <NewUserModalForm
+      {/* <NewUserModalForm
         isOpen={signingUp}
         onClose={() => setSigningUp(false)}
         onSuccess={async () => {
@@ -204,7 +210,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         onSuccess={async () => {
           await router.push(Routes.Dashboard())
         }}
-      />
+      /> */}
 
       {isLoggedIn && (
         <>
@@ -221,19 +227,16 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             disableStash={editingCustomer}
             onSuccess={async (customer) => {
               if (customer) {
-                if ("notes" in customer) await refetchStashes()
-                else {
-                  if (creatingCustomer) {
-                    setLocationId(undefined)
-                    await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
-                  }
-                  editingCustomer && (await refetchCustomer())
-                  // await refetchCustomer()
-                  //   .catch((e) =>
-                  //     console.log(`Header CustomerModalForm error: ${e}`)
-                  //   )
-                }
+                if ("stashType" in customer) await refetchStashes()
+                else if (creatingCustomer) {
+                  setLocationId(undefined)
+                  await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
+                } else if (editingCustomer) await refetchCustomer()
               }
+              // await refetchCustomer()
+              //   .catch((e) =>
+              //     console.log(`Header CustomerModalForm error: ${e}`)
+              //   )
               creatingCustomer && setCreatingCustomer(false)
               editingCustomer && setEditingCustomer(false)
               editingStash && setEditingStash(false)
@@ -251,11 +254,13 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               editingLocation && setEditingLocation(false)
               editingStash && setEditingStash(false)
             }}
-            onSuccess={(location) => {
-              if ("notes" in location) {
-                refetchStashes().catch((e) => console.log(e))
-              } else {
-                setLocationId(location.id)
+            disableStash={editingLocation}
+            onSuccess={async (location) => {
+              if ("stashType" in location) await refetchStashes()
+              else {
+                if (creatingLocation) {
+                  setLocationId(location.id)
+                }
                 // refetchCustomer()
                 // router
                 //   .push(Routes.ShowLocationPage({ customerId: customer!.id, locationId: location.id }))

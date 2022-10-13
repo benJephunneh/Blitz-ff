@@ -103,8 +103,9 @@ model JobStash {
   title      String?
   start      DateTime?
   end        DateTime?
-  locationId Int
   location   Location  @relation(fields: [locationId], references: [id])
+  locationId Int
+  stashType  StashType @default(Location)
   user       User      @relation(fields: [userId], references: [id])
   userId     Int
   notes      String
@@ -119,6 +120,7 @@ model CustomerArchive {
   companyname       String?
   displayname       String
   email             String
+  notes             String?
   archivedLocations LocationArchive[]
 }
 
@@ -136,6 +138,7 @@ model LocationArchive {
   block            String?
   lot              String?
   parcel           String?
+  notes            String?
   locationType     LocationType    @default(Personal)
   archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id])
   customerId       Int
@@ -150,6 +153,7 @@ model JobArchive {
   start            DateTime?
   end              DateTime?
   locationId       Int
+  notes            String?
   archivedLocation LocationArchive @relation(fields: [locationId], references: [id])
 }
 

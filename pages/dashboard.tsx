@@ -18,32 +18,32 @@ import HeaderLayout from "app/core/layouts/HeaderLayout"
 import Link from "next/link"
 import DashboardSubheader from "app/dashboard/DashboardSubheader"
 
-type UserInfoProps = Partial<User>
+// type UserInfoProps = Partial<User>
 
-const UserInfo = ({ username, role }: UserInfoProps) => {
-  const [logoutMutation] = useMutation(logout)
+// const UserInfo = ({ username, role }: UserInfoProps) => {
+//   const [logoutMutation] = useMutation(logout)
 
-  return (
-    <>
-      <HStack spacing={2}>
-        <Button
-          onClick={async () => {
-            await logoutMutation()
-          }}
-          bg="gray.50"
-        >
-          Log out
-        </Button>
-        <Box>
-          User: <Code fontWeight="bold">{username}</Code>
-          <br />
-          Role: <Code fontWeight="bold">{role}</Code>
-        </Box>
-      </HStack>
-    </>
-  )
-  // }
-}
+//   return (
+//     <>
+//       <HStack spacing={2}>
+//         <Button
+//           onClick={async () => {
+//             await logoutMutation()
+//           }}
+//           bg="gray.50"
+//         >
+//           Log out
+//         </Button>
+//         <Box>
+//           User: <Code fontWeight="bold">{username}</Code>
+//           <br />
+//           Role: <Code fontWeight="bold">{role}</Code>
+//         </Box>
+//       </HStack>
+//     </>
+//   )
+//   // }
+// }
 
 const Dashboard: BlitzPage = () => {
   const router = useRouter()

@@ -25,11 +25,12 @@ import { FcFullTrash } from "react-icons/fc"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import headerContext from "./headerContext"
+import userContext from "app/auth/components/contexts/userContext"
 
 const HeaderLoggedIn = () => {
   const router = useRouter()
+  const { logOut } = useContext(userContext)
   const {
-    logOut,
     pickLocation,
     editCustomer,
     createCustomer,

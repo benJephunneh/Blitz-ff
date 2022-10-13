@@ -8,6 +8,11 @@ export const end = z.date().optional()
 export const locationId = z.number()
 const notes = stashContentSchema
 
+export const CreateJobSkeleton = z.object({
+  title,
+  start,
+  end,
+})
 export const CreateJob = z.object({
   title,
   start,

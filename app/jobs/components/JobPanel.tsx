@@ -1,15 +1,35 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
-import { Box, Button, Flex, TabPanel } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuDivider,
+  MenuItem,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
+  TabPanel,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import headerContext from "app/core/components/header/headerContext"
 import db, { Job } from "db"
 import { useContext, useEffect, useState } from "react"
-import { FaPlus } from "react-icons/fa"
+import { BsArrowDown, BsFileEarmarkArrowDown } from "react-icons/bs"
+import { FaArrowDown, FaChevronDown, FaPlus } from "react-icons/fa"
 import createJob from "../mutations/createJob"
 import updateJob from "../mutations/updateJob"
 import getJobs from "../queries/getJobs"
 import JobModalForm from "./JobModalForm"
 
-const JobPanel = () => {
+type JobPanelProps = {
+  locationId?: number
+}
+
+const JobPanel = ({ locationId }: JobPanelProps) => {
   const { jobStash, refetchStashes } = useContext(headerContext)
   const [creatingJob, setCreatingJob] = useState(false)
   const [editingJob, setEditingJob] = useState(false)
@@ -32,16 +52,10 @@ const JobPanel = () => {
     }
   }, [jobId])
 
-  const createJobMutation = useMutation(createJob)
-  const updateJobMutation = useMutation(updateJob)
-
-  const onSubmit = async (values) => {}
-
-  const handleError = async (e) => {}
-
   return (
     <>
       <JobModalForm
+        locationId={locationId}
         job={editingJob ? job : undefined}
         jobStash={jobStash}
         isOpen={creatingJob || editingJob}
@@ -65,7 +79,30 @@ const JobPanel = () => {
       />
 
       <Flex justify="space-between">
-        <Box>another</Box>
+        <Menu closeOnSelect={false}>
+          <MenuButton
+            as={Button}
+            size="sm"
+            variant="outline"
+            rightIcon={<Icon as={FaChevronDown} />}
+          >
+            Job list
+          </MenuButton>
+          <MenuList>
+            <MenuOptionGroup defaultValue="all" type="radio">
+              <MenuItemOption value="all">All jobs</MenuItemOption>
+              <MenuDivider />
+              {jobs.jobs.map((j, ii) => (
+                <MenuItemOption key={ii} value={ii.toString()}>
+                  {job?.title}
+                </MenuItemOption>
+              ))}
+              <MenuItemOption value="job1">Job 1</MenuItemOption>
+              <MenuItemOption value="job2">Job 2</MenuItemOption>
+            </MenuOptionGroup>
+          </MenuList>
+        </Menu>
+        {/* <Box>Job list dropdown</Box> */}
 
         <Button
           size="sm"
@@ -73,8 +110,8 @@ const JobPanel = () => {
           variant="outline"
           borderStyle="dashed"
           borderWidth={1}
-          borderColor="green"
-          color="green"
+          borderColor={useColorModeValue("green", "orange.200")}
+          color={useColorModeValue("green", "orange.200")}
           leftIcon={<FaPlus size={10} />}
           onClick={() => setCreatingJob(true)}
         >

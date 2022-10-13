@@ -108,7 +108,7 @@ const ShowCustomerPage: BlitzPage = () => {
 
         <Spacer />
 
-        <InvoicesCard invoices="asdf" />
+        {/* <InvoicesCard invoices="asdf" /> */}
       </Flex>
       {/* <Button
         colorScheme="telegram"

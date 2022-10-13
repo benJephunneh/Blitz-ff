@@ -1,6 +1,9 @@
+import { useSession } from "@blitzjs/auth"
 import { BlitzLayout } from "@blitzjs/next"
 import { Box, Flex, Grid, GridItem } from "@chakra-ui/react"
-import { useState } from "react"
+import userContext from "app/auth/components/contexts/userContext"
+import UserProvider from "app/auth/components/providers/UserProvider"
+import { useContext, useState } from "react"
 import Header from "../components/header/Header"
 import HeaderProvider from "../components/header/HeaderProvider"
 import PageTitle from "../components/PageTitle"
@@ -18,22 +21,27 @@ const HeaderLayout: BlitzLayout<HeaderLayoutProps> = ({
   subheader,
   children,
 }) => {
+  const session = useSession()
+  const isLoggedIn = !!session.userId
+
   return (
-    <HeaderProvider>
-      <Flex direction="column">
-        <PageTitle title={title} />
+    <UserProvider>
+      <HeaderProvider>
+        <Flex direction="column">
+          <PageTitle title={title} />
 
-        <Grid position="sticky" top={0} shadow="md">
-          <GridItem rowSpan={1}>
-            <Header />
-          </GridItem>
+          <Grid position="sticky" top={0} shadow="md">
+            <GridItem rowSpan={1}>
+              <Header />
+            </GridItem>
 
-          {subheader && <GridItem rowSpan={1}>{subheader}</GridItem>}
-        </Grid>
+            {isLoggedIn && subheader && <GridItem rowSpan={1}>{subheader}</GridItem>}
+          </Grid>
 
-        {children}
-      </Flex>
-    </HeaderProvider>
+          {children}
+        </Flex>
+      </HeaderProvider>
+    </UserProvider>
   )
 }
 
