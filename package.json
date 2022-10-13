@@ -46,6 +46,7 @@
     "next": "12.2.5",
     "quirrel": "1.9.3",
     "react": "18.2.0",
+    "react-datepicker": "4.8.0",
     "react-dom": "18.2.0",
     "react-final-form": "6.5.9",
     "react-icons": "4.4.0",
