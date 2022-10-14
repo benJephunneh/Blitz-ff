@@ -17,6 +17,7 @@ specifiers:
   "@tiptap/html": 2.0.0-beta.197
   "@tiptap/react": 2.0.0-beta.197
   "@tiptap/starter-kit": 2.0.0-beta.197
+  "@types/clndr": 1.4.7
   "@types/jest": 27.4.1
   "@types/jquery": 3.5.14
   "@types/node": 17.0.16
@@ -38,6 +39,7 @@ specifiers:
   jquery: 3.6.1
   lint-staged: 12.1.7
   lodash: 4.17.21
+  moment: 2.29.4
   next: 12.2.5
   prettier: ^2.7.1
   prettier-plugin-prisma: 3.8.0
@@ -76,6 +78,7 @@ dependencies:
   framer-motion: 7.2.0_biqbaboplfbrettd7655fr4n2y
   html-to-text: 8.2.1
   lodash: 4.17.21
+  moment: 2.29.4
   next: 12.2.5_rlaikcoslzwwtqyk7brpdzej5y
   quirrel: registry.npmmirror.com/quirrel/1.9.3_redis-commands@1.7.0
   react: 18.2.0
@@ -89,6 +92,7 @@ dependencies:
 devDependencies:
   "@next/bundle-analyzer": 12.0.8
   "@testing-library/jest-dom": 5.16.3
+  "@types/clndr": 1.4.7
   "@types/jest": 27.4.1
   "@types/jquery": 3.5.14
   "@types/node": 17.0.16
@@ -4544,6 +4548,16 @@ packages:
       "@types/node": 17.0.16
       "@types/responselike": 1.0.0
     dev: false
+
+  /@types/clndr/1.4.7:
+    resolution:
+      {
+        integrity: sha512-YLVZzb0CsNT1IsA/wklaTlowNXFkx5IRsRUe9C2AVdt5N1RmFcwtBMutiPVMEjcRDsML1DXl45SOrhnltA2D9A==,
+      }
+    dependencies:
+      "@types/jquery": 3.5.14
+      moment: 2.29.4
+    dev: true
 
   /@types/connect/3.4.35:
     resolution:
@@ -10928,6 +10942,12 @@ packages:
       for-in: 1.0.2
       is-extendable: 1.0.1
     dev: false
+
+  /moment/2.29.4:
+    resolution:
+      {
+        integrity: sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==,
+      }
 
   /moo/0.5.1:
     resolution:
