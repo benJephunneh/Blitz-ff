@@ -6,6 +6,10 @@ import { ChakraProvider } from "@chakra-ui/react"
 import LayoutLoader from "app/core/components/LayoutLoader"
 import PageLoader from "app/core/components/PageLoader"
 
+import "@fullcalendar/common/main.css"
+import "@fullcalendar/daygrid/main.css"
+import "@fullcalendar/timegrid/main.css"
+
 function RootErrorFallback({ error }: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
     return <div>Error: You are not authenticated</div>
