@@ -39,6 +39,7 @@
     "@tiptap/react": "2.0.0-beta.197",
     "@tiptap/starter-kit": "2.0.0-beta.197",
     "blitz": "2.0.0-beta.3",
+    "clndr": "1.5.1",
     "final-form": "4.20.7",
     "framer-motion": "7.2.0",
     "html-to-text": "8.2.1",

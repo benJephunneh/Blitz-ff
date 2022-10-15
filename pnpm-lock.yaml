@@ -25,6 +25,7 @@ specifiers:
   "@types/react": 18.0.17
   "@typescript-eslint/eslint-plugin": 5.30.5
   blitz: 2.0.0-beta.3
+  clndr: 1.5.1
   concurrently: 7.4.0
   date-fns: 2.29.3
   eslint: 7.32.0
@@ -74,6 +75,7 @@ dependencies:
   "@tiptap/react": 2.0.0-beta.197_rjcart35aipijkzet7vjnsjbja
   "@tiptap/starter-kit": 2.0.0-beta.197
   blitz: 2.0.0-beta.3_lc4xspwhl7x4jkigfhc4n62xkm
+  clndr: 1.5.1
   final-form: 4.20.7
   framer-motion: 7.2.0_biqbaboplfbrettd7655fr4n2y
   html-to-text: 8.2.1
@@ -6131,6 +6133,16 @@ packages:
       wrap-ansi: registry.npmmirror.com/wrap-ansi/7.0.0
     dev: true
 
+  /clndr/1.5.1:
+    resolution:
+      {
+        integrity: sha512-sPHvln2fCRiVmctixOW7K4mnNx1sVuogJDvtw/9rpYX9h2QZ4o38/v18KjpvDVUiD/+BWIeNgCWw9qYYq1RhOg==,
+      }
+    dependencies:
+      jquery: 3.6.1
+      moment: 2.29.4
+    dev: false
+
   /clone-buffer/1.0.0:
     resolution:
       {
@@ -10052,7 +10064,6 @@ packages:
       {
         integrity: sha512-opJeO4nCucVnsjiXOE+/PcCgYw9Gwpvs/a6B1LL/lQhwWwpbVEVYDZ1FokFr8PRc7ghYlrFPuyHuiiDNTQxmcw==,
       }
-    dev: true
 
   /js-stringify/1.0.2:
     resolution:
