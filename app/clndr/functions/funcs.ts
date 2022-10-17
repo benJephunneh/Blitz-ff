@@ -1,6 +1,4 @@
-import { getDay, getDaysInMonth } from "date-fns"
-import $ from "jquery"
-import { createContext, useState } from "react"
+import { getDay, getDaysInMonth, startOfDay } from "date-fns"
 
 export const getDatesInMonth = (date) => {
   let firstDayOfMonth = new Date(date)
@@ -31,7 +29,7 @@ export const getDatesInMonth = (date) => {
   })
 }
 
-const getDaysInWeek = (days) =>
+export const getDaysInWeek = (days) =>
   Array.from({
     length: 7, // Seven days in a week
   }).map((_, ii) => {
@@ -39,7 +37,7 @@ const getDaysInWeek = (days) =>
     return dayInMonth ? dayInMonth : {}
   })
 
-const sortDatesByWeeksNo = (days) => {
+export const sortDatesByWeeksNo = (days) => {
   const numberOfWeeks = days.reduce((n, day, ii) => {
     let prevDay = days[ii - 1]
     if (prevDay) {
@@ -55,19 +53,4 @@ const sortDatesByWeeksNo = (days) => {
   )
 }
 
-const getDatesByWeekNo = (date) => sortDatesByWeeksNo(getDatesInMonth(date))
-const now = new Date()
-const calendarContext = createContext
-
-export function Calendar({ initialDate, onChangeDate, min, maz, children }) {
-  const [selectedDate, setSelectedDate] = useState(initialDate)
-  const [shownMonthDate, setShownMonthDate] = useState(() => {
-    let monthDate = new Date(initialDate || now)
-    monthDate.setDate(1)
-
-    return monthDate
-  })
-
-  return (
-  )
-}
+export const getDatesByWeekNo = (date) => sortDatesByWeeksNo(getDatesInMonth(date))
