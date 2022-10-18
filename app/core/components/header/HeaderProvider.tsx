@@ -9,6 +9,7 @@ import logout from "app/auth/mutations/logout"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
+import JobModalForm from "app/jobs/components/JobModalForm"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import deleteLocation from "app/locations/mutations/deleteLocation"
 import updateLocation from "app/locations/mutations/updateLocation"
@@ -40,13 +41,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const router = useRouter()
   const { isLoggedIn, isLoggedOut } = useContext(userContext)
 
-  // User
-  // const session = useSession({ suspense: false })
-  // const isLoggedIn = !!session.userId
-  // const isLoggedOut = !session.userId && !session.isLoading
-  // const [loggingIn, setLoggingIn] = useState(false)
-  // const [signingUp, setSigningUp] = useState(false)
-
   // Customer
   const { customerId } = useParams("number")
   const [customer, { refetch: refetchCustomer }] = useQuery(
@@ -76,8 +70,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [creatingLocation, setCreatingLocation] = useState(false)
   const [editingLocation, setEditingLocation] = useState(false)
   const [deletingLocation, setDeletingLocation] = useState(false)
-  const updateLocationMutation = useMutation(updateLocation)
-  const deleteLocationMutation = useMutation(deleteLocation)
   const [locationIds, setLocationIds] = useState<[{ id: number }]>()
   const [locationId, setLocationId] = useState<number>()
   // const [location, setLocation] = useState<Location>()
@@ -99,6 +91,12 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   // console.log(`locationId (HeaderProvider): ${locationId}`)
   // }, [locationId]) // eslint-disable-line
 
+  // Job
+  const [creatingJob, setCreatingJob] = useState(false)
+  const [editingJob, setEditingJob] = useState(false)
+  const [deletingJob, setDeletingJob] = useState(false)
+  const [jobId, setJobId] = useState<number>()
+
   // Stash
   const [
     { customerStashes, locationStashes, jobStashes, count: numStashes },
@@ -108,8 +106,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
     {},
     {
       suspense: true,
+      // enabled: isLoggedIn,
       staleTime: Infinity,
-      // enabled: true,
       refetchOnWindowFocus: false,
       // refetchInterval: 2000,
       // refetchIntervalInBackground: true,
@@ -130,15 +128,16 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
 
     switch (stashType) {
       case "Customer":
-        setCustomerStash(customerStashes.find((cs) => cs.id === stashId))
-        // setEditingStash(true)
+        setCustomerStash(customerStashes.find((c) => c.id === stashId))
+        setEditingStash(true)
         break
       case "Location":
-        setLocationStash(locationStashes.find((ls) => ls.id === stashId))
-        // setEditingStash(true)
+        setLocationStash(locationStashes.find((l) => l.id === stashId))
+        setEditingStash(true)
         break
       case "Job":
-        setJobStash(jobStashes.find((js) => js.id === stashId))
+        setJobStash(jobStashes.find((j) => j.id === stashId))
+        setEditingStash(true)
         break
 
       default:
@@ -148,8 +147,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
     }
   }, [customerStashes, editingStash, locationStashes, jobStashes, stashId, stashType])
 
-  const [loginMutation] = useMutation(login)
-  const [logoutMutation] = useMutation(logout)
+  // const [loginMutation] = useMutation(login)
+  // const [logoutMutation] = useMutation(logout)
 
   return (
     <Provider
@@ -174,6 +173,11 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         deleteLocation: () => setDeletingLocation(true),
         pickLocation: (id) => setLocationId(id),
 
+        createJob: () => setCreatingJob(true),
+        pickJob: (id) => setJobId(id),
+        editJob: () => setEditingJob(true),
+        deleteJob: () => setDeletingJob(true),
+
         editStash: (id, type) => {
           setStashId(id)
           setStashType(type)
@@ -186,6 +190,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         locationIds,
         customerStashes,
         locationStashes,
+        jobId,
+        jobStashes,
         jobStash,
         // estimateStash,
         // invoiceStash,
@@ -218,7 +224,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             // customerId={customerId}
             customer={editingCustomer ? customer : undefined}
             customerStash={editingStash ? customerStash : undefined}
-            isOpen={creatingCustomer || editingCustomer || editingStash}
+            isOpen={creatingCustomer || editingCustomer || (editingStash && !!customerStash)}
             onClose={() => {
               creatingCustomer && setCreatingCustomer(false)
               editingCustomer && setEditingCustomer(false)
@@ -248,7 +254,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             // location={editingLocation ? location : undefined}
             locationId={creatingLocation ? undefined : locationId}
             locationStash={editingStash ? locationStash : undefined}
-            isOpen={creatingLocation || editingLocation || editingStash}
+            isOpen={creatingLocation || editingLocation || (editingStash && !!locationStash)}
             onClose={() => {
               creatingLocation && setCreatingLocation(false)
               editingLocation && setEditingLocation(false)
@@ -257,18 +263,41 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             disableStash={editingLocation}
             onSuccess={async (location) => {
               if ("stashType" in location) await refetchStashes()
-              else {
-                if (creatingLocation) {
-                  setLocationId(location.id)
-                }
-                // refetchCustomer()
-                // router
-                //   .push(Routes.ShowLocationPage({ customerId: customer!.id, locationId: location.id }))
-                //   .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
+              else if (creatingLocation) {
+                setLocationId(location.id)
               }
+              // refetchCustomer()
+              // router
+              //   .push(Routes.ShowLocationPage({ customerId: customer!.id, locationId: location.id }))
+              //   .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
+
               creatingLocation && setCreatingLocation(false)
               editingLocation && setEditingLocation(false)
               editingStash && setEditingStash(false)
+            }}
+          />
+
+          <JobModalForm
+            locationId={locationId}
+            job={editingJob ? job : undefined}
+            jobStash={jobStash}
+            isOpen={creatingJob || editingJob}
+            onClose={() => {
+              creatingJob && setCreatingJob(false)
+              editingJob && setEditingJob(false)
+            }}
+            disableStash={editingJob}
+            onSuccess={async (job) => {
+              if (job) {
+                if ("stashType" in job) await refetchStashes()
+                else if (creatingJob) {
+                  setJobId(job.id)
+                  // await refetchJobs()
+                }
+              }
+
+              creatingJob && setCreatingJob(false)
+              editingJob && setEditingJob(false)
             }}
           />
 
@@ -276,7 +305,11 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             title={`Delete ${customer?.firstname} ${customer?.lastname} ? `}
             description="Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
             isOpen={deletingCustomer}
-            onClose={() => setDeletingCustomer(false)}
+            onClose={() => {
+              deletingCustomer && setDeletingCustomer(false)
+              deletingLocation && setDeletingLocation(false)
+              deletingJob && setDeletingJob(false)
+            }}
             onConfirm={async () => {
               await deleteCustomerMutation({ id: customer!.id })
                 .then(() => router.push(Routes.CustomersPage()))

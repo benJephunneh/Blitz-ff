@@ -26,42 +26,22 @@ import deleteStash from "app/stashes/mutations/deleteStash"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import headerContext from "./headerContext"
 import userContext from "app/auth/components/contexts/userContext"
+import { j } from "@blitzjs/auth/dist/index-57d74361"
 
 const HeaderLoggedIn = () => {
   const router = useRouter()
   const { logOut } = useContext(userContext)
   const {
-    pickLocation,
-    editCustomer,
     createCustomer,
     editStash,
     refetchStashes,
     customerStashes,
     locationStashes,
+    jobStashes,
     numStashes,
   } = useContext(headerContext)
 
   const [deleteStashMutation] = useMutation(deleteStash)
-
-  // const [stashingCustomer, setStashingCustomer] = useState(false)
-  const [stashId, setStashId] = useState<number>()
-  const [customerId, setCustomerId] = useState<number>()
-  // const [customerStash, setCustomerStash] = useState<CustomerStash>()
-  // const [{ customerStashes, locationStashes, count: numStashes }, { refetch: refetchStashes }] =
-  //   useQuery(
-  //     getStashes,
-  //     {},
-  //     {
-  //       refetchOnWindowFocus: false,
-  //       // refetchInterval: 2000,
-  //       // refetchIntervalInBackground: true,
-  //     }
-  //   )
-
-  // const [editingLocation, setEditingLocation] = useState(false)
-  // const [editingJob, setEditingJob] = useState(false)
-  // const [editingInvoice, setEditingInvoice] = useState(false)
-  // const [editingEstimate, setEditingEstimate] = useState(false)
 
   const stashKeyframes = keyframes`
     from { background-color: red; color: white }
@@ -178,6 +158,29 @@ const HeaderLoggedIn = () => {
                 />
               </MenuItem>
             ))}
+            {jobStashes?.map((j, kk) => (
+              <MenuItem key={kk} fontWeight="semibold">
+                <Text
+                  textOverflow="ellipsis"
+                  onClick={() => {
+                    editStash(j.id, "Job")
+                  }}
+                >
+                  {j.title}: {JSON.parse(j.notes).content[0].content[0].text}
+                </Text>
+                <Spacer />
+                <Icon
+                  as={FcFullTrash}
+                  h={5}
+                  w={5}
+                  onClick={async () => {
+                    deleteStashMutation({ id: j.id, stashType: "Job" })
+                      .then(() => refetchStashes())
+                      .catch((e) => console.log(`Error deleting job stash: ${e}`))
+                  }}
+                />
+              </MenuItem>
+            ))}
           </MenuList>
         </Menu>
         <ButtonGroup spacing={4} alignItems="center">
@@ -189,7 +192,7 @@ const HeaderLoggedIn = () => {
             borderWidth={1}
             borderStyle="dashed"
             onClick={createCustomer}
-            _hover={{ bg: useColorModeValue("blackAlpha.100", "gray.900") }}
+            _hover={{ bg: useColorModeValue("green.50", "gray.900") }}
             leftIcon={<FaPlus size={10} />}
           >
             New customer

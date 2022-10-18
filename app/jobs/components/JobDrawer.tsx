@@ -8,7 +8,7 @@ import {
   Spinner,
 } from "@chakra-ui/react"
 import { useContext } from "react"
-import jobContext from "../contexts/JobContext"
+import jobContext from "../contexts/jobContext"
 
 type JobDrawerProps = {
   isOpen: boolean

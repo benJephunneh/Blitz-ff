@@ -199,6 +199,7 @@ const LocationModalForm = ({
         locationRet = await createLocationMutation({
           customerId: customerId!,
           locationInput: formSubmission,
+          notes,
         })
         if (locationStash && locationRet) {
           await deleteStashMutation({

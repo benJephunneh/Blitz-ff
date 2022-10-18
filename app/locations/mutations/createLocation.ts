@@ -1,4 +1,5 @@
 import { resolver } from "@blitzjs/rpc"
+import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
 import db from "db"
 import { z } from "zod"
 import { CreateLocation } from "../validations"
@@ -14,15 +15,18 @@ export default resolver.pipe(
 
   async ({ customerId, locationInput }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    const { notes } = locationInput
     const location = await db.location.create({
       data: {
         customerId,
+        notes: notes && JSON.stringify(notes),
         ...locationInput,
       },
     })
     await db.locationArchive.create({
       data: {
         customerId,
+        notes: notes && JSON.stringify(notes),
         ...locationInput,
       },
     })

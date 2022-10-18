@@ -30,11 +30,9 @@ type JobPanelProps = {
 }
 
 const JobPanel = ({ locationId }: JobPanelProps) => {
-  const { jobStash, refetchStashes } = useContext(headerContext)
-  const [creatingJob, setCreatingJob] = useState(false)
-  const [editingJob, setEditingJob] = useState(false)
-  const [jobId, setJobId] = useState<number>()
-  const [job, setJob] = useState<Job>()
+  const { jobId, jobStash, createJob, editJob, refetchStashes } = useContext(headerContext)
+  // const [jobId, setJobId] = useState<number>()
+  const [job, setJob] = useState<Job>({} as Job)
   const [jobs, { refetch: refetchJobs }] = useQuery(
     getJobs,
     {},
@@ -54,7 +52,7 @@ const JobPanel = ({ locationId }: JobPanelProps) => {
 
   return (
     <>
-      <JobModalForm
+      {/* <JobModalForm
         locationId={locationId}
         job={editingJob ? job : undefined}
         jobStash={jobStash}
@@ -76,7 +74,7 @@ const JobPanel = ({ locationId }: JobPanelProps) => {
           creatingJob && setCreatingJob(false)
           editingJob && setEditingJob(false)
         }}
-      />
+      /> */}
 
       <Flex justify="space-between">
         <Menu closeOnSelect={false}>

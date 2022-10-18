@@ -16,7 +16,7 @@ import { useContext } from "react"
 import { IconType } from "react-icons"
 import { FaChevronDown } from "react-icons/fa"
 import { FcHome } from "react-icons/fc"
-import jobContext from "../contexts/JobContext"
+import jobContext from "../contexts/jobContext"
 import getJobs from "../queries/getJobs"
 
 type JobPickerProps = {

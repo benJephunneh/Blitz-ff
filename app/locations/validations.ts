@@ -60,7 +60,7 @@ export const CreateLocationStash = z.object({
   lot: lot.optional(),
   parcel: parcel.optional(),
   locationType,
-  notes,
+  notes: notes.nullable(),
 })
 
 export const UpdateLocationStash = CreateLocationStash.extend({ id })

@@ -33,9 +33,17 @@ export type HeaderContext = {
   // pickLocation: (l: Location) => void
   pickLocation: (id: number | undefined) => void
 
+  // Job
+  jobId?: number
+  createJob: () => void
+  editJob: () => void
+  pickJob: (id: number) => void
+  deleteJob: () => void
+
   // Stash
   customerStashes: CustomerStash[]
   locationStashes: LocationStash[]
+  jobStashes: JobStash[]
   jobStash?: JobStash
   numStashes: number
   editStash: (id: number | undefined, type: StashType | undefined) => void

@@ -1,13 +1,13 @@
-import { Job } from "@prisma/client"
 import { createContext } from "react"
 
 export type JobContext = {
+  jobId?: number
+
   createJob: () => void
   editJob: () => void
   refetchJob: () => void
   showDetails: () => void
-
-  job: Job
+  deleteJob: () => void
 
   // amountPaid: number
   // amountOwed: number

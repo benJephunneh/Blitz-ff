@@ -16,6 +16,10 @@ import { useEffect, useState } from "react"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import createStash from "app/stashes/mutations/createStash"
 import updateStash from "app/stashes/mutations/updateStash"
+import { Calendar } from "react-calendar"
+import "react-calendar/dist/Calendar.css"
+import { LabeledDateField } from "app/calendar/components/LabeledDateField"
+import { addDays, formatRelative } from "date-fns"
 
 type JobModalFormProps = {
   locationId?: number
@@ -48,6 +52,7 @@ const JobModalForm = ({
   const [updateStashMutation] = useMutation(updateStash)
   const [deleteStashMutation] = useMutation(deleteStash)
   const [user, setUser] = useState<User>()
+  const [calendarValue, onCalendarChange] = useState(new Date())
 
   const stashType = "Job"
   const stashFootnoteColor = useColorModeValue("red", "cyan.200")
@@ -122,6 +127,8 @@ const JobModalForm = ({
     }
   }
 
+  const tomorrow0900 = addDays(new Date().setHours(9, 0, 0, 0), 1)
+  const tomorrow1700 = addDays(new Date().setHours(17, 0, 0, 0), 1)
   const initialValues = {
     title: jobStash?.title || job?.title || undefined,
     start: jobStash?.start || job?.start || undefined,
@@ -147,11 +154,10 @@ const JobModalForm = ({
       render={() => (
         <>
           <LabeledTextField name="title" label="Title" />
-          <LabeledTextField name="start" label="Start date/time" />
-          <LabeledTextField name="end" label="End date/time" />
-          {/* <Text>
-            {location.house} {location.street} {location.zipcode}
-          </Text> */}
+          {/* <LabeledTextField name="start" label="Start date/time" /> */}
+          {/* <LabeledTextField name="end" label="End date/time" /> */}
+          <LabeledDateField name="start" label="Start" initialDate={tomorrow0900} />
+          <LabeledDateField name="end" label="End" initialDate={tomorrow1700} />
           <EditorField
             name="notes"
             fontSize="md"

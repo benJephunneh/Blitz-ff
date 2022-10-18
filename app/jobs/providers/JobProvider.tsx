@@ -6,33 +6,8 @@ import { ReactNode } from "react"
 import { useState } from "react"
 import JobDrawer from "../components/JobDrawer"
 import JobModalForm from "../components/JobModalForm"
-import jobContext from "../contexts/JobContext"
+import jobContext from "../contexts/jobContext"
 import getJob from "../queries/getJob"
-
-const fetchLocations = async (customerId: number) => {
-  const locations = await db.location.findMany({
-    where: { customerId },
-    orderBy: [
-      { primary: "asc" },
-      { zipcode: "asc" },
-      { city: "asc" },
-      { street: "asc" },
-      { house: "asc" },
-    ],
-  })
-
-  return locations
-}
-
-const fetchCustomer = async (customerId: number) => {
-  const customer = await db.customer.findFirst({
-    where: { id: customerId },
-  })
-
-  if (!customer) throw new NotFoundError()
-
-  return customer
-}
 
 const { Provider } = jobContext
 
@@ -46,6 +21,7 @@ const JobProvider = ({ locationId, jobId, children }: JobProviderProps) => {
   // const [customer, { refetch: refetchCustomer }] = useCustomer({ id, suspense: false })
 
   const [editingJob, setEditingJob] = useState(false)
+  const [deletingJob, setDeletingJob] = useState(false)
   const [showingDetails, setShowingDetails] = useState(false)
 
   // const [customer, { refetch: refetchCustomer }] = useQuery(
@@ -71,8 +47,9 @@ const JobProvider = ({ locationId, jobId, children }: JobProviderProps) => {
         editJob: () => setEditingJob(true),
         showDetails: () => setShowingDetails(true),
         createJob: () => setEditingJob(true),
+        deleteJob: () => setDeletingJob(true),
 
-        job: job,
+        jobId,
 
         refetchJob,
       }}
