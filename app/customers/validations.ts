@@ -12,7 +12,7 @@ export const notes = stashContentSchema
 // })
 // const email = await emailSchema.parseAsync(query)
 // export const phone = z.string().min(7).max(10)
-const id = z.number()
+export const id = z.number()
 
 export const CreateCustomerSkeleton = z.object({
   firstname,

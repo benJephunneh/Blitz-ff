@@ -83,7 +83,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   // Can't have just any re-render changing chosen locationId.
   //   // if (!router.isReady) return
   //   async () => {
-  //     let l = await db.location.findFirstOrThrow({ where: { id: locationId } })
+  //     let l = await db.location.findFirst({ where: { id: locationId } })
   //     setLocation(l)
   //   }
   //   // setLocation()
@@ -107,15 +107,15 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
     {
       suspense: true,
       // enabled: isLoggedIn,
-      staleTime: Infinity,
+      // staleTime: Infinity,
       refetchOnWindowFocus: false,
-      // refetchInterval: 2000,
+      // refetchInterval: 5000,
       // refetchIntervalInBackground: true,
     }
   )
-  const [customerStash, setCustomerStash] = useState<CustomerStash>()
-  const [locationStash, setLocationStash] = useState<LocationStash>()
-  const [jobStash, setJobStash] = useState<JobStash>()
+  // const [customerStash, setCustomerStash] = useState<CustomerStash>()
+  // const [locationStash, setLocationStash] = useState<LocationStash>()
+  // const [jobStash, setJobStash] = useState<JobStash>()
   const [stashId, setStashId] = useState<number>()
   const [stashType, setStashType] = useState<StashType>()
   const [editingStash, setEditingStash] = useState(false)
@@ -123,29 +123,30 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   // const [createStashMutation] = useMutation(createStash)
   // const [updateStashMutation] = useMutation(updateStash)
   // const [deleteStashMutation] = useMutation(deleteStash)
-  useEffect(() => {
-    if (!editingStash) return
+  // useEffect(() => {
+  //   if (!editingStash) return
 
-    switch (stashType) {
-      case "Customer":
-        setCustomerStash(customerStashes.find((c) => c.id === stashId))
-        setEditingStash(true)
-        break
-      case "Location":
-        setLocationStash(locationStashes.find((l) => l.id === stashId))
-        setEditingStash(true)
-        break
-      case "Job":
-        setJobStash(jobStashes.find((j) => j.id === stashId))
-        setEditingStash(true)
-        break
+  //   switch (stashType) {
+  //     case "Customer":
+  //       setCustomerStash(customerStashes.find((c) => c.id === stashId))
+  //       // setEditingStash(true)
+  //       break
+  //     case "Location":
+  //       setLocationStash(locationStashes.find((l) => l.id === stashId))
+  //       // setEditingStash(true)
+  //       break
+  //     case "Job":
+  //       setJobStash(jobStashes.find((j) => j.id === stashId))
+  //       // setEditingStash(true)
+  //       break
 
-      default:
-        setCustomerStash(undefined)
-        setLocationStash(undefined)
-        break
-    }
-  }, [customerStashes, editingStash, locationStashes, jobStashes, stashId, stashType])
+  //     default:
+  //       setCustomerStash(undefined)
+  //       setLocationStash(undefined)
+  //       setJobStash(undefined)
+  //       break
+  //   }
+  // }, [editingStash, stashId, stashType])
 
   // const [loginMutation] = useMutation(login)
   // const [logoutMutation] = useMutation(logout)
@@ -192,7 +193,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         locationStashes,
         jobId,
         jobStashes,
-        jobStash,
+        // jobStash,
         // estimateStash,
         // invoiceStash,
         numStashes,
@@ -223,8 +224,12 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
           <CustomerModalForm
             // customerId={customerId}
             customer={editingCustomer ? customer : undefined}
-            customerStash={editingStash ? customerStash : undefined}
-            isOpen={creatingCustomer || editingCustomer || (editingStash && !!customerStash)}
+            stashId={editingStash ? stashId : undefined}
+            isOpen={
+              creatingCustomer ||
+              editingCustomer ||
+              (stashType === "Customer" && editingStash && !!stashId)
+            }
             onClose={() => {
               creatingCustomer && setCreatingCustomer(false)
               editingCustomer && setEditingCustomer(false)
@@ -234,15 +239,17 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             onSuccess={async (customer) => {
               if (customer) {
                 if ("stashType" in customer) await refetchStashes()
-                else if (creatingCustomer) {
+                else if (editingCustomer) await refetchCustomer()
+                else {
                   setLocationId(undefined)
+                  editingStash && refetchStashes()
                   await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
-                } else if (editingCustomer) await refetchCustomer()
+                }
+                // await refetchCustomer()
+                //   .catch((e) =>
+                //     console.log(`Header CustomerModalForm error: ${e}`)
+                //   )
               }
-              // await refetchCustomer()
-              //   .catch((e) =>
-              //     console.log(`Header CustomerModalForm error: ${e}`)
-              //   )
               creatingCustomer && setCreatingCustomer(false)
               editingCustomer && setEditingCustomer(false)
               editingStash && setEditingStash(false)
@@ -250,11 +257,15 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
           />
 
           <LocationModalForm
-            customerId={customer?.id}
+            customerId={editingStash ? undefined : customer?.id}
             // location={editingLocation ? location : undefined}
-            locationId={creatingLocation ? undefined : locationId}
-            locationStash={editingStash ? locationStash : undefined}
-            isOpen={creatingLocation || editingLocation || (editingStash && !!locationStash)}
+            locationId={editingLocation ? locationId : undefined}
+            stashId={editingStash ? stashId : undefined}
+            isOpen={
+              creatingLocation ||
+              editingLocation ||
+              (stashType === "Location" && editingStash && !!stashId)
+            }
             onClose={() => {
               creatingLocation && setCreatingLocation(false)
               editingLocation && setEditingLocation(false)
@@ -262,14 +273,18 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             }}
             disableStash={editingLocation}
             onSuccess={async (location) => {
-              if ("stashType" in location) await refetchStashes()
-              else if (creatingLocation) {
-                setLocationId(location.id)
+              if (location) {
+                if ("stashType" in location) await refetchStashes()
+                else {
+                  await refetchCustomer()
+                  setLocationId(location.id)
+                  if (editingStash) {
+                    await router.push(Routes.ShowCustomerPage({ customerId: location.customerId }))
+                    // .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
+                  }
+                  // refetchCustomer()
+                }
               }
-              // refetchCustomer()
-              // router
-              //   .push(Routes.ShowLocationPage({ customerId: customer!.id, locationId: location.id }))
-              //   .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
 
               creatingLocation && setCreatingLocation(false)
               editingLocation && setEditingLocation(false)
@@ -279,25 +294,25 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
 
           <JobModalForm
             locationId={locationId}
-            job={editingJob ? job : undefined}
-            jobStash={jobStash}
-            isOpen={creatingJob || editingJob}
+            jobId={editingJob ? jobId : undefined}
+            stashId={editingStash ? stashId : undefined}
+            isOpen={creatingJob || editingJob || (stashType === "Job" && editingStash && !!stashId)}
             onClose={() => {
               creatingJob && setCreatingJob(false)
               editingJob && setEditingJob(false)
+              editingStash && setEditingStash(false)
             }}
             disableStash={editingJob}
             onSuccess={async (job) => {
               if (job) {
                 if ("stashType" in job) await refetchStashes()
-                else if (creatingJob) {
-                  setJobId(job.id)
-                  // await refetchJobs()
-                }
+                else setJobId(job.id)
+                // await refetchJobs()
               }
 
               creatingJob && setCreatingJob(false)
               editingJob && setEditingJob(false)
+              editingStash && setEditingStash(false)
             }}
           />
 
@@ -312,8 +327,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             }}
             onConfirm={async () => {
               await deleteCustomerMutation({ id: customer!.id })
+                .then(() => refetchStashes())
                 .then(() => router.push(Routes.CustomersPage()))
-                .catch((e) => console.log(`customerProvider DeleteModal error: ${e}`))
+                .catch((e) => console.log(`customerProvider DeleteModal error: ${e.message}`))
             }}
           />
         </>

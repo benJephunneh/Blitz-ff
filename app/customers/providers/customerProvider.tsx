@@ -85,8 +85,10 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         showDetails: () => setShowingDetails(true),
         // createLocation: () => setCreatingLocation(true),
         // pickLocation: (id) => setLocationId(id),
-        gotoLocation: async (id) =>
-          await router.push(Routes.ShowLocationPage({ customerId: customer!.id, locationId: id })),
+        gotoLocation: async (id) => {
+          pickLocation(id)
+          await router.push(Routes.ShowCustomerPage({ customerId: customer!.id }))
+        },
 
         // customer: customer as Customer,
         // displayname: customer!.displayname,

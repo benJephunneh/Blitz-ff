@@ -28,9 +28,9 @@ type CustomerModalFormProps = {
   onClose: () => void
   onSuccess?: (customer: Customer | CustomerStash | void) => void
   // customerId?: number
-  // stashId?: number
+  stashId?: number
   customer?: Customer
-  customerStash?: CustomerStash // | LocationStash
+  // customerStash?: CustomerStash // | LocationStash
   disableStash?: boolean
   // mutationType?: MutationType
   props?: Partial<ModalProps>
@@ -41,9 +41,9 @@ const CustomerModalForm = ({
   onClose,
   onSuccess,
   // customerId,
-  // stashId,
+  stashId,
   customer,
-  customerStash,
+  // customerStash,
   disableStash,
   // mutationType = "New",
   ...props
@@ -54,7 +54,6 @@ const CustomerModalForm = ({
   const [updateStashMutation] = useMutation(updateStash)
   const [deleteStashMutation] = useMutation(deleteStash)
   const stashType = "Customer"
-
   // console.log('CustomerModalForm inputs:')
   // console.log(`\tcustomerId: ${customerId}`)
   // console.log(`\tstash: ${JSON.stringify(stashId)}`)
@@ -74,19 +73,19 @@ const CustomerModalForm = ({
 
   // const customerStash = useStash(stashId, stashType)
 
-  // const [customerStash, { refetch: refetchStash }] = useQuery(
-  //   getStash,
-  //   {
-  //     id: stashId,
-  //     stashType,
-  //   },
-  //   {
-  //     suspense: !!stashId,
-  //     enabled: !!stashId,
-  //     staleTime: Infinity,
-  //     refetchOnWindowFocus: false,
-  //   }
-  // )
+  const [customerStash] = useQuery(
+    getStash,
+    {
+      id: stashId,
+      stashType,
+    },
+    {
+      suspense: !!stashId,
+      enabled: !!stashId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  )
 
   const [user] = useQuery(
     getUser,
@@ -179,9 +178,9 @@ const CustomerModalForm = ({
   }
 
   const handleError = (error) => {
-    console.log(`Error doing something with customer modal: ${error.toString()}`)
+    console.log(`Error doing something with customer modal: ${error.message}`)
     return {
-      [FORM_ERROR]: `Customer modal error: ${error.toString()}`,
+      [FORM_ERROR]: `Customer modal error: ${error.message}`,
     }
   }
 
@@ -202,8 +201,8 @@ const CustomerModalForm = ({
       onClose={onClose}
       disableStash={disableStash}
       schema={CreateCustomerStash}
-      title={customer || customerStash ? "Edit customer" : "New customer"}
-      submitText={customer || customerStash ? "Update" : "Create"}
+      title={customer ? "Edit customer" : "New customer"}
+      submitText={customer ? "Update" : "Create"}
       initialValues={initialValues}
       onSubmit={(values) => {
         onSubmit(values)

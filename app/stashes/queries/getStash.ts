@@ -29,11 +29,11 @@ export default resolver.pipe(
           where: { id },
         })
         break
-      // case "Job":
-      //   const stash = await db.jobStash.findFirst({
-      //     where: { id },
-      //   })
-      //   break
+      case "Job":
+        stash = await db.jobStash.findFirst({
+          where: { id },
+        })
+        break
       // case "Invoice":
       //   stash = await db.invoiceStash.findFirst({
       //     where: { id },
@@ -62,6 +62,7 @@ export default resolver.pipe(
     //   stash,
     //   user,
     // }
+    console.log(JSON.stringify(stash))
     return stash
   }
 )

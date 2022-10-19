@@ -52,7 +52,7 @@ model Location {
   lot          String?
   parcel       String?
   locationType LocationType @default(Personal)
-  customer     Customer     @relation(fields: [customerId], references: [id])
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId   Int
   jobs         Job[]
   jobStashes   JobStash[]
@@ -74,7 +74,7 @@ model LocationStash {
   lot          String?
   parcel       String?
   locationType LocationType @default(Personal)
-  customer     Customer     @relation(fields: [customerId], references: [id])
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId   Int
   stashType    StashType    @default(Location)
   user         User         @relation(fields: [userId], references: [id])
@@ -90,7 +90,7 @@ model Job {
   start      DateTime?
   end        DateTime?
   locationId Int
-  location   Location  @relation(fields: [locationId], references: [id])
+  location   Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
   user       User      @relation(fields: [userId], references: [id])
   userId     Int
   notes      String?
@@ -103,7 +103,7 @@ model JobStash {
   title      String?
   start      DateTime?
   end        DateTime?
-  location   Location  @relation(fields: [locationId], references: [id])
+  location   Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
   locationId Int
   stashType  StashType @default(Location)
   user       User      @relation(fields: [userId], references: [id])
@@ -140,7 +140,7 @@ model LocationArchive {
   parcel           String?
   notes            String?
   locationType     LocationType    @default(Personal)
-  archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id])
+  archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId       Int
   archivedJobs     JobArchive[]
 }
@@ -154,7 +154,7 @@ model JobArchive {
   end              DateTime?
   locationId       Int
   notes            String?
-  archivedLocation LocationArchive @relation(fields: [locationId], references: [id])
+  archivedLocation LocationArchive @relation(fields: [locationId], references: [id], onDelete: Cascade)
 }
 
 model User {

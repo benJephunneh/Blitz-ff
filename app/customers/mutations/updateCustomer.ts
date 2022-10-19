@@ -1,27 +1,30 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
-import { UpdateCustomer } from "../validations"
+import { CreateCustomerSkeleton, id, notes } from "../validations"
 
 export default resolver.pipe(
-  resolver.zod(UpdateCustomer),
+  resolver.zod(CreateCustomerSkeleton.extend({ id, notes: notes.nullable() })),
   resolver.authorize(),
 
-  async ({ id, ...data }) => {
+  async ({ id, notes, ...values }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const displayname = `${data.firstname} ${data.lastname}`
+    const displayname = `${values.firstname} ${values.lastname}`
+    // const { id, notes, ...values } = input
 
     const customer = await db.customer.update({
       where: { id },
       data: {
         displayname,
-        ...data,
+        notes: JSON.stringify(notes),
+        ...values,
       },
     })
     await db.customerArchive.update({
       where: { id },
       data: {
         displayname,
-        ...data,
+        notes: JSON.stringify(notes),
+        ...values,
       },
     })
 

@@ -43,11 +43,11 @@ type LocationModalFormProps = {
   isOpen: boolean
   onClose: () => void
   onSuccess?: (location: Location | LocationStash) => void
-  customerId?: number // Always necessary, but HeaderProvider needs to instantiate the form when customer might not yet be defined.
+  customerId?: number
   locationId?: number
-  // stashId?: number
+  stashId?: number
   // location?: Location
-  locationStash?: LocationStash
+  // locationStash?: LocationStash
   disableStash?: boolean
   mutationType?: MutationType
   props?: Partial<ModalProps>
@@ -59,9 +59,9 @@ const LocationModalForm = ({
   onSuccess,
   customerId,
   locationId,
-  // stashId,
+  stashId,
   // location,
-  locationStash,
+  // locationStash,
   disableStash,
   // mutationType = "New",
   ...props
@@ -85,19 +85,19 @@ const LocationModalForm = ({
     }
   )
 
-  // const [locationStash, { refetch: refetchStash }] = useQuery(
-  //   getStash,
-  //   {
-  //     id: stashId,
-  //     stashType,
-  //   },
-  //   {
-  //     suspense: !!stashId,
-  //     enabled: !!stashId,
-  //     staleTime: Infinity,
-  //     refetchOnWindowFocus: false,
-  //   }
-  // )
+  const [locationStash] = useQuery(
+    getStash,
+    {
+      id: stashId,
+      stashType,
+    },
+    {
+      suspense: !!stashId,
+      enabled: !!stashId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  )
 
   const [user] = useQuery(
     getUser,
@@ -197,9 +197,9 @@ const LocationModalForm = ({
       } else {
         // console.log("\tcreating location")
         locationRet = await createLocationMutation({
-          customerId: customerId!,
-          locationInput: formSubmission,
-          notes,
+          customerId: stashId ? locationStash.customerId : customerId,
+          notes: notes,
+          ...formSubmission,
         })
         if (locationStash && locationRet) {
           await deleteStashMutation({
@@ -213,16 +213,16 @@ const LocationModalForm = ({
     return locationRet
   }
 
-  const handleError = (e) => {
-    console.log(`Error doing something with location modal: ${e.toString()}`)
+  const handleError = (e: Error) => {
+    console.log(`Error doing something with location modal: ${e.message}`)
     return {
-      [FORM_ERROR]: `Customer modal error: ${e.toString()}`,
+      [FORM_ERROR]: `Customer modal error: ${e.message}`,
     }
   }
 
   const locationTypes = Object.values(LocationType)
   const initialValues = {
-    primary: locationStash?.primary || location?.primary || true,
+    primary: locationStash ? locationStash["primary"] : location ? location["primary"] : true,
     house: locationStash?.house || location?.house || undefined,
     street: locationStash?.street || location?.street || undefined,
     city: locationStash?.city || location?.city || undefined,
@@ -236,6 +236,9 @@ const LocationModalForm = ({
     notes: locationStash?.notes ? JSON.parse(locationStash.notes) : null,
     // customerId,
   }
+  // console.log(`initialValues: ${JSON.stringify(initialValues)}`)
+  // console.log(`locationStash: ${JSON.stringify(locationStash)}`)
+  // console.log(`primary: ${JSON.stringify(locationStash ? locationStash['primary'] : '')}`)
 
   return (
     <ModalForm
@@ -244,8 +247,8 @@ const LocationModalForm = ({
       onClose={onClose}
       disableStash={disableStash}
       schema={CreateLocationStash}
-      title={location || locationStash ? "Edit location" : "New location"}
-      submitText={location || locationStash ? "Update" : "Create"}
+      title={location ? "Edit location" : "New location"}
+      submitText={location ? "Update" : "Create"}
       initialValues={initialValues}
       onSubmit={(values) => {
         onSubmit(values)
@@ -308,9 +311,9 @@ const LocationModalForm = ({
               <HStack>
                 <Tag colorScheme="orange" flexShrink={0}>
                   {/* <TagLeftIcon as={FcButtingIn} /> */}
-                  <TagLabel>Make this the primary location?</TagLabel>
+                  <TagLabel>Is primary location?</TagLabel>
                 </Tag>
-                <LabeledCheckboxField name="primary" defaultChecked={true} />
+                <LabeledCheckboxField name="primary" label="Primary address" />
               </HStack>
             </GridItem>
           </Grid>

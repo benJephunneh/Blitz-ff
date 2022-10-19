@@ -1,5 +1,6 @@
 import {
   Checkbox,
+  CheckboxProps,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -14,10 +15,11 @@ import getFieldErrorMessage from "./helpers/getFieldErrorMessage"
 
 interface LabeledCheckboxFieldProps extends ComponentPropsWithoutRef<typeof Checkbox> {
   name: string
-  label: string
+  // isChecked?: boolean
+  label?: string
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
   labelProps?: ComponentPropsWithoutRef<"label">
-  children: JSX.Element[]
+  children?: JSX.Element[]
   props?: ComponentPropsWithoutRef<typeof Checkbox>
 }
 
@@ -25,23 +27,24 @@ const LabeledCheckboxField = forwardRef<HTMLInputElement, LabeledCheckboxFieldPr
   ({ label, outerProps, labelProps, name, children, ...props }, ref) => {
     const { input, meta } = useField(name, { type: "checkbox" })
     const error = getFieldErrorMessage(meta)
+    console.log(`input: ${JSON.stringify(input)}`)
 
     return (
       <FormControl isInvalid={meta.touched && error} {...outerProps}>
         <HStack>
-          <Switch
+          {/* {label && (
+            <FormLabel htmlFor={input.id} {...labelProps}>
+              {label}
+            </FormLabel>
+          )} */}
+
+          <Checkbox
             {...input}
             isChecked={input.checked}
             disabled={meta.submitting}
             {...props}
             ref={ref}
           />
-
-          {label && (
-            <FormLabel htmlFor={input.id} {...labelProps}>
-              {label}
-            </FormLabel>
-          )}
         </HStack>
 
         <FormErrorMessage>{error}</FormErrorMessage>

@@ -9,24 +9,24 @@ import stashContentSchema from "../../core/components/editor/schema/stashContent
 // const customerZod = CreateCustomer.partial()
 // const locationZod = CreateLocation.partial()
 // const jobZod = CreateJob.partial()
-const customerZod = CreateCustomerSkeleton.partial()
-const locationZod = CreateLocationSkeleton.partial()
-const jobZod = CreateJobSkeleton.partial()
+// const customerZod = CreateCustomerSkeleton.partial()
+// const locationZod = CreateLocationSkeleton.partial()
+// const jobZod = CreateJobSkeleton.partial()
 
 export const CreateStash = z.object({
   notes: stashContentSchema, // .nullable(),
   stashType: z.nativeEnum(StashType),
   customerId: z.number().optional(),
   locationId: z.number().optional(),
-  customer: customerZod.optional(),
-  location: locationZod.optional(),
-  job: jobZod.optional(),
+  customer: CreateCustomerSkeleton.partial().optional(),
+  location: CreateLocationSkeleton.partial().optional(),
+  job: CreateJobSkeleton.partial().optional(),
 })
 
-type CreateStashProps = {
-  input: any
-  stashType: StashType
-}
+// type CreateStashProps = {
+//   input: any
+//   stashType: StashType
+// }
 
 export default resolver.pipe(
   resolver.zod(CreateStash),
@@ -48,10 +48,10 @@ export default resolver.pipe(
 
         stash = await db.customerStash.create({
           data: {
-            userId: ctx.session.userId,
-            notes: JSON.stringify(notes),
             displayname,
             stashType,
+            notes: JSON.stringify(notes),
+            userId: ctx.session.userId,
             ...customer,
           },
         })
@@ -60,10 +60,10 @@ export default resolver.pipe(
       case "Location":
         stash = await db.locationStash.create({
           data: {
-            userId: ctx.session.userId,
-            notes: JSON.stringify(notes),
-            stashType,
             customerId: customerId!,
+            stashType,
+            notes: JSON.stringify(notes),
+            userId: ctx.session.userId,
             ...location,
           },
         })
@@ -72,10 +72,10 @@ export default resolver.pipe(
       case "Job":
         stash = await db.jobStash.create({
           data: {
-            userId: ctx.session.userId,
-            notes: JSON.stringify(notes),
-            stashType,
             locationId: locationId!,
+            stashType,
+            notes: JSON.stringify(notes),
+            userId: ctx.session.userId,
             ...job,
           },
         })

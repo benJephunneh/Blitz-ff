@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Flex,
   HStack,
   Icon,
   keyframes,
@@ -112,37 +113,47 @@ const HeaderLoggedIn = () => {
           </Button>
           <MenuList>
             {customerStashes?.map((c, ii) => (
-              // <MenuItem key={ii} fontWeight='semibold' onClick={() => editStash(c.id, c.stashType)}>
-              <MenuItem key={ii} fontWeight="semibold">
-                <Text
-                  textOverflow="ellipsis"
-                  onClick={() => {
-                    editStash(c.id, "Customer")
+              <>
+                {/* <MenuItem key={ii} fontWeight='semibold' onClick={() => editStash(c.id, c.stashType)}> */}
+                <MenuItem
+                  key={ii}
+                  fontWeight="semibold"
+                  onKeyDownCapture={(e) => {
+                    console.log(e)
+                    e.key === "Enter" && editStash(c.id, "Customer")
                   }}
+                  justifyContent="space-between"
                 >
-                  {c.displayname}: {JSON.parse(c.notes).content[0].content[0].text}
-                </Text>
-                <Spacer />
-                <Icon
-                  as={FcFullTrash}
-                  h={5}
-                  w={5}
-                  onClick={async () => {
-                    deleteStashMutation({ id: c.id, stashType: "Customer" })
-                      .then(() => refetchStashes())
-                      .catch((e) => console.log(`Error deleting customer stash: ${e}`))
-                  }}
-                />
-              </MenuItem>
+                  <Text
+                    textOverflow="ellipsis"
+                    onClick={() => editStash(c.id, "Customer")}
+                    // onClick={() => {
+                    //   editStash(c.id, "Customer")
+                    // }}
+                  >
+                    {c.displayname}: {JSON.parse(c.notes).content[0].content[0].text}
+                  </Text>
+                  <Icon
+                    as={FcFullTrash}
+                    h={5}
+                    w={5}
+                    onClick={async () => {
+                      deleteStashMutation({ id: c.id, stashType: "Customer" })
+                        .then(() => refetchStashes())
+                        .catch((e) => console.log(`Error deleting customer stash: ${e}`))
+                    }}
+                  />
+                </MenuItem>
+              </>
             ))}
             {locationStashes?.map((l, jj) => (
-              <MenuItem key={jj} fontWeight="semibold">
-                <Text
-                  textOverflow="ellipsis"
-                  onClick={() => {
-                    editStash(l.id, "Location")
-                  }}
-                >
+              <MenuItem
+                key={jj}
+                fontWeight="semibold"
+                onKeyDownCapture={(e) => e.key === "Enter" && editStash(l.id, "Location")}
+                justifyContent="space-between"
+              >
+                <Text textOverflow="ellipsis" onClick={() => editStash(l.id, "Location")}>
                   {l.house} {l.street}: {JSON.parse(l.notes).content[0].content[0].text}
                 </Text>
                 <Spacer />
@@ -159,13 +170,13 @@ const HeaderLoggedIn = () => {
               </MenuItem>
             ))}
             {jobStashes?.map((j, kk) => (
-              <MenuItem key={kk} fontWeight="semibold">
-                <Text
-                  textOverflow="ellipsis"
-                  onClick={() => {
-                    editStash(j.id, "Job")
-                  }}
-                >
+              <MenuItem
+                key={kk}
+                fontWeight="semibold"
+                onKeyDownCapture={(e) => e.key === "Enter" && editStash(j.id, "Job")}
+                justifyContent="space-between"
+              >
+                <Text textOverflow="ellipsis" onClick={() => editStash(j.id, "Job")}>
                   {j.title}: {JSON.parse(j.notes).content[0].content[0].text}
                 </Text>
                 <Spacer />
@@ -183,34 +194,32 @@ const HeaderLoggedIn = () => {
             ))}
           </MenuList>
         </Menu>
-        <ButtonGroup spacing={4} alignItems="center">
-          <Button
-            size="sm"
-            variant="outline"
-            textColor={useColorModeValue("cyan.600", "cyan.600")}
-            borderColor={useColorModeValue("cyan.600", "cyan.600")}
-            borderWidth={1}
-            borderStyle="dashed"
-            onClick={createCustomer}
-            _hover={{ bg: useColorModeValue("green.50", "gray.900") }}
-            leftIcon={<FaPlus size={10} />}
-          >
-            New customer
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            color={useColorModeValue("blackAlpha.600", "gray.300")}
-            bg={useColorModeValue("blackAlpha.100", "gray.700")}
-            borderColor={useColorModeValue("gray.50", "blackAlpha.100")}
-            borderWidth={1}
-            textColor="current"
-            onClick={logOut}
-            _hover={{ bg: useColorModeValue("blackAlpha.300", "gray.900") }}
-          >
-            Log out
-          </Button>
-        </ButtonGroup>
+        <Button
+          size="sm"
+          variant="outline"
+          textColor={useColorModeValue("cyan.600", "cyan.600")}
+          borderColor={useColorModeValue("cyan.600", "cyan.600")}
+          borderWidth={1}
+          borderStyle="dashed"
+          onClick={createCustomer}
+          _hover={{ bg: useColorModeValue("green.50", "gray.900") }}
+          leftIcon={<FaPlus size={10} />}
+        >
+          New customer
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          color={useColorModeValue("blackAlpha.600", "gray.300")}
+          bg={useColorModeValue("blackAlpha.100", "gray.700")}
+          borderColor={useColorModeValue("gray.50", "blackAlpha.100")}
+          borderWidth={1}
+          textColor="current"
+          onClick={logOut}
+          _hover={{ bg: useColorModeValue("blackAlpha.300", "gray.900") }}
+        >
+          Log out
+        </Button>
       </HStack>
     </Box>
   )

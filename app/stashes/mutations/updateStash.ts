@@ -1,7 +1,7 @@
 import { resolver } from "@blitzjs/rpc"
-import { CreateCustomer } from "app/customers/validations"
-import { CreateJob } from "app/jobs/validations"
-import { CreateLocation } from "app/locations/validations"
+import { CreateCustomer, CreateCustomerSkeleton } from "app/customers/validations"
+import { CreateJob, CreateJobSkeleton } from "app/jobs/validations"
+import { CreateLocation, CreateLocationSkeleton } from "app/locations/validations"
 import { NotFoundError } from "blitz"
 import db, { StashType } from "db"
 import { z } from "zod"
@@ -15,17 +15,17 @@ export const UpdateStash = z.object({
   id: z.number(),
   notes: stashContentSchema.nullable(),
   stashType: z.nativeEnum(StashType),
-  customerId: z.number().optional(),
-  customer: customerZod.partial().optional(),
-  location: locationZod.partial().optional(),
-  job: jobZod.partial().optional(),
+  // customerId: z.number().optional(),
+  customer: CreateCustomerSkeleton.partial().optional(),
+  location: CreateLocationSkeleton.partial().optional(),
+  job: CreateJobSkeleton.partial().optional(),
 })
 
 export default resolver.pipe(
   resolver.zod(UpdateStash),
   resolver.authorize(),
 
-  async ({ id, notes, stashType, customerId, customer, location, job }, ctx) => {
+  async ({ id, notes, stashType, customer, location, job }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     console.log(JSON.stringify(customer))
 
@@ -48,14 +48,16 @@ export default resolver.pipe(
         stash = await db.customerStash.update({
           where: { id },
           data: {
-            userId: ctx.session.userId,
-            notes: JSON.stringify(notes),
-            stashType,
-            firstname: customer?.firstname,
-            lastname: customer?.lastname,
-            companyname: customer?.companyname,
             displayname,
-            email: customer?.email,
+            stashType,
+            // firstname: customer?.firstname,
+            // lastname: customer?.lastname,
+            // companyname: customer?.companyname,
+            // displayname,
+            // email: customer?.email,
+            notes: JSON.stringify(notes),
+            userId: ctx.session.userId,
+            ...customer,
           },
         })
         break
@@ -63,24 +65,24 @@ export default resolver.pipe(
         stash = await db.locationStash.update({
           where: { id },
           data: {
-            userId: ctx.session.userId,
-            notes: JSON.stringify(notes),
             stashType,
+            notes: JSON.stringify(notes),
+            userId: ctx.session.userId,
             ...location,
           },
         })
         break
-      // case "Job":
-      //   await db.jobStash.update({
-      //     where: { id },
-      //     data: {
-      //       userId: ctx.session.userId,
-      //       notes: JSON.stringify(notes),
-      //       stashType,
-      //       ...job,
-      //     },
-      //   })
-      //   break
+      case "Job":
+        await db.jobStash.update({
+          where: { id },
+          data: {
+            stashType,
+            notes: JSON.stringify(notes),
+            userId: ctx.session.userId,
+            ...job,
+          },
+        })
+        break
       // case "Invoice":
       //   await db.invoiceStash.update({
       //     where: { id },

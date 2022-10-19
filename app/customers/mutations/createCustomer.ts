@@ -7,14 +7,14 @@ export default resolver.pipe(
   resolver.zod(CreateCustomerSkeleton.extend({ notes: notes.nullable() })),
   resolver.authorize(),
 
-  async (input) => {
+  async ({ notes, ...values }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const displayname = `${input.firstname} ${input.lastname}`
-    const { notes, ...values } = input
+    const displayname = `${values.firstname} ${values.lastname}`
+    // const { notes, ...values } = input
 
     const email = await db.customer.findFirst({
       where: {
-        email: input.email,
+        email: values.email,
       },
       select: {
         email: true,

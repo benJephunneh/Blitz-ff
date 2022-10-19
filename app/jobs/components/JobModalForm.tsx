@@ -20,12 +20,14 @@ import { Calendar } from "react-calendar"
 import "react-calendar/dist/Calendar.css"
 import { LabeledDateField } from "app/calendar/components/LabeledDateField"
 import { addDays, formatRelative } from "date-fns"
+import getStash from "app/stashes/queries/getStash"
 
 type JobModalFormProps = {
   locationId?: number
   jobId?: number
-  job?: Job
-  jobStash?: JobStash
+  // job?: Job
+  stashId?: number
+  // jobStash?: JobStash
   disableStash?: boolean
   // locationId?: number
   isOpen: boolean
@@ -37,8 +39,9 @@ type JobModalFormProps = {
 const JobModalForm = ({
   locationId,
   jobId,
+  stashId,
   job,
-  jobStash,
+  // jobStash,
   disableStash,
   // locationId,
   isOpen,
@@ -57,14 +60,14 @@ const JobModalForm = ({
   const stashType = "Job"
   const stashFootnoteColor = useColorModeValue("red", "cyan.200")
 
-  useEffect(() => {
-    ;async () => {
-      if (jobStash) {
-        const u = await db.user.findFirst({ where: { id: jobStash.userId } })
-        if (u) setUser(u)
-      }
-    }
-  }, [jobStash])
+  // useEffect(() => {
+  //   ; async () => {
+  //     if (jobStash) {
+  //       const u = await db.user.findFirst({ where: { id: jobStash.userId } })
+  //       if (u) setUser(u)
+  //     }
+  //   }
+  // }, [jobStash])
 
   // const [job, { isLoading }] = useQuery(
   //   getJob,
@@ -76,6 +79,20 @@ const JobModalForm = ({
   //     id: locationId,
   //   },
   // })
+
+  const [jobStash] = useQuery(
+    getStash,
+    {
+      id: stashId,
+      stashType,
+    },
+    {
+      suspense: !!stashId,
+      enabled: !!stashId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  )
 
   const onSubmit = async (values) => {
     const { notes, ...formSubmission } = values
