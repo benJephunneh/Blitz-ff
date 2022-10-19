@@ -40,7 +40,7 @@ const JobModalForm = ({
   locationId,
   jobId,
   stashId,
-  job,
+  // job,
   // jobStash,
   disableStash,
   // locationId,
@@ -69,11 +69,12 @@ const JobModalForm = ({
   //   }
   // }, [jobStash])
 
-  // const [job, { isLoading }] = useQuery(
-  //   getJob,
-  //   { id: jobId },
-  //   { suspense: false, enabled: !!jobId }
-  // )
+  const [job, { isLoading }] = useQuery(
+    getJob,
+    { id: jobId },
+    { suspense: false, enabled: !!jobId }
+  )
+
   // const [location] = useQuery(getLocation, {
   //   where: {
   //     id: locationId,

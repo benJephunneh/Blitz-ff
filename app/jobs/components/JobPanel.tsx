@@ -111,7 +111,7 @@ const JobPanel = ({ locationId }: JobPanelProps) => {
           borderColor={useColorModeValue("green", "orange.200")}
           color={useColorModeValue("green", "orange.200")}
           leftIcon={<FaPlus size={10} />}
-          onClick={() => setCreatingJob(true)}
+          onClick={createJob}
         >
           New job
         </Button>

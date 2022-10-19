@@ -49,7 +49,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
       where: { id: customerId },
       include: {
         locations: {
-          select: { id: true },
+          select: { id: true, phones: true },
           orderBy: { primary: "desc" },
         },
       },
@@ -65,6 +65,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [deletingCustomer, setDeletingCustomer] = useState(false)
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
+  const [customerPhone, setCustomerPhone] = useState<string>()
 
   // Location
   const [creatingLocation, setCreatingLocation] = useState(false)
@@ -79,6 +80,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   useEffect(() => {
     setLocationId(locationIds?.length && locationIds.at(0)?.id)
   }, [customerId, locationIds])
+  useEffect(() => {
+    setCustomerPhone(customer ? customer["locations"].at(0).phones : undefined)
+  }, [customer])
   // useEffect(() => {
   //   // Can't have just any re-render changing chosen locationId.
   //   // if (!router.isReady) return
@@ -258,6 +262,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
 
           <LocationModalForm
             customerId={editingStash ? undefined : customer?.id}
+            customerPhone={customerPhone}
             // location={editingLocation ? location : undefined}
             locationId={editingLocation ? locationId : undefined}
             stashId={editingStash ? stashId : undefined}

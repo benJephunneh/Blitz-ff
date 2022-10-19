@@ -44,6 +44,7 @@ type LocationModalFormProps = {
   onClose: () => void
   onSuccess?: (location: Location | LocationStash) => void
   customerId?: number
+  customerPhone?: string
   locationId?: number
   stashId?: number
   // location?: Location
@@ -58,6 +59,7 @@ const LocationModalForm = ({
   onClose,
   onSuccess,
   customerId,
+  customerPhone,
   locationId,
   stashId,
   // location,
@@ -228,7 +230,7 @@ const LocationModalForm = ({
     city: locationStash?.city || location?.city || undefined,
     state: locationStash?.state || location?.state || "FL",
     zipcode: locationStash?.zipcode || location?.zipcode || undefined,
-    phones: locationStash?.phones || location?.phones || undefined,
+    phones: locationStash?.phones || location?.phones || customerPhone || undefined,
     block: locationStash?.block || location?.block || undefined,
     lot: locationStash?.lot || location?.lot || undefined,
     parcel: locationStash?.parcel || location?.parcel || undefined,

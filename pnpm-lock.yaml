@@ -8,7 +8,7 @@ specifiers:
   "@emotion/react": 11.10.0
   "@emotion/styled": 11.10.0
   "@next/bundle-analyzer": 12.0.8
-  "@prisma/client": ^4.4.0
+  "@prisma/client": ^4.5.0
   "@testing-library/jest-dom": 5.16.3
   "@tiptap/extension-focus": 2.0.0-beta.197
   "@tiptap/extension-image": 2.0.0-beta.197
@@ -23,6 +23,8 @@ specifiers:
   "@types/react": 18.0.17
   "@types/react-calendar": 3.5.3
   "@typescript-eslint/eslint-plugin": 5.30.5
+  "@wojtekmaj/react-daterange-picker": 4.0.0
+  "@wojtekmaj/react-timerange-picker": 4.0.0
   blitz: 2.0.0-beta.3
   concurrently: 7.4.0
   date-fns: 2.29.3
@@ -42,7 +44,7 @@ specifiers:
   prettier-plugin-prisma: 3.8.0
   pretty-quick: 3.1.3
   preview-email: 3.0.7
-  prisma: ^4.4.0
+  prisma: ^4.5.0
   quirrel: 1.9.3
   react: 18.2.0
   react-calendar: 3.9.0
@@ -63,7 +65,7 @@ dependencies:
   "@chakra-ui/react": 2.2.8_m243orcia2mxbjexmsik3vj2ii
   "@emotion/react": 11.10.0_tu23i5xxn6kbev62oblybgbdem
   "@emotion/styled": 11.10.0_j46kbo7layvgw6ebzgyotlgnfu
-  "@prisma/client": 4.4.0_prisma@4.4.0
+  "@prisma/client": 4.5.0_prisma@4.5.0
   "@tiptap/extension-focus": 2.0.0-beta.197_7ucu3cj5vc65mnzl27ajc44kci
   "@tiptap/extension-image": 2.0.0-beta.197_7ucu3cj5vc65mnzl27ajc44kci
   "@tiptap/extension-link": 2.0.0-beta.197_7ucu3cj5vc65mnzl27ajc44kci
@@ -71,6 +73,8 @@ dependencies:
   "@tiptap/html": 2.0.0-beta.197
   "@tiptap/react": 2.0.0-beta.197_rjcart35aipijkzet7vjnsjbja
   "@tiptap/starter-kit": 2.0.0-beta.197
+  "@wojtekmaj/react-daterange-picker": 4.0.0_biqbaboplfbrettd7655fr4n2y
+  "@wojtekmaj/react-timerange-picker": 4.0.0_biqbaboplfbrettd7655fr4n2y
   blitz: 2.0.0-beta.3_lc4xspwhl7x4jkigfhc4n62xkm
   final-form: 4.20.7
   framer-motion: 7.2.0_biqbaboplfbrettd7655fr4n2y
@@ -109,7 +113,7 @@ devDependencies:
   prettier-plugin-prisma: 3.8.0_prettier@2.7.1
   pretty-quick: 3.1.3_prettier@2.7.1
   preview-email: 3.0.7
-  prisma: 4.4.0
+  prisma: 4.5.0
   react-lorem-ipsum: 1.4.10
   ts-jest: 28.0.7_pbchm4a4dosw4zu4viyh3ll6ca
   typescript: 4.8.2
@@ -3932,10 +3936,10 @@ packages:
       }
     dev: false
 
-  /@prisma/client/4.4.0_prisma@4.4.0:
+  /@prisma/client/4.5.0_prisma@4.5.0:
     resolution:
       {
-        integrity: sha512-ciKOP246x1xwr04G9ajHlJ4pkmtu9Q6esVyqVBO0QJihaKQIUvbPjClp17IsRJyxqNpFm4ScbOc/s9DUzKHINQ==,
+        integrity: sha512-B2cV0OPI1smhdYUxsJoLYQLoMlLH06MUxgFUWQnHodGMX98VRVXKmQE/9OcrTNkqtke5RC+YU24Szxd04tZA2g==,
       }
     engines: { node: ">=14.17" }
     requiresBuild: true
@@ -3945,21 +3949,21 @@ packages:
       prisma:
         optional: true
     dependencies:
-      "@prisma/engines-version": 4.4.0-66.f352a33b70356f46311da8b00d83386dd9f145d6
-      prisma: 4.4.0
+      "@prisma/engines-version": 4.5.0-43.0362da9eebca54d94c8ef5edd3b2e90af99ba452
+      prisma: 4.5.0
     dev: false
 
-  /@prisma/engines-version/4.4.0-66.f352a33b70356f46311da8b00d83386dd9f145d6:
+  /@prisma/engines-version/4.5.0-43.0362da9eebca54d94c8ef5edd3b2e90af99ba452:
     resolution:
       {
-        integrity: sha512-P5v/PuEIJLYXZUZBvOLPqoyCW+m6StNqHdiR6te++gYVODpPdLakks5HVx3JaZIY+LwR02juJWFlwpc9Eog/ug==,
+        integrity: sha512-o7LyVx8PPJBLrEzLl6lpxxk2D5VnlM4Fwmrbq0NoT6pr5aa1OuHD9ZG+WJY6TlR/iD9bhmo2LNcxddCMr5Rv2A==,
       }
     dev: false
 
-  /@prisma/engines/4.4.0:
+  /@prisma/engines/4.5.0:
     resolution:
       {
-        integrity: sha512-Fpykccxlt9MHrAs/QpPGpI2nOiRxuLA+LiApgA59ibbf24YICZIMWd3SI2YD+q0IAIso0jCGiHhirAIbxK3RyQ==,
+        integrity: sha512-4t9ir2SbQQr/wMCNU4YpHWp5hU14J2m3wHUZnGJPpmBF8YtkisxyVyQsKd1e6FyLTaGq8LOLhm6VLYHKqKNm+g==,
       }
     requiresBuild: true
 
@@ -4806,7 +4810,6 @@ packages:
       }
     dependencies:
       "@types/react": 18.0.17
-    dev: true
 
   /@types/react/18.0.17:
     resolution:
@@ -5107,6 +5110,44 @@ packages:
       {
         integrity: sha512-1VPkkTBk07gMR1fjpBtse4G+oJqpmE+0gUFB0dg3VIL7qJmUVaBoD/vlzMm/jNeOPfvlmerl1lpnsZyBUFIRuw==,
       }
+    dev: false
+
+  /@wojtekmaj/react-daterange-picker/4.0.0_biqbaboplfbrettd7655fr4n2y:
+    resolution:
+      {
+        integrity: sha512-u/OybZhz3G+lybXqrHv7Cpmn9Kc508c84UCBgrzC0qmvCnnV42ic6R2iBshvIccivKnRQ4RGXPB78tHP9kMdAA==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      make-event-props: 1.3.0
+      merge-class-names: 1.4.2
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-calendar: 3.9.0_biqbaboplfbrettd7655fr4n2y
+      react-date-picker: 9.0.0_biqbaboplfbrettd7655fr4n2y
+      react-dom: 18.2.0_react@18.2.0
+      react-fit: 1.4.0_biqbaboplfbrettd7655fr4n2y
+    dev: false
+
+  /@wojtekmaj/react-timerange-picker/4.0.0_biqbaboplfbrettd7655fr4n2y:
+    resolution:
+      {
+        integrity: sha512-AYlHj3+faYym2MuB7P+pvhoFQl8Eh7ad8JpBtiDFNua4vPRPgXRHmrGm1avAyNMNKBnSJQQ7Yl2QMbOF0P31gw==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      make-event-props: 1.3.0
+      merge-class-names: 1.4.2
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-clock: 3.1.0_biqbaboplfbrettd7655fr4n2y
+      react-dom: 18.2.0_react@18.2.0
+      react-fit: 1.4.0_biqbaboplfbrettd7655fr4n2y
+      react-time-picker: 5.0.0_biqbaboplfbrettd7655fr4n2y
     dev: false
 
   /@zag-js/element-size/0.1.0:
@@ -6823,6 +6864,13 @@ packages:
     resolution:
       {
         integrity: sha512-3NdhDuEXnfun/z7x9GOElY49LoqVHoGScmOKwmxhsS8N5Y+Z8KyPPDnaSzqWgYt/ji4mqwfTS34Htrk0zPIXVg==,
+      }
+    dev: false
+
+  /detect-element-overflow/1.2.0:
+    resolution:
+      {
+        integrity: sha512-Jtr9ivYPhpd9OJux+hjL0QjUKiS1Ghgy8tvIufUjFslQgIWvgGr4mn57H190APbKkiOmXnmtMI6ytaKzMusecg==,
       }
     dev: false
 
@@ -10721,6 +10769,13 @@ packages:
         integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==,
       }
 
+  /make-event-props/1.3.0:
+    resolution:
+      {
+        integrity: sha512-oWiDZMcVB1/A487251hEWza1xzgCzl6MXxe9aF24l5Bt9N9UEbqTqKumEfuuLhmlhRZYnc+suVvW4vUs8bwO7Q==,
+      }
+    dev: false
+
   /makeerror/1.0.12:
     resolution:
       {
@@ -11948,16 +12003,16 @@ packages:
       uuid: 8.3.2
     dev: true
 
-  /prisma/4.4.0:
+  /prisma/4.5.0:
     resolution:
       {
-        integrity: sha512-l/QKLmLcKJQFuc+X02LyICo0NWTUVaNNZ00jKJBqwDyhwMAhboD1FWwYV50rkH4Wls0RviAJSFzkC2ZrfawpfA==,
+        integrity: sha512-9Aeg4qiKlv9Wsjz4NO8k2CzRzlvS3A4FYVJ5+28sBBZ0eEwbiVOE/Jj7v6rZC1tFW2s4GSICQOAyuOjc6WsNew==,
       }
     engines: { node: ">=14.17" }
     hasBin: true
     requiresBuild: true
     dependencies:
-      "@prisma/engines": 4.4.0
+      "@prisma/engines": 4.5.0
 
   /process-nextick-args/2.0.1:
     resolution:
@@ -12351,6 +12406,45 @@ packages:
       react: 18.2.0
     dev: false
 
+  /react-clock/3.1.0_biqbaboplfbrettd7655fr4n2y:
+    resolution:
+      {
+        integrity: sha512-KLV3pDBcETc7lHPPqK6EpRaPS8NA3STAes+zIdfr7IY67vYgYc3brOAnGC9IcgA4X4xNPnLZwwaLJXmHrQ/MnQ==,
+      }
+    peerDependencies:
+      react: ^15.5.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^15.5.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      "@wojtekmaj/date-utils": 1.0.3
+      get-user-locale: 1.5.1
+      merge-class-names: 1.4.2
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-date-picker/9.0.0_biqbaboplfbrettd7655fr4n2y:
+    resolution:
+      {
+        integrity: sha512-Ylu+Ct6a/6uYrayXertKZyv/yQTQj6iPy6sVqYZelZo8B8pMZ04oas4w4vRpdHW9CFlQ0eM49QSxFCdBvbyhUA==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      "@types/react-calendar": 3.5.3
+      "@wojtekmaj/date-utils": 1.0.3
+      get-user-locale: 1.5.1
+      make-event-props: 1.3.0
+      merge-class-names: 1.4.2
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-calendar: 3.9.0_biqbaboplfbrettd7655fr4n2y
+      react-dom: 18.2.0_react@18.2.0
+      react-fit: 1.4.0_biqbaboplfbrettd7655fr4n2y
+      update-input-width: 1.2.2
+    dev: false
+
   /react-dom/18.2.0_react@18.2.0:
     resolution:
       {
@@ -12383,6 +12477,22 @@ packages:
       "@babel/runtime": 7.18.9
       final-form: 4.20.7
       react: 18.2.0
+    dev: false
+
+  /react-fit/1.4.0_biqbaboplfbrettd7655fr4n2y:
+    resolution:
+      {
+        integrity: sha512-cf9sFKbr1rlTB9fNIKE5Uy4NCMUOqrX2mdJ69V4RtmV4KubPdtnbIP1tEar16GXaToCRr7I7c9d2wkTNk9TV5g==,
+      }
+    peerDependencies:
+      react: ^15.5.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^15.5.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      detect-element-overflow: 1.2.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      tiny-warning: 1.0.3
     dev: false
 
   /react-focus-lock/2.9.1_ug65io7jkbhmo4fihdmbrh3ina:
@@ -12493,6 +12603,27 @@ packages:
       invariant: 2.2.4
       react: 18.2.0
       tslib: registry.npmmirror.com/tslib/2.4.0
+    dev: false
+
+  /react-time-picker/5.0.0_biqbaboplfbrettd7655fr4n2y:
+    resolution:
+      {
+        integrity: sha512-GLFkMYUYO8Dc3h6xhRr7iBlid9wlFJUhFf+BLGhVUvfMkGB18f0clpFMzaTdlMClxC3WSeRhvfQSHoLrkyomnA==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      "@wojtekmaj/date-utils": 1.0.3
+      get-user-locale: 1.5.1
+      make-event-props: 1.3.0
+      merge-class-names: 1.4.2
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-clock: 3.1.0_biqbaboplfbrettd7655fr4n2y
+      react-dom: 18.2.0_react@18.2.0
+      react-fit: 1.4.0_biqbaboplfbrettd7655fr4n2y
+      update-input-width: 1.2.2
     dev: false
 
   /react/18.2.0:
@@ -13700,6 +13831,13 @@ packages:
     engines: { node: ">=6" }
     dev: false
 
+  /tiny-warning/1.0.3:
+    resolution:
+      {
+        integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==,
+      }
+    dev: false
+
   /tippy.js/6.3.7:
     resolution:
       {
@@ -14130,6 +14268,13 @@ packages:
       browserslist: 4.21.3
       escalade: registry.npmmirror.com/escalade/3.1.1
       picocolors: 1.0.0
+
+  /update-input-width/1.2.2:
+    resolution:
+      {
+        integrity: sha512-6QwD9ZVSXb96PxOZ01DU0DJTPwQGY7qBYgdniZKJN02Xzom2m+9J6EPxMbefskqtj4x78qbe5psDSALq9iNEYg==,
+      }
+    dev: false
 
   /uri-js/4.4.1:
     resolution:
@@ -17502,6 +17647,7 @@ packages:
       }
     name: isexe
     version: 2.0.0
+    dev: false
 
   registry.npmmirror.com/join-component/1.1.0:
     resolution:
@@ -19759,7 +19905,7 @@ packages:
     version: 1.3.1
     hasBin: true
     dependencies:
-      isexe: registry.npmmirror.com/isexe/2.0.0
+      isexe: 2.0.0
 
   registry.npmmirror.com/which/2.0.2:
     resolution:
