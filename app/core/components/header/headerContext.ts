@@ -37,7 +37,7 @@ export type HeaderContext = {
   jobId?: number
   createJob: () => void
   editJob: () => void
-  pickJob: (id: number) => void
+  pickJob: (id: number | undefined) => void
   deleteJob: () => void
 
   // Stash

@@ -30,12 +30,14 @@ type JobPanelProps = {
 }
 
 const JobPanel = ({ locationId }: JobPanelProps) => {
-  const { jobId, jobStash, createJob, editJob, refetchStashes } = useContext(headerContext)
+  const { jobId, jobStash, createJob, editJob, pickJob, refetchStashes } = useContext(headerContext)
   // const [jobId, setJobId] = useState<number>()
   const [job, setJob] = useState<Job>({} as Job)
   const [jobs, { refetch: refetchJobs }] = useQuery(
     getJobs,
-    {},
+    {
+      orderBy: { start: "asc" },
+    },
     {
       refetchOnWindowFocus: false,
       refetchInterval: 5000,
@@ -44,11 +46,12 @@ const JobPanel = ({ locationId }: JobPanelProps) => {
   )
 
   useEffect(() => {
-    ;async () => {
-      const j = await db.job.findFirst({ where: { id: jobId } })
-      if (j) setJob(j)
-    }
-  }, [jobId])
+    setJob(() => {
+      const j = jobs.jobs.find((j) => j.id === jobId)
+      // console.log(j)
+      return j as Job
+    })
+  }, [jobId, jobs.jobs])
 
   return (
     <>
@@ -88,15 +91,15 @@ const JobPanel = ({ locationId }: JobPanelProps) => {
           </MenuButton>
           <MenuList>
             <MenuOptionGroup defaultValue="all" type="radio">
-              <MenuItemOption value="all">All jobs</MenuItemOption>
+              <MenuItemOption value="all" onClick={() => pickJob(undefined)}>
+                All jobs
+              </MenuItemOption>
               <MenuDivider />
               {jobs.jobs.map((j, ii) => (
-                <MenuItemOption key={ii} value={ii.toString()}>
-                  {job?.title}
+                <MenuItemOption key={ii} value={ii.toString()} onClick={() => pickJob(j.id)}>
+                  {j.title}
                 </MenuItemOption>
               ))}
-              <MenuItemOption value="job1">Job 1</MenuItemOption>
-              <MenuItemOption value="job2">Job 2</MenuItemOption>
             </MenuOptionGroup>
           </MenuList>
         </Menu>
@@ -116,6 +119,8 @@ const JobPanel = ({ locationId }: JobPanelProps) => {
           New job
         </Button>
       </Flex>
+
+      <pre>{JSON.stringify(job, null, 2)}</pre>
     </>
   )
 }

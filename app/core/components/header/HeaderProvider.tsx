@@ -179,9 +179,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         pickLocation: (id) => setLocationId(id),
 
         createJob: () => setCreatingJob(true),
-        pickJob: (id) => setJobId(id),
         editJob: () => setEditingJob(true),
         deleteJob: () => setDeletingJob(true),
+        pickJob: (id) => setJobId(id),
 
         editStash: (id, type) => {
           setStashId(id)

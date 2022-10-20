@@ -89,7 +89,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
               <Box alignSelf="end">
                 <Stat>
                   <StatLabel>Start</StatLabel>
-                  {Array.isArray(value) && (
+                  {Array.isArray(value) && value.at(0) !== undefined && (
                     <>
                       <Text as={StatNumber}>{`${format(value.at(0), "HHmm EEEE")}`}</Text>
                       <StatHelpText>{formatDistance(value.at(0), new Date())}</StatHelpText>
@@ -100,7 +100,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
               {/* <Spacer /> */}
               <Box alignSelf="center">
                 <Stat>
-                  {Array.isArray(value) && (
+                  {Array.isArray(value) && value.at(0) !== undefined && (
                     <Text as={StatNumber}>{`${format(value.at(0), "do MMM")}`}</Text>
                   )}
                 </Stat>
@@ -111,7 +111,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
               <Box alignSelf="end">
                 <Stat>
                   <StatLabel>End</StatLabel>
-                  {Array.isArray(value) && (
+                  {Array.isArray(value) && value.at(1) !== undefined && (
                     <>
                       <Text as={StatNumber}>{`${format(value.at(1), "HHmm EEEE")}`}</Text>
                       <StatHelpText>{formatDistance(value.at(1), new Date())}</StatHelpText>
@@ -122,7 +122,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
               {/* <Spacer /> */}
               <Box alignSelf="center">
                 <Stat>
-                  {Array.isArray(value) && (
+                  {Array.isArray(value) && value.at(1) !== undefined && (
                     <Text as={StatNumber}>{`${format(value.at(1), "do MMM")}`}</Text>
                   )}
                 </Stat>
