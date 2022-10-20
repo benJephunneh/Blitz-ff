@@ -22,6 +22,7 @@ specifiers:
   "@types/preview-email": 2.0.1
   "@types/react": 18.0.17
   "@types/react-calendar": 3.5.3
+  "@types/wojtekmaj__react-daterange-picker": 3.4.1
   "@typescript-eslint/eslint-plugin": 5.30.5
   "@wojtekmaj/react-daterange-picker": 4.0.0
   "@wojtekmaj/react-timerange-picker": 4.0.0
@@ -99,6 +100,7 @@ devDependencies:
   "@types/preview-email": 2.0.1
   "@types/react": 18.0.17
   "@types/react-calendar": 3.5.3
+  "@types/wojtekmaj__react-daterange-picker": 3.4.1
   "@typescript-eslint/eslint-plugin": 5.30.5_tdulzt75c7jz4dzwgyvequdixu
   concurrently: registry.npmmirror.com/concurrently/7.4.0
   date-fns: 2.29.3
@@ -4884,6 +4886,15 @@ packages:
         integrity: sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==,
       }
     dev: false
+
+  /@types/wojtekmaj__react-daterange-picker/3.4.1:
+    resolution:
+      {
+        integrity: sha512-TZkeyAVS7Shm6Wa60S5mtKDabbZ0HfjPK6/O88Jq1oqdTLA2eM+KO8+3cCZy6YAyGEj/fej2pBHJZS9ixzwOsA==,
+      }
+    dependencies:
+      "@types/react": 18.0.17
+    dev: true
 
   /@types/yargs-parser/21.0.0:
     resolution:

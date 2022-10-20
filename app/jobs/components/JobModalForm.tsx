@@ -17,10 +17,13 @@ import deleteStash from "app/stashes/mutations/deleteStash"
 import createStash from "app/stashes/mutations/createStash"
 import updateStash from "app/stashes/mutations/updateStash"
 import { Calendar } from "react-calendar"
-import "react-calendar/dist/Calendar.css"
 import { LabeledDateField } from "app/calendar/components/LabeledDateField"
 import { addDays, formatRelative } from "date-fns"
 import getStash from "app/stashes/queries/getStash"
+import { LabeledDateRangeField } from "app/calendar/components/LabeledDateRangeField"
+
+import "react-calendar/dist/Calendar.css"
+import "@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css"
 
 type JobModalFormProps = {
   locationId?: number
@@ -145,8 +148,8 @@ const JobModalForm = ({
     }
   }
 
-  const tomorrow0900 = addDays(new Date().setHours(9, 0, 0, 0), 1)
-  const tomorrow1700 = addDays(new Date().setHours(17, 0, 0, 0), 1)
+  const [startDateTime, setStartDateTime] = useState(addDays(new Date().setHours(9, 0, 0, 0), 1))
+  const [endDateTime, setEndDateTime] = useState(addDays(new Date().setHours(17, 0, 0, 0), 1))
   const initialValues = {
     title: jobStash?.title || job?.title || undefined,
     start: jobStash?.start || job?.start || undefined,
@@ -174,8 +177,9 @@ const JobModalForm = ({
           <LabeledTextField name="title" label="Title" />
           {/* <LabeledTextField name="start" label="Start date/time" /> */}
           {/* <LabeledTextField name="end" label="End date/time" /> */}
-          <LabeledDateField name="start" label="Start" initialDate={tomorrow0900} />
-          <LabeledDateField name="end" label="End" initialDate={tomorrow1700} />
+          <LabeledDateField name="start" label="Start" initialDate={startDateTime} />
+          <LabeledDateField name="end" label="End" initialDate={endDateTime} />
+          {/* <LabeledDateRangeField name='dateRange' label='Date range' /> */}
           <EditorField
             name="notes"
             fontSize="md"

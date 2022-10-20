@@ -64,6 +64,7 @@
     "@types/preview-email": "2.0.1",
     "@types/react": "18.0.17",
     "@types/react-calendar": "3.5.3",
+    "@types/wojtekmaj__react-daterange-picker": "3.4.1",
     "@typescript-eslint/eslint-plugin": "5.30.5",
     "concurrently": "7.4.0",
     "date-fns": "2.29.3",
