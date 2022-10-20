@@ -1,10 +1,14 @@
+import { j } from "@blitzjs/auth/dist/index-57d74361"
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import {
   Box,
   Button,
+  ButtonGroup,
   Flex,
+  Heading,
   HStack,
   Icon,
+  ListItem,
   Menu,
   MenuButton,
   MenuDivider,
@@ -13,11 +17,15 @@ import {
   MenuList,
   MenuOptionGroup,
   TabPanel,
+  Text,
+  UnorderedList,
   useColorModeValue,
 } from "@chakra-ui/react"
 import headerContext from "app/core/components/header/headerContext"
+import { format } from "date-fns"
 import db, { Job } from "db"
 import { useContext, useEffect, useState } from "react"
+import { Calendar } from "react-calendar"
 import { BsArrowDown, BsFileEarmarkArrowDown } from "react-icons/bs"
 import { FaArrowDown, FaChevronDown, FaPlus } from "react-icons/fa"
 import createJob from "../mutations/createJob"
@@ -29,13 +37,17 @@ type JobPanelProps = {
   locationId?: number
 }
 
-const JobPanel = ({ locationId }: JobPanelProps) => {
-  const { jobId, jobStash, createJob, editJob, pickJob, refetchStashes } = useContext(headerContext)
+type Range = [Date | null, Date | null] | Date | null | undefined
+
+const JobPanel = () => {
+  const { locationId, jobId, jobStash, createJob, editJob, pickJob, refetchStashes } =
+    useContext(headerContext)
   // const [jobId, setJobId] = useState<number>()
   const [job, setJob] = useState<Job>({} as Job)
   const [jobs, { refetch: refetchJobs }] = useQuery(
     getJobs,
     {
+      where: { locationId },
       orderBy: { start: "asc" },
     },
     {
@@ -52,6 +64,13 @@ const JobPanel = ({ locationId }: JobPanelProps) => {
       return j as Job
     })
   }, [jobId, jobs.jobs])
+
+  const [range, setRange] = useState<Range>()
+  useEffect(() => {
+    if (job) setRange([job.start as Date, job.end as Date])
+  }, [job])
+
+  const headingColor = useColorModeValue("green", "khaki")
 
   return (
     <>
@@ -79,48 +98,91 @@ const JobPanel = ({ locationId }: JobPanelProps) => {
         }}
       /> */}
 
-      <Flex justify="space-between">
-        <Menu closeOnSelect={false}>
-          <MenuButton
-            as={Button}
-            size="sm"
-            variant="outline"
-            rightIcon={<Icon as={FaChevronDown} />}
-          >
-            Job list
-          </MenuButton>
-          <MenuList>
-            <MenuOptionGroup defaultValue="all" type="radio">
-              <MenuItemOption value="all" onClick={() => pickJob(undefined)}>
-                All jobs
-              </MenuItemOption>
-              <MenuDivider />
-              {jobs.jobs.map((j, ii) => (
-                <MenuItemOption key={ii} value={ii.toString()} onClick={() => pickJob(j.id)}>
-                  {j.title}
+      <Flex justify="space-between" mb={4}>
+        <HStack spacing={4}>
+          <Menu closeOnSelect={false}>
+            <MenuButton
+              as={Button}
+              size="sm"
+              variant="outline"
+              rightIcon={<Icon as={FaChevronDown} />}
+            >
+              Job list
+            </MenuButton>
+            <MenuList>
+              <MenuOptionGroup defaultValue={!jobId ? "all" : jobId.toString()} type="radio">
+                <MenuItemOption value="all" onClick={() => pickJob(undefined)}>
+                  All jobs
                 </MenuItemOption>
-              ))}
-            </MenuOptionGroup>
-          </MenuList>
-        </Menu>
-        {/* <Box>Job list dropdown</Box> */}
+                <MenuDivider />
+                {jobs.jobs.map((j, ii) => (
+                  <MenuItemOption value={jobId?.toString()} key={ii} onClick={() => pickJob(j.id)}>
+                    {j.title}
+                  </MenuItemOption>
+                ))}
+              </MenuOptionGroup>
+            </MenuList>
+          </Menu>
+          {job && (
+            <Text
+              fontSize="xl"
+              fontWeight="semibold"
+              textColor={headingColor}
+              textOverflow="ellipsis"
+            >
+              {job.title}
+            </Text>
+          )}
+        </HStack>
 
-        <Button
-          size="sm"
-          py={0}
-          variant="outline"
-          borderStyle="dashed"
-          borderWidth={1}
-          borderColor={useColorModeValue("green", "orange.200")}
-          color={useColorModeValue("green", "orange.200")}
-          leftIcon={<FaPlus size={10} />}
-          onClick={createJob}
-        >
-          New job
-        </Button>
+        <ButtonGroup isAttached>
+          <Button
+            size="sm"
+            py={0}
+            variant="outline"
+            borderWidth={1}
+            borderRightWidth={0}
+            bg={useColorModeValue("blackAlpha.200", "blackAlpha.400")}
+            borderColor="whiteAlpha.50"
+            onClick={editJob}
+          >
+            Edit job
+          </Button>
+          <Button
+            size="sm"
+            py={0}
+            variant="outline"
+            borderStyle="dashed"
+            borderWidth={1}
+            borderColor={useColorModeValue("green", "orange.200")}
+            color={useColorModeValue("green", "orange.200")}
+            leftIcon={<FaPlus size={10} />}
+            onClick={createJob}
+            borderLeftWidth={0}
+            bg={useColorModeValue("white", "whiteAlpha.400")}
+          >
+            New job
+          </Button>
+        </ButtonGroup>
       </Flex>
 
-      <pre>{JSON.stringify(job, null, 2)}</pre>
+      {job && <Calendar value={range} />}
+
+      {!job && (
+        <UnorderedList>
+          {jobs.jobs.map((j, ii) => (
+            <ListItem key={ii} onClick={() => pickJob(j.id)}>
+              {j.start?.getMonth() === j.end?.getMonth()
+                ? j.start?.getDate() === j.end?.getDate()
+                  ? `${j.title}: ${format(j.start!, "HHmm")} - ${format(j.end!, "HHmm, d MMM")}`
+                  : `${j.title}: ${format(j.start!, "d")} - ${format(j.end!, "d MMM")}`
+                : `${j.title}: ${format(j.start!, "d MMM")} - ${format(j.end!, "d MMM")}`}
+            </ListItem>
+          ))}
+        </UnorderedList>
+      )}
+
+      {/* <pre>{JSON.stringify(job, null, 2)}</pre> */}
     </>
   )
 }

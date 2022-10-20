@@ -83,17 +83,20 @@ model LocationStash {
 }
 
 model Job {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  title      String
-  start      DateTime?
-  end        DateTime?
-  locationId Int
-  location   Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
-  user       User      @relation(fields: [userId], references: [id])
-  userId     Int
-  notes      String?
+  id               Int              @id @default(autoincrement())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  title            String
+  start            DateTime?
+  end              DateTime?
+  locationId       Int
+  location         Location         @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  user             User             @relation(fields: [userId], references: [id])
+  userId           Int
+  notes            String?
+  invoices         Invoice[]
+  invoiceStashes   InvoiceStash[]
+  archivedInvoices InvoiceArchive[]
 }
 
 model JobStash {
@@ -109,6 +112,26 @@ model JobStash {
   user       User      @relation(fields: [userId], references: [id])
   userId     Int
   notes      String
+}
+
+model Invoice {
+  id        Int     @id @default(autoincrement())
+  lineItems String
+  job       Job     @relation(fields: [jobId], references: [id])
+  jobId     Int
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  notes     String?
+}
+
+model InvoiceStash {
+  id        Int    @id @default(autoincrement())
+  lineItems String
+  job       Job    @relation(fields: [jobId], references: [id])
+  jobId     Int
+  user      User   @relation(fields: [userId], references: [id])
+  userId    Int
+  notes     String
 }
 
 model CustomerArchive {
@@ -146,15 +169,29 @@ model LocationArchive {
 }
 
 model JobArchive {
-  id               Int             @id @default(autoincrement())
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  id               Int              @id @default(autoincrement())
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
   title            String
   start            DateTime?
   end              DateTime?
   locationId       Int
   notes            String?
-  archivedLocation LocationArchive @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  archivedLocation LocationArchive  @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  archivedInvoices InvoiceArchive[]
+}
+
+model InvoiceArchive {
+  id           Int         @id @default(autoincrement())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  title        String
+  lineItems    String
+  job          Job?        @relation(fields: [jobId], references: [id])
+  jobId        Int
+  jobArchive   JobArchive? @relation(fields: [jobArchiveId], references: [id])
+  jobArchiveId Int
+  notes        String?
 }
 
 model User {
@@ -166,9 +203,11 @@ model User {
   hashedPassword  String?
   role            UserRole        @default(Tech)
   jobs            Job[]
+  invoices        Invoice[]
   customerStashes CustomerStash[]
   locationStashes LocationStash[]
   jobStashes      JobStash[]
+  invoiceStashes  InvoiceStash[]
   sessions        Session[]
   tokens          Token[]
 }

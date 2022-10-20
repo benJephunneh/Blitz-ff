@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import { PromiseReturnType } from "blitz"
 import { FORM_ERROR } from "final-form"
-import { CreateJob, CreateJobStash } from "../validations"
+import { CreateJob, CreateJobStash, JobSkeleton, notes } from "../validations"
 import { ModalProps, Text, useColorModeValue } from "@chakra-ui/react"
 import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
@@ -23,7 +23,7 @@ import getStash from "app/stashes/queries/getStash"
 import { LabeledDateRangeField } from "app/calendar/components/LabeledDateRangeField"
 
 import "react-calendar/dist/Calendar.css"
-import "@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css"
+// import "@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css"
 
 type JobModalFormProps = {
   locationId?: number
@@ -72,10 +72,16 @@ const JobModalForm = ({
   //   }
   // }, [jobStash])
 
-  const [job, { isLoading }] = useQuery(
+  const [job, { refetch: refetchJob }] = useQuery(
     getJob,
-    { id: jobId },
-    { suspense: false, enabled: !!jobId }
+    {
+      id: jobId,
+    },
+    {
+      suspense: false,
+      enabled: !!jobId,
+      refetchOnWindowFocus: false,
+    }
   )
 
   // const [location] = useQuery(getLocation, {
@@ -99,7 +105,7 @@ const JobModalForm = ({
   )
 
   const onSubmit = async (values) => {
-    console.log(JSON.stringify(values))
+    // console.log(JSON.stringify(values))
     const { notes, stashing, range, ...formSubmission } = values
     const start = range?.at(0).setHours(9, 0, 0, 0)
     const end = range?.at(1).setHours(17, 0, 0, 0)
@@ -108,6 +114,7 @@ const JobModalForm = ({
 
     let jobRet
     if (stashing) {
+      console.log("Stashing...")
       if (jobStash) {
         jobRet = await updateStashMutation({
           id: jobStash.id,
@@ -124,14 +131,18 @@ const JobModalForm = ({
         })
       }
     } else {
+      console.log("Jobbing...")
       if (job) {
         jobRet = updateJobMutation({
           id: job.id,
+          notes,
           ...formSubmission,
         })
+        refetchJob().catch((e) => console.log(e.message))
       } else {
         jobRet = newJobMutation({
           locationId,
+          notes,
           ...formSubmission,
         })
         if (jobStash && jobRet) {
@@ -169,7 +180,7 @@ const JobModalForm = ({
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
-      schema={CreateJobStash}
+      schema={JobSkeleton.omit({ start: true, end: true }).extend({ notes: notes.nullable() })}
       title={job ? "Edit job" : "New job"}
       submitText={job ? "Update" : "Create"}
       initialValues={initialValues}

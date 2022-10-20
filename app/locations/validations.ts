@@ -20,7 +20,7 @@ const locationType = z.nativeEnum(LocationType)
 export const notes = stashContentSchema
 const stashType = z.nativeEnum(StashType)
 
-export const CreateLocationSkeleton = z.object({
+export const LocationSkeleton = z.object({
   primary,
   house: house.optional(),
   street,

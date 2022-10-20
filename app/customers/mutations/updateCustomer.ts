@@ -1,9 +1,9 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
-import { CreateCustomerSkeleton, id, notes } from "../validations"
+import { CustomerSkeleton, id, notes } from "../validations"
 
 export default resolver.pipe(
-  resolver.zod(CreateCustomerSkeleton.extend({ id, notes: notes.nullable() })),
+  resolver.zod(CustomerSkeleton.extend({ id, notes: notes.nullable() })),
   resolver.authorize(),
 
   async ({ id, notes, ...values }) => {

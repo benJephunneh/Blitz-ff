@@ -2,7 +2,7 @@ import { resolver } from "@blitzjs/rpc"
 import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
 import db from "db"
 import { z } from "zod"
-import { CreateLocation, CreateLocationSkeleton, customerId, notes } from "../validations"
+import { LocationSkeleton, customerId, notes } from "../validations"
 
 // const CreateLocationZod = z.object({
 //   customerId: z.number(),
@@ -10,7 +10,7 @@ import { CreateLocation, CreateLocationSkeleton, customerId, notes } from "../va
 // })
 
 export default resolver.pipe(
-  resolver.zod(CreateLocationSkeleton.extend({ customerId, notes: notes.nullable() })),
+  resolver.zod(LocationSkeleton.extend({ customerId, notes: notes.nullable() })),
   resolver.authorize(),
 
   async ({ customerId, notes, ...values }) => {

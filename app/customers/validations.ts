@@ -14,7 +14,7 @@ export const notes = stashContentSchema
 // export const phone = z.string().min(7).max(10)
 export const id = z.number()
 
-export const CreateCustomerSkeleton = z.object({
+export const CustomerSkeleton = z.object({
   firstname,
   lastname,
   companyname: companyname.optional(),

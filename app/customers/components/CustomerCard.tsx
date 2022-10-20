@@ -100,7 +100,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
   // })
 
   const tagBgColor = useColorModeValue("white", "gray.800")
-  const tabBgColor = useColorModeValue("white", "gray.800")
+  const tabBgColor = useColorModeValue("blackAlpha.200", "gray.700")
   // console.log(`customerId: ${customer}`)
 
   return (
@@ -190,23 +190,23 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
 
         <Tabs variant="enclosed" alignSelf="start" w="full" isLazy>
           <TabList>
-            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }}>
+            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
               <Icon as={GiBulldozer} mr={2} h={6} w={6} />
               Jobs
             </Tab>
-            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }}>
+            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
               <Icon as={GiCalculator} mr={2} h={6} w={6} />
               Estimates
             </Tab>
-            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }}>
-              <Icon as={GiBleedingWound} color="red" mr={2} h={6} w={6} />
+            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
+              <Icon as={GiBleedingWound} color="crimson" mr={2} h={6} w={6} />
               {/* x icon when open/unpaid invoices, y icon when none/paid */}
               Invoices
             </Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
-              <JobPanel locationId={location?.id} />
+              <JobPanel />
             </TabPanel>
             <TabPanel>
               <Icon as={GiChoice} mr={2} />

@@ -24,4 +24,12 @@ export default CronJob("api/staleStashCron", "0 18 * * 2-6", async () => {
       },
     },
   })
+  await db.jobStash.deleteMany({
+    where: {
+      updatedAt: {
+        // lt: subMinutes(Date.now(), 1),
+        lt: subDays(Date.now(), 1),
+      },
+    },
+  })
 })

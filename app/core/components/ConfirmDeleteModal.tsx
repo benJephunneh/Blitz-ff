@@ -65,7 +65,6 @@ const ConfirmDeleteModal = ({
           <Slider
             defaultValue={0}
             onChange={async (v) => {
-              console.log(v)
               if (v === 100) await confirm()
             }}
           >

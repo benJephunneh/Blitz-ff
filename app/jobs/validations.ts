@@ -7,9 +7,9 @@ export const title = z.string()
 export const start = z.date()
 export const end = z.date()
 export const locationId = z.number()
-const notes = stashContentSchema
+export const notes = stashContentSchema
 
-export const CreateJobSkeleton = z.object({
+export const JobSkeleton = z.object({
   title,
   start,
   end,

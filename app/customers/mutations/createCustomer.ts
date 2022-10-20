@@ -1,10 +1,10 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
 import UniquityError from "../errors/uniquityError"
-import { CreateCustomerSkeleton, notes } from "../validations"
+import { CustomerSkeleton, notes } from "../validations"
 
 export default resolver.pipe(
-  resolver.zod(CreateCustomerSkeleton.extend({ notes: notes.nullable() })),
+  resolver.zod(CustomerSkeleton.extend({ notes: notes.nullable() })),
   resolver.authorize(),
 
   async ({ notes, ...values }) => {

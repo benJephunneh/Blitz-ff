@@ -1,24 +1,23 @@
 import { resolver } from "@blitzjs/rpc"
-import { CreateCustomer, CreateCustomerSkeleton } from "app/customers/validations"
-import { CreateJob, CreateJobSkeleton } from "app/jobs/validations"
-import { CreateLocation, CreateLocationSkeleton } from "app/locations/validations"
-import { NotFoundError } from "blitz"
+import { CustomerSkeleton } from "app/customers/validations"
+import { LocationSkeleton } from "app/locations/validations"
+import { JobSkeleton } from "app/jobs/validations"
 import db, { StashType } from "db"
 import { z } from "zod"
 import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
 
-const customerZod = CreateCustomer
-const locationZod = CreateLocation
-const jobZod = CreateJob
+// const customerZod = CreateCustomer
+// const locationZod = CreateLocation
+// const jobZod = CreateJob
 
 export const UpdateStash = z.object({
   id: z.number(),
   notes: stashContentSchema.nullable(),
   stashType: z.nativeEnum(StashType),
   // customerId: z.number().optional(),
-  customer: CreateCustomerSkeleton.partial().optional(),
-  location: CreateLocationSkeleton.partial().optional(),
-  job: CreateJobSkeleton.partial().optional(),
+  customer: CustomerSkeleton.partial().optional(),
+  location: LocationSkeleton.partial().optional(),
+  job: JobSkeleton.partial().optional(),
 })
 
 export default resolver.pipe(

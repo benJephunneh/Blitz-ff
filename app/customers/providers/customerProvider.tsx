@@ -62,15 +62,15 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
   const [creatingLocation, setCreatingLocation] = useState(false)
 
   // Search
-  const [searchQuery, setSearchQuery] = useState("")
+  const [searchParams, setSearchParams] = useState("")
   const [searchResults, { refetch: refetchSearch }] = useQuery(
     findCustomer,
     {
-      query: searchQuery,
+      query: searchParams,
     },
     {
       suspense: false,
-      enabled: !!searchQuery,
+      enabled: !!searchParams,
     }
   )
 
@@ -89,6 +89,9 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
           pickLocation(id)
           await router.push(Routes.ShowCustomerPage({ customerId: customer!.id }))
         },
+
+        search: (p) => setSearchParams(p),
+        searchParams,
 
         // customer: customer as Customer,
         // displayname: customer!.displayname,

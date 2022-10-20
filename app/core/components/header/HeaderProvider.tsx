@@ -81,7 +81,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
     setLocationId(locationIds?.length && locationIds.at(0)?.id)
   }, [customerId, locationIds])
   useEffect(() => {
-    setCustomerPhone(customer ? customer["locations"].at(0).phones : undefined)
+    setCustomerPhone(customer ? customer["locations"]?.at(0)?.phones : undefined)
   }, [customer])
   // useEffect(() => {
   //   // Can't have just any re-render changing chosen locationId.
@@ -152,8 +152,13 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   }
   // }, [editingStash, stashId, stashType])
 
-  // const [loginMutation] = useMutation(login)
-  // const [logoutMutation] = useMutation(logout)
+  const deleteDescription = deletingCustomer
+    ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
+    : deletingLocation
+    ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
+    : deletingJob
+    ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
+    : ""
 
   return (
     <Provider
@@ -323,7 +328,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
 
           <ConfirmDeleteModal
             title={`Delete ${customer?.firstname} ${customer?.lastname} ? `}
-            description="Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
+            description={deleteDescription}
             isOpen={deletingCustomer}
             onClose={() => {
               deletingCustomer && setDeletingCustomer(false)
