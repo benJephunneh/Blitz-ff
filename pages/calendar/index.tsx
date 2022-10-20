@@ -30,15 +30,12 @@ const TestCalendar = () => {
   useEffect(() => {
     // console.log(JSON.stringify(value))
     if (!Array.isArray(value)) return
-
     ;(async () => {
       setStartDateTime(value.at(0).setHours(9, 0, 0, 0))
       setEndDateTime(value.at(1).setHours(17, 0, 0, 0))
     })().catch((e) => console.log(e.message))
   }, [value])
   useEffect(() => {
-    console.log(`startDateTime: ${format(startDateTime, "HHmm EEEE, do MMM")}`)
-    console.log(`endDateTime: ${format(endDateTime, "HHmm EEEE, do MMM")}`)
     console.log(startDateTime)
     console.log(endDateTime)
     console.log(`startDateTime: ${format(startDateTime, "HHmm EEEE, do MMM")}`)

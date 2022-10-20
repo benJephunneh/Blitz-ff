@@ -20,6 +20,9 @@ export default resolver.pipe(
       case "Location":
         await db.locationStash.delete({ where: { id } })
         break
+      case "Job":
+        await db.jobStash.delete({ where: { id } })
+        break
 
       default:
         break

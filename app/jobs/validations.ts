@@ -1,10 +1,11 @@
 import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
-import { z } from "zod"
+import { z, ZodDate } from "zod"
 
 export const id = z.number()
 export const title = z.string()
-export const start = z.date().optional()
-export const end = z.date().optional()
+// export const range = z.array(z.date())
+export const start = z.date()
+export const end = z.date()
 export const locationId = z.number()
 const notes = stashContentSchema
 
@@ -23,6 +24,7 @@ export const UpdateJob = CreateJob.extend({ id })
 
 export const CreateJobStash = z.object({
   title: title.optional(),
+  // range: range.optional(),
   start: start.optional(),
   end: end.optional(),
   notes,

@@ -99,10 +99,15 @@ const JobModalForm = ({
   )
 
   const onSubmit = async (values) => {
-    const { notes, ...formSubmission } = values
+    console.log(JSON.stringify(values))
+    const { notes, stashing, range, ...formSubmission } = values
+    const start = range?.at(0).setHours(9, 0, 0, 0)
+    const end = range?.at(1).setHours(17, 0, 0, 0)
+    formSubmission["start"] = new Date(start)
+    formSubmission["end"] = new Date(end)
 
     let jobRet
-    if (values.stashing) {
+    if (stashing) {
       if (jobStash) {
         jobRet = await updateStashMutation({
           id: jobStash.id,
@@ -122,12 +127,12 @@ const JobModalForm = ({
       if (job) {
         jobRet = updateJobMutation({
           id: job.id,
-          ...values,
+          ...formSubmission,
         })
       } else {
         jobRet = newJobMutation({
           locationId,
-          ...values,
+          ...formSubmission,
         })
         if (jobStash && jobRet) {
           await deleteStashMutation({
@@ -148,10 +153,11 @@ const JobModalForm = ({
     }
   }
 
-  const [startDateTime, setStartDateTime] = useState(addDays(new Date().setHours(9, 0, 0, 0), 1))
-  const [endDateTime, setEndDateTime] = useState(addDays(new Date().setHours(17, 0, 0, 0), 1))
+  // const [startDateTime, setStartDateTime] = useState(addDays(new Date().setHours(9, 0, 0, 0), 1))
+  // const [endDateTime, setEndDateTime] = useState(addDays(new Date().setHours(17, 0, 0, 0), 1))
   const initialValues = {
     title: jobStash?.title || job?.title || undefined,
+    range: undefined,
     start: jobStash?.start || job?.start || undefined,
     end: jobStash?.end || job?.end || undefined,
     notes: jobStash ? JSON.parse(jobStash.notes) : job?.notes ? JSON.parse(job.notes) : null,
@@ -177,8 +183,13 @@ const JobModalForm = ({
           <LabeledTextField name="title" label="Title" />
           {/* <LabeledTextField name="start" label="Start date/time" /> */}
           {/* <LabeledTextField name="end" label="End date/time" /> */}
-          <LabeledDateField name="start" label="Start" initialDate={startDateTime} />
-          <LabeledDateField name="end" label="End" initialDate={endDateTime} />
+          <LabeledDateField
+            name="range"
+            label="Date range"
+            start={initialValues.start}
+            end={initialValues.end}
+          />
+          {/* <LabeledDateField name="end" label="End" initialDate={endDateTime} /> */}
           {/* <LabeledDateRangeField name='dateRange' label='Date range' /> */}
           <EditorField
             name="notes"

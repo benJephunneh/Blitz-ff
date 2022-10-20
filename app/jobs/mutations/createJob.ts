@@ -1,5 +1,6 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
+import { BsCartX } from "react-icons/bs"
 import { z } from "zod"
 
 const CreateJob = z.object({
@@ -9,9 +10,14 @@ const CreateJob = z.object({
   locationId: z.number(),
 })
 
-export default resolver.pipe(resolver.zod(CreateJob), resolver.authorize(), async (input) => {
+export default resolver.pipe(resolver.zod(CreateJob), resolver.authorize(), async (input, ctx) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const job = await db.job.create({ data: input })
+  const job = await db.job.create({
+    data: {
+      userId: ctx.session.userId,
+      ...input,
+    },
+  })
   await db.jobArchive.create({ data: input })
 
   return job
