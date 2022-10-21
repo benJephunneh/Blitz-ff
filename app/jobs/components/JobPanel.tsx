@@ -1,41 +1,33 @@
-import { j } from "@blitzjs/auth/dist/index-57d74361"
-import { useMutation, useQuery } from "@blitzjs/rpc"
+import { useQuery } from "@blitzjs/rpc"
 import {
   Box,
   Button,
   ButtonGroup,
   Flex,
-  Heading,
   HStack,
   Icon,
   ListItem,
   Menu,
   MenuButton,
   MenuDivider,
-  MenuItem,
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
-  TabPanel,
   Text,
   UnorderedList,
   useColorModeValue,
 } from "@chakra-ui/react"
+import EditorField from "app/core/components/editor/components/EditorField"
 import headerContext from "app/core/components/header/headerContext"
-import { format } from "date-fns"
-import db, { Job } from "db"
+import { validateZodSchema } from "blitz"
+import { format, isPast, isSameDay, isSameMonth } from "date-fns"
+import { Job } from "db"
 import { useContext, useEffect, useState } from "react"
 import { Calendar } from "react-calendar"
-import { BsArrowDown, BsFileEarmarkArrowDown } from "react-icons/bs"
-import { FaArrowDown, FaChevronDown, FaPlus } from "react-icons/fa"
-import createJob from "../mutations/createJob"
-import updateJob from "../mutations/updateJob"
+import { Form as FinalForm } from "react-final-form"
+import { FaChevronDown, FaPlus } from "react-icons/fa"
 import getJobs from "../queries/getJobs"
-import JobModalForm from "./JobModalForm"
-
-type JobPanelProps = {
-  locationId?: number
-}
+import { notes } from "../validations"
 
 type Range = [Date | null, Date | null] | Date | null | undefined
 
@@ -60,7 +52,6 @@ const JobPanel = () => {
   useEffect(() => {
     setJob(() => {
       const j = jobs.jobs.find((j) => j.id === jobId)
-      // console.log(j)
       return j as Job
     })
   }, [jobId, jobs.jobs])
@@ -71,33 +62,10 @@ const JobPanel = () => {
   }, [job])
 
   const headingColor = useColorModeValue("green", "khaki")
+  const inactiveJobColor = "gray.400"
 
   return (
     <>
-      {/* <JobModalForm
-        locationId={locationId}
-        job={editingJob ? job : undefined}
-        jobStash={jobStash}
-        isOpen={creatingJob || editingJob}
-        onClose={() => {
-          creatingJob && setCreatingJob(false)
-          editingJob && setEditingJob(false)
-        }}
-        disableStash={editingJob}
-        onSuccess={async (job) => {
-          if (job) {
-            if ("notes" in job) refetchStashes()
-            else if (creatingJob) {
-              setJobId(undefined)
-              await refetchJobs()
-            }
-          }
-
-          creatingJob && setCreatingJob(false)
-          editingJob && setEditingJob(false)
-        }}
-      /> */}
-
       <Flex justify="space-between" mb={4}>
         <HStack spacing={4}>
           <Menu closeOnSelect={false}>
@@ -167,13 +135,16 @@ const JobPanel = () => {
       </Flex>
 
       {job && <Calendar value={range} />}
-
       {!job && (
         <UnorderedList>
           {jobs.jobs.map((j, ii) => (
-            <ListItem key={ii} onClick={() => pickJob(j.id)}>
-              {j.start?.getMonth() === j.end?.getMonth()
-                ? j.start?.getDate() === j.end?.getDate()
+            <ListItem
+              key={ii}
+              onClick={() => pickJob(j.id)}
+              textColor={isPast(j.start!) ? inactiveJobColor : "initial"}
+            >
+              {isSameMonth(j.start!, j.end!)
+                ? isSameDay(j.start!, j.end!)
                   ? `${j.title}: ${format(j.start!, "HHmm")} - ${format(j.end!, "HHmm, d MMM")}`
                   : `${j.title}: ${format(j.start!, "d")} - ${format(j.end!, "d MMM")}`
                 : `${j.title}: ${format(j.start!, "d MMM")} - ${format(j.end!, "d MMM")}`}
@@ -181,6 +152,28 @@ const JobPanel = () => {
           ))}
         </UnorderedList>
       )}
+
+      <FinalForm
+        initialValues={{
+          notes: job.notes ? JSON.parse(job.notes) : null,
+        }}
+        validate={validateZodSchema({ notes: notes.nullable() })}
+        onSubmit={onSubmit}
+        render={(phorm) => (
+          <form onSubmit={phorm.handleSubmit}>
+            <Box bg="white" borderRadius={4} borderColor="whiteAlpha.50">
+              <EditorField
+                name="jobNotes"
+                fontSize="md"
+                label="Job notes"
+                features={{
+                  heading: true,
+                }}
+              />
+            </Box>
+          </form>
+        )}
+      />
 
       {/* <pre>{JSON.stringify(job, null, 2)}</pre> */}
     </>

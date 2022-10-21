@@ -115,21 +115,21 @@ model JobStash {
 }
 
 model Invoice {
-  id        Int     @id @default(autoincrement())
-  lineItems String
-  job       Job     @relation(fields: [jobId], references: [id])
+  id        Int      @id @default(autoincrement())
+  lineItems String[]
+  job       Job      @relation(fields: [jobId], references: [id])
   jobId     Int
-  user      User    @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   userId    Int
   notes     String?
 }
 
 model InvoiceStash {
-  id        Int    @id @default(autoincrement())
-  lineItems String
-  job       Job    @relation(fields: [jobId], references: [id])
+  id        Int      @id @default(autoincrement())
+  lineItems String[]
+  job       Job      @relation(fields: [jobId], references: [id])
   jobId     Int
-  user      User   @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   userId    Int
   notes     String
 }
@@ -186,7 +186,7 @@ model InvoiceArchive {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   title        String
-  lineItems    String
+  lineItems    String[]
   job          Job?        @relation(fields: [jobId], references: [id])
   jobId        Int
   jobArchive   JobArchive? @relation(fields: [jobArchiveId], references: [id])
