@@ -30,6 +30,8 @@ import { ComponentPropsWithoutRef, forwardRef, PropsWithoutRef, useEffect, useSt
 import { Calendar } from "react-calendar"
 import { useField, UseFieldConfig } from "react-final-form"
 
+import "react-calendar/dist/Calendar.css"
+
 interface LabeledDateFieldProps extends ComponentPropsWithoutRef<typeof Input> {
   name: string
   label: string

@@ -22,9 +22,6 @@ import { addDays, formatRelative } from "date-fns"
 import getStash from "app/stashes/queries/getStash"
 import { LabeledDateRangeField } from "app/calendar/components/LabeledDateRangeField"
 
-import "react-calendar/dist/Calendar.css"
-// import "@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css"
-
 type JobModalFormProps = {
   locationId?: number
   jobId?: number
