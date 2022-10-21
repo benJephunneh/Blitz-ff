@@ -83,20 +83,25 @@ model LocationStash {
 }
 
 model Job {
-  id               Int              @id @default(autoincrement())
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  title            String
-  start            DateTime?
-  end              DateTime?
-  locationId       Int
-  location         Location         @relation(fields: [locationId], references: [id], onDelete: Cascade)
-  user             User             @relation(fields: [userId], references: [id])
-  userId           Int
-  notes            String?
-  invoices         Invoice[]
-  invoiceStashes   InvoiceStash[]
-  archivedInvoices InvoiceArchive[]
+  id                Int               @id @default(autoincrement())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  title             String
+  start             DateTime?
+  end               DateTime?
+  completed         Boolean           @default(false)
+  locationId        Int
+  location          Location          @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  user              User              @relation(fields: [userId], references: [id])
+  userId            Int
+  notes             String?
+  invoices          Invoice[]
+  invoiceStashes    InvoiceStash[]
+  archivedInvoices  InvoiceArchive[]
+  estimates         Estimate[]
+  estimateStashes   EstimateStash[]
+  archivedEstimates EstimateArchive[]
+  // Show warranty on customer page, calculated from date of completion.
 }
 
 model JobStash {
@@ -115,23 +120,85 @@ model JobStash {
 }
 
 model Invoice {
-  id        Int     @id @default(autoincrement())
-  lineItems String
-  job       Job     @relation(fields: [jobId], references: [id])
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  title     String
+  lineItems LineItem[]
+  job       Job        @relation(fields: [jobId], references: [id])
   jobId     Int
-  user      User    @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
   userId    Int
   notes     String?
 }
 
 model InvoiceStash {
-  id        Int    @id @default(autoincrement())
-  lineItems String
-  job       Job    @relation(fields: [jobId], references: [id])
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  title     String
+  lineItems LineItem[]
+  job       Job        @relation(fields: [jobId], references: [id])
   jobId     Int
-  user      User   @relation(fields: [userId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
   userId    Int
   notes     String
+}
+
+model Estimate {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  title     String
+  job       Job        @relation(fields: [jobId], references: [id])
+  jobId     Int
+  lineItems LineItem[]
+  total     Int        @default(0)
+  user      User       @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model EstimateStash {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  title     String
+  job       Job        @relation(fields: [jobId], references: [id])
+  jobId     Int
+  lineItems LineItem[]
+  total     Int        @default(0)
+  user      User       @relation(fields: [userId], references: [id])
+  userId    Int
+}
+
+model EstimateTemplate {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  title     String
+  lineItems LineItem[]
+  total     Int
+}
+
+model LineItem {
+  id                 Int               @id @default(autoincrement())
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  name               String
+  cost               Int?
+  quantity           Int               @default(1)
+  notes              String?
+  invoices           Invoice[]
+  invoiceStashes     InvoiceStash[]
+  archivedInvoices   InvoiceArchive[]
+  Estimate           Estimate?         @relation(fields: [estimateId], references: [id])
+  estimateId         Int?
+  EstimateStash      EstimateStash?    @relation(fields: [estimateStashId], references: [id])
+  estimateStashId    Int?
+  EstimateTemplate   EstimateTemplate? @relation(fields: [estimateTemplateId], references: [id])
+  estimateTemplateId Int?
+  EstimateArchive    EstimateArchive?  @relation(fields: [estimateArchiveId], references: [id])
+  estimateArchiveId  Int?
 }
 
 model CustomerArchive {
@@ -169,16 +236,17 @@ model LocationArchive {
 }
 
 model JobArchive {
-  id               Int              @id @default(autoincrement())
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  title            String
-  start            DateTime?
-  end              DateTime?
-  locationId       Int
-  notes            String?
-  archivedLocation LocationArchive  @relation(fields: [locationId], references: [id], onDelete: Cascade)
-  archivedInvoices InvoiceArchive[]
+  id                Int               @id @default(autoincrement())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  title             String
+  start             DateTime?
+  end               DateTime?
+  locationId        Int
+  notes             String?
+  archivedLocation  LocationArchive   @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  archivedInvoices  InvoiceArchive[]
+  archivedEstimates EstimateArchive[]
 }
 
 model InvoiceArchive {
@@ -186,12 +254,25 @@ model InvoiceArchive {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   title        String
-  lineItems    String
+  lineItems    LineItem[]
   job          Job?        @relation(fields: [jobId], references: [id])
   jobId        Int
   jobArchive   JobArchive? @relation(fields: [jobArchiveId], references: [id])
   jobArchiveId Int
   notes        String?
+}
+
+model EstimateArchive {
+  id           Int         @id @default(autoincrement())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  title        String
+  job          Job?        @relation(fields: [jobId], references: [id])
+  jobArchive   JobArchive? @relation(fields: [jobArchiveId], references: [id])
+  lineItems    LineItem[]
+  total        Int         @default(0)
+  jobId        Int?
+  jobArchiveId Int?
 }
 
 model User {
@@ -210,6 +291,8 @@ model User {
   invoiceStashes  InvoiceStash[]
   sessions        Session[]
   tokens          Token[]
+  Estimate        Estimate[]
+  EstimateStash   EstimateStash[]
 }
 
 model Session {
