@@ -1,14 +1,15 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
 import { z } from "zod"
+import { UpdateJob } from "../validations"
 
-const UpdateJob = z.object({
-  id: z.number(),
-  title: z.string(),
-  start: z.date().optional(),
-  end: z.date().optional(),
-  locationId: z.number(),
-})
+// const UpdateJob = z.object({
+//   id: z.number(),
+//   title: z.string(),
+//   start: z.date().optional(),
+//   end: z.date().optional(),
+//   locationId: z.number(),
+// })
 
 export default resolver.pipe(
   resolver.zod(UpdateJob),

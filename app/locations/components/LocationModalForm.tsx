@@ -36,6 +36,7 @@ import getStash from "app/stashes/queries/getStash"
 import EditorField from "app/core/components/editor/components/EditorField"
 import getUser from "app/users/queries/getUser"
 import { Signup } from "app/auth/validations"
+import TextAreaField from "app/core/components/forms/components/TextAreaField"
 
 type Location = PromiseReturnType<typeof createLocation>
 
@@ -50,7 +51,7 @@ type LocationModalFormProps = {
   // location?: Location
   // locationStash?: LocationStash
   disableStash?: boolean
-  mutationType?: MutationType
+  // mutationType?: MutationType
   props?: Partial<ModalProps>
 }
 
@@ -165,6 +166,7 @@ const LocationModalForm = ({
   // }
 
   const onSubmit = async (values) => {
+    console.log(JSON.stringify(values))
     const { notes, ...formSubmission } = values
 
     let locationRet
@@ -319,7 +321,7 @@ const LocationModalForm = ({
               </HStack>
             </GridItem>
           </Grid>
-          <EditorField
+          {/* <EditorField
             name="notes"
             fontSize="md"
             label="Stash notes"
@@ -330,7 +332,8 @@ const LocationModalForm = ({
             barMenu
             bubbleMenu
             floatingMenu
-          />
+          /> */}
+          <TextAreaField name="notes" label="Location notes" />
           {locationStash && (
             <Text fontSize="xs" color={textFootnoteColor}>
               Stashed by {user?.username}

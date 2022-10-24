@@ -66,7 +66,7 @@ type CustomerCardProps = {
 }
 
 const CustomerCard = ({ ...props }: CustomerCardProps) => {
-  const { customer, locationId, editLocation, submitNote } = useContext(headerContext)
+  const { customer, locationId, editLocation, refetchCustomer } = useContext(headerContext)
   const [editingNote, setEditingNote] = useState(false)
   const router = useRouter()
   const [location, { refetch: refetchLocation }] = useQuery(
@@ -121,20 +121,21 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
       // _hover={{ borderColor: "blue.400" }}
       {...props}
     >
-      <VStack spacing={5}>
-        <IconButton
-          icon={<MdOutlineEditLocation size={25} />}
-          as={Button}
-          position="fixed"
-          size="xs"
-          aria-label="Edit location"
-          alignSelf="start"
-          onClick={editLocation}
-          bg="transparent"
-          // zIndex="overlay"
-        />
-        <Heading fontStyle="italic" size="2xl">
-          {/* <>
+      <HStack spacing={8}>
+        <VStack spacing={5}>
+          <IconButton
+            icon={<MdOutlineEditLocation size={25} />}
+            as={Button}
+            position="fixed"
+            size="xs"
+            aria-label="Edit location"
+            alignSelf="start"
+            onClick={editLocation}
+            bg="transparent"
+            // zIndex="overlay"
+          />
+          <Heading fontStyle="italic" size="2xl">
+            {/* <>
             {location ? (
               <Link
                 href={Routes.ShowLocationPage({
@@ -149,99 +150,105 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
               <>{customer!.displayname}</>
             )}
           </> */}
-          {customer!.displayname}
-        </Heading>
-        <NoteSubmission
-          isEditing={editingNote}
-          modelType="Customer"
-          customer={customer}
-          // modelId={location?.id}
-          onSuccess={(notes) => {
-            submitNote({ modelType: "Customer", notes })
-          }}
-        />
+            {customer!.displayname}
+          </Heading>
 
-        {location && (
-          <>
-            <SimpleGrid columns={2} mt={5}>
-              <HStack ml={4}>
-                <Link
-                  href={`http://maps.google.com/maps?q=${location.house}+${location.street.replace(
-                    " ",
-                    "+"
-                  )},+${location.city.replace(" ", "+")},+${location.state.replace(" ", "+")}`}
-                  passHref
-                >
-                  <a target="_blank" rel="noopener noreferrer">
-                    <Icon as={GiTreasureMap} w={8} h={8} mr={4} />
-                  </a>
-                </Link>
-                <Text fontWeight="semibold" opacity="0.8">
-                  {location.house} {location.street}
-                  <br />
-                  {location.city}, {location.state} {location.zipcode}
-                </Text>
-              </HStack>
+          {location && (
+            <>
+              <SimpleGrid columns={2} mt={5}>
+                <HStack ml={4}>
+                  <Link
+                    href={`http://maps.google.com/maps?q=${
+                      location.house
+                    }+${location.street.replace(" ", "+")},+${location.city.replace(
+                      " ",
+                      "+"
+                    )},+${location.state.replace(" ", "+")}`}
+                    passHref
+                  >
+                    <a target="_blank" rel="noopener noreferrer">
+                      <Icon as={GiTreasureMap} w={8} h={8} mr={4} />
+                    </a>
+                  </Link>
+                  <Text fontWeight="semibold" opacity="0.8">
+                    {location.house} {location.street}
+                    <br />
+                    {location.city}, {location.state} {location.zipcode}
+                  </Text>
+                </HStack>
 
-              <HStack display="block" alignSelf="end">
-                <Tag size="sm" bg={tagBgColor} opacity="0.9">
-                  <TagLeftIcon as={FcPhone} />
-                  <TagLabel>{phoneDisplay(location.phones!)}</TagLabel>
-                </Tag>
-                <Tag
-                  as="a"
-                  href={`mailto:${customer!.email}`}
-                  size="sm"
-                  bg={tagBgColor}
-                  opacity="0.9"
-                >
-                  <TagLeftIcon as={MdAlternateEmail} color="cyan.400" />
-                  <TagLabel _hover={{ textDecoration: "underline" }}>{customer!.email}</TagLabel>
-                </Tag>
-              </HStack>
-            </SimpleGrid>
+                <HStack display="block" alignSelf="end">
+                  <Tag size="sm" bg={tagBgColor} opacity="0.9">
+                    <TagLeftIcon as={FcPhone} />
+                    <TagLabel>{phoneDisplay(location.phones!)}</TagLabel>
+                  </Tag>
+                  <Tag
+                    as="a"
+                    href={`mailto:${customer!.email}`}
+                    size="sm"
+                    bg={tagBgColor}
+                    opacity="0.9"
+                  >
+                    <TagLeftIcon as={MdAlternateEmail} color="cyan.400" />
+                    <TagLabel _hover={{ textDecoration: "underline" }}>{customer!.email}</TagLabel>
+                  </Tag>
+                </HStack>
+              </SimpleGrid>
 
-            <NoteSubmission
-              isEditing={editingNote}
-              modelType="Location"
-              modelId={location.customerId}
-              onSuccess={(notes) => {
-                submitNote({ modelType: "Location", id: location.id, notes })
-              }}
-            />
-          </>
-        )}
+              <NoteSubmission
+                modelType="Location"
+                // modelId={location.customerId}
+                onSuccess={async () => {
+                  refetchCustomer()
+                  await refetchLocation()
+                }}
+              />
+            </>
+          )}
 
-        <Tabs variant="enclosed" alignSelf="start" w="full" isLazy>
-          <TabList>
-            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
-              <Icon as={GiBulldozer} mr={2} h={6} w={6} />
-              Jobs
-            </Tab>
-            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
-              <Icon as={GiCalculator} mr={2} h={6} w={6} />
-              Estimates
-            </Tab>
-            <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
-              <Icon as={GiBleedingWound} color="crimson" mr={2} h={6} w={6} />
-              {/* x icon when open/unpaid invoices, y icon when none/paid */}
-              Invoices
-            </Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <JobPanel />
-            </TabPanel>
-            <TabPanel>
-              <Icon as={GiChoice} mr={2} />
-              Pending approval:
-            </TabPanel>
-            <TabPanel>
-              <InvoicesCard invoices="asdf" />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </VStack>
+          <Tabs variant="enclosed" alignSelf="start" w="full" isLazy>
+            <TabList>
+              <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
+                <Icon as={GiBulldozer} mr={2} h={6} w={6} />
+                Jobs
+              </Tab>
+              <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
+                <Icon as={GiCalculator} mr={2} h={6} w={6} />
+                Estimates
+              </Tab>
+              <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
+                <Icon as={GiBleedingWound} color="crimson" mr={2} h={6} w={6} />
+                {/* x icon when open/unpaid invoices, y icon when none/paid */}
+                Invoices
+              </Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <JobPanel />
+              </TabPanel>
+              <TabPanel>
+                <Icon as={GiChoice} mr={2} />
+                Pending approval:
+              </TabPanel>
+              <TabPanel>
+                <InvoicesCard invoices="asdf" />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </VStack>
+
+        <Box minW="400px" alignSelf="start" p={4}>
+          <NoteSubmission
+            isEditing={editingNote}
+            modelType="Customer"
+            customer={customer}
+            // modelId={location?.id}
+            onSuccess={() => {
+              refetchCustomer()
+            }}
+          />
+        </Box>
+      </HStack>
     </Box>
   )
 }

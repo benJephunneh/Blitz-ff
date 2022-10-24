@@ -18,17 +18,16 @@ export const id = z.number()
 export const CustomerSkeleton = z.object({
   firstname,
   lastname,
-  companyname,
+  companyname: companyname.nullable(),
   email,
 })
 
-export const CreateCustomer = CustomerSkeleton.partial({ companyname: true }).extend({
+export const CreateCustomer = CustomerSkeleton.extend({
   notes: textNotes.nullable(),
 })
 export const CreateCustomerStash = CustomerSkeleton.partial({
   firstname: true,
   lastname: true,
-  companyname: true,
 }).extend({
   notes: textNotes,
 })

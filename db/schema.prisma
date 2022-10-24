@@ -185,24 +185,31 @@ model EstimateTemplate {
 }
 
 model LineItem {
-  id                 Int               @id @default(autoincrement())
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
-  name               String
-  cost               Int?
-  quantity           Int               @default(1)
-  notes              String?
-  invoices           Invoice[]
-  invoiceStashes     InvoiceStash[]
-  archivedInvoices   InvoiceArchive[]
-  Estimate           Estimate?         @relation(fields: [estimateId], references: [id])
-  estimateId         Int?
-  EstimateStash      EstimateStash?    @relation(fields: [estimateStashId], references: [id])
-  estimateStashId    Int?
-  EstimateTemplate   EstimateTemplate? @relation(fields: [estimateTemplateId], references: [id])
-  estimateTemplateId Int?
-  EstimateArchive    EstimateArchive?  @relation(fields: [estimateArchiveId], references: [id])
-  estimateArchiveId  Int?
+  id                Int                @id @default(autoincrement())
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  name              String
+  cost              Int?
+  quantity          Int                @default(1)
+  notes             String?
+  invoices          Invoice[]
+  invoiceStashes    InvoiceStash[]
+  archivedInvoices  InvoiceArchive[]
+  Estimate          Estimate[]
+  EstimateStash     EstimateStash[]
+  EstimateTemplate  EstimateTemplate[]
+  EstimateArchive   EstimateArchive[]
+  lineItemTemplates LineItemTemplate[]
+}
+
+model LineItemTemplate {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  name      String
+  lineItems LineItem[]
+  cost      Int
+  notes     String
 }
 
 model CustomerArchive {

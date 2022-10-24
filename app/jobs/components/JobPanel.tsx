@@ -18,6 +18,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import EditorField from "app/core/components/editor/components/EditorField"
+import NoteSubmission from "app/core/components/forms/NoteSubmission"
 import headerContext from "app/core/components/header/headerContext"
 import { validateZodSchema } from "blitz"
 import { format, isPast, isSameDay, isSameMonth } from "date-fns"
@@ -32,8 +33,16 @@ import { textNotes } from "../validations"
 type Range = [Date | null, Date | null] | Date | null | undefined
 
 const JobPanel = () => {
-  const { locationId, jobId, jobStash, createJob, editJob, pickJob, refetchStashes } =
-    useContext(headerContext)
+  const {
+    locationId,
+    jobId,
+    jobStash,
+    createJob,
+    editJob,
+    pickJob,
+    refetchCustomer,
+    refetchStashes,
+  } = useContext(headerContext)
   // const [jobId, setJobId] = useState<number>()
   const [job, setJob] = useState<Job>({} as Job)
   const [jobs, { refetch: refetchJobs }] = useQuery(
@@ -138,7 +147,21 @@ const JobPanel = () => {
         </ButtonGroup>
       </Flex>
 
-      {job && <Calendar value={range} />}
+      {job && (
+        <>
+          <Calendar value={range} />
+
+          <Box h={4}>
+            <NoteSubmission
+              modelType="Job"
+              onSuccess={async () => {
+                refetchCustomer()
+                await refetchJobs()
+              }}
+            />
+          </Box>
+        </>
+      )}
       {!job && (
         <UnorderedList>
           {jobs.jobs.map((j, ii) => (
@@ -156,34 +179,6 @@ const JobPanel = () => {
           ))}
         </UnorderedList>
       )}
-
-      <Box h={4} />
-      <FinalForm
-        initialValues={{
-          notes: job?.notes ? JSON.parse(job.notes) : null,
-        }}
-        validate={validateZodSchema({ notes: textNotes.nullable() })}
-        onSubmit={onSubmit}
-        render={({ handleSubmit, form, submitting, pristine, values }) => (
-          <form onSubmit={handleSubmit}>
-            <Box bg="white" borderRadius={4} borderColor="whiteAlpha.50">
-              <EditorField
-                name="jobNotes"
-                fontSize="md"
-                label="Job notes"
-                features={{
-                  heading: true,
-                }}
-              />
-            </Box>
-            <Button type="submit" disabled={pristine || submitting}>
-              Submit
-            </Button>
-
-            <pre>{JSON.stringify(values, null, 2)}</pre>
-          </form>
-        )}
-      />
 
       {/* <pre>{JSON.stringify(job, null, 2)}</pre> */}
     </>

@@ -24,10 +24,10 @@ interface LabeledCheckboxFieldProps extends ComponentPropsWithoutRef<typeof Chec
 }
 
 const LabeledCheckboxField = forwardRef<HTMLInputElement, LabeledCheckboxFieldProps>(
-  ({ label, outerProps, labelProps, name, children, ...props }, ref) => {
+  ({ name, label, outerProps, labelProps, children, ...props }, ref) => {
     const { input, meta } = useField(name, { type: "checkbox" })
     const error = getFieldErrorMessage(meta)
-    console.log(`input: ${JSON.stringify(input)}`)
+    // console.log(`input: ${JSON.stringify(input)}`)
 
     return (
       <FormControl isInvalid={meta.touched && error} {...outerProps}>

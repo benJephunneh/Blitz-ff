@@ -26,7 +26,6 @@ export default resolver.pipe(
           { companyname: { search, mode: "insensitive" } },
           { email: { contains: search, mode: "insensitive" } },
           { email: { search, mode: "insensitive" } },
-          // { phone: { contains: search, mode: "insensitive" } },
         ],
       },
     })

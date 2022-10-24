@@ -12,8 +12,8 @@ export const textNotes = z.string()
 
 export const JobSkeleton = z.object({
   title,
-  start,
-  end,
+  start: start.nullable(),
+  end: end.nullable(),
   locationId,
 })
 export const CreateJob = JobSkeleton.extend({

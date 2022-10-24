@@ -193,16 +193,16 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         deleteJob: () => setDeletingJob(true),
         pickJob: (id) => setJobId(id),
 
-        submitNote: async (modelType, id, notes) => {
-          switch (modelType) {
-            case "Customer":
-              await updateCustomerMutation({ id, notes, customer })
-              break
+        // submitNote: async (modelType, id, notes) => {
+        //   switch (modelType) {
+        //     case "Customer":
+        //       await updateCustomerMutation({ id, notes, customer })
+        //       break
 
-            default:
-              break
-          }
-        },
+        //     default:
+        //       break
+        //   }
+        // },
 
         editStash: (id, type) => {
           setStashId(id)

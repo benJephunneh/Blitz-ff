@@ -41,11 +41,11 @@ export type HeaderContext = {
   deleteJob: () => void
 
   // Note
-  submitNote: (
-    modelType: "Customer" | "Location" | "Job" | "Invoice" | "Estimate",
-    id: number,
-    notes: string
-  ) => void
+  // submitNote: (
+  //   modelType: "Customer" | "Location" | "Job" | "Invoice" | "Estimate",
+  //   id: number,
+  //   notes: string
+  // ) => void
 
   // Stash
   customerStashes: CustomerStash[]

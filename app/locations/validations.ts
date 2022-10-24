@@ -23,25 +23,20 @@ const stashType = z.nativeEnum(StashType)
 
 export const LocationSkeleton = z.object({
   primary,
-  house,
+  house: house.nullable(),
   street,
   city,
   state,
   zipcode,
   phones,
-  block,
-  lot,
-  parcel,
+  block: block.nullable(),
+  lot: lot.nullable(),
+  parcel: parcel.nullable(),
   locationType,
 })
-export const CreateLocation = LocationSkeleton.partial({
-  house: true,
-  block: true,
-  lot: true,
-  parcel: true,
-}).extend({
+export const CreateLocation = LocationSkeleton.extend({
   customerId,
-  notes: textNotes.optional(),
+  notes: textNotes.nullable(),
 })
 export const CreateLocationStash = LocationSkeleton.partial().extend({
   customerId,

@@ -8,14 +8,14 @@ type TextAreaFieldProps = ComponentPropsWithoutRef<typeof Textarea> & {
   label?: string
   // modelType: 'Customer' | 'Location' | 'Job' | 'Estimate' | 'Invoice' | 'LineItem'
   // modelId?: number
-  isEditing: boolean
+  // isEditing: boolean
   fieldProps?: UseFieldConfig<string>
 }
 
 const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>(
   (
     {
-      isEditing,
+      // isEditing,
       name,
       label,
       // modelType,
@@ -29,20 +29,17 @@ const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>(
 
     return (
       <FormControl isInvalid={meta.touched && error}>
-        <FormLabel mb={0} opacity=".9">
-          {label}
-        </FormLabel>
+        <FormLabel opacity=".9">{label}</FormLabel>
         <Textarea
-          alignSelf="start"
-          position="relative"
-          mt={0}
+          // alignSelf="start"
+          // position="relative"
           {...input}
-          disabled={!isEditing && meta.submitting}
+          disabled={meta.submitting}
           variant="filled"
           {...props}
           ref={ref}
           overflowX="hidden"
-          maxW="max-content"
+          minW="max-content"
         />
         <FormErrorMessage>{error}</FormErrorMessage>
       </FormControl>
