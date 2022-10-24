@@ -21,10 +21,13 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
+  Textarea,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import { Customer, Location } from "@prisma/client"
+import NoteSubmission from "app/core/components/forms/NoteSubmission"
+import TextAreaField from "app/core/components/forms/components/TextAreaField"
 import headerContext from "app/core/components/header/headerContext"
 import phoneDisplay from "app/core/components/methods/phoneDisplay"
 import JobPanel from "app/jobs/components/JobPanel"
@@ -63,7 +66,8 @@ type CustomerCardProps = {
 }
 
 const CustomerCard = ({ ...props }: CustomerCardProps) => {
-  const { customer, locationId, editLocation } = useContext(headerContext)
+  const { customer, locationId, editLocation, submitNote } = useContext(headerContext)
+  const [editingNote, setEditingNote] = useState(false)
   const router = useRouter()
   const [location, { refetch: refetchLocation }] = useQuery(
     getLocation,
@@ -147,45 +151,65 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
           </> */}
           {customer!.displayname}
         </Heading>
+        <NoteSubmission
+          isEditing={editingNote}
+          modelType="Customer"
+          customer={customer}
+          // modelId={location?.id}
+          onSuccess={(notes) => {
+            submitNote({ modelType: "Customer", notes })
+          }}
+        />
 
         {location && (
-          <SimpleGrid columns={2} mt={5}>
-            <HStack ml={4}>
-              <Link
-                href={`http://maps.google.com/maps?q=${location.house}+${location.street.replace(
-                  " ",
-                  "+"
-                )},+${location.city.replace(" ", "+")},+${location.state.replace(" ", "+")}`}
-                passHref
-              >
-                <a target="_blank" rel="noopener noreferrer">
-                  <Icon as={GiTreasureMap} w={8} h={8} mr={4} />
-                </a>
-              </Link>
-              <Text fontWeight="semibold" opacity="0.8">
-                {location.house} {location.street}
-                <br />
-                {location.city}, {location.state} {location.zipcode}
-              </Text>
-            </HStack>
+          <>
+            <SimpleGrid columns={2} mt={5}>
+              <HStack ml={4}>
+                <Link
+                  href={`http://maps.google.com/maps?q=${location.house}+${location.street.replace(
+                    " ",
+                    "+"
+                  )},+${location.city.replace(" ", "+")},+${location.state.replace(" ", "+")}`}
+                  passHref
+                >
+                  <a target="_blank" rel="noopener noreferrer">
+                    <Icon as={GiTreasureMap} w={8} h={8} mr={4} />
+                  </a>
+                </Link>
+                <Text fontWeight="semibold" opacity="0.8">
+                  {location.house} {location.street}
+                  <br />
+                  {location.city}, {location.state} {location.zipcode}
+                </Text>
+              </HStack>
 
-            <HStack display="block" alignSelf="end">
-              <Tag size="sm" bg={tagBgColor} opacity="0.9">
-                <TagLeftIcon as={FcPhone} />
-                <TagLabel>{phoneDisplay(location.phones!)}</TagLabel>
-              </Tag>
-              <Tag
-                as="a"
-                href={`mailto:${customer!.email}`}
-                size="sm"
-                bg={tagBgColor}
-                opacity="0.9"
-              >
-                <TagLeftIcon as={MdAlternateEmail} color="cyan.400" />
-                <TagLabel _hover={{ textDecoration: "underline" }}>{customer!.email}</TagLabel>
-              </Tag>
-            </HStack>
-          </SimpleGrid>
+              <HStack display="block" alignSelf="end">
+                <Tag size="sm" bg={tagBgColor} opacity="0.9">
+                  <TagLeftIcon as={FcPhone} />
+                  <TagLabel>{phoneDisplay(location.phones!)}</TagLabel>
+                </Tag>
+                <Tag
+                  as="a"
+                  href={`mailto:${customer!.email}`}
+                  size="sm"
+                  bg={tagBgColor}
+                  opacity="0.9"
+                >
+                  <TagLeftIcon as={MdAlternateEmail} color="cyan.400" />
+                  <TagLabel _hover={{ textDecoration: "underline" }}>{customer!.email}</TagLabel>
+                </Tag>
+              </HStack>
+            </SimpleGrid>
+
+            <NoteSubmission
+              isEditing={editingNote}
+              modelType="Location"
+              modelId={location.customerId}
+              onSuccess={(notes) => {
+                submitNote({ modelType: "Location", id: location.id, notes })
+              }}
+            />
+          </>
         )}
 
         <Tabs variant="enclosed" alignSelf="start" w="full" isLazy>

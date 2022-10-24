@@ -1,26 +1,20 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
-import { PromiseReturnType } from "blitz"
 import { FORM_ERROR } from "final-form"
-import { CreateJob, CreateJobStash, JobSkeleton, notes } from "../validations"
+import { JobSkeleton, textNotes } from "../validations"
 import { ModalProps, Text, useColorModeValue } from "@chakra-ui/react"
-import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import createJob from "../mutations/createJob"
 import updateJob from "../mutations/updateJob"
 import getJob from "../queries/getJob"
-import db, { Job, JobStash, User } from "db"
-import getLocation from "app/locations/queries/getLocation"
+import { Job, User } from "db"
 import EditorField from "app/core/components/editor/components/EditorField"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import createStash from "app/stashes/mutations/createStash"
 import updateStash from "app/stashes/mutations/updateStash"
-import { Calendar } from "react-calendar"
 import { LabeledDateField } from "app/calendar/components/LabeledDateField"
-import { addDays, formatRelative } from "date-fns"
 import getStash from "app/stashes/queries/getStash"
-import { LabeledDateRangeField } from "app/calendar/components/LabeledDateRangeField"
 
 type JobModalFormProps = {
   locationId?: number
@@ -177,7 +171,7 @@ const JobModalForm = ({
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
-      schema={JobSkeleton.omit({ start: true, end: true }).extend({ notes: notes.nullable() })}
+      schema={JobSkeleton.omit({ start: true, end: true }).extend({ notes: textNotes.nullable() })}
       title={job ? "Edit job" : "New job"}
       submitText={job ? "Update" : "Create"}
       initialValues={initialValues}

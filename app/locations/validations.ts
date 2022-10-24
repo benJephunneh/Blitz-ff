@@ -2,9 +2,9 @@ import { LocationType, StashType } from "@prisma/client"
 import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
 import { z } from "zod"
 
-export const id = z.number()
-export const customerId = z.number()
-const primary = z.boolean()
+const id = z.number()
+const customerId = z.number()
+const primary = z.boolean().default(true)
 // export const email = z.string().email()
 const house = z.string()
 const street = z.string()
@@ -15,55 +15,42 @@ const phones = z.string() // .array() ??? or should it be .array().optional()?  
 const block = z.string()
 const lot = z.string()
 const parcel = z.string()
-const locationType = z.nativeEnum(LocationType)
+const locationType = z.nativeEnum(LocationType).default("Personal")
 // export const customerId = z.number()
-export const notes = stashContentSchema
+const notes = stashContentSchema
+export const textNotes = z.string()
 const stashType = z.nativeEnum(StashType)
 
 export const LocationSkeleton = z.object({
   primary,
-  house: house.optional(),
+  house,
   street,
   city,
   state,
   zipcode,
   phones,
-  block: block.optional(),
-  lot: lot.optional(),
-  parcel: parcel.optional(),
+  block,
+  lot,
+  parcel,
   locationType,
 })
-export const CreateLocation = z.object({
-  primary,
-  house: house.optional(),
-  street,
-  city,
-  state,
-  zipcode,
-  phones,
-  block: block.optional(),
-  lot: lot.optional(),
-  parcel: parcel.optional(),
-  locationType,
-  notes: notes.nullable(),
+export const CreateLocation = LocationSkeleton.partial({
+  house: true,
+  block: true,
+  lot: true,
+  parcel: true,
+}).extend({
+  customerId,
+  notes: textNotes.optional(),
 })
-export const UpdateLocation = CreateLocation.extend({ id })
-
-export const CreateLocationStash = z.object({
-  primary,
-  house: house.optional(),
-  street: street.optional(),
-  city: city.optional(),
-  state: state.optional(),
-  zipcode: zipcode.optional(),
-  phones: phones.optional(),
-  block: block.optional(),
-  lot: lot.optional(),
-  parcel: parcel.optional(),
-  locationType,
-  notes: notes.nullable(),
+export const CreateLocationStash = LocationSkeleton.partial().extend({
+  customerId,
+  note: textNotes,
 })
 
+export const UpdateLocation = CreateLocation.extend({
+  id,
+})
 export const UpdateLocationStash = CreateLocationStash.extend({ id })
 
 export const DeleteLocation = z.object({ id })

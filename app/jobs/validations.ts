@@ -7,28 +7,23 @@ export const title = z.string()
 export const start = z.date()
 export const end = z.date()
 export const locationId = z.number()
-export const notes = stashContentSchema
+const notes = stashContentSchema
+export const textNotes = z.string()
 
 export const JobSkeleton = z.object({
   title,
   start,
   end,
+  locationId,
 })
-export const CreateJob = z.object({
-  title,
-  start,
-  end,
-  notes: notes.nullable(),
+export const CreateJob = JobSkeleton.extend({
+  notes: textNotes.nullable(),
 })
-export const UpdateJob = CreateJob.extend({ id })
+export const CreateJobStash = JobSkeleton.partial().extend({
+  notes: textNotes,
+})
 
-export const CreateJobStash = z.object({
-  title: title.optional(),
-  // range: range.optional(),
-  start: start.optional(),
-  end: end.optional(),
-  notes,
-})
+export const UpdateJob = CreateJob.extend({ id })
 export const UpdateJobStash = CreateJobStash.extend({ id })
 
 export const DeleteJob = z.object({ id })

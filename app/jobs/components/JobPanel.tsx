@@ -27,7 +27,7 @@ import { Calendar } from "react-calendar"
 import { Form as FinalForm } from "react-final-form"
 import { FaChevronDown, FaPlus } from "react-icons/fa"
 import getJobs from "../queries/getJobs"
-import { notes } from "../validations"
+import { textNotes } from "../validations"
 
 type Range = [Date | null, Date | null] | Date | null | undefined
 
@@ -63,6 +63,10 @@ const JobPanel = () => {
 
   const headingColor = useColorModeValue("green", "khaki")
   const inactiveJobColor = "gray.400"
+
+  const onSubmit = async (values) => {
+    console.log("submitted on job panel")
+  }
 
   return (
     <>
@@ -153,14 +157,15 @@ const JobPanel = () => {
         </UnorderedList>
       )}
 
+      <Box h={4} />
       <FinalForm
         initialValues={{
-          notes: job.notes ? JSON.parse(job.notes) : null,
+          notes: job?.notes ? JSON.parse(job.notes) : null,
         }}
-        validate={validateZodSchema({ notes: notes.nullable() })}
+        validate={validateZodSchema({ notes: textNotes.nullable() })}
         onSubmit={onSubmit}
-        render={(phorm) => (
-          <form onSubmit={phorm.handleSubmit}>
+        render={({ handleSubmit, form, submitting, pristine, values }) => (
+          <form onSubmit={handleSubmit}>
             <Box bg="white" borderRadius={4} borderColor="whiteAlpha.50">
               <EditorField
                 name="jobNotes"
@@ -171,6 +176,11 @@ const JobPanel = () => {
                 }}
               />
             </Box>
+            <Button type="submit" disabled={pristine || submitting}>
+              Submit
+            </Button>
+
+            <pre>{JSON.stringify(values, null, 2)}</pre>
           </form>
         )}
       />

@@ -1,10 +1,11 @@
 import { resolver } from "@blitzjs/rpc"
-import { CustomerSkeleton, notes } from "app/customers/validations"
+import { CustomerSkeleton } from "app/customers/validations"
 import { JobSkeleton } from "app/jobs/validations"
 import { LocationSkeleton } from "app/locations/validations"
 import db, { StashType } from "db"
 import { z } from "zod"
 import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
+import { CreateStash } from "../validations"
 
 // const customerZod = CreateCustomer.partial()
 // const locationZod = CreateLocation.partial()
@@ -13,15 +14,15 @@ import stashContentSchema from "../../core/components/editor/schema/stashContent
 // const locationZod = CreateLocationSkeleton.partial()
 // const jobZod = CreateJobSkeleton.partial()
 
-export const CreateStash = z.object({
-  notes: stashContentSchema, // .nullable(),
-  stashType: z.nativeEnum(StashType),
-  customerId: z.number().optional(),
-  locationId: z.number().optional(),
-  customer: CustomerSkeleton.partial().optional(),
-  location: LocationSkeleton.partial().optional(),
-  job: JobSkeleton.partial().optional(),
-})
+// export const CreateStash = z.object({
+//   notes: stashContentSchema, // .nullable(),
+//   stashType: z.nativeEnum(StashType),
+//   customerId: z.number().optional(),
+//   locationId: z.number().optional(),
+//   customer: CustomerSkeleton.partial().optional(),
+//   location: LocationSkeleton.partial().optional(),
+//   job: JobSkeleton.partial().optional(),
+// })
 
 // type CreateStashProps = {
 //   input: any
@@ -32,7 +33,7 @@ export default resolver.pipe(
   resolver.zod(CreateStash),
   resolver.authorize(),
 
-  async ({ notes, stashType, customerId, locationId, customer, location, job }, ctx) => {
+  async ({ stashType, notes, customerId, locationId, customer, location, job }, ctx) => {
     // async ({ input, stashType }: CreateStashProps, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     // console.log(`customer input to createStash: ${JSON.stringify(customer)}`)
@@ -50,7 +51,8 @@ export default resolver.pipe(
           data: {
             displayname,
             stashType,
-            notes: JSON.stringify(notes),
+            notes,
+            // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
             ...customer,
           },
@@ -62,7 +64,8 @@ export default resolver.pipe(
           data: {
             customerId: customerId!,
             stashType,
-            notes: JSON.stringify(notes),
+            notes,
+            // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
             ...location,
           },
@@ -74,7 +77,8 @@ export default resolver.pipe(
           data: {
             locationId: locationId!,
             stashType,
-            notes: JSON.stringify(notes),
+            notes,
+            // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
             ...job,
           },

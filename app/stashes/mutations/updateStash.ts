@@ -5,26 +5,27 @@ import { JobSkeleton } from "app/jobs/validations"
 import db, { StashType } from "db"
 import { z } from "zod"
 import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
+import { UpdateStash } from "../validations"
 
 // const customerZod = CreateCustomer
 // const locationZod = CreateLocation
 // const jobZod = CreateJob
 
-export const UpdateStash = z.object({
-  id: z.number(),
-  notes: stashContentSchema.nullable(),
-  stashType: z.nativeEnum(StashType),
-  // customerId: z.number().optional(),
-  customer: CustomerSkeleton.partial().optional(),
-  location: LocationSkeleton.partial().optional(),
-  job: JobSkeleton.partial().optional(),
-})
+// export const UpdateStash = z.object({
+//   id: z.number(),
+//   notes: stashContentSchema.nullable(),
+//   stashType: z.nativeEnum(StashType),
+//   // customerId: z.number().optional(),
+//   customer: CustomerSkeleton.partial().optional(),
+//   location: LocationSkeleton.partial().optional(),
+//   job: JobSkeleton.partial().optional(),
+// })
 
 export default resolver.pipe(
   resolver.zod(UpdateStash),
   resolver.authorize(),
 
-  async ({ id, notes, stashType, customer, location, job }, ctx) => {
+  async ({ id, stashType, customer, location, job }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     console.log(JSON.stringify(customer))
 
@@ -54,7 +55,7 @@ export default resolver.pipe(
             // companyname: customer?.companyname,
             // displayname,
             // email: customer?.email,
-            notes: JSON.stringify(notes),
+            // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
             ...customer,
           },
@@ -65,7 +66,7 @@ export default resolver.pipe(
           where: { id },
           data: {
             stashType,
-            notes: JSON.stringify(notes),
+            // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
             ...location,
           },
@@ -76,7 +77,7 @@ export default resolver.pipe(
           where: { id },
           data: {
             stashType,
-            notes: JSON.stringify(notes),
+            // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
             ...job,
           },

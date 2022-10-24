@@ -8,8 +8,10 @@ import login from "app/auth/mutations/login"
 import logout from "app/auth/mutations/logout"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
+import updateCustomer from "app/customers/mutations/updateCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
 import JobModalForm from "app/jobs/components/JobModalForm"
+import updateJob from "app/jobs/mutations/updateJob"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import deleteLocation from "app/locations/mutations/deleteLocation"
 import updateLocation from "app/locations/mutations/updateLocation"
@@ -64,8 +66,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [creatingCustomer, setCreatingCustomer] = useState(false)
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [deletingCustomer, setDeletingCustomer] = useState(false)
-  const [deleteCustomerMutation] = useMutation(deleteCustomer)
   const [customerPhone, setCustomerPhone] = useState<string>()
+  const [updateCustomerMutation] = useMutation(updateCustomer)
+  const [deleteCustomerMutation] = useMutation(deleteCustomer)
 
   // Location
   const [creatingLocation, setCreatingLocation] = useState(false)
@@ -73,6 +76,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [deletingLocation, setDeletingLocation] = useState(false)
   const [locationIds, setLocationIds] = useState<[{ id: number }]>()
   const [locationId, setLocationId] = useState<number>()
+  const [updateLocationMutation] = useMutation(updateLocation)
   // const [location, setLocation] = useState<Location>()
   useEffect(() => {
     setLocationIds(customer ? customer["locations"] : [])
@@ -100,6 +104,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [editingJob, setEditingJob] = useState(false)
   const [deletingJob, setDeletingJob] = useState(false)
   const [jobId, setJobId] = useState<number>()
+  const [updateJobMutation] = useMutation(updateJob)
 
   // Stash
   const [
@@ -187,6 +192,17 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         editJob: () => setEditingJob(true),
         deleteJob: () => setDeletingJob(true),
         pickJob: (id) => setJobId(id),
+
+        submitNote: async (modelType, id, notes) => {
+          switch (modelType) {
+            case "Customer":
+              await updateCustomerMutation({ id, notes, customer })
+              break
+
+            default:
+              break
+          }
+        },
 
         editStash: (id, type) => {
           setStashId(id)

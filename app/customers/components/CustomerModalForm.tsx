@@ -3,7 +3,13 @@ import { FORM_ERROR } from "final-form"
 import createCustomer from "../mutations/createCustomer"
 import updateCustomer from "../mutations/updateCustomer"
 import getCustomer from "../queries/getCustomer"
-import { CreateCustomer, CreateCustomerStash, UpdateCustomer } from "../validations"
+import {
+  CreateCustomer,
+  CreateCustomerStash,
+  CustomerSkeleton,
+  textNotes,
+  UpdateCustomer,
+} from "../validations"
 import {
   Grid,
   GridItem,
@@ -22,6 +28,7 @@ import getStash from "app/stashes/queries/getStash"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import updateStash from "app/stashes/mutations/updateStash"
 import getUser from "app/users/queries/getUser"
+import TextAreaField from "app/core/components/forms/components/TextAreaField"
 
 type CustomerModalFormProps = {
   isOpen: boolean
@@ -189,8 +196,9 @@ const CustomerModalForm = ({
     lastname: customerStash?.lastname || customer?.lastname || undefined,
     companyname: customerStash?.companyname || customer?.companyname || undefined,
     email: customerStash?.email || customer?.email || undefined,
-    notes: customerStash?.notes ? JSON.parse(customerStash.notes) : null,
+    notes: customerStash?.notes || customer?.notes || null,
   }
+  // console.log
 
   const a = useDisclosure()
 
@@ -200,7 +208,7 @@ const CustomerModalForm = ({
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
-      schema={CreateCustomerStash}
+      schema={CustomerSkeleton.partial().extend({ notes: textNotes.nullable() })}
       title={customer ? "Edit customer" : "New customer"}
       submitText={customer ? "Update" : "Create"}
       initialValues={initialValues}
@@ -229,7 +237,7 @@ const CustomerModalForm = ({
             <LabeledTextField name="phone" label="Phone number" type="phone" />
           </GridItem> */}
           </Grid>
-          <EditorField
+          {/* <EditorField
             name="notes"
             fontSize="md"
             label="Stash notes"
@@ -240,6 +248,11 @@ const CustomerModalForm = ({
             barMenu
             bubbleMenu
             floatingMenu
+          /> */}
+          <TextAreaField
+            name="notes"
+            modelType="Customer"
+            placeholder={`Add notes about this customer...`}
           />
           {customerStash && (
             <Text fontSize="xs" color={textFootnoteColor}>

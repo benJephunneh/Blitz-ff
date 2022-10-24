@@ -31,7 +31,7 @@ const LineItemPage: BlitzPage = () => {
         onSubmit={onSubmit}
         initialValues={initialValues}
         schema={validateZodSchema(LineItemSkeleton.extend({ notes: notes.nullable() }))}
-        render={({ handleSubmit, phorm, submitting, pristine, values }) => (
+        render={({ handleSubmit, form, submitting, pristine, values }) => (
           <form onSubmit={handleSubmit}>
             <Grid templateRows="repeat(2, 1fr)" templateColumns="repeat(3, 1fr)">
               <GridItem colSpan={2}>

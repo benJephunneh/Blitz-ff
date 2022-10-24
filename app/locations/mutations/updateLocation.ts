@@ -1,6 +1,6 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
-import { LocationSkeleton, id, notes } from "../validations"
+import { UpdateLocation } from "../validations"
 
 // const UpdateLocationZod = z.object({
 //   id: z.number(),
@@ -8,24 +8,12 @@ import { LocationSkeleton, id, notes } from "../validations"
 // })
 
 export default resolver.pipe(
-  resolver.zod(LocationSkeleton.extend({ id, notes: notes.nullable() })),
+  resolver.zod(UpdateLocation),
   resolver.authorize(),
-  async ({ id, notes, ...values }) => {
+  async ({ id, ...data }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const location = await db.location.update({
-      where: { id },
-      data: {
-        notes: JSON.stringify(notes),
-        ...values,
-      },
-    })
-    await db.locationArchive.update({
-      where: { id },
-      data: {
-        notes: JSON.stringify(notes),
-        ...values,
-      },
-    })
+    const location = await db.location.update({ where: { id }, data })
+    await db.locationArchive.update({ where: { id }, data })
 
     return location
   }
