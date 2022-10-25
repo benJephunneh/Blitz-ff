@@ -131,7 +131,7 @@ const HeaderLoggedIn = () => {
                     //   editStash(c.id, "Customer")
                     // }}
                   >
-                    {c.displayname}: {JSON.parse(c.notes).content[0].content[0].text}
+                    {c.displayname}: {c.notes}
                   </Text>
                   <Icon
                     as={FcFullTrash}

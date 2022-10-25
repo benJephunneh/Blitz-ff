@@ -200,15 +200,13 @@ const CustomerModalForm = ({
   }
   // console.log
 
-  const a = useDisclosure()
-
   return (
     <ModalForm
       size="lg"
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
-      schema={CustomerSkeleton.partial().extend({ notes: textNotes.nullable() })}
+      schema={CustomerSkeleton.partial().extend({ notes: textNotes.nullable().optional() })}
       title={customer ? "Edit customer" : "New customer"}
       submitText={customer ? "Update" : "Create"}
       initialValues={initialValues}
@@ -233,9 +231,6 @@ const CustomerModalForm = ({
             <GridItem colSpan={3}>
               <LabeledTextField name="email" label="Email address" type="email" />
             </GridItem>
-            {/* <GridItem colSpan={2}>
-            <LabeledTextField name="phone" label="Phone number" type="phone" />
-          </GridItem> */}
           </Grid>
           {/* <EditorField
             name="notes"

@@ -198,6 +198,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
               <NoteSubmission
                 modelType="Location"
                 // modelId={location.customerId}
+                location={location}
                 onSuccess={async () => {
                   refetchCustomer()
                   await refetchLocation()
@@ -239,10 +240,8 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
 
         <Box minW="400px" alignSelf="start" p={4}>
           <NoteSubmission
-            // isEditing={editingNote}
             modelType="Customer"
             customer={customer}
-            // modelId={location?.id}
             onSuccess={() => {
               refetchCustomer()
             }}

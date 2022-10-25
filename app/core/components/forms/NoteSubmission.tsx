@@ -1,25 +1,12 @@
-import { x } from "@blitzjs/auth/dist/index-57d74361"
 import { useMutation } from "@blitzjs/rpc"
-import {
-  Box,
-  BoxProps,
-  Button,
-  HStack,
-  LayoutProps,
-  useColorMode,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Button, HStack, useColorModeValue } from "@chakra-ui/react"
 import { Customer, Estimate, Invoice, Job, Location } from "@prisma/client"
 import updateCustomer from "app/customers/mutations/updateCustomer"
 import updateJob from "app/jobs/mutations/updateJob"
-import { notes } from "app/lineitems/validations"
 import updateLocation from "app/locations/mutations/updateLocation"
-import { PromiseReturnType } from "blitz"
-import { ComponentPropsWithoutRef, PropsWithoutRef, useState } from "react"
+import { useState } from "react"
 import { Form as FinalForm } from "react-final-form"
 import { z } from "zod"
-import ConfirmDeleteModal from "../ConfirmDeleteModal"
-import EditorField from "../editor/components/EditorField"
 import TextAreaField from "./components/TextAreaField"
 
 type NoteSubmissionProps = {
@@ -59,6 +46,9 @@ const NoteSubmission = ({
   const [updateJobMutation] = useMutation(updateJob)
   // const [updateInvoiceMutation] = useMutation(updateInvoice)
   // const [updateEstimateMutation] = useMutation(updateEstimate)
+
+  const textFieldBg = useColorModeValue("white", "gray.200")
+  const textFieldBorderColor = useColorModeValue("blackAlpha.50", "blackAlpha.100")
 
   const onSubmit = async (notes) => {
     // console.log(notes.notes)
@@ -158,9 +148,10 @@ const NoteSubmission = ({
             <TextAreaField
               name="notes"
               label={`${modelType} notes`}
-              placeholder={`Additional notes about this ${modelType.toLowerCase()}`}
-              // modelType={modelType}
-              // modelId={modelId}
+              placeholder={`Add notes about this ${modelType.toLowerCase()}...`}
+              bg={textFieldBg}
+              borderWidth={3}
+              borderColor={textFieldBorderColor}
             />
             {/* <Box borderRadius={4} {...boxProps}>
             <EditorField
@@ -193,6 +184,7 @@ const NoteSubmission = ({
                 border={1}
                 borderColor="whiteAlpha.50"
                 size="xs"
+                alignSelf="start"
                 disabled={!initialValues.notes}
                 variant="ghost"
                 textColor="red"

@@ -8,34 +8,23 @@ import {
   ModalProps,
   Tag,
   TagLabel,
-  TagLeftIcon,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { MutationType } from "app/core/components/types/MutationType"
 import ModalForm from "app/core/components/forms/ModalForm"
 import createLocation from "../mutations/createLocation"
 import updateLocation from "../mutations/updateLocation"
 import getLocation from "../queries/getLocation"
-import {
-  CreateLocation,
-  CreateLocationStash,
-  UpdateLocation,
-  UpdateLocationStash,
-} from "../validations"
+import { LocationFormSchema } from "../validations"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import LabeledCheckboxField from "app/core/components/forms/LabeledCheckboxField"
-import { FcButtingIn } from "react-icons/fc"
-import { unknown, z } from "zod"
 import LabeledSelectField from "app/core/components/forms/LabeledSelectField"
-import { LocationStash, LocationType, User } from "@prisma/client"
+import { LocationStash, LocationType } from "@prisma/client"
 import createStash from "app/stashes/mutations/createStash"
 import updateStash from "app/stashes/mutations/updateStash"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import getStash from "app/stashes/queries/getStash"
-import EditorField from "app/core/components/editor/components/EditorField"
 import getUser from "app/users/queries/getUser"
-import { Signup } from "app/auth/validations"
 import TextAreaField from "app/core/components/forms/components/TextAreaField"
 
 type Location = PromiseReturnType<typeof createLocation>
@@ -48,8 +37,6 @@ type LocationModalFormProps = {
   customerPhone?: string
   locationId?: number
   stashId?: number
-  // location?: Location
-  // locationStash?: LocationStash
   disableStash?: boolean
   // mutationType?: MutationType
   props?: Partial<ModalProps>
@@ -250,7 +237,7 @@ const LocationModalForm = ({
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
-      schema={CreateLocationStash}
+      schema={LocationFormSchema}
       title={location ? "Edit location" : "New location"}
       submitText={location ? "Update" : "Create"}
       initialValues={initialValues}

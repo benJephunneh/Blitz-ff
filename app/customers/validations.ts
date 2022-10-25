@@ -21,9 +21,12 @@ export const CustomerSkeleton = z.object({
   companyname: companyname.nullable(),
   email,
 })
+export const CustomerFormSchema = CustomerSkeleton.partial().extend({
+  notes: textNotes.nullable().optional(),
+})
 
 export const CreateCustomer = CustomerSkeleton.extend({
-  notes: textNotes.nullable(),
+  notes: textNotes.nullable().optional(),
 })
 export const CreateCustomerStash = CustomerSkeleton.partial({
   firstname: true,

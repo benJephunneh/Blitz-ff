@@ -122,40 +122,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
       // refetchIntervalInBackground: true,
     }
   )
-  // const [customerStash, setCustomerStash] = useState<CustomerStash>()
-  // const [locationStash, setLocationStash] = useState<LocationStash>()
-  // const [jobStash, setJobStash] = useState<JobStash>()
   const [stashId, setStashId] = useState<number>()
   const [stashType, setStashType] = useState<StashType>()
   const [editingStash, setEditingStash] = useState(false)
-  // const [deletingStash, setDeletingStash] = useState(false)
-  // const [createStashMutation] = useMutation(createStash)
-  // const [updateStashMutation] = useMutation(updateStash)
-  // const [deleteStashMutation] = useMutation(deleteStash)
-  // useEffect(() => {
-  //   if (!editingStash) return
-
-  //   switch (stashType) {
-  //     case "Customer":
-  //       setCustomerStash(customerStashes.find((c) => c.id === stashId))
-  //       // setEditingStash(true)
-  //       break
-  //     case "Location":
-  //       setLocationStash(locationStashes.find((l) => l.id === stashId))
-  //       // setEditingStash(true)
-  //       break
-  //     case "Job":
-  //       setJobStash(jobStashes.find((j) => j.id === stashId))
-  //       // setEditingStash(true)
-  //       break
-
-  //     default:
-  //       setCustomerStash(undefined)
-  //       setLocationStash(undefined)
-  //       setJobStash(undefined)
-  //       break
-  //   }
-  // }, [editingStash, stashId, stashType])
 
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
@@ -168,12 +137,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   return (
     <Provider
       value={{
-        // signUp: () => setSigningUp(true),
-        // logIn: () => setLoggingIn(true),
-        // logOut: () => logoutMutation(),
-        // isLoggedIn,
-        // isLoggedOut,
-
         // gotoCustomer: (id) => router.push(Routes.ShowCustomerPage({ customerId: id })),
         createCustomer: async () => {
           setStashId(undefined)
@@ -219,8 +182,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         jobId,
         jobStashes,
         // jobStash,
-        // estimateStash,
-        // invoiceStash,
+        // estimateStashes,
+        // invoiceStashes,
         numStashes,
 
         // refetchCustomer,

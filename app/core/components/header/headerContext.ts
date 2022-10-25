@@ -1,6 +1,9 @@
 import {
   Customer,
   CustomerStash,
+  Estimate,
+  EstimateStash,
+  InvoiceStash,
   JobStash,
   Location,
   LocationStash,
@@ -52,6 +55,8 @@ export type HeaderContext = {
   locationStashes: LocationStash[]
   jobStashes: JobStash[]
   jobStash?: JobStash
+  // invoiceStashes: InvoiceStash[]
+  // estimateStashes: EstimateStash[]
   numStashes: number
   editStash: (id: number | undefined, type: StashType | undefined) => void
 
