@@ -239,7 +239,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
 
         <Box minW="400px" alignSelf="start" p={4}>
           <NoteSubmission
-            isEditing={editingNote}
+            // isEditing={editingNote}
             modelType="Customer"
             customer={customer}
             // modelId={location?.id}

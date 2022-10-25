@@ -252,7 +252,7 @@ const CustomerModalForm = ({
           <TextAreaField
             name="notes"
             label="Notes"
-            modelType="Customer"
+            // modelType="Customer"
             placeholder={`Add notes about this customer...`}
           />
           {customerStash && (

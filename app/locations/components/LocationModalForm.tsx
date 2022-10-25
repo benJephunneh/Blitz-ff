@@ -255,6 +255,7 @@ const LocationModalForm = ({
       submitText={location ? "Update" : "Create"}
       initialValues={initialValues}
       onSubmit={(values) => {
+        console.log(JSON.stringify(values, null, 2))
         onSubmit(values)
           .then((location) => onSuccess?.(location))
           // .then(() => onClose())
