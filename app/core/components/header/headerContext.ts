@@ -1,9 +1,6 @@
 import {
   Customer,
   CustomerStash,
-  Estimate,
-  EstimateStash,
-  InvoiceStash,
   JobStash,
   Location,
   LocationStash,
@@ -12,13 +9,6 @@ import {
 import { createContext } from "react"
 
 export type HeaderContext = {
-  // User
-  // signUp: () => void
-  // logIn: () => void
-  // logOut: () => void
-  // isLoggedIn: boolean
-  // isLoggedOut: boolean
-
   // Customer
   customer?: Customer
   createCustomer: () => void
@@ -43,13 +33,6 @@ export type HeaderContext = {
   pickJob: (id: number | undefined) => void
   deleteJob: () => void
 
-  // Note
-  // submitNote: (
-  //   modelType: "Customer" | "Location" | "Job" | "Invoice" | "Estimate",
-  //   id: number,
-  //   notes: string
-  // ) => void
-
   // Stash
   customerStashes: CustomerStash[]
   locationStashes: LocationStash[]
@@ -60,10 +43,11 @@ export type HeaderContext = {
   numStashes: number
   editStash: (id: number | undefined, type: StashType | undefined) => void
 
-  // locationStashes: LocationStash[]
-  // jobStashes: JobStash[]
-  // invoiceStashes: InvoiceStash[]
-  // estimateStashes: EstimateStash[]
+  // Search
+  // Test with only customer searches:
+  openSearch: () => void
+  search: (query: string) => void
+  searchResults: Customer[] | undefined
 
   refetchCustomer: () => void
   refetchStashes: () => void

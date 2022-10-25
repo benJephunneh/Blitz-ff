@@ -1,27 +1,30 @@
-import { useSession } from "@blitzjs/auth"
 import { Routes, useParams } from "@blitzjs/next"
 import { useMutation, useQuery } from "@blitzjs/rpc"
+import {
+  Box,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Input,
+  Stack,
+} from "@chakra-ui/react"
 import userContext from "app/auth/components/contexts/userContext"
-import LoginUserModalForm from "app/auth/components/LoginUserModalForm"
-import NewUserModalForm from "app/auth/components/NewUserModalForm"
-import login from "app/auth/mutations/login"
-import logout from "app/auth/mutations/logout"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import updateCustomer from "app/customers/mutations/updateCustomer"
+import findCustomer from "app/customers/queries/findCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
 import JobModalForm from "app/jobs/components/JobModalForm"
 import updateJob from "app/jobs/mutations/updateJob"
 import LocationModalForm from "app/locations/components/LocationModalForm"
-import deleteLocation from "app/locations/mutations/deleteLocation"
 import updateLocation from "app/locations/mutations/updateLocation"
-import createStash from "app/stashes/mutations/createStash"
-import deleteStash from "app/stashes/mutations/deleteStash"
-import updateStash from "app/stashes/mutations/updateStash"
 import getStashes from "app/stashes/queries/getStashes"
-import db, { Customer, CustomerStash, JobStash, Location, LocationStash, StashType } from "db"
+import { StashType } from "db"
 import { useRouter } from "next/router"
-import { ReactNode, useContext, useEffect, useState } from "react"
+import { ReactNode, useContext, useEffect, useRef, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
 import headerContext from "./headerContext"
 
@@ -126,6 +129,19 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [stashType, setStashType] = useState<StashType>()
   const [editingStash, setEditingStash] = useState(false)
 
+  // Search
+  const searchField = useRef()
+  const [searching, setSearching] = useState(false)
+  const [query, setQuery] = useState<string>()
+  const [searchResults, { refetch: refetchCustomerSearch }] = useQuery(
+    findCustomer,
+    { query },
+    { suspense: false, enabled: !!query }
+  )
+  useEffect(() => {
+    ;async () => await refetchCustomerSearch()
+  }, [query])
+
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
     : deletingLocation
@@ -156,17 +172,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         deleteJob: () => setDeletingJob(true),
         pickJob: (id) => setJobId(id),
 
-        // submitNote: async (modelType, id, notes) => {
-        //   switch (modelType) {
-        //     case "Customer":
-        //       await updateCustomerMutation({ id, notes, customer })
-        //       break
-
-        //     default:
-        //       break
-        //   }
-        // },
-
         editStash: (id, type) => {
           setStashId(id)
           setStashType(type)
@@ -174,39 +179,26 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         },
 
         customer,
-        // location,
         locationId,
         locationIds,
         customerStashes,
         locationStashes,
         jobId,
-        jobStashes,
         // jobStash,
+        jobStashes,
         // estimateStashes,
         // invoiceStashes,
         numStashes,
+
+        openSearch: () => setSearching(true),
+        search: (q: string) => setQuery(q),
+        searchResults,
 
         // refetchCustomer,
         refetchCustomer,
         refetchStashes,
       }}
     >
-      {/* <NewUserModalForm
-        isOpen={signingUp}
-        onClose={() => setSigningUp(false)}
-        onSuccess={async () => {
-          await router.push(Routes.Dashboard())
-        }}
-      />
-
-      <LoginUserModalForm
-        isOpen={loggingIn}
-        onClose={() => setLoggingIn(false)}
-        onSuccess={async () => {
-          await router.push(Routes.Dashboard())
-        }}
-      /> */}
-
       {isLoggedIn && (
         <>
           <CustomerModalForm
@@ -321,6 +313,23 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
                 .catch((e) => console.log(`customerProvider DeleteModal error: ${e.message}`))
             }}
           />
+
+          <Drawer isOpen={searching} placement="right" initialFocusRef={searchField}>
+            <DrawerOverlay />
+            <DrawerContent>
+              <DrawerCloseButton />
+              <DrawerHeader borderBottomWidth={1}>Search...</DrawerHeader>
+
+              <DrawerBody>
+                <Stack spacing={8}>
+                  <Box>
+                    <Input ref={searchField} placeholder="Enter search query..." />
+                  </Box>
+                  <Box>Results</Box>
+                </Stack>
+              </DrawerBody>
+            </DrawerContent>
+          </Drawer>
         </>
       )}
 
