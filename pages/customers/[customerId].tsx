@@ -45,7 +45,7 @@ const ShowCustomerPage: BlitzPage = () => {
         }}
       /> */}
 
-      <Flex alignItems="start" p={4}>
+      <Flex alignItems="start" p={4} position="absolute">
         {/* <HStack borderRadius="md" bg={useColorModeValue("blackAlpha.100", "gray.600")}> */}
         <CustomerCard />
         {/* <Grid templateRows='repeat(3, 1fr)' gap={6} w={50} h='full'>

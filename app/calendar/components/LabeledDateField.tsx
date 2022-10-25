@@ -27,7 +27,7 @@ import getFieldErrorMessage from "app/core/components/forms/helpers/getFieldErro
 import { addDays, format, formatDistance } from "date-fns"
 import { useRouter } from "next/router"
 import { ComponentPropsWithoutRef, forwardRef, PropsWithoutRef, useEffect, useState } from "react"
-import { Calendar } from "react-calendar"
+import { Calendar, Detail } from "react-calendar"
 import { useField, UseFieldConfig } from "react-final-form"
 
 import "react-calendar/dist/Calendar.css"
@@ -48,10 +48,11 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
     const { input, meta } = useField(name)
     const { value, onChange } = input
     const error = getFieldErrorMessage(meta)
+    const initialRange = start && end ? [start, end] : undefined
 
-    useEffect(() => {
-      onChange([start, end])
-    }, [])
+    // useEffect(() => {
+    //   onChange([start, end])
+    // }, [])
 
     // const normalizedError = Array.isArray(error)
     //   ? error.join(', ')
@@ -75,11 +76,13 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
             <AccordionPanel>
               <Calendar
                 showWeekNumbers
-                onChange={onChange}
-                value={value}
+                onChange={(r) => {
+                  r[0].setHours(9, 0, 0, 0)
+                  r[1].setHours(17, 0, 0, 0)
+                  onChange(r)
+                }}
+                defaultValue={initialRange}
                 selectRange
-                onClickDay={() => console.log("Clicked day")}
-                onClickWeekNumber={() => console.log("Clicked week")}
               />
             </AccordionPanel>
           </AccordionItem>

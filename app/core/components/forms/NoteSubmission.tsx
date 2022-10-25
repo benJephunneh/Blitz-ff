@@ -172,13 +172,37 @@ const NoteSubmission = ({
                 border={1}
                 borderColor="whiteAlpha.50"
                 size="sm"
-                disabled={pristine || submitting}
+                disabled={
+                  pristine ||
+                  submitting ||
+                  (values.notes === undefined && initialValues.notes === null) ||
+                  values.notes === initialValues.notes
+                }
                 type="submit"
                 variant="ghost"
                 // isDisabled={pristine || submitting}
               >
                 Update notes
               </Button>
+              {/* <Button
+                bg={buttonBg}
+                border={1}
+                borderColor='whiteAlpha.50'
+                colorScheme='green'
+                size='sm'
+                alignSelf='start'
+                disabled={
+                  pristine
+                  || submitting
+                  || (values.notes === undefined && initialValues.notes === null)
+                  || values.notes === initialValues.notes
+                }
+                type='submit'
+                variant='ghost'
+                onClick={() => form.change('stashing', true)}
+              >
+                Stash
+              </Button> */}
               <Button
                 bg={buttonBg}
                 border={1}
@@ -198,7 +222,7 @@ const NoteSubmission = ({
               </Button>
             </HStack>
 
-            {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
+            {/* <pre>{JSON.stringify(values.notes, null, 2)}</pre> */}
           </form>
         )}
       />

@@ -103,7 +103,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
   //   // refetchIntervalInBackground: true,
   // })
 
-  const tagBgColor = useColorModeValue("white", "gray.800")
+  const tagBgColor = useColorModeValue("green.50", "blue.800")
   const tabBgColor = useColorModeValue("blackAlpha.200", "gray.700")
   // console.log(`customerId: ${customer}`)
 
@@ -177,7 +177,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
                   </Text>
                 </HStack>
 
-                <HStack display="block" alignSelf="end">
+                <VStack justifySelf="end" display="flex" spacing={1} align="end">
                   <Tag size="sm" bg={tagBgColor} opacity="0.9">
                     <TagLeftIcon as={FcPhone} />
                     <TagLabel>{phoneDisplay(location.phones!)}</TagLabel>
@@ -192,18 +192,20 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
                     <TagLeftIcon as={MdAlternateEmail} color="cyan.400" />
                     <TagLabel _hover={{ textDecoration: "underline" }}>{customer!.email}</TagLabel>
                   </Tag>
-                </HStack>
+                </VStack>
               </SimpleGrid>
 
-              <NoteSubmission
-                modelType="Location"
-                // modelId={location.customerId}
-                location={location}
-                onSuccess={async () => {
-                  refetchCustomer()
-                  await refetchLocation()
-                }}
-              />
+              <Box minW="400px" alignSelf="start">
+                <NoteSubmission
+                  modelType="Location"
+                  // modelId={location.customerId}
+                  location={location}
+                  onSuccess={async () => {
+                    refetchCustomer()
+                    await refetchLocation()
+                  }}
+                />
+              </Box>
             </>
           )}
 

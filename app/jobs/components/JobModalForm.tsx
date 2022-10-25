@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import { FORM_ERROR } from "final-form"
-import { JobSkeleton, textNotes } from "../validations"
+import { JobFormSchema, JobSkeleton, textNotes } from "../validations"
 import { ModalProps, Text, useColorModeValue } from "@chakra-ui/react"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
@@ -15,6 +15,7 @@ import createStash from "app/stashes/mutations/createStash"
 import updateStash from "app/stashes/mutations/updateStash"
 import { LabeledDateField } from "app/calendar/components/LabeledDateField"
 import getStash from "app/stashes/queries/getStash"
+import TextAreaField from "app/core/components/forms/components/TextAreaField"
 
 type JobModalFormProps = {
   locationId?: number
@@ -69,7 +70,7 @@ const JobModalForm = ({
       id: jobId,
     },
     {
-      suspense: false,
+      suspense: !!jobId,
       enabled: !!jobId,
       refetchOnWindowFocus: false,
     }
@@ -96,7 +97,7 @@ const JobModalForm = ({
   )
 
   const onSubmit = async (values) => {
-    // console.log(JSON.stringify(values))
+    console.log(JSON.stringify(values))
     const { notes, stashing, range, ...formSubmission } = values
     const start = range?.at(0).setHours(9, 0, 0, 0)
     const end = range?.at(1).setHours(17, 0, 0, 0)
@@ -157,11 +158,12 @@ const JobModalForm = ({
 
   // const [startDateTime, setStartDateTime] = useState(addDays(new Date().setHours(9, 0, 0, 0), 1))
   // const [endDateTime, setEndDateTime] = useState(addDays(new Date().setHours(17, 0, 0, 0), 1))
+  const start = jobStash?.start || job?.start || undefined
+  const end = jobStash?.end || job?.end || undefined
+
   const initialValues = {
     title: jobStash?.title || job?.title || undefined,
-    range: undefined,
-    start: jobStash?.start || job?.start || undefined,
-    end: jobStash?.end || job?.end || undefined,
+    range: start && end ? [start, end] : undefined,
     notes: jobStash ? JSON.parse(jobStash.notes) : job?.notes ? JSON.parse(job.notes) : null,
   }
 
@@ -171,7 +173,7 @@ const JobModalForm = ({
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
-      schema={JobSkeleton.omit({ start: true, end: true }).extend({ notes: textNotes.nullable() })}
+      schema={JobFormSchema}
       title={job ? "Edit job" : "New job"}
       submitText={job ? "Update" : "Create"}
       initialValues={initialValues}
@@ -185,15 +187,10 @@ const JobModalForm = ({
           <LabeledTextField name="title" label="Title" />
           {/* <LabeledTextField name="start" label="Start date/time" /> */}
           {/* <LabeledTextField name="end" label="End date/time" /> */}
-          <LabeledDateField
-            name="range"
-            label="Date range"
-            start={initialValues.start}
-            end={initialValues.end}
-          />
+          <LabeledDateField name="range" label="Date range" start={start} end={end} />
           {/* <LabeledDateField name="end" label="End" initialDate={endDateTime} /> */}
           {/* <LabeledDateRangeField name='dateRange' label='Date range' /> */}
-          <EditorField
+          {/* <EditorField
             name="notes"
             fontSize="md"
             label="Stash notes"
@@ -201,7 +198,8 @@ const JobModalForm = ({
               heading: true,
               horizontalRule: true,
             }}
-          />
+          /> */}
+          <TextAreaField name="notes" label="Notes" placeholder="Add notes about this job..." />
           {jobStash && (
             <Text fontSize="xs" color={stashFootnoteColor}>
               Stashed by {user?.username}

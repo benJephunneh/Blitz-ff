@@ -30,7 +30,7 @@ import { FaChevronDown, FaPlus } from "react-icons/fa"
 import getJobs from "../queries/getJobs"
 import { textNotes } from "../validations"
 
-type Range = [Date | null, Date | null] | Date | null | undefined
+export type Range = [Date | null, Date | null] | Date | null | undefined
 
 const JobPanel = () => {
   const {

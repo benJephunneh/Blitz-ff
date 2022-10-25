@@ -2,28 +2,12 @@ import { useMutation, useQuery } from "@blitzjs/rpc"
 import { FORM_ERROR } from "final-form"
 import createCustomer from "../mutations/createCustomer"
 import updateCustomer from "../mutations/updateCustomer"
-import getCustomer from "../queries/getCustomer"
-import {
-  CreateCustomer,
-  CreateCustomerStash,
-  CustomerSkeleton,
-  textNotes,
-  UpdateCustomer,
-} from "../validations"
-import {
-  Grid,
-  GridItem,
-  ModalProps,
-  Text,
-  useColorModeValue,
-  useDisclosure,
-} from "@chakra-ui/react"
-import { MutationType } from "app/core/components/types/MutationType"
+import { CustomerSkeleton, textNotes } from "../validations"
+import { Grid, GridItem, ModalProps, Text, useColorModeValue } from "@chakra-ui/react"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import { Customer, CustomerStash } from "@prisma/client"
 import createStash from "app/stashes/mutations/createStash"
-import EditorField from "app/core/components/editor/components/EditorField"
 import getStash from "app/stashes/queries/getStash"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import updateStash from "app/stashes/mutations/updateStash"
@@ -248,7 +232,7 @@ const CustomerModalForm = ({
             name="notes"
             label="Notes"
             // modelType="Customer"
-            placeholder={`Add notes about this customer...`}
+            placeholder="Add notes about this customer..."
           />
           {customerStash && (
             <Text fontSize="xs" color={textFootnoteColor}>

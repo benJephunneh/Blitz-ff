@@ -12,15 +12,19 @@ export const textNotes = z.string()
 
 export const JobSkeleton = z.object({
   title,
-  start: start.nullable(),
-  end: end.nullable(),
-  locationId,
+  start,
+  end,
+})
+export const JobFormSchema = JobSkeleton.partial().extend({
+  notes: textNotes.nullable().optional(),
 })
 export const CreateJob = JobSkeleton.extend({
-  notes: textNotes.nullable(),
+  notes: textNotes.nullable().optional(),
+  locationId,
 })
 export const CreateJobStash = JobSkeleton.partial().extend({
   notes: textNotes,
+  locationId,
 })
 
 export const UpdateJob = CreateJob.extend({ id })

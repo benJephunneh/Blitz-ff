@@ -27,31 +27,32 @@ const HeaderLayout: BlitzLayout<HeaderLayoutProps> = ({
 
   return (
     <UserProvider>
-      <Flex direction="column">
+      <Flex direction="column" h="100vh">
         <PageTitle title={title} />
 
         {isLoggedIn && (
           <HeaderProvider>
-            <Grid position="sticky" top={0} shadow="md">
-              <GridItem rowSpan={1}>
-                <Header />
-              </GridItem>
+            {/* <Grid position="sticky" top={0} shadow="md">
+              <GridItem rowSpan={1}> */}
+            <Header />
+            {/* </GridItem> */}
 
-              {subheader && <GridItem rowSpan={1}>{subheader}</GridItem>}
-            </Grid>
+            {/* {subheader && <GridItem rowSpan={1}>{subheader}</GridItem>} */}
+            {subheader}
+            {/* </Grid> */}
 
-            {children}
+            <Box flex="1 1 auto" w="100vw" overflowX="auto" overflowY="hidden">
+              {children}
+            </Box>
           </HeaderProvider>
         )}
         {isLoggedOut && (
           <>
-            <Grid position="sticky" top={0} shadow="md">
-              <GridItem rowSpan={1}>
-                <Header />
-              </GridItem>
-            </Grid>
+            <Header />
 
-            {children}
+            <Box flex="1 1 auto" w="100vw" overflowX="auto" overflowY="hidden">
+              {children}
+            </Box>
           </>
         )}
       </Flex>
