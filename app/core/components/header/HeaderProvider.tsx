@@ -135,7 +135,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [editingStash, setEditingStash] = useState(false)
 
   // Search
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen: searchIsOpen, onOpen: openSearch, onClose: closeSearch } = useDisclosure()
   const searchField = useRef()
   const [searching, setSearching] = useState(false)
   const [query, setQuery] = useState("")
@@ -196,9 +196,12 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         // invoiceStashes,
         numStashes,
 
-        openSearch: () => setSearching(true),
-        search: (q: string) => setQuery(q),
-        searchResults,
+        // openSearch: () => setSearching(true),
+        // search: (q: string) => setQuery(q),
+        // searchResults,
+        searchIsOpen,
+        openSearch,
+        closeSearch,
 
         // refetchCustomer,
         refetchCustomer,
@@ -321,8 +324,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
           />
 
           <Drawer
-            isOpen={searching}
-            onClose={onClose}
+            isOpen={searchIsOpen}
+            onClose={closeSearch}
             placement="right"
             initialFocusRef={searchField}
           >
@@ -339,7 +342,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
                   </Box>
                   {/* <Box>Results</Box> */}
                   <SearchResults query={query} items={searchResults || []} isLoading={isLoading}>
-                    <SimpleGrid ml={4} columns={1} spacing={3}>
+                    <SimpleGrid columns={1} spacing={3}>
                       {searchResults?.map((r) => (
                         <CustomerSearchResult key={r.id} customer={r} />
                       ))}

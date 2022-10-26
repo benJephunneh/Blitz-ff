@@ -36,8 +36,8 @@ const CustomerSearchResult = ({ customer, ...props }: CustomerSearchResultProps)
       <Link href={route({ customerId: customer.id })} passHref>
         <LinkOverlay>
           <HStack align="center" spacing={5}>
-            <Heading size="sm">{customer.displayname}</Heading>
             <VStack alignItems="start">
+              <Heading size="sm">{customer.displayname}</Heading>
               {/* <Tag size="sm">
                 <TagLeftIcon as={FcPhone} />
                 <TagLabel>{phoneFormat(customer.phone)}</TagLabel>

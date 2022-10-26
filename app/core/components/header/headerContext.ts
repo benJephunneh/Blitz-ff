@@ -46,8 +46,10 @@ export type HeaderContext = {
   // Search
   // Test with only customer searches:
   openSearch: () => void
-  search: (query: string) => void
-  searchResults: Customer[] | undefined
+  closeSearch: () => void
+  searchIsOpen: boolean
+  // search: (query: string) => void
+  // searchResults: Customer[] | undefined
 
   refetchCustomer: () => void
   refetchStashes: () => void
