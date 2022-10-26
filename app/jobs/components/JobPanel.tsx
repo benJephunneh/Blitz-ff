@@ -60,10 +60,10 @@ const JobPanel = () => {
 
   useEffect(() => {
     setJob(() => {
-      const j = jobs.jobs.find((j) => j.id === jobId)
+      const j = jobs.find((j) => j.id === jobId)
       return j as Job
     })
-  }, [jobId, jobs.jobs])
+  }, [jobId, jobs])
 
   const [range, setRange] = useState<Range>()
   useEffect(() => {
@@ -96,7 +96,7 @@ const JobPanel = () => {
                   All jobs
                 </MenuItemOption>
                 <MenuDivider />
-                {jobs.jobs.map((j, ii) => (
+                {jobs.map((j, ii) => (
                   <MenuItemOption value={jobId?.toString()} key={ii} onClick={() => pickJob(j.id)}>
                     {j.title}
                   </MenuItemOption>
@@ -104,14 +104,14 @@ const JobPanel = () => {
               </MenuOptionGroup>
             </MenuList>
           </Menu>
-          {job && (
+          {jobId && (
             <Text
               fontSize="xl"
               fontWeight="semibold"
               textColor={headingColor}
               textOverflow="ellipsis"
             >
-              {job.title}
+              {job?.title}
             </Text>
           )}
         </HStack>
@@ -126,6 +126,7 @@ const JobPanel = () => {
             bg={useColorModeValue("blackAlpha.200", "blackAlpha.400")}
             borderColor="whiteAlpha.50"
             onClick={editJob}
+            disabled={!!jobId}
           >
             Edit job
           </Button>
@@ -164,7 +165,7 @@ const JobPanel = () => {
       )}
       {!job && (
         <UnorderedList>
-          {jobs.jobs.map((j, ii) => (
+          {jobs.map((j, ii) => (
             <ListItem
               key={ii}
               onClick={() => pickJob(j.id)}

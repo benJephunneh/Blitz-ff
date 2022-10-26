@@ -2,8 +2,8 @@ import { useMutation, useQuery } from "@blitzjs/rpc"
 import { FORM_ERROR } from "final-form"
 import createCustomer from "../mutations/createCustomer"
 import updateCustomer from "../mutations/updateCustomer"
-import { CustomerSkeleton, textNotes } from "../validations"
-import { Grid, GridItem, ModalProps, Text, useColorModeValue } from "@chakra-ui/react"
+import { CustomerFormSchema, CustomerSkeleton, textNotes } from "../validations"
+import { Flex, Grid, GridItem, ModalProps, Text, useColorModeValue, VStack } from "@chakra-ui/react"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import { Customer, CustomerStash } from "@prisma/client"
@@ -13,6 +13,9 @@ import deleteStash from "app/stashes/mutations/deleteStash"
 import updateStash from "app/stashes/mutations/updateStash"
 import getUser from "app/users/queries/getUser"
 import TextAreaField from "app/core/components/forms/components/TextAreaField"
+import LabeledListField from "app/core/components/forms/LabeledListField"
+import { Field } from "react-final-form"
+import LabeledSelectField from "app/core/components/forms/LabeledSelectField"
 
 type CustomerModalFormProps = {
   isOpen: boolean
@@ -182,15 +185,18 @@ const CustomerModalForm = ({
     email: customerStash?.email || customer?.email || undefined,
     notes: customerStash?.notes || customer?.notes || null,
   }
-  // console.log
+
+  const onChange = (v) => {
+    console.log(v)
+  }
 
   return (
     <ModalForm
-      size="lg"
+      size="md"
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
-      schema={CustomerSkeleton.partial().extend({ notes: textNotes.nullable().optional() })}
+      schema={CustomerFormSchema}
       title={customer ? "Edit customer" : "New customer"}
       submitText={customer ? "Update" : "Create"}
       initialValues={initialValues}
@@ -202,19 +208,40 @@ const CustomerModalForm = ({
       }}
       render={() => (
         <>
-          <Grid templateColumns="repeat(5, 1fr)" gap={2}>
-            <GridItem colSpan={2}>
+          <Grid
+            // templateColumns="repeat(5, 1fr)"
+            // templateRows='repeat(7, 1fr)'
+            templateAreas={`'fn ln ln'
+                            'cn cn .'
+                            'em em .'
+                            'ph ph .'`}
+            gap={2}
+          >
+            <GridItem area="fn">
               <LabeledTextField name="firstname" label="First name" />
             </GridItem>
-            <GridItem colSpan={3}>
+            <GridItem area="ln">
               <LabeledTextField name="lastname" label="Last name" />
             </GridItem>
-            <GridItem colSpan={3}>
+            <GridItem area="cn">
               <LabeledTextField name="companyname" label="Company name" />
             </GridItem>
-            <GridItem colSpan={3}>
+            <GridItem area="em">
               <LabeledTextField name="email" label="Email address" type="email" />
             </GridItem>
+            <GridItem area="ph">
+              <LabeledTextField name="phone" label="Phone number" />
+            </GridItem>
+            {/* <GridItem area='pl'>
+              <Flex direction='column'>
+                <Text fontWeight='semibold'>Phone list</Text>
+                <Field name='phoneList' component='select' multiple w='full' h='full'>
+                  <option value='phone1'>2348023460</option>
+                  <option value='phone2'>8023926</option>
+                  <option value='phone3'>0923623842</option>
+                </Field>
+              </Flex>
+            </GridItem> */}
           </Grid>
           {/* <EditorField
             name="notes"

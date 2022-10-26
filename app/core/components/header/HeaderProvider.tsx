@@ -136,7 +136,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
 
   // Search
   const { isOpen: searchIsOpen, onOpen: openSearch, onClose: closeSearch } = useDisclosure()
-  const searchField = useRef()
+  const searchField = useRef<any>()
   const [searching, setSearching] = useState(false)
   const [query, setQuery] = useState("")
   const [searchResults, { refetch: refetchCustomerSearch, isLoading }] = useQuery(
@@ -144,9 +144,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
     { query },
     { suspense: false, enabled: !!query }
   )
-  useEffect(() => {
-    ;async () => await refetchCustomerSearch()
-  }, [query])
+  // useEffect(() => {
+  //   ;async () => await refetchCustomerSearch()
+  // }, [query])
 
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
@@ -328,6 +328,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             onClose={closeSearch}
             placement="right"
             initialFocusRef={searchField}
+            size="lg"
           >
             <DrawerOverlay />
             <DrawerContent>

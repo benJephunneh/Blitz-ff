@@ -7,25 +7,14 @@ interface GetJobsInput
 
 export default resolver.pipe(
   resolver.authorize(),
-  async ({ where, include, orderBy, skip = 0, take = 100 }: GetJobsInput) => {
+  async ({ where, include, orderBy }: GetJobsInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const {
-      items: jobs,
-      hasMore,
-      nextPage,
-      count,
-    } = await paginate({
-      skip,
-      take,
-      count: () => db.job.count({ where }),
-      query: (paginateArgs) => db.job.findMany({ ...paginateArgs, where, include, orderBy }),
+    const jobs = await db.job.findMany({
+      where,
+      include,
+      orderBy,
     })
 
-    return {
-      jobs,
-      nextPage,
-      hasMore,
-      count,
-    }
+    return jobs
   }
 )

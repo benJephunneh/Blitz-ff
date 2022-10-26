@@ -32,7 +32,9 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
 
     return (
       <FormControl {...outerProps}>
-        <FormLabel {...labelProps}>{label}</FormLabel>
+        <FormLabel mb={0} {...labelProps}>
+          {label}
+        </FormLabel>
         <Input
           {...input}
           disabled={submitting}

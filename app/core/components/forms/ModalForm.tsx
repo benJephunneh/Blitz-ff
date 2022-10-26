@@ -112,7 +112,7 @@ const ModalForm: FormComponent<ModalFormProps> = ({
                   <Button onClick={onClose}>Cancel</Button>
                 </HStack>
 
-                <pre>{JSON.stringify(phorm.values, null, 2)}</pre>
+                {/* <pre>{JSON.stringify(phorm.values, null, 2)}</pre> */}
               </ModalFooter>
             </ModalContent>
           </form>

@@ -46,7 +46,7 @@ export const CreateLocationStash = LocationSkeleton.partial().extend({
   note: textNotes,
 })
 
-export const UpdateLocation = CreateLocation.extend({
+export const UpdateLocation = CreateLocation.omit({ customerId: true }).extend({
   id,
 })
 export const UpdateLocationStash = CreateLocationStash.extend({ id })

@@ -2,6 +2,7 @@ import { Icon, Input, InputGroup, InputLeftElement, useColorModeValue } from "@c
 import {
   ChangeEventHandler,
   ComponentPropsWithoutRef,
+  forwardRef,
   useCallback,
   useEffect,
   useMemo,
@@ -14,7 +15,7 @@ type SearchInputProps = {
   props?: ComponentPropsWithoutRef<typeof Input>
 }
 
-const SearchInput = ({ search, ...props }: SearchInputProps) => {
+const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(({ search, ...props }, ref) => {
   const changeHandler: ChangeEventHandler<HTMLInputElement> = useCallback(
     ({ target }) => {
       search(target.value)
@@ -46,10 +47,11 @@ const SearchInput = ({ search, ...props }: SearchInputProps) => {
         _active={{ bg: useColorModeValue("gray.100", "gray.200") }}
         _focus={{ bg: "white" }}
         _placeholder={{ textColor: "blackAlpha.600" }}
+        ref={ref}
         {...props}
       />
     </InputGroup>
   )
-}
+})
 
 export default SearchInput
