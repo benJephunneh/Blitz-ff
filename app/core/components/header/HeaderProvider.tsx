@@ -9,10 +9,13 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Input,
+  SimpleGrid,
   Stack,
+  useDisclosure,
 } from "@chakra-ui/react"
 import userContext from "app/auth/components/contexts/userContext"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
+import CustomerSearchResult from "app/customers/components/CustomerSearchResult"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import updateCustomer from "app/customers/mutations/updateCustomer"
 import findCustomer from "app/customers/queries/findCustomer"
@@ -21,6 +24,8 @@ import JobModalForm from "app/jobs/components/JobModalForm"
 import updateJob from "app/jobs/mutations/updateJob"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import updateLocation from "app/locations/mutations/updateLocation"
+import SearchInput from "app/search/SearchInput"
+import SearchResults from "app/search/SearchResults"
 import getStashes from "app/stashes/queries/getStashes"
 import { StashType } from "db"
 import { useRouter } from "next/router"
@@ -130,10 +135,11 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [editingStash, setEditingStash] = useState(false)
 
   // Search
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const searchField = useRef()
   const [searching, setSearching] = useState(false)
-  const [query, setQuery] = useState<string>()
-  const [searchResults, { refetch: refetchCustomerSearch }] = useQuery(
+  const [query, setQuery] = useState("")
+  const [searchResults, { refetch: refetchCustomerSearch, isLoading }] = useQuery(
     findCustomer,
     { query },
     { suspense: false, enabled: !!query }
@@ -314,7 +320,12 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             }}
           />
 
-          <Drawer isOpen={searching} placement="right" initialFocusRef={searchField}>
+          <Drawer
+            isOpen={searching}
+            onClose={onClose}
+            placement="right"
+            initialFocusRef={searchField}
+          >
             <DrawerOverlay />
             <DrawerContent>
               <DrawerCloseButton />
@@ -323,9 +334,17 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               <DrawerBody>
                 <Stack spacing={8}>
                   <Box>
-                    <Input ref={searchField} placeholder="Enter search query..." />
+                    {/* <Input ref={searchField} placeholder="Enter search query..." /> */}
+                    <SearchInput ref={searchField} search={setQuery} />
                   </Box>
-                  <Box>Results</Box>
+                  {/* <Box>Results</Box> */}
+                  <SearchResults query={query} items={searchResults || []} isLoading={isLoading}>
+                    <SimpleGrid ml={4} columns={1} spacing={3}>
+                      {searchResults?.map((r) => (
+                        <CustomerSearchResult key={r.id} customer={r} />
+                      ))}
+                    </SimpleGrid>
+                  </SearchResults>
                 </Stack>
               </DrawerBody>
             </DrawerContent>
