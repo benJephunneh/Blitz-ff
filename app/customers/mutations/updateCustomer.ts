@@ -10,15 +10,14 @@ export default resolver.pipe(
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     // const { id, notes, ...values } = input
 
-    const newDisplayname = `${input.firstname} ${input.lastname}`
-    const displayname = await db.customer.findFirst({
-      where: { id },
-      select: { displayname: true },
-    })
+    const displayname = `${input.firstname} ${input.lastname}`
+    // const displayname = await db.customer.findFirst({
+    //   where: { id },
+    //   select: { displayname: true },
+    // })
 
     const data = {
-      displayname:
-        displayname?.displayname !== newDisplayname ? newDisplayname : displayname.displayname,
+      displayname,
       ...input,
     }
 

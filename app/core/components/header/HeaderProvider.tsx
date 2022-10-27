@@ -88,13 +88,11 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   // const [location, setLocation] = useState<Location>()
   useEffect(() => {
     setLocationIds(customer ? customer["locations"] : [])
+    setCustomerPhone(customer ? customer.phone : undefined)
   }, [customer])
   useEffect(() => {
     setLocationId(locationIds?.length && locationIds.at(0)?.id)
   }, [customerId, locationIds])
-  useEffect(() => {
-    setCustomerPhone(customer ? customer["locations"]?.at(0)?.phones : undefined)
-  }, [customer])
   // useEffect(() => {
   //   // Can't have just any re-render changing chosen locationId.
   //   // if (!router.isReady) return

@@ -5,6 +5,10 @@ const firstname = z.string()
 const lastname = z.string()
 const companyname = z.string()
 export const email = z.string().email()
+const phone = z
+  .string()
+  .min(7, "Minimum seven-character phone number length")
+  .max(10, "Maximum ten-character phone number length")
 const notes = stashContentSchema
 export const textNotes = z.string()
 // .refine((query) => useQuery(checkUniquity, { query }, { suspense: true }), {
@@ -20,6 +24,7 @@ export const CustomerSkeleton = z.object({
   lastname,
   companyname: companyname.nullable(),
   email,
+  phone,
 })
 export const CustomerFormSchema = CustomerSkeleton.partial().extend({
   notes: textNotes.nullable().optional(),

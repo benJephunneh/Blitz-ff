@@ -26,6 +26,9 @@ import deleteStash from "app/stashes/mutations/deleteStash"
 import getStash from "app/stashes/queries/getStash"
 import getUser from "app/users/queries/getUser"
 import TextAreaField from "app/core/components/forms/components/TextAreaField"
+import db from "db"
+import { useContext } from "react"
+import headerContext from "app/core/components/header/headerContext"
 
 type Location = PromiseReturnType<typeof createLocation>
 
@@ -56,6 +59,7 @@ const LocationModalForm = ({
   // mutationType = "New",
   ...props
 }: LocationModalFormProps) => {
+  const { locationIds } = useContext(headerContext)
   const [createLocationMutation] = useMutation(createLocation)
   const [updateLocationMutation] = useMutation(updateLocation)
   const [createStashMutation] = useMutation(createStash)
@@ -153,7 +157,7 @@ const LocationModalForm = ({
   // }
 
   const onSubmit = async (values) => {
-    console.log(JSON.stringify(values))
+    // console.log({ values })
     const { notes, ...formSubmission } = values
 
     let locationRet
@@ -213,7 +217,13 @@ const LocationModalForm = ({
 
   const locationTypes = Object.values(LocationType)
   const initialValues = {
-    primary: locationStash ? locationStash["primary"] : location ? location["primary"] : true,
+    primary: locationStash
+      ? locationStash["primary"]
+      : location
+      ? location["primary"]
+      : locationIds && locationIds.length > 0
+      ? false
+      : true,
     house: locationStash?.house || location?.house || undefined,
     street: locationStash?.street || location?.street || undefined,
     city: locationStash?.city || location?.city || undefined,

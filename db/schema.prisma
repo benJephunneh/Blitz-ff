@@ -16,8 +16,8 @@ model Customer {
   lastname        String
   companyname     String?
   displayname     String
-  email           String[]
-  phone           String[]
+  email           String
+  phone           String
   locations       Location[]
   locationStashes LocationStash[]
   user            User            @relation(fields: [userId], references: [id])
@@ -223,6 +223,7 @@ model CustomerArchive {
   companyname       String?
   displayname       String
   email             String
+  phone             String
   notes             String?
   archivedLocations LocationArchive[]
 }

@@ -4,8 +4,8 @@ import LocationPicker from "app/locations/components/LocationPicker"
 import SubheaderSearch from "app/search/components/SubheaderSearch"
 import React from "react"
 import { FcTimeline } from "react-icons/fc"
-import CustomerProvider from "../providers/CustomerProvider"
 import CustomerSubheaderActions from "./CustomerSubheaderActions"
+import CustomerProvider from "../providers/CustomerProvider"
 
 // const CustomerPickerSubheader = () => {
 //   return <CustomerPicker2 />
