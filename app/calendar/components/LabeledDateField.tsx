@@ -41,10 +41,27 @@ interface LabeledDateFieldProps extends ComponentPropsWithoutRef<typeof Input> {
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
   labelProps?: ComponentPropsWithoutRef<"label">
   fieldProps?: UseFieldConfig<Date>
+  onClickDay?: (day: Date) => void
+  onClickWeekNumber?: (w: number) => void
 }
 
 export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldProps>(
-  ({ name, label, initialDate, start, end, outerProps, labelProps, fieldProps, ...props }, ref) => {
+  (
+    {
+      name,
+      label,
+      initialDate,
+      start,
+      end,
+      outerProps,
+      labelProps,
+      fieldProps,
+      onClickDay,
+      onClickWeekNumber,
+      ...props
+    },
+    ref
+  ) => {
     const { input, meta } = useField(name)
     const { value, onChange } = input
     const error = getFieldErrorMessage(meta)
@@ -82,6 +99,8 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
                   onChange(r)
                 }}
                 defaultValue={initialRange}
+                onClickDay={(d) => onClickDay?.(d)}
+                onClickWeekNumber={(w) => onClickWeekNumber?.(w)}
                 selectRange
               />
             </AccordionPanel>

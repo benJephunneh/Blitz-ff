@@ -21,13 +21,14 @@ import updateCustomer from "app/customers/mutations/updateCustomer"
 import findCustomer from "app/customers/queries/findCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
 import JobModalForm from "app/jobs/components/JobModalForm"
+import { Range } from "app/jobs/components/JobPanel"
 import updateJob from "app/jobs/mutations/updateJob"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import updateLocation from "app/locations/mutations/updateLocation"
 import SearchInput from "app/search/SearchInput"
 import SearchResults from "app/search/SearchResults"
 import getStashes from "app/stashes/queries/getStashes"
-import { StashType } from "db"
+import db, { Job, StashType } from "db"
 import { useRouter } from "next/router"
 import { ReactNode, useContext, useEffect, useRef, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
@@ -110,7 +111,16 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [editingJob, setEditingJob] = useState(false)
   const [deletingJob, setDeletingJob] = useState(false)
   const [jobId, setJobId] = useState<number>()
+  const [job, setJob] = useState<Job | null>()
   const [updateJobMutation] = useMutation(updateJob)
+
+  useEffect(() => {
+    ;(async () => {
+      const j = await db.job.findFirst({ where: { id: jobId } })
+      setJob(j)
+      console.log({ job })
+    })().catch((e) => console.error(e))
+  }, [jobId, job])
 
   // Stash
   const [

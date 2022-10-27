@@ -1,5 +1,6 @@
 import { useQuery } from "@blitzjs/rpc"
 import {
+  Box,
   Button,
   Drawer,
   DrawerBody,
@@ -9,42 +10,34 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Flex,
+  Text,
 } from "@chakra-ui/react"
+import findJobs from "app/jobs/queries/findJobs"
 import getJobs from "app/jobs/queries/getJobs"
 
 type DayViewProps = {
   date: Date
-  isOpen: boolean
-  onOpen: () => void
-  onClose: () => void
+  // isOpen: boolean
+  // onOpen: () => void
+  // onClose: () => void
 }
 const today = new Date()
 
-const DayView = ({ date, isOpen, onOpen, onClose }: DayViewProps) => {
-  const jobStarts = useQuery(getJobs, {
-    where: {
-      OR: [{ start: { equals: date } }, { end: { equals: date } }],
-    },
-  })
+const DayView = ({ date }: DayViewProps) => {
+  // const [jobStarts] = useQuery(
+  //   findJobs, { query: date },
+  //   {
+  //     suspense: true,
+  //     refetchOnWindowFocus: false,
+  //     staleTime: Infinity,
+  //   }
+  // )
 
   return (
-    <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader>Schedule</DrawerHeader>
-
-        <DrawerBody>
-          <Flex direction="column"></Flex>
-        </DrawerBody>
-
-        <DrawerFooter>
-          <Button variant="ghost" onClick={onClose}>
-            Cancel
-          </Button>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+    <Box borderWidth={2} borderColor="blue.400" borderRadius={4}>
+      <Text fontWeight="semibold">{date.toDateString()}</Text>
+      {/* <pre>{JSON.stringify(jobStarts, null, 2)}</pre> */}
+    </Box>
   )
 }
 

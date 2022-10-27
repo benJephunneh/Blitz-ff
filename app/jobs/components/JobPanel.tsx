@@ -53,8 +53,9 @@ const JobPanel = () => {
     },
     {
       refetchOnWindowFocus: false,
-      refetchInterval: 5000,
-      refetchIntervalInBackground: true,
+      // refetchInterval: 5000,
+      // refetchIntervalInBackground: true,
+      staleTime: Infinity,
     }
   )
 

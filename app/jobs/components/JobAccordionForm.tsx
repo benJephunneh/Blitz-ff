@@ -7,7 +7,7 @@ import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import createJob from "../mutations/createJob"
 import updateJob from "../mutations/updateJob"
 import getJob from "../queries/getJob"
-import db, { Job, User } from "db"
+import { Job, User } from "db"
 import EditorField from "app/core/components/editor/components/EditorField"
 import { useState } from "react"
 import deleteStash from "app/stashes/mutations/deleteStash"
@@ -16,36 +16,6 @@ import updateStash from "app/stashes/mutations/updateStash"
 import { LabeledDateField } from "app/calendar/components/LabeledDateField"
 import getStash from "app/stashes/queries/getStash"
 import TextAreaField from "app/core/components/forms/components/TextAreaField"
-import DayView from "app/calendar/components/DayView"
-import { Range } from "./JobPanel"
-import getJobs from "../queries/getJobs"
-import { addDays, getWeek, lastDayOfWeek, startOfWeek, subDays, weeksToDays } from "date-fns"
-import { Ctx } from "@blitzjs/next"
-
-const handleDayClick = async (d: Date) => {
-  const dayBefore = subDays(d, 1)
-  const dayAfter = addDays(d, 1)
-
-  const jobs = await db.job.findMany({
-    where: {
-      AND: [{ start: { gte: dayBefore } }, { end: { lte: dayAfter } }],
-    },
-  })
-
-  return jobs
-}
-
-const handleWeekNumberClick = async (w: number) => {
-  const currentWeek = getWeek(new Date())
-  const dayDifference = (currentWeek - (w + 1)) * 7
-  const monday = startOfWeek(subDays(new Date(), dayDifference), { weekStartsOn: 1 })
-  const friday = addDays(monday, 4)
-
-  console.log({ w })
-  console.log({ currentWeek })
-  console.log(`weeksToDays: ${weeksToDays(w)}`)
-  console.table([{ Monday: monday, Friday: friday }])
-}
 
 type JobModalFormProps = {
   locationId?: number
@@ -228,25 +198,10 @@ const JobModalForm = ({
               <LabeledTextField name="title" label="Title" />
             </GridItem>
             <GridItem area="c">
-              <LabeledDateField
-                name="range"
-                label="Date range"
-                start={start}
-                end={end}
-                onClickDay={(d) => {
-                  console.log({ d })
-                }}
-                onClickWeekNumber={(w) => {
-                  // console.log({ w })
-                  handleWeekNumberClick(w).catch((e) => console.error(e))
-                }}
-              />
+              <LabeledDateField name="range" label="Date range" start={start} end={end} />
             </GridItem>
             <GridItem area="n">
               <TextAreaField name="notes" label="Notes" placeholder="Add notes about this job..." />
-            </GridItem>
-            <GridItem area="s">
-              <DayView date={new Date()} />
             </GridItem>
           </Grid>
           {/* <LabeledTextField name="start" label="Start date/time" /> */}
