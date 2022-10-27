@@ -12,10 +12,15 @@ import {
 } from "@chakra-ui/react"
 import getJobs from "app/jobs/queries/getJobs"
 
-type DayViewProps = { date: Date }
+type DayViewProps = {
+  date: Date
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
+}
 const today = new Date()
 
-const DayView = ({ date }: DayViewProps) => {
+const DayView = ({ date, isOpen, onOpen, onClose }: DayViewProps) => {
   const jobStarts = useQuery(getJobs, {
     where: {
       OR: [{ start: { equals: date } }, { end: { equals: date } }],

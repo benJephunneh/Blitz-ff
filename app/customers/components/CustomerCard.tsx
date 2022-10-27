@@ -137,7 +137,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
         gap={2}
       >
         <GridItem area="name">
-          <Heading fontStyle="italic" size="2xl" alignSelf="start">
+          <Heading fontStyle="italic" size="2xl" alignSelf="start" ml={4}>
             {customer?.displayname}
           </Heading>
         </GridItem>

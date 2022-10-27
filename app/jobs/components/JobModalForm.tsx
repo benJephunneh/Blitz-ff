@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import { FORM_ERROR } from "final-form"
 import { JobFormSchema, JobSkeleton, textNotes } from "../validations"
-import { ModalProps, Text, useColorModeValue } from "@chakra-ui/react"
+import { Box, Grid, GridItem, HStack, ModalProps, Text, useColorModeValue } from "@chakra-ui/react"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import createJob from "../mutations/createJob"
@@ -169,7 +169,7 @@ const JobModalForm = ({
 
   return (
     <ModalForm
-      size="lg"
+      size="4xl"
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
@@ -183,11 +183,29 @@ const JobModalForm = ({
           .catch((e) => handleError(e))
       }}
       render={() => (
-        <>
-          <LabeledTextField name="title" label="Title" />
+        <HStack>
+          <Grid
+            templateAreas={`
+                'title title title s s s'
+                'c c c s s s'
+                'n n n s s s'
+              `}
+            templateColumns="repeat(6, 1fr)"
+            w="full"
+            gap={4}
+          >
+            <GridItem area="title">
+              <LabeledTextField name="title" label="Title" />
+            </GridItem>
+            <GridItem area="c">
+              <LabeledDateField name="range" label="Date range" start={start} end={end} />
+            </GridItem>
+            <GridItem area="n">
+              <TextAreaField name="notes" label="Notes" placeholder="Add notes about this job..." />
+            </GridItem>
+          </Grid>
           {/* <LabeledTextField name="start" label="Start date/time" /> */}
           {/* <LabeledTextField name="end" label="End date/time" /> */}
-          <LabeledDateField name="range" label="Date range" start={start} end={end} />
           {/* <LabeledDateField name="end" label="End" initialDate={endDateTime} /> */}
           {/* <LabeledDateRangeField name='dateRange' label='Date range' /> */}
           {/* <EditorField
@@ -199,13 +217,12 @@ const JobModalForm = ({
               horizontalRule: true,
             }}
           /> */}
-          <TextAreaField name="notes" label="Notes" placeholder="Add notes about this job..." />
           {jobStash && (
             <Text fontSize="xs" color={stashFootnoteColor}>
               Stashed by {user?.username}
             </Text>
           )}
-        </>
+        </HStack>
       )}
       {...props}
     />
