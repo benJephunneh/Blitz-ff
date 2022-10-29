@@ -151,13 +151,13 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
               </Tag>
               <Tag
                 as="a"
-                href={`mailto:${customer!.email}`}
+                href={`mailto:${customer?.email}`}
                 size="sm"
                 bg={tagBgColor}
                 opacity="0.9"
               >
                 <TagLeftIcon as={MdAlternateEmail} color="cyan.400" />
-                <TagLabel _hover={{ textDecoration: "underline" }}>{customer!.email}</TagLabel>
+                <TagLabel _hover={{ textDecoration: "underline" }}>{customer?.email}</TagLabel>
               </Tag>
             </VStack>
           )}

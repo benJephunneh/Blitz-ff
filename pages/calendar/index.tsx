@@ -1,3 +1,4 @@
+import { BlitzPage } from "@blitzjs/next"
 import {
   Box,
   Button,
@@ -20,11 +21,12 @@ import {
   useToast,
 } from "@chakra-ui/react"
 import { addDays, format, getWeek, setHours, startOfWeek, subDays, weeksToDays } from "date-fns"
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import Calendar from "react-calendar"
+import Layout from "app/core/layouts/Layout"
 import "react-calendar/dist/Calendar.css"
 
-const TestCalendar = () => {
+const TestCalendar: BlitzPage = () => {
   const [value, onChange] = useState<Date>()
   const toast = useToast()
   const { isOpen, onClose, onToggle } = useDisclosure()
@@ -128,4 +130,5 @@ const TestCalendar = () => {
   )
 }
 
+TestCalendar.getLayout = (page) => <Layout title="Calendar test page">{page}</Layout>
 export default TestCalendar

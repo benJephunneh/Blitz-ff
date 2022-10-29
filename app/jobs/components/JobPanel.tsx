@@ -36,6 +36,7 @@ const JobPanel = () => {
   const {
     locationId,
     jobId,
+    job,
     jobStash,
     createJob,
     editJob,
@@ -44,7 +45,7 @@ const JobPanel = () => {
     refetchStashes,
   } = useContext(headerContext)
   // const [jobId, setJobId] = useState<number>()
-  const [job, setJob] = useState<Job>({} as Job)
+  // const [job, setJob] = useState<Job>({} as Job)
   const [jobs, { refetch: refetchJobs }] = useQuery(
     getJobs,
     {
@@ -59,12 +60,12 @@ const JobPanel = () => {
     }
   )
 
-  useEffect(() => {
-    setJob(() => {
-      const j = jobs.find((j) => j.id === jobId)
-      return j as Job
-    })
-  }, [jobId, jobs])
+  // useEffect(() => {
+  //   setJob(() => {
+  //     const j = jobs.find((j) => j.id === jobId)
+  //     return j as Job
+  //   })
+  // }, [jobId, jobs])
 
   const [range, setRange] = useState<Range>()
   useEffect(() => {
@@ -127,7 +128,7 @@ const JobPanel = () => {
             bg={useColorModeValue("blackAlpha.200", "blackAlpha.400")}
             borderColor="whiteAlpha.50"
             onClick={editJob}
-            disabled={!!jobId}
+            disabled={!jobId}
           >
             Edit job
           </Button>
@@ -137,12 +138,12 @@ const JobPanel = () => {
             variant="outline"
             borderStyle="dashed"
             borderWidth={1}
-            borderColor={useColorModeValue("green", "orange.200")}
+            borderColor={useColorModeValue("green", "gray.500")}
             color={useColorModeValue("green", "orange.200")}
             leftIcon={<FaPlus size={10} />}
             onClick={createJob}
             borderLeftWidth={0}
-            bg={useColorModeValue("white", "whiteAlpha.400")}
+            bg={useColorModeValue("white", "transparent")}
           >
             New job
           </Button>

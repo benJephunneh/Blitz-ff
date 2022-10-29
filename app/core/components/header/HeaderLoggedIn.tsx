@@ -45,8 +45,14 @@ const HeaderLoggedIn = () => {
   const [deleteStashMutation] = useMutation(deleteStash)
 
   const stashKeyframes = keyframes`
-    from { background-color: red; color: white }
-      to { background-color: ${useColorModeValue("white", "black")}; color: red }`
+    from { background-color: ${useColorModeValue("red", "cyan")}; color: ${useColorModeValue(
+    "white",
+    "black"
+  )} }
+      to { background-color: ${useColorModeValue("white", "#4a5568")}; color: ${useColorModeValue(
+    "red",
+    "cyan"
+  )} }`
   const stashAnimation = `${stashKeyframes} 1s alternate infinite`
 
   // const parsed = JSON.parse(customerStashes[0]!.notes)
@@ -197,8 +203,8 @@ const HeaderLoggedIn = () => {
         <Button
           size="sm"
           variant="outline"
-          textColor={useColorModeValue("cyan.600", "cyan.600")}
-          borderColor={useColorModeValue("cyan.600", "cyan.600")}
+          textColor={useColorModeValue("cyan.600", "cyan.400")}
+          borderColor={useColorModeValue("gray.300", "gray.500")}
           borderWidth={1}
           borderStyle="dashed"
           onClick={createCustomer}

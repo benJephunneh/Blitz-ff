@@ -1,6 +1,7 @@
 import {
   Customer,
   CustomerStash,
+  Job,
   JobStash,
   Location,
   LocationStash,
@@ -23,15 +24,15 @@ export type HeaderContext = {
   createLocation: () => void
   editLocation: () => void
   deleteLocation: () => void
-  // pickLocation: (l: Location) => void
   pickLocation: (id: number | undefined) => void
 
   // Job
   jobId?: number
+  job?: Job
   createJob: () => void
   editJob: () => void
-  pickJob: (id: number | undefined) => void
   deleteJob: () => void
+  pickJob: (id: number | undefined) => void
 
   // Stash
   customerStashes: CustomerStash[]

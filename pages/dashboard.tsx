@@ -47,7 +47,7 @@ import DashboardSubheader from "app/dashboard/DashboardSubheader"
 
 const Dashboard: BlitzPage = () => {
   const router = useRouter()
-  const currentUser = useCurrentUser({ suspense: false })
+  const { user: currentUser } = useCurrentUser({ suspense: false })
 
   return (
     <>

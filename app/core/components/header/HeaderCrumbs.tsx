@@ -9,25 +9,31 @@ import {
 } from "@chakra-ui/react"
 import getCustomer from "app/customers/queries/getCustomer"
 import { useRouter } from "next/router"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import headerContext from "./headerContext"
 
-const HeaderCrumbs = () => {
-  const pathname = window.location.pathname
+type HeaderCrumbsProps = {
+  pathname: string
+}
+
+const HeaderCrumbs = ({ pathname }: HeaderCrumbsProps) => {
+  // const pathname = window.location.pathname
   const paths = pathname.split("/")
   const { customerId, locationId, jobId } = useParams("number")
-  const [customer] = useQuery(
-    getCustomer,
-    {
-      where: {
-        id: customerId,
-      },
-    },
-    {
-      enabled: !!customerId,
-      refetchOnWindowFocus: false,
-    }
-  )
-  const [displayname, setDisplayname] = useState<string>()
+  const { customer } = useContext(headerContext)
+  // const [customer] = useQuery(
+  //   getCustomer,
+  //   {
+  //     where: {
+  //       id: customerId,
+  //     },
+  //   },
+  //   {
+  //     enabled: !!customerId,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // )
+  const [displayname, setDisplayname] = useState(customer?.displayname)
   // console.log(JSON.stringify(customer))
   // Parse pathname (regex) to array, then map to BreadcrumItems
   // const pages = new RegExp('^\/?(\w*)\/?', 'g')
@@ -85,7 +91,7 @@ const HeaderCrumbs = () => {
                 fontSize={ii + 1 == paths?.slice(1).length ? "xl" : "md"}
               >
                 {/* {displayCrumb(path)} */}
-                {path}
+                {ii + 1 == paths?.slice(1).length ? displayname : path}
               </BreadcrumbLink>
             </BreadcrumbItem>
           ))}

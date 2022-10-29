@@ -123,13 +123,6 @@ const ShowCustomerPage: BlitzPage = () => {
   )
 }
 
-ShowCustomerPage.authenticate = { redirectTo: Routes.Home() }
-ShowCustomerPage.getLayout = (page) => (
-  <HeaderLayout title="Customer page" subheader={<CustomerSubheader />}>
-    {page}
-  </HeaderLayout>
-)
-
 // export async function getServerSideProps(ctx) {
 //   const client = new PrefetchQueryClient(ctx)
 
@@ -160,5 +153,12 @@ ShowCustomerPage.getLayout = (page) => (
 //     },
 //   }
 // }
+
+ShowCustomerPage.authenticate = { redirectTo: Routes.Home() }
+ShowCustomerPage.getLayout = (page) => (
+  <HeaderLayout title="Customer page" subheader={<CustomerSubheader />}>
+    {page}
+  </HeaderLayout>
+)
 
 export default ShowCustomerPage

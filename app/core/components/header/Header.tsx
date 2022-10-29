@@ -67,7 +67,7 @@ const Header = ({ children }: HeaderProps) => {
               />
               <Box justifySelf="flex-start">
                 {showBreadcrumbs ? (
-                  <HeaderCrumbs />
+                  <HeaderCrumbs pathname={pathname} />
                 ) : (
                   <Heading size="md" display={{ base: "none", md: "block" }} textColor="#009a4c">
                     Apalachee Backhoe & Septic Tank, LLC

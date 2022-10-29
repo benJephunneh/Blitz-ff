@@ -51,10 +51,10 @@ const CustomerSubheaderActions = () => {
           size="sm"
           variant="outline"
           leftIcon={<FaPlus size={10} />}
-          color={useColorModeValue("#009a4c", "blue.200")}
+          color={useColorModeValue("#009a4c", "blue.300")}
           bg="transparent"
           borderStyle="dashed"
-          borderColor={useColorModeValue("cyan.800", "blue.200")}
+          borderColor={useColorModeValue("gray.400", "gray.600")}
           alignSelf="start"
           justifySelf="end"
           onClick={createLocation}

@@ -25,7 +25,13 @@ const SubheaderSearch = () => {
     //   </Link>
     // </LinkBox>
     <>
-      <Button onClick={openSearch} size="md">
+      <Button
+        onClick={openSearch}
+        size="sm"
+        backdropFilter="auto"
+        backdropBlur="1px"
+        bg="transparent"
+      >
         Search
       </Button>
     </>

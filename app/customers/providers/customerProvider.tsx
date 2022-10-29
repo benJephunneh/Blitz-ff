@@ -24,7 +24,7 @@ type CustomerProviderProps = {
 
 const CustomerProvider = ({ children }: CustomerProviderProps) => {
   const router = useRouter()
-  const { customer, pickLocation, locationId, refetchStashes } = useContext(headerContext)
+  const { customer, pickLocation } = useContext(headerContext)
   // const [location, setLocation] = useState<Location>()
 
   // Location
@@ -43,7 +43,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
   const [locations, { refetch: refetchLocations }] = useQuery(
     getLocations,
     {
-      where: { customerId: customer!.id },
+      where: { customerId: customer?.id },
       orderBy: { primary: "desc" },
     },
     {
@@ -60,7 +60,7 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
   // console.log(`location (customerProvider): ${JSON.stringify(location)}`)
 
   const [showingDetails, setShowingDetails] = useState(false)
-  const [creatingLocation, setCreatingLocation] = useState(false)
+  // const [creatingLocation, setCreatingLocation] = useState(false)
 
   // Search
   const [searchParams, setSearchParams] = useState("")

@@ -18,9 +18,9 @@ const Subheader = ({ children }: SubheaderProps) => {
       position="sticky"
       top={14}
       backdropFilter="auto"
-      backdropBlur="4px"
-      backdropBrightness="80%"
-      backdropInvert="10%"
+      backdropBlur="6px"
+      // backdropBrightness="80%"
+      // backdropInvert="10%"
     >
       {children}
     </Box>

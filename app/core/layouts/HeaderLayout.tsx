@@ -7,6 +7,7 @@ import { useContext, useState } from "react"
 import Header from "../components/header/Header"
 import HeaderProvider from "../components/header/HeaderProvider"
 import PageTitle from "../components/PageTitle"
+import { useCurrentUser } from "../hooks/useCurrentUser"
 
 type HeaderLayoutProps = {
   title?: string
@@ -21,6 +22,7 @@ const HeaderLayout: BlitzLayout<HeaderLayoutProps> = ({
   subheader,
   children,
 }) => {
+  // const { isLoggedIn, isLoggedOut } = useContext(userContext)
   const session = useSession()
   const isLoggedIn = !!session.userId
   const isLoggedOut = !session.userId && !session.isLoading
