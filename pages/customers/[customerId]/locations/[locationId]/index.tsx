@@ -13,7 +13,7 @@ import {
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 import getCustomer from "app/customers/queries/getCustomer"
 import LocationSubheader from "app/locations/components/LocationSubheader"
-import locationContext from "app/locations/contexts/LocationContext"
+import locationContext from "app/locations/contexts/locationContext"
 import deleteLocation from "app/locations/mutations/deleteLocation"
 import updateLocation from "app/locations/mutations/updateLocation"
 import getLocation from "app/locations/queries/getLocation"

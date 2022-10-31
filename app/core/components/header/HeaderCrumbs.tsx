@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react"
 import getCustomer from "app/customers/queries/getCustomer"
 import { useRouter } from "next/router"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import headerContext from "./headerContext"
 
 type HeaderCrumbsProps = {
@@ -23,19 +23,10 @@ const HeaderCrumbs = ({ pathname }: HeaderCrumbsProps) => {
   // console.log(`paths.at(-1): ${paths.at(-1)}`)
   // const { customerId, locationId, jobId } = useParams("number")
   const { customer } = useContext(headerContext)
-  // const [customer] = useQuery(
-  //   getCustomer,
-  //   {
-  //     where: {
-  //       id: customerId,
-  //     },
-  //   },
-  //   {
-  //     enabled: !!customerId,
-  //     refetchOnWindowFocus: false,
-  //   }
-  // )
-  const [displayname, setDisplayname] = useState(customer ? customer.displayname : paths.at(-1))
+  const [displayname, setDisplayname] = useState<string>()
+  useEffect(() => {
+    setDisplayname(customer?.displayname)
+  }, [customer])
   // console.log(JSON.stringify(customer))
   // Parse pathname (regex) to array, then map to BreadcrumItems
   // const pages = new RegExp('^\/?(\w*)\/?', 'g')
@@ -58,16 +49,16 @@ const HeaderCrumbs = ({ pathname }: HeaderCrumbsProps) => {
   // const textColor = paths?.slice(1).length == 1 ? textColorMode : 'blue'
   const lightDarkTextColor = useColorModeValue("blackAlpha.600", "gray.300")
 
-  const displayCrumb = (path: string) => {
-    // Not working to render customer name
-    if (displayname === "customers") {
-      setDisplayname(customer?.displayname)
-    } else {
-      setDisplayname(path)
-    }
+  // const displayCrumb = (path: string) => {
+  //   // Not working to render customer name
+  //   if (displayname === "customers") {
+  //     setDisplayname(customer?.displayname)
+  //   } else {
+  //     setDisplayname(path)
+  //   }
 
-    return displayname
-  }
+  //   return displayname
+  // }
 
   return (
     <Box

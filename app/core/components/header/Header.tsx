@@ -1,8 +1,28 @@
 import { useSession } from "@blitzjs/auth"
-import { Box, Flex, Heading, HStack, Icon, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Icon,
+  MenuButton,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverFooter,
+  PopoverHeader,
+  PopoverTrigger,
+  Text,
+  useColorMode,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import userContext from "app/auth/components/contexts/userContext"
+import LocationSubheader from "app/locations/components/LocationSubheader"
 import { useRouter } from "next/router"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useRef } from "react"
 import { useState } from "react"
 import { GiMoon, GiSun } from "react-icons/gi"
 import HeaderActions from "./HeaderActions"
@@ -12,13 +32,17 @@ import HeaderIconButton from "./HeaderIconButton"
 import HeaderLoggedIn from "./HeaderLoggedIn"
 import HeaderLoggedOut from "./HeaderLoggedOut"
 import HeaderProvider from "./HeaderProvider"
+import DataPicker from "./subheader/components/DataPicker"
 
+type subheader = "Customer" | "Location" | "Job" | "Invoice" | "Estimate"
 type HeaderProps = {
+  // subheader?: 'Customer' | 'Location' | 'Job' | 'Invoice' | 'Estimate'
   children?: JSX.Element
 }
 
 const Header = ({ children }: HeaderProps) => {
   const { isLoggedIn, isLoggedOut } = useContext(userContext)
+  const { subheader, pickSubheader, customerId } = useContext(headerContext)
   const router = useRouter()
   const pathname = router.pathname
   // const [drawerIsOpen, setDrawerIsOpen] = useState(false)
@@ -28,6 +52,7 @@ const Header = ({ children }: HeaderProps) => {
   // const isLoggedIn = !!session.userId
   // const isLoggedOut = !session.userId && !session.isLoading
   const [showBreadcrumbs, setShowBreadcrumbs] = useState(isLoggedIn)
+  const initialFocusRef = useRef<any>()
 
   useEffect(() => {
     if (!router.isReady) return
@@ -74,11 +99,20 @@ const Header = ({ children }: HeaderProps) => {
                   </Heading>
                 )}
               </Box>
+              {/* <DataPicker /> */}
+              {/* {subheader === 'Customer' && <CustomerSubheader />} */}
+              {customerId && <LocationSubheader />}
+              {/* {customerId && <JobSubheader />} */}
+              {/* {customerId && <InvoiceSubheader />} */}
+              {/* {customerId && <EstimateSubheader />} */}
             </HStack>
             {isLoggedOut && <HeaderLoggedOut />}
             {isLoggedIn && <HeaderLoggedIn />}
           </HStack>
         </Box>
+      </Box>
+      <Box flex="1 1 auto" w="100vw" overflowX="auto" overflowY="hidden">
+        {children}
       </Box>
     </>
   )

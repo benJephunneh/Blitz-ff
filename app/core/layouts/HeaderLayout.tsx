@@ -12,14 +12,15 @@ import { useCurrentUser } from "../hooks/useCurrentUser"
 type HeaderLayoutProps = {
   title?: string
   description?: string
-  subheader?: JSX.Element
+  // subheader?: 'Customer' | 'Location' | 'Job' | 'Invoice' | 'Estimate'
+  // subheader?: JSX.Element
   children?: JSX.Element
 }
 
 const HeaderLayout: BlitzLayout<HeaderLayoutProps> = ({
   title = "ABST",
   description,
-  subheader,
+  // subheader,
   children,
 }) => {
   // const { isLoggedIn, isLoggedOut } = useContext(userContext)
@@ -36,25 +37,25 @@ const HeaderLayout: BlitzLayout<HeaderLayoutProps> = ({
           <HeaderProvider>
             {/* <Grid position="sticky" top={0} shadow="md">
               <GridItem rowSpan={1}> */}
-            <Header />
+            <Header>{children}</Header>
             {/* </GridItem> */}
 
             {/* {subheader && <GridItem rowSpan={1}>{subheader}</GridItem>} */}
-            {subheader}
+            {/* {subheader} */}
             {/* </Grid> */}
 
-            <Box flex="1 1 auto" w="100vw" overflowX="auto" overflowY="hidden">
+            {/* <Box flex="1 1 auto" w="100vw" overflowX="auto" overflowY="hidden">
               {children}
-            </Box>
+            </Box> */}
           </HeaderProvider>
         )}
         {isLoggedOut && (
           <>
-            <Header />
+            <Header>{children}</Header>
 
-            <Box flex="1 1 auto" w="100vw" overflowX="auto" overflowY="hidden">
+            {/* <Box flex="1 1 auto" w="100vw" overflowX="auto" overflowY="hidden">
               {children}
-            </Box>
+            </Box> */}
           </>
         )}
       </Flex>

@@ -1,5 +1,3 @@
-import { Routes, useParam, useParams } from "@blitzjs/next"
-import { useQuery } from "@blitzjs/rpc"
 import {
   Box,
   Button,
@@ -11,11 +9,7 @@ import {
   HStack,
   Icon,
   IconButton,
-  LinkBox,
-  LinkOverlay,
-  SimpleGrid,
   SpaceProps,
-  Spacer,
   Tab,
   TabList,
   TabPanel,
@@ -25,40 +19,21 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
-  Textarea,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import { Customer, Location } from "@prisma/client"
 import NoteSubmission from "app/core/components/forms/NoteSubmission"
-import TextAreaField from "app/core/components/forms/components/TextAreaField"
 import headerContext from "app/core/components/header/headerContext"
 import phoneDisplay from "app/core/components/methods/phoneDisplay"
 import JobPanel from "app/jobs/components/JobPanel"
-import getLocation from "app/locations/queries/getLocation"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useContext, useEffect, useState } from "react"
-import { BsReceipt } from "react-icons/bs"
-import { FaEdit } from "react-icons/fa"
-import { FcAdvertising, FcEditImage, FcHome, FcMoneyTransfer, FcPhone } from "react-icons/fc"
-import {
-  GiAk47,
-  GiArrest,
-  GiBanknote,
-  GiBleedingWound,
-  GiBulldozer,
-  GiCalculator,
-  GiChoice,
-  GiFarmTractor,
-  GiMoneyStack,
-  GiTreasureMap,
-} from "react-icons/gi"
+import { useContext, useState } from "react"
+import { FcPhone } from "react-icons/fc"
+import { GiBleedingWound, GiBulldozer, GiCalculator, GiChoice, GiTreasureMap } from "react-icons/gi"
 import { MdAlternateEmail, MdOutlineEditLocation } from "react-icons/md"
-import { TbBackhoe } from "react-icons/tb"
-import customerContext from "../contexts/customerContext"
-import getCustomer from "../queries/getCustomer"
 import InvoicesCard from "./InvoicesCard"
+import locationContext from "app/locations/contexts/LocationContext"
 
 type CustomerCardProps = {
   // customer: Pick<
@@ -70,49 +45,17 @@ type CustomerCardProps = {
 }
 
 const CustomerCard = ({ ...props }: CustomerCardProps) => {
-  const { jobId, customer, locationId, editLocation, refetchCustomer } = useContext(headerContext)
+  const { customer, refetchCustomer, deleteLocation } = useContext(headerContext)
+  const { location, editLocation, refetchLocations } = useContext(locationContext)
   const [editingNote, setEditingNote] = useState(false)
   const router = useRouter()
-  const [location, { refetch: refetchLocation }] = useQuery(
-    getLocation,
-    {
-      where: { id: locationId },
-    },
-    {
-      enabled: !!locationId,
-      refetchOnWindowFocus: false,
-      // refetchInterval: 5000,
-      staleTime: Infinity,
-    }
-  )
-  // useEffect(() => {
-  //   async () => await refetchLocation()
-  // }, [locationId]) // eslint-disable-line
-
-  //// console.log(`customer (CustomerCard): ${JSON.stringify(customer)}`)
-  // console.log(`location (CustomerCard): ${JSON.stringify(location)}`)
-  // const [customer] = useQuery(
-  //   getCustomer, {
-  //   where: { id: customerId },
-  //   include: {
-  //     locations: {
-  //       orderBy: {
-  //         primary: 'desc'
-  //       }
-  //     }
-  //   }
-  // }, {
-  //   enabled: !!customerId,
-  //   refetchOnWindowFocus: false,
-  //   // refetchInterval: 2000,
-  //   // refetchIntervalInBackground: true,
-  // })
 
   const tagBgColor = useColorModeValue("blue.50", "blue.800")
   const tabBgColor = useColorModeValue("blackAlpha.200", "gray.700")
   const locBgColor = useColorModeValue("white", "gray.300")
   const locTextColor = useColorModeValue("gray.800", "")
-  // console.log(`customerId: ${customer}`)
+
+  console.log({ location })
 
   return (
     <Flex
@@ -137,11 +80,11 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
         `}
         gap={2}
       >
-        <GridItem area="name">
+        {/* <GridItem area="name">
           <Heading fontStyle="italic" size="2xl" alignSelf="start" ml={4}>
             {customer?.displayname}
           </Heading>
-        </GridItem>
+        </GridItem> */}
         <GridItem area="tags">
           {location && (
             <VStack justifySelf="end" display="flex" spacing={1} align="end" mt={1}>
@@ -164,43 +107,62 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
         </GridItem>
         <GridItem area="address">
           {location && (
-            <HStack
-              ml={4}
-              p={2}
-              borderWidth={1}
-              borderColor="blackAlpha.300"
-              borderRadius={4}
-              bg={locBgColor}
-              w="max-content"
-            >
-              <Link
-                href={`http://maps.google.com/maps?q=${location.house}+${location.street.replace(
-                  " ",
-                  "+"
-                )},+${location.city.replace(" ", "+")},+${location.state.replace(" ", "+")}`}
-                passHref
+            <VStack spacing={0}>
+              <HStack
+                ml={4}
+                p={2}
+                borderWidth={1}
+                borderColor="blackAlpha.300"
+                borderRadius={4}
+                bg={locBgColor}
+                w="max-content"
               >
-                <a target="_blank" rel="noopener noreferrer">
-                  <Icon as={GiTreasureMap} w={8} h={8} mr={4} color="darkgreen" />
-                </a>
-              </Link>
-              <Text fontWeight="semibold" opacity="0.8" textColor="gray.800">
-                {location.house} {location.street}
-                <br />
-                {location.city}, {location.state} {location.zipcode}
-              </Text>
-              <IconButton
-                icon={<MdOutlineEditLocation size={25} />}
-                as={Button}
-                // size="xs"
-                aria-label="Edit location"
-                alignSelf="start"
-                onClick={editLocation}
-                bg="transparent"
-                color="darkslategray"
-                // zIndex="overlay"
-              />
-            </HStack>
+                <Link
+                  href={`http://maps.google.com/maps?q=${location.house}+${location.street.replace(
+                    " ",
+                    "+"
+                  )},+${location.city.replace(" ", "+")},+${location.state.replace(" ", "+")}`}
+                  passHref
+                >
+                  <a target="_blank" rel="noopener noreferrer">
+                    <Icon as={GiTreasureMap} w={8} h={8} mr={4} color="darkgreen" />
+                  </a>
+                </Link>
+                <Text fontWeight="semibold" opacity="0.8" textColor="gray.800">
+                  {location.house} {location.street}
+                  <br />
+                  {location.city}, {location.state} {location.zipcode}
+                </Text>
+                <IconButton
+                  icon={<MdOutlineEditLocation size={25} />}
+                  as={Button}
+                  // size="xs"
+                  aria-label="Edit location"
+                  alignSelf="start"
+                  onClick={editLocation}
+                  bg="transparent"
+                  color="darkslategray"
+                  // zIndex="overlay"
+                />
+              </HStack>
+              <Box
+                as="button"
+                height="20px"
+                lineHeight="1.2"
+                transition="all 0.2s cubic-bezier(0.08, 0.52, 0.52, 1)"
+                border={1}
+                px={2}
+                borderBottomRadius={4}
+                fontSize={10}
+                bg="red"
+                textColor="white"
+                fontWeight="semibold"
+                borderColor="whiteAlpha.50"
+                onClick={deleteLocation}
+              >
+                Delete location
+              </Box>
+            </VStack>
           )}
         </GridItem>
         <GridItem area="aNotes">
@@ -212,7 +174,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
                 location={location}
                 onSuccess={async () => {
                   refetchCustomer()
-                  await refetchLocation()
+                  await refetchLocations()
                 }}
               />
             </Box>
@@ -222,7 +184,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
           <Box minW="400px" alignSelf="start" p={4}>
             <NoteSubmission
               modelType="Customer"
-              customer={customer}
+              customer={customer!}
               onSuccess={() => {
                 refetchCustomer()
               }}
@@ -319,7 +281,8 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <JobPanel />
+            JobPanel goes here
+            {/* <JobPanel /> */}
           </TabPanel>
 
           <TabPanel>
@@ -332,7 +295,6 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-      <Text>{jobId}</Text>
       {/* </VStack>
 
         <Box minW="400px" alignSelf="start" p={4}>

@@ -1,49 +1,9 @@
 import { BlitzPage, Routes } from "@blitzjs/next"
-import { useMutation } from "@blitzjs/rpc"
-import {
-  Box,
-  Button,
-  Code,
-  Container,
-  Heading,
-  HStack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react"
-import logout from "app/auth/mutations/logout"
+import { Box, Button, Container, Heading, HStack, Text, useColorModeValue } from "@chakra-ui/react"
 import { useRouter } from "next/router"
-import { User } from "db"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import HeaderLayout from "app/core/layouts/HeaderLayout"
 import Link from "next/link"
-import DashboardSubheader from "app/dashboard/DashboardSubheader"
-
-// type UserInfoProps = Partial<User>
-
-// const UserInfo = ({ username, role }: UserInfoProps) => {
-//   const [logoutMutation] = useMutation(logout)
-
-//   return (
-//     <>
-//       <HStack spacing={2}>
-//         <Button
-//           onClick={async () => {
-//             await logoutMutation()
-//           }}
-//           bg="gray.50"
-//         >
-//           Log out
-//         </Button>
-//         <Box>
-//           User: <Code fontWeight="bold">{username}</Code>
-//           <br />
-//           Role: <Code fontWeight="bold">{role}</Code>
-//         </Box>
-//       </HStack>
-//     </>
-//   )
-//   // }
-// }
 
 const Dashboard: BlitzPage = () => {
   const router = useRouter()
@@ -61,12 +21,6 @@ const Dashboard: BlitzPage = () => {
           </Text>
         </Container>
       </Box>
-
-      {/* <Container as="main" py={{ base: 12, md: 20 }} mx={0}>
-        <Suspense>
-          <UserInfo username={currentUser?.username} role={currentUser?.role} />
-        </Suspense>
-      </Container> */}
 
       <footer>
         <HStack spacing={2} position="fixed" left={2} bottom={2}>
@@ -99,11 +53,7 @@ const Dashboard: BlitzPage = () => {
 Dashboard.suppressFirstRenderFlicker = true
 Dashboard.authenticate = { redirectTo: Routes.Home() }
 Dashboard.getLayout = (page) => (
-  <HeaderLayout
-    title="Dashboard"
-    description="Home page for ABST staff"
-    subheader={<DashboardSubheader />}
-  >
+  <HeaderLayout title="Dashboard" description="Home page for ABST staff">
     {page}
   </HeaderLayout>
 )

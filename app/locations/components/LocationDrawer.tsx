@@ -8,7 +8,7 @@ import {
   Spinner,
 } from "@chakra-ui/react"
 import { useContext } from "react"
-import locationContext from "../contexts/LocationContext"
+import locationContext from "../contexts/locationContext"
 
 type LocationDrawerProps = {
   isOpen: boolean

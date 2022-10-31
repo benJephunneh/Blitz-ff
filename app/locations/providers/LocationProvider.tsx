@@ -1,78 +1,58 @@
-import { useQuery } from "@blitzjs/rpc"
+import { useMutation, useQuery } from "@blitzjs/rpc"
+import headerContext from "app/core/components/header/headerContext"
 import getCustomer from "app/customers/queries/getCustomer"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import getLocations from "app/locations/queries/getLocations"
 import { NotFoundError } from "blitz"
-import db from "db"
-import { ReactNode } from "react"
+import db, { Location } from "db"
+import { ReactNode, useContext, useEffect } from "react"
 import { useState } from "react"
 import JobDrawer from "../components/LocationDrawer"
-import locationContext from "../contexts/LocationContext"
+import locationContext from "../contexts/locationContext"
+import deleteLocation from "../mutations/deleteLocation"
 import getLocation from "../queries/getLocation"
-
-const fetchLocations = async (customerId: number) => {
-  const locations = await db.location.findMany({
-    where: { customerId },
-    orderBy: [
-      { primary: "asc" },
-      { zipcode: "asc" },
-      { city: "asc" },
-      { street: "asc" },
-      { house: "asc" },
-    ],
-  })
-
-  return locations
-}
-
-const fetchCustomer = async (customerId: number) => {
-  const customer = await db.customer.findFirst({
-    where: { id: customerId },
-  })
-
-  if (!customer) throw new NotFoundError()
-
-  return customer
-}
 
 const { Provider } = locationContext
 
 type LocationProviderProps = {
-  customerId: number
-  locationId: number
   children?: ReactNode
 }
 
-const LocationProvider = ({ customerId, locationId, children }: LocationProviderProps) => {
-  // const [customer, { refetch: refetchCustomer }] = useCustomer({ id, suspense: false })
+const LocationProvider = ({ children }: LocationProviderProps) => {
+  const { customer, locationId, pickLocation, deleteLocation } = useContext(headerContext)
 
+  const [creatingLocation, setCreatingLocation] = useState(false)
   const [editingLocation, setEditingLocation] = useState(false)
+  const [deletingLocation, setDeletingLocation] = useState(false)
   const [showingDetails, setShowingDetails] = useState(false)
+  const [locationIds, setLocationIds] = useState<[{ id: number }]>()
 
-  // const [customer, { refetch: refetchCustomer }] = useQuery(
-  //   getCustomer, {
-  //   where: {
-  //     id: customerId
-  //   },
-  //   include: {
-  //     locations: true
-  //   }
-  // }, {
-  //   enabled: true
-  // })
-  // const locations = customer.locations
-
-  const [location, { refetch: refetchLocation }] = useQuery(
-    getLocation,
+  const [location, setLocation] = useState<Location>()
+  const [locations, { refetch: refetchLocations }] = useQuery(
+    getLocations,
     {
-      where: {
-        id: locationId,
-      },
+      where: { customerId: customer?.id },
+      orderBy: [
+        { primary: "desc" },
+        { zipcode: "asc" },
+        { city: "asc" },
+        { street: "asc" },
+        { house: "asc" },
+      ],
     },
     {
-      suspense: false,
+      refetchOnWindowFocus: false,
     }
   )
+  useEffect(() => {
+    const l = locations?.find((l) => l.id === locationId)
+    console.log("LocationProvider useEffect location:")
+    console.table({ l })
+    setLocation(l)
+  }, [locationId]) // eslint-disable-line
+
+  const deleteDescription =
+    "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
 
   // const [customerOranizer, { refetch: refetchOrganizer }] = useQuery(getCustomerOrganizer, { id })
   // const { jobs, totalPaid, totalOwed } = useCalculateBalanceSheet(customerOrganizer?.jobs || [])
@@ -80,22 +60,39 @@ const LocationProvider = ({ customerId, locationId, children }: LocationProvider
   return (
     <Provider
       value={{
+        // pickLocation: (id) => setLocationId(id),
         editLocation: () => setEditingLocation(true),
+        // deleteLocation: () => setDeletingLocation(true),
         showDetails: () => setShowingDetails(true),
         createLocation: () => setEditingLocation(true),
 
-        location: location,
+        location,
+        locations,
 
-        refetchLocation,
+        refetchLocations,
       }}
     >
       <LocationModalForm
-        customerId={customerId}
-        isOpen={editingLocation}
-        onClose={() => setEditingLocation(false)}
-        onSuccess={() => {
-          refetchLocation().catch((e) => console.log(`LocationProvider modal error: ${e}`))
-          setEditingLocation(false)
+        customerId={customer?.id}
+        customerPhone={customer?.phone}
+        // location={editingLocation ? location : undefined}
+        locationId={editingLocation ? locationId : undefined}
+        isOpen={creatingLocation || editingLocation}
+        onClose={() => {
+          creatingLocation && setCreatingLocation(false)
+          editingLocation && setEditingLocation(false)
+        }}
+        disableStash={editingLocation}
+        onSuccess={async (location) => {
+          if (location) {
+            // await refetchCustomer()
+            await refetchLocations()
+              .then(() => pickLocation(location.id))
+              .catch(console.error)
+          }
+
+          creatingLocation && setCreatingLocation(false)
+          editingLocation && setEditingLocation(false)
         }}
       />
 

@@ -49,7 +49,7 @@ export default resolver.pipe(
       where: { customerId: customer?.id },
     })
 
-    if (!customer) throw new NotFoundError()
+    // if (!customer) throw new NotFoundError()
 
     return customer
   }

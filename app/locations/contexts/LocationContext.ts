@@ -2,29 +2,20 @@ import { Location } from "@prisma/client"
 import { createContext } from "react"
 
 export type LocationContext = {
+  // pickLocation: (id: number) => void
   createLocation: () => void
   editLocation: () => void
-  refetchLocation: () => void
+  // deleteLocation: () => void
   showDetails: () => void
 
   location?: Location
-  // location: {
-  //   id: number
-  //   house?: string | null
-  //   street: string
-  //   city: string
-  //   state: string
-  //   zipcode: string
-  //   block?: string | null
-  //   lot?: string | null
-  //   parcel?: string | null
-  //   primary?: boolean | null
-  //   customerId: number
-  // }
+  locations?: Location[]
 
   // amountPaid: number
   // amountOwed: number
   // balance: number
+
+  refetchLocations: () => void
 }
 
 const locationContext = createContext<LocationContext>({} as LocationContext)

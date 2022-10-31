@@ -24,7 +24,7 @@ type CustomerProviderProps = {
 
 const CustomerProvider = ({ children }: CustomerProviderProps) => {
   const router = useRouter()
-  const { customer, pickLocation } = useContext(headerContext)
+  const { customer, refetchCustomer, pickLocation } = useContext(headerContext)
   // const [location, setLocation] = useState<Location>()
 
   // Location
@@ -104,22 +104,31 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
         refetchLocations,
       }}
     >
-      {/* <LocationModalForm
-        customerId={customer!.id}
-        isOpen={creatingLocation}
-        onClose={() => setCreatingLocation(false)}
-        onSuccess={(location) => {
-          setCreatingLocation(false)
-          if ("notes" in location) refetchStashes()
-          else {
-            pickLocation(location!.id)
-            // refetchCustomer()
-            router
-              .push(Routes.ShowLocationPage({ customerId: customer!.id, locationId: location.id }))
-              .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
-          }
+      <LocationModalForm
+        customerId={customer?.id}
+        customerPhone={customer?.phone}
+        // location={editingLocation ? location : undefined}
+        locationId={editingLocation ? locationId : undefined}
+        isOpen={creatingLocation || editingLocation}
+        onClose={() => {
+          creatingLocation && setCreatingLocation(false)
+          editingLocation && setEditingLocation(false)
         }}
-      /> */}
+        disableStash={editingLocation}
+        onSuccess={async (location) => {
+          if (location) {
+            await refetchCustomer()
+            await refetchLocations()
+              .then(() => setLocationId(location.id))
+              .catch(console.error)
+            if (editingStash)
+              await router.push(Routes.ShowCustomerPage({ customerId: location.customerId }))
+          }
+
+          creatingLocation && setCreatingLocation(false)
+          editingLocation && setEditingLocation(false)
+        }}
+      />
 
       <CustomerDrawer onClose={() => setShowingDetails(false)} isOpen={showingDetails} />
 

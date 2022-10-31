@@ -16,7 +16,7 @@ import { useState } from "react"
 import { FaArrowRight, FaPlus } from "react-icons/fa"
 import { FcDoughnutChart } from "react-icons/fc"
 import { TiEdit } from "react-icons/ti"
-import locationContext from "../contexts/LocationContext"
+import locationContext from "../contexts/locationContext"
 
 const LocationSubheaderActions = () => {
   const [editingLocation, setEditingLocation] = useState(false)

@@ -13,7 +13,7 @@ const CustomersPage: BlitzPage = () => {
         pt={4}
         maxH="max-content"
         overflowY="hidden"
-        bg={useColorModeValue("white", "gray.600")}
+        bg={useColorModeValue("white", "gray.800")}
         justifyContent="space-around"
       >
         <CustomerList />
@@ -24,7 +24,7 @@ const CustomersPage: BlitzPage = () => {
 
 CustomersPage.authenticate = { redirectTo: Routes.Home() }
 CustomersPage.getLayout = (page) => (
-  <HeaderLayout title="Customers" description="Customer list" subheader={<DashboardSubheader />}>
+  <HeaderLayout title="Customers" description="Customer list">
     {page}
   </HeaderLayout>
 )

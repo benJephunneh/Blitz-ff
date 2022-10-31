@@ -1,3 +1,4 @@
+import { Routes } from "@blitzjs/next"
 import { useQuery } from "@blitzjs/rpc"
 import {
   Box,
@@ -55,6 +56,7 @@ const DayView = ({ date }: DayViewProps) => {
       {jobStarts &&
         jobStarts.map((j, ii) => (
           <>
+            <Link href={Routes.ShowCustomerPage({ customerId: j.customerId })} />
             {/* onClick: Pick customer */}
             {/* onClick: Pick location */}
             {/* onClick: Pick job */}
