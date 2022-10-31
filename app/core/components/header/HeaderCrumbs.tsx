@@ -19,7 +19,9 @@ type HeaderCrumbsProps = {
 const HeaderCrumbs = ({ pathname }: HeaderCrumbsProps) => {
   // const pathname = window.location.pathname
   const paths = pathname.split("/")
-  const { customerId, locationId, jobId } = useParams("number")
+  // console.log(`paths.slice(1).length: ${paths.slice(1).length}`)
+  // console.log(`paths.at(-1): ${paths.at(-1)}`)
+  // const { customerId, locationId, jobId } = useParams("number")
   const { customer } = useContext(headerContext)
   // const [customer] = useQuery(
   //   getCustomer,
@@ -33,7 +35,7 @@ const HeaderCrumbs = ({ pathname }: HeaderCrumbsProps) => {
   //     refetchOnWindowFocus: false,
   //   }
   // )
-  const [displayname, setDisplayname] = useState(customer?.displayname)
+  const [displayname, setDisplayname] = useState(customer ? customer.displayname : paths.at(-1))
   // console.log(JSON.stringify(customer))
   // Parse pathname (regex) to array, then map to BreadcrumItems
   // const pages = new RegExp('^\/?(\w*)\/?', 'g')
@@ -82,7 +84,7 @@ const HeaderCrumbs = ({ pathname }: HeaderCrumbsProps) => {
             dashboard
           </BreadcrumbLink>
         </BreadcrumbItem>
-        {paths?.slice(1).length >= 1 &&
+        {paths?.slice(1).length > 0 &&
           paths?.slice(1).map((path, ii) => (
             <BreadcrumbItem key={ii}>
               <BreadcrumbLink
@@ -91,7 +93,11 @@ const HeaderCrumbs = ({ pathname }: HeaderCrumbsProps) => {
                 fontSize={ii + 1 == paths?.slice(1).length ? "xl" : "md"}
               >
                 {/* {displayCrumb(path)} */}
-                {ii + 1 == paths?.slice(1).length ? displayname : path}
+                {ii + 1 == paths?.slice(1).length
+                  ? path === "[customerId]"
+                    ? displayname
+                    : path
+                  : path}
               </BreadcrumbLink>
             </BreadcrumbItem>
           ))}

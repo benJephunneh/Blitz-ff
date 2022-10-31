@@ -4,9 +4,11 @@ import {
   Button,
   Center,
   Container,
+  Divider,
   Flex,
   Grid,
   GridItem,
+  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -25,6 +27,7 @@ import { Suspense, useEffect, useState } from "react"
 import Calendar from "react-calendar"
 import Layout from "app/core/layouts/Layout"
 import "react-calendar/dist/Calendar.css"
+import DayView from "app/calendar/components/DayView"
 
 const TestCalendar: BlitzPage = () => {
   const [value, onChange] = useState<Date>()
@@ -33,13 +36,20 @@ const TestCalendar: BlitzPage = () => {
   const [startDateTime, setStartDateTime] = useState<Date>(new Date())
   const [endDateTime, setEndDateTime] = useState<Date>(new Date())
   const [monday, setMonday] = useState<Date>()
-  const [friday, setFriday] = useState<Date>()
+  // const [friday, setFriday] = useState<Date>()
 
   const handleWeekNumberClick = async (w: number) => {
+    console.log({ w })
+    const today = new Date()
+    console.log({ today })
     const currentWeek = getWeek(new Date())
+    const jan1Week = getWeek(new Date(today.getFullYear(), 0, 0))
+    console.log({ currentWeek })
+    console.log({ jan1Week })
     const dayDifference = (currentWeek - (w + 1)) * 7
+    console.log({ dayDifference })
     const monday = startOfWeek(subDays(new Date(), dayDifference), { weekStartsOn: 1 })
-    const friday = addDays(monday, 4)
+    // const friday = addDays(monday, 4)
 
     // console.log({ w })
     // console.log({ currentWeek })
@@ -52,7 +62,7 @@ const TestCalendar: BlitzPage = () => {
     // }
 
     setMonday(monday)
-    setFriday(friday)
+    // setFriday(friday)
   }
 
   useEffect(() => {
@@ -90,42 +100,51 @@ const TestCalendar: BlitzPage = () => {
         showWeekNumbers
         onClickWeekNumber={handleWeekNumberClick}
       />
-      <Grid templateColumns="repeat(5, 1fr)" justifyContent="center" w="50vw">
-        <GridItem colSpan={1}>
-          <Center>
-            <Text>Monday jobs</Text>
-          </Center>
-        </GridItem>
-        <GridItem colSpan={1}>
-          <Center>
-            <Text>
-              <Text>Tuesday jobs</Text>
-            </Text>
-          </Center>
-        </GridItem>
-        <GridItem colSpan={1}>
-          <Center>
-            <Text>Wednesday jobs</Text>
-          </Center>
-        </GridItem>
-        <GridItem colSpan={1}>
-          <Center>
-            <Text>Thursday jobs</Text>
-          </Center>
-        </GridItem>
-        <GridItem colSpan={1}>
-          <Center>
-            <Text>Friday jobs</Text>
-          </Center>
-        </GridItem>
-      </Grid>
-      <Text>{monday?.toDateString()}</Text>
-
-      {/* </ModalBody>
-
-          <ModalFooter>{`${value}`}</ModalFooter>
-        </ModalContent>
-      </Modal> */}
+      {monday && (
+        <>
+          <HStack justify="space-evenly" alignItems="start" mt={2} spacing={0}>
+            <DayView date={monday} />
+            {/* <Divider orientation="vertical" /> */}
+            <DayView date={addDays(monday, 1)} />
+            {/* <Divider orientation="vertical" /> */}
+            <DayView date={addDays(monday, 2)} />
+            {/* <Divider orientation="vertical" /> */}
+            <DayView date={addDays(monday, 3)} />
+            {/* <Divider orientation="vertical" /> */}
+            <DayView date={addDays(monday, 4)} />
+          </HStack>
+          {/* <Grid templateColumns="repeat(5, 1fr)" justifyContent="center" w="100vw">
+            <GridItem colSpan={1}>
+              <Center>
+                <Text>Monday jobs</Text>
+              </Center>
+            </GridItem>
+            <GridItem colSpan={1}>
+              <Center>
+                <Text>
+                  <Text>Tuesday jobs</Text>
+                </Text>
+              </Center>
+            </GridItem>
+            <GridItem colSpan={1}>
+              <Center>
+                <Text>Wednesday jobs</Text>
+              </Center>
+            </GridItem>
+            <GridItem colSpan={1}>
+              <Center>
+                <Text>Thursday jobs</Text>
+              </Center>
+            </GridItem>
+            <GridItem colSpan={1}>
+              <Center>
+                <Text>Friday jobs</Text>
+              </Center>
+            </GridItem>
+          </Grid>
+          <Text>{monday?.toDateString()}</Text> */}
+        </>
+      )}
     </Flex>
   )
 }

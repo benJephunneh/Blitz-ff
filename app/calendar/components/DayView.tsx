@@ -12,8 +12,13 @@ import {
   Flex,
   Text,
 } from "@chakra-ui/react"
-import findJobs from "app/jobs/queries/findJobs"
+import findJobsByDate from "app/jobs/queries/findJobsByDate"
+import findJobs from "app/jobs/queries/findJobsByDate"
+import findJobStartsByDate from "app/jobs/queries/findJobStartsByDate"
 import getJobs from "app/jobs/queries/getJobs"
+import { format } from "date-fns"
+import Link from "next/link"
+import { useEffect } from "react"
 
 type DayViewProps = {
   date: Date
@@ -24,19 +29,39 @@ type DayViewProps = {
 const today = new Date()
 
 const DayView = ({ date }: DayViewProps) => {
-  // const [jobStarts] = useQuery(
-  //   findJobs, { query: date },
-  //   {
-  //     suspense: true,
-  //     refetchOnWindowFocus: false,
-  //     staleTime: Infinity,
-  //   }
-  // )
+  // console.log({ date })
+  const [jobStarts, { refetch }] = useQuery(
+    findJobsByDate,
+    {
+      query: date,
+      orderBy: { start: "asc" },
+    },
+    {
+      suspense: true,
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+    }
+  )
+
+  useEffect(() => {
+    refetch().catch(console.error)
+  }, [date])
 
   return (
-    <Box borderWidth={2} borderColor="blue.400" borderRadius={4}>
-      <Text fontWeight="semibold">{date.toDateString()}</Text>
-      {/* <pre>{JSON.stringify(jobStarts, null, 2)}</pre> */}
+    <Box borderWidth={1} borderColor="blue.400" borderRadius={4} w="full">
+      <Text textAlign="center" fontWeight="semibold">
+        {format(date, "EEE, do LLL yy")}
+      </Text>
+      {jobStarts &&
+        jobStarts.map((j, ii) => (
+          <>
+            {/* onClick: Pick customer */}
+            {/* onClick: Pick location */}
+            {/* onClick: Pick job */}
+            {/* If completed, opacity change */}
+            <pre>{JSON.stringify(jobStarts, null, 2)}</pre>
+          </>
+        ))}
     </Box>
   )
 }

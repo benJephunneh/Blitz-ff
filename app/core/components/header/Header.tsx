@@ -31,7 +31,7 @@ const Header = ({ children }: HeaderProps) => {
 
   useEffect(() => {
     if (!router.isReady) return
-    if (pathname != "/dashboard" && pathname != "/") {
+    if (pathname !== "/dashboard" && pathname !== "/") {
       // console.log(`if pathname: ${pathname}`)
       // const paths = pathname.split('/')
       // if (paths.length > 1) {
