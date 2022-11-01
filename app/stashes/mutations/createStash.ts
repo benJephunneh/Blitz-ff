@@ -75,6 +75,7 @@ export default resolver.pipe(
       case "Job":
         stash = await db.jobStash.create({
           data: {
+            customerId: customerId!,
             locationId: locationId!,
             stashType,
             notes,

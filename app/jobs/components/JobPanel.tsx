@@ -50,7 +50,7 @@ const JobPanel = () => {
     getJobs,
     {
       where: { locationId },
-      orderBy: { start: "asc" },
+      orderBy: [{ start: "asc" }, { end: "asc" }, { title: "asc" }],
     },
     {
       refetchOnWindowFocus: false,
@@ -150,7 +150,7 @@ const JobPanel = () => {
         </ButtonGroup>
       </Flex>
 
-      {job && (
+      {jobId && (
         <>
           <Calendar value={range} />
 
@@ -165,7 +165,7 @@ const JobPanel = () => {
           </Box>
         </>
       )}
-      {!job && (
+      {!jobId && (
         <UnorderedList>
           {jobs.map((j, ii) => (
             <ListItem

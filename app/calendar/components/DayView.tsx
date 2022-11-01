@@ -43,9 +43,9 @@ const DayView = ({ date }: DayViewProps) => {
     }
   )
 
-  useEffect(() => {
-    refetch().catch(console.error)
-  }, [date])
+  // useEffect(() => {
+  //   refetch().catch(console.error)
+  // }, [date])
 
   return (
     <Box borderWidth={1} borderColor="blue.400" borderRadius={4} w="full">

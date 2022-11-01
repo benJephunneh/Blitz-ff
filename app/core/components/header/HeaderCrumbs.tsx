@@ -58,7 +58,7 @@ const HeaderCrumbs = ({ pathname }: HeaderCrumbsProps) => {
 
   // Could go off of /customers/... in path to infer useQuery(getCustomer ...)
 
-  const textColorMode = useColorModeValue("cyan.500", "cyan.300")
+  const textColorMode = useColorModeValue("red.500", "red.400")
   // const textColor = paths?.slice(1).length == 1 ? textColorMode : 'blue'
   const lightDarkTextColor = useColorModeValue("blackAlpha.600", "gray.300")
 

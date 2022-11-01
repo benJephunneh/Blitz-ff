@@ -20,6 +20,8 @@ model Customer {
   phone           String
   locations       Location[]
   locationStashes LocationStash[]
+  jobs            Job[]
+  jobStashes      JobStash[]
   user            User            @relation(fields: [userId], references: [id])
   userId          Int
   notes           String?
@@ -96,6 +98,8 @@ model Job {
   start             DateTime?
   end               DateTime?
   completed         Boolean           @default(false)
+  customer          Customer          @relation(fields: [customerId], references: [id])
+  customerId        Int
   locationId        Int
   location          Location          @relation(fields: [locationId], references: [id], onDelete: Cascade)
   user              User              @relation(fields: [userId], references: [id])
@@ -117,6 +121,8 @@ model JobStash {
   title      String?
   start      DateTime?
   end        DateTime?
+  customer   Customer  @relation(fields: [customerId], references: [id])
+  customerId Int
   location   Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
   locationId Int
   stashType  StashType @default(Location)
@@ -226,6 +232,7 @@ model CustomerArchive {
   phone             String
   notes             String?
   archivedLocations LocationArchive[]
+  archivedJobs      JobArchive[]
 }
 
 model LocationArchive {
@@ -256,8 +263,10 @@ model JobArchive {
   title             String
   start             DateTime?
   end               DateTime?
+  customerId        Int
   locationId        Int
   notes             String?
+  archivedCustomer  CustomerArchive   @relation(fields: [customerId], references: [id], onDelete: Cascade)
   archivedLocation  LocationArchive   @relation(fields: [locationId], references: [id], onDelete: Cascade)
   archivedInvoices  InvoiceArchive[]
   archivedEstimates EstimateArchive[]

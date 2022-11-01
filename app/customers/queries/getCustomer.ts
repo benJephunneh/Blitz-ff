@@ -17,14 +17,13 @@ export default resolver.pipe(
   // resolver.zod(GetCustomer),
 
   // async ({ id }) => {
-  async ({ where, include, select }: CustomerFindFirstArgs) => {
+  async ({ where }: CustomerFindFirstArgs) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
 
     // if (!id) return null
 
     const customer = await db.customer.findFirst({
       where,
-      include,
       // include: {
       //   locations: {
       //     select: { id: true },
@@ -45,11 +44,12 @@ export default resolver.pipe(
       //   email: true,
       // },
     })
-    const locationCount = await db.location.count({
-      where: { customerId: customer?.id },
-    })
+    // const locations = customer ? customer["locations"] : []
+    // const locationCount = await db.location.count({
+    //   where: { customerId: customer?.id },
+    // })
 
-    if (!customer) throw new NotFoundError()
+    // if (!customer) throw new NotFoundError()
 
     return customer
   }

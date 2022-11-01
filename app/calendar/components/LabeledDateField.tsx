@@ -13,6 +13,7 @@ import {
   Heading,
   HStack,
   Input,
+  Select,
   Spacer,
   Stat,
   StatGroup,
@@ -26,16 +27,34 @@ import {
 import getFieldErrorMessage from "app/core/components/forms/helpers/getFieldErrorMessage"
 import { addDays, format, formatDistance } from "date-fns"
 import { useRouter } from "next/router"
-import { ComponentPropsWithoutRef, forwardRef, PropsWithoutRef, useEffect, useState } from "react"
+import React, {
+  ComponentPropsWithoutRef,
+  forwardRef,
+  PropsWithoutRef,
+  useEffect,
+  useState,
+} from "react"
 import { Calendar, Detail } from "react-calendar"
 import { useField, UseFieldConfig } from "react-final-form"
 
 import "react-calendar/dist/Calendar.css"
+import { r } from "@blitzjs/auth/dist/index-57d74361"
+
+const timerange = () => {
+  const timeArray = Array<number>(17)
+  for (let ii = 0; ii <= 16; ii++) {
+    // to 16 because there are 16+1 half-hour segments from 9-17.
+    const nextTime = 900 + (ii % 2 === 0 ? (ii / 2) * 100 : Math.floor(ii / 2) * 100 + 30)
+    timeArray.push(nextTime)
+  }
+  // console.log(timeArray)
+  return timeArray
+}
 
 interface LabeledDateFieldProps extends ComponentPropsWithoutRef<typeof Input> {
   name: string
   label: string
-  initialDate?: Date
+  // initialDate?: Date
   start?: Date
   end?: Date
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
@@ -50,7 +69,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
     {
       name,
       label,
-      initialDate,
+      // initialDate,
       start,
       end,
       outerProps,
@@ -66,6 +85,27 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
     const { value, onChange } = input
     const error = getFieldErrorMessage(meta)
     const initialRange = start && end ? [start, end] : undefined
+
+    const timeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      // console.log(e)
+      // console.log(e.target.name)
+      const r = [...value.map((v) => new Date(v))]
+      // console.log({ r })
+      const newHour = Number(e.target.value) / 100
+      const newMinute = Number(e.target.value) % 100
+      switch (e.target.name) {
+        case "start":
+          r.at(0).setHours(newHour, newMinute, 0, 0)
+          break
+        case "end":
+          r.at(1).setHours(newHour, newMinute, 0, 0)
+          break
+        default:
+          break
+      }
+      // console.log(r)
+      onChange(r)
+    }
 
     // useEffect(() => {
     //   onChange([start, end])
@@ -99,8 +139,8 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
                   onChange(r)
                 }}
                 defaultValue={initialRange}
-                onClickDay={(d) => onClickDay?.(d)}
-                onClickWeekNumber={(w) => onClickWeekNumber?.(w)}
+                onClickDay={onClickDay}
+                onClickWeekNumber={onClickWeekNumber}
                 selectRange
               />
             </AccordionPanel>
@@ -119,8 +159,23 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
                   <StatLabel>Start</StatLabel>
                   {Array.isArray(value) && value.some((v) => v !== undefined) && (
                     <>
-                      <StatNumber>{`${format(value.at(0), "HHmm EEEE")}`}</StatNumber>
-                      {/* <Text as={StatNumber}>{`${format(value.at(0), "HHmm EEEE")}`}</Text> */}
+                      <HStack as={StatNumber}>
+                        <Select
+                          name="start"
+                          variant="unstyled"
+                          defaultValue={900}
+                          fontWeight="semibold"
+                          fontSize="2xl"
+                          onChange={timeChange}
+                        >
+                          {timerange().map((t, ii) => (
+                            <option key={ii} value={t}>
+                              {t}
+                            </option>
+                          ))}
+                        </Select>
+                        <Text>{`${format(value.at(1), "EEEE")}`}</Text>
+                      </HStack>
                       <StatHelpText>{formatDistance(value.at(0), new Date())}</StatHelpText>
                     </>
                   )}
@@ -147,7 +202,23 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
                   <StatLabel>End</StatLabel>
                   {Array.isArray(value) && value.some((v) => v !== undefined) && (
                     <>
-                      <Text as={StatNumber}>{`${format(value.at(1), "HHmm EEEE")}`}</Text>
+                      <HStack as={StatNumber}>
+                        <Select
+                          name="end"
+                          variant="unstyled"
+                          defaultValue={1700}
+                          fontWeight="semibold"
+                          fontSize="2xl"
+                          onChange={timeChange}
+                        >
+                          {timerange().map((t, ii) => (
+                            <option key={ii} value={t}>
+                              {t}
+                            </option>
+                          ))}
+                        </Select>
+                        <Text>{`${format(value.at(1), "EEEE")}`}</Text>
+                      </HStack>
                       <StatHelpText>{formatDistance(value.at(1), new Date())}</StatHelpText>
                     </>
                   )}

@@ -11,7 +11,7 @@ import { createContext } from "react"
 
 export type HeaderContext = {
   // Customer
-  customer?: Customer
+  customer?: Customer | null
   createCustomer: () => void
   editCustomer: () => void
   deleteCustomer: () => void
@@ -29,7 +29,7 @@ export type HeaderContext = {
 
   // Job
   jobId?: number
-  job?: Job
+  job?: Job | null
   createJob: () => void
   editJob: () => void
   deleteJob: () => void

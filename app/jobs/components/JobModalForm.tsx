@@ -19,8 +19,20 @@ import TextAreaField from "app/core/components/forms/components/TextAreaField"
 import DayView from "app/calendar/components/DayView"
 import { Range } from "./JobPanel"
 import getJobs from "../queries/getJobs"
-import { addDays, getWeek, lastDayOfWeek, startOfWeek, subDays, weeksToDays } from "date-fns"
+import {
+  addBusinessDays,
+  addDays,
+  getWeek,
+  isFriday,
+  isMonday,
+  lastDayOfWeek,
+  previousMonday,
+  startOfWeek,
+  subDays,
+  weeksToDays,
+} from "date-fns"
 import { Ctx } from "@blitzjs/next"
+import findJobsByWeek from "../queries/findJobsByWeek"
 
 const handleDayClick = async (d: Date) => {
   const dayBefore = subDays(d, 1)
@@ -35,19 +47,8 @@ const handleDayClick = async (d: Date) => {
   return jobs
 }
 
-const handleWeekNumberClick = async (w: number) => {
-  const currentWeek = getWeek(new Date())
-  const dayDifference = (currentWeek - (w + 1)) * 7
-  const monday = startOfWeek(subDays(new Date(), dayDifference), { weekStartsOn: 1 })
-  const friday = addDays(monday, 4)
-
-  console.log({ w })
-  console.log({ currentWeek })
-  console.log(`weeksToDays: ${weeksToDays(w)}`)
-  console.table([{ Monday: monday, Friday: friday }])
-}
-
 type JobModalFormProps = {
+  customerId?: number
   locationId?: number
   jobId?: number
   // job?: Job
@@ -62,6 +63,7 @@ type JobModalFormProps = {
 }
 
 const JobModalForm = ({
+  customerId,
   locationId,
   jobId,
   stashId,
@@ -74,7 +76,7 @@ const JobModalForm = ({
   onSuccess,
   ...props
 }: JobModalFormProps) => {
-  const [newJobMutation] = useMutation(createJob)
+  const [createJobMutation] = useMutation(createJob)
   const [updateJobMutation] = useMutation(updateJob)
   const [createStashMutation] = useMutation(createStash)
   const [updateStashMutation] = useMutation(updateStash)
@@ -85,32 +87,17 @@ const JobModalForm = ({
   const stashType = "Job"
   const stashFootnoteColor = useColorModeValue("red", "cyan.200")
 
-  // useEffect(() => {
-  //   ; async () => {
-  //     if (jobStash) {
-  //       const u = await db.user.findFirst({ where: { id: jobStash.userId } })
-  //       if (u) setUser(u)
-  //     }
-  //   }
-  // }, [jobStash])
-
   const [job, { refetch: refetchJob }] = useQuery(
     getJob,
     {
-      id: jobId,
+      where: { id: jobId },
     },
     {
-      suspense: !!jobId,
       enabled: !!jobId,
+      staleTime: Infinity,
       refetchOnWindowFocus: false,
     }
   )
-
-  // const [location] = useQuery(getLocation, {
-  //   where: {
-  //     id: locationId,
-  //   },
-  // })
 
   const [jobStash] = useQuery(
     getStash,
@@ -119,20 +106,66 @@ const JobModalForm = ({
       stashType,
     },
     {
-      suspense: !!stashId,
       enabled: !!stashId,
       staleTime: Infinity,
       refetchOnWindowFocus: false,
     }
   )
 
+  const today = new Date()
+  let m: Date
+  if (isMonday(today)) m = today
+  else m = previousMonday(today)
+  const [monday, setMonday] = useState<Date | null>(m)
+  const [friday, setFriday] = useState<Date | null>(addDays(m, 4))
+
+  if (job) {
+    if (isMonday(job.start!)) {
+      setMonday(job.start)
+      setFriday(addDays(job.start!, 4))
+    } else {
+      const m = previousMonday(job.start!)
+      setMonday(m)
+      setFriday(addDays(m, 4))
+    }
+  } else if (jobStash) {
+    if (isMonday(jobStash.start!)) {
+      setMonday(jobStash.start)
+      setFriday(addDays(jobStash.start!, 4))
+    } else {
+      const m = previousMonday(jobStash.start!)
+      setMonday(m)
+      setFriday(addDays(m, 4))
+    }
+  }
+  const [jobsByWeek] = useQuery(
+    findJobsByWeek,
+    { range: [monday, friday] },
+    { refetchOnWindowFocus: false }
+  )
+
+  const handleWeekNumberClick = async (w: number) => {
+    const currentWeek = getWeek(new Date())
+    const dayDifference = (currentWeek - (w + 1)) * 7
+    const monday = startOfWeek(subDays(new Date(), dayDifference), { weekStartsOn: 1 })
+    const friday = addDays(monday, 4)
+
+    console.log({ w })
+    console.log({ currentWeek })
+    console.log(`weeksToDays: ${weeksToDays(w)}`)
+    console.table([{ Monday: monday, Friday: friday }])
+
+    setMonday(monday)
+    setFriday(friday)
+  }
+
   const onSubmit = async (values) => {
     console.log(JSON.stringify(values))
     const { notes, stashing, range, ...formSubmission } = values
-    const start = range?.at(0).setHours(9, 0, 0, 0)
-    const end = range?.at(1).setHours(17, 0, 0, 0)
-    formSubmission["start"] = new Date(start)
-    formSubmission["end"] = new Date(end)
+    const [start, end] = [...range.map((t) => new Date(t))]
+    console.log({ start })
+    formSubmission["start"] = start
+    formSubmission["end"] = end
 
     let jobRet
     if (stashing) {
@@ -146,6 +179,7 @@ const JobModalForm = ({
         })
       } else {
         jobRet = await createStashMutation({
+          customerId,
           locationId,
           stashType,
           job: formSubmission,
@@ -162,7 +196,8 @@ const JobModalForm = ({
         })
         refetchJob().catch((e) => console.log(e.message))
       } else {
-        jobRet = newJobMutation({
+        jobRet = createJobMutation({
+          customerId,
           locationId,
           notes,
           ...formSubmission,
@@ -188,8 +223,8 @@ const JobModalForm = ({
 
   // const [startDateTime, setStartDateTime] = useState(addDays(new Date().setHours(9, 0, 0, 0), 1))
   // const [endDateTime, setEndDateTime] = useState(addDays(new Date().setHours(17, 0, 0, 0), 1))
-  const start = jobStash?.start || job?.start || undefined
-  const end = jobStash?.end || job?.end || undefined
+  const start = jobStash?.start || job?.start || addBusinessDays(new Date(), 1).setHours(9, 0, 0, 0)
+  const end = jobStash?.end || job?.end || addBusinessDays(new Date(), 1).setHours(17, 0, 0, 0)
 
   const initialValues = {
     title: jobStash?.title || job?.title || undefined,
@@ -208,9 +243,7 @@ const JobModalForm = ({
       submitText={job ? "Update" : "Create"}
       initialValues={initialValues}
       onSubmit={(values) => {
-        onSubmit(values)
-          .then((job) => onSuccess?.(job))
-          .catch((e) => handleError(e))
+        onSubmit(values).then(onSuccess).catch(handleError)
       }}
       render={() => (
         <HStack>
@@ -233,9 +266,7 @@ const JobModalForm = ({
                 label="Date range"
                 start={start}
                 end={end}
-                onClickDay={(d) => {
-                  console.log({ d })
-                }}
+                onClickDay={console.log}
                 onClickWeekNumber={(w) => {
                   // console.log({ w })
                   handleWeekNumberClick(w).catch((e) => console.error(e))
@@ -245,9 +276,9 @@ const JobModalForm = ({
             <GridItem area="n">
               <TextAreaField name="notes" label="Notes" placeholder="Add notes about this job..." />
             </GridItem>
-            <GridItem area="s">
+            {/* <GridItem area="s">
               <DayView date={new Date()} />
-            </GridItem>
+            </GridItem> */}
           </Grid>
           {/* <LabeledTextField name="start" label="Start date/time" /> */}
           {/* <LabeledTextField name="end" label="End date/time" /> */}

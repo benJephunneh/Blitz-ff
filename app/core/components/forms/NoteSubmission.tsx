@@ -13,7 +13,7 @@ type NoteSubmissionProps = {
   modelType: "Customer" | "Location" | "Job" | "Estimate" | "Invoice" | "LineItem"
   label?: string
   // modelId?: number
-  customer?: Customer
+  customer?: Customer | null
   location?: Location
   job?: Job
   invoice?: Invoice

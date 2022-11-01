@@ -6,7 +6,8 @@ export const title = z.string()
 // export const range = z.array(z.date())
 export const start = z.date()
 export const end = z.date()
-export const locationId = z.number()
+const customerId = z.number()
+const locationId = z.number()
 const notes = stashContentSchema
 export const textNotes = z.string()
 
@@ -20,6 +21,7 @@ export const JobFormSchema = JobSkeleton.partial().extend({
 })
 export const CreateJob = JobSkeleton.extend({
   notes: textNotes.nullable().optional(),
+  customerId,
   locationId,
 })
 export const CreateJobStash = JobSkeleton.partial().extend({

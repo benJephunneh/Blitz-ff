@@ -110,7 +110,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
   //   // refetchIntervalInBackground: true,
   // })
 
-  const tagBgColor = useColorModeValue("blue.50", "blue.700")
+  const tagBgColor = useColorModeValue("blue.100", "blue.700")
   const tabBgColor = useColorModeValue("blackAlpha.200", "gray.700")
   const locBgColor = useColorModeValue("white", "gray.300")
   const locTextColor = useColorModeValue("gray.800", "")
@@ -143,7 +143,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
             {customer?.displayname}
           </Heading>
         </GridItem> */}
-        <GridItem area="tags">
+        {/* <GridItem area="tags">
           {location && (
             <VStack justifySelf="end" display="flex" spacing={1} align="end" mt={1}>
               <Tag size="sm" bg={tagBgColor} opacity="0.9">
@@ -162,52 +162,68 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
               </Tag>
             </VStack>
           )}
-        </GridItem>
+        </GridItem> */}
         <GridItem area="address">
           {location && (
-            <HStack
-              ml={4}
-              mt={4}
-              p={2}
-              borderWidth={1}
-              borderColor="blackAlpha.50"
-              borderRadius={4}
-              bg={locBgColor}
-              w="max-content"
-            >
-              <Link
-                href={`http://maps.google.com/maps?q=${location.house}+${location.street.replace(
-                  " ",
-                  "+"
-                )},+${location.city.replace(" ", "+")},+${location.state.replace(" ", "+")}`}
-                passHref
+            <VStack justifySelf="end" display="flex" spacing={1} align="end" mt={1}>
+              <HStack
+                ml={2}
+                mt={2}
+                p={2}
+                borderWidth={1}
+                borderColor="blackAlpha.50"
+                borderRadius={4}
+                bg={locBgColor}
+                w="max-content"
               >
-                <a target="_blank" rel="noopener noreferrer">
-                  <Icon as={GiTreasureMap} w={8} h={8} mr={4} color="darkgreen" />
-                </a>
-              </Link>
-              <Text fontWeight="semibold" opacity="0.8" textColor="gray.800">
-                {location.house} {location.street}
-                <br />
-                {location.city}, {location.state} {location.zipcode}
-              </Text>
-              <IconButton
-                icon={<MdOutlineEditLocation size={25} />}
-                as={Button}
-                // size="xs"
-                aria-label="Edit location"
-                alignSelf="start"
-                onClick={editLocation}
-                bg="transparent"
-                color="darkslategray"
-                // zIndex="overlay"
-              />
-            </HStack>
+                <Link
+                  href={`http://maps.google.com/maps?q=${location.house}+${location.street.replace(
+                    " ",
+                    "+"
+                  )},+${location.city.replace(" ", "+")},+${location.state.replace(" ", "+")}`}
+                  passHref
+                >
+                  <a target="_blank" rel="noopener noreferrer">
+                    <Icon as={GiTreasureMap} w={8} h={8} mr={4} color="darkgreen" />
+                  </a>
+                </Link>
+                <Text fontWeight="semibold" opacity="0.8" textColor="gray.800">
+                  {location.house} {location.street}
+                  <br />
+                  {location.city}, {location.state} {location.zipcode}
+                </Text>
+                <IconButton
+                  icon={<MdOutlineEditLocation size={25} />}
+                  as={Button}
+                  // size="xs"
+                  aria-label="Edit location"
+                  alignSelf="start"
+                  onClick={editLocation}
+                  bg="transparent"
+                  color="darkslategray"
+                  // zIndex="overlay"
+                />
+              </HStack>
+              <Tag size="sm" bg={tagBgColor} opacity="0.9">
+                <TagLeftIcon as={FcPhone} />
+                <TagLabel>{phoneDisplay(location.phones!)}</TagLabel>
+              </Tag>
+              <Tag
+                as="a"
+                href={`mailto:${customer?.email}`}
+                size="sm"
+                bg={tagBgColor}
+                opacity="0.9"
+              >
+                <TagLeftIcon as={MdAlternateEmail} color="cyan.700" />
+                <TagLabel _hover={{ textDecoration: "underline" }}>{customer?.email}</TagLabel>
+              </Tag>
+            </VStack>
           )}
         </GridItem>
         <GridItem area="aNotes">
           {location && (
-            <Box minW="400px" alignSelf="start" mr={4}>
+            <Box minW="400px" alignSelf="start" mr={2}>
               <NoteSubmission
                 modelType="Location"
                 // modelId={location.customerId}
@@ -221,7 +237,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
           )}
         </GridItem>
         <GridItem area="cNotes">
-          <Box minW="400px" alignSelf="start" mt={4} mr={4}>
+          <Box minW="400px" alignSelf="start" mt={2} mr={2}>
             <NoteSubmission
               modelType="Customer"
               customer={customer}

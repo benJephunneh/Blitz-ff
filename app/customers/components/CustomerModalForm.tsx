@@ -23,7 +23,7 @@ type CustomerModalFormProps = {
   onSuccess?: (customer: Customer | CustomerStash | void) => void
   // customerId?: number
   stashId?: number
-  customer?: Customer
+  customer?: Customer | null
   // customerStash?: CustomerStash // | LocationStash
   disableStash?: boolean
   // mutationType?: MutationType

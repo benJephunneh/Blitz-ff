@@ -28,6 +28,7 @@ import updateJob from "app/jobs/mutations/updateJob"
 import getJob from "app/jobs/queries/getJob"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import updateLocation from "app/locations/mutations/updateLocation"
+import getLocations from "app/locations/queries/getLocations"
 import SearchInput from "app/search/SearchInput"
 import SearchResults from "app/search/SearchResults"
 import getStashes from "app/stashes/queries/getStashes"
@@ -55,11 +56,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const router = useRouter()
   const { isLoggedIn, isLoggedOut } = useContext(userContext)
 
-  // Calendar
-  const [weekNumber, setWeekNumber] = useState<number>()
-  const [date, setDate] = useState<Date>()
-
   // Customer
+  const customerId = useParam("customerId", "number")
   // const [customerId, setCustomerId] = useState<number>()
   // const fetchCustomerId = useCallback(async () => {
   //   // const { customerId: c } = router.query
@@ -72,42 +70,11 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   fetchCustomerId()
   //     .catch(console.error)
   // }, [router.isReady])
-  const customerId = useParam("customerId", "number")
-  const [customer, { refetch: refetchCustomer }] = useQuery(
-    getCustomer,
-    {
-      where: { id: customerId },
-      include: {
-        locations: {
-          orderBy: [
-            { primary: "desc" },
-            { zipcode: "asc" },
-            { city: "asc" },
-            { street: "asc" },
-            { house: "asc" },
-          ],
-        },
-      },
-    },
-    {
-      enabled: !!customerId,
-      refetchOnWindowFocus: false,
-    }
-  )
-  const [locations, setLocations] = useState<Location[]>()
-  useEffect(() => {
-    setLocations(customer ? customer["locations"] : undefined)
-  }, [customer])
   // useEffect(() => {
   //   if (!router.isReady) return
-
   //   fetchCustomerId()
   //     .catch(console.error)
   // }, [router.isReady, fetchCustomerId])
-  useEffect(() => {
-    refetchCustomer().catch(console.error)
-  }, [customerId]) // eslint-disable-line
-
   const [creatingCustomer, setCreatingCustomer] = useState(false)
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [deletingCustomer, setDeletingCustomer] = useState(false)
@@ -119,14 +86,60 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [creatingLocation, setCreatingLocation] = useState(false)
   const [editingLocation, setEditingLocation] = useState(false)
   const [deletingLocation, setDeletingLocation] = useState(false)
-  const [locationIds, setLocationIds] = useState<[{ id: number }]>()
+  const [locationIds, setLocationIds] = useState<{ id: number }[]>()
   const [locationId, setLocationId] = useState<number>()
   const [updateLocationMutation] = useMutation(updateLocation)
-  // const [location, setLocation] = useState<Location>()
+
+  // Job
+  const [creatingJob, setCreatingJob] = useState(false)
+  const [editingJob, setEditingJob] = useState(false)
+  const [deletingJob, setDeletingJob] = useState(false)
+  const [jobId, setJobId] = useState<number>()
+  const [updateJobMutation] = useMutation(updateJob)
+
+  // Calendar
+  const [weekNumber, setWeekNumber] = useState<number>()
+  const [date, setDate] = useState<Date>()
+
+  // Customer
+  const [customer, { refetch: refetchCustomer }] = useQuery(
+    getCustomer,
+    { where: { id: customerId } },
+    { enabled: !!customerId, refetchOnWindowFocus: false }
+  )
+  const [locations, { refetch: refetchLocations }] = useQuery(
+    getLocations,
+    {
+      where: { customerId: customer?.id },
+      orderBy: [
+        { primary: "desc" },
+        { zipcode: "asc" },
+        { city: "asc" },
+        { street: "asc" },
+        { house: "asc" },
+      ],
+    },
+    {
+      enabled: !!customerId,
+      refetchOnWindowFocus: false,
+    }
+  )
+
   useEffect(() => {
-    setLocationIds(customer ? customer["locations"] : [])
+    refetchCustomer()
+      .then(() => setJobId(undefined))
+      .then(() => refetchLocations())
+      .catch(console.error)
+  }, [customerId]) // eslint-disable-line
+  useEffect(() => {
+    let ids: { id: number }[] = []
+    if (locations) {
+      ids = [...locations?.map(({ id }) => ({ id }))]
+      setLocationId(ids.at(0)?.id)
+    }
+    setLocationIds(ids)
     setCustomerPhone(customer ? customer.phone : undefined)
-  }, [customer])
+  }, [customer, locations])
   useEffect(() => {
     setLocationId(locationIds?.length && locationIds.at(0)?.id)
   }, [customerId, locationIds])
@@ -141,14 +154,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   // setLocation(locationIds?.length && locationIds.at(0)?.id)
   //   // console.log(`locationId (HeaderProvider): ${locationId}`)
   // }, [locationId]) // eslint-disable-line
-
-  // Job
-  const [creatingJob, setCreatingJob] = useState(false)
-  const [editingJob, setEditingJob] = useState(false)
-  const [deletingJob, setDeletingJob] = useState(false)
-  const [jobId, setJobId] = useState<number>()
-  // const [job, setJob] = useState<Job>()
-  const [updateJobMutation] = useMutation(updateJob)
 
   // const refetchJob = useCallback(async () => {
   //   const j = await db.job.findFirst({ where: { id: jobId } })
@@ -341,6 +346,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
           />
 
           <JobModalForm
+            customerId={customerId}
             locationId={locationId}
             jobId={editingJob ? jobId : undefined}
             stashId={editingStash ? stashId : undefined}
@@ -354,7 +360,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             onSuccess={async (job) => {
               if (job) {
                 if ("stashType" in job) await refetchStashes()
-                else setJobId(job.id)
+                else {
+                  await setJobQueryData(job)
+                  setJobId(job.id)
+                }
                 // await refetchJobs()
               }
 
