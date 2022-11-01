@@ -40,19 +40,19 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
   //     refetchOnWindowFocus: false,
   //   }
   // )
-  const [locations, { refetch: refetchLocations }] = useQuery(
-    getLocations,
-    {
-      where: { customerId: customer?.id },
-      orderBy: { primary: "desc" },
-    },
-    {
-      enabled: !!customer,
-      refetchOnWindowFocus: false,
-      // refetchInterval: 5000,
-      staleTime: Infinity,
-    }
-  )
+  // const [locations, { refetch: refetchLocations }] = useQuery(
+  //   getLocations,
+  //   {
+  //     where: { customerId: customer?.id },
+  //     orderBy: { primary: "desc" },
+  //   },
+  //   {
+  //     enabled: !!customer,
+  //     refetchOnWindowFocus: false,
+  //     // refetchInterval: 5000,
+  //     staleTime: Infinity,
+  //   }
+  // )
 
   // useEffect(() => {
   //   refetchLocation().catch((e) => console.log(e))
@@ -96,12 +96,12 @@ const CustomerProvider = ({ children }: CustomerProviderProps) => {
 
         // customer: customer as Customer,
         // displayname: customer!.displayname,
-        locations,
+        // locations,
         // location,
         // locationId: locationId,
 
         // refetchCustomer,
-        refetchLocations,
+        // refetchLocations,
       }}
     >
       {/* <LocationModalForm

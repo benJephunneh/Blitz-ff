@@ -70,21 +70,23 @@ type CustomerCardProps = {
 }
 
 const CustomerCard = ({ ...props }: CustomerCardProps) => {
-  const { jobId, customer, locationId, editLocation, refetchCustomer } = useContext(headerContext)
+  const { jobId, customer, refetchCustomer, locationId, locations, editLocation } =
+    useContext(headerContext)
+  const location = locations?.find((l) => l.id === locationId)
   const [editingNote, setEditingNote] = useState(false)
   const router = useRouter()
-  const [location, { refetch: refetchLocation }] = useQuery(
-    getLocation,
-    {
-      where: { id: locationId },
-    },
-    {
-      enabled: !!locationId,
-      refetchOnWindowFocus: false,
-      // refetchInterval: 5000,
-      staleTime: Infinity,
-    }
-  )
+  // const [location, { refetch: refetchLocation }] = useQuery(
+  //   getLocation,
+  //   {
+  //     where: { id: locationId },
+  //   },
+  //   {
+  //     enabled: !!locationId,
+  //     refetchOnWindowFocus: false,
+  //     // refetchInterval: 5000,
+  //     staleTime: Infinity,
+  //   }
+  // )
   // useEffect(() => {
   //   async () => await refetchLocation()
   // }, [locationId]) // eslint-disable-line
@@ -108,7 +110,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
   //   // refetchIntervalInBackground: true,
   // })
 
-  const tagBgColor = useColorModeValue("blue.50", "blue.800")
+  const tagBgColor = useColorModeValue("blue.50", "blue.700")
   const tabBgColor = useColorModeValue("blackAlpha.200", "gray.700")
   const locBgColor = useColorModeValue("white", "gray.300")
   const locTextColor = useColorModeValue("gray.800", "")
@@ -131,17 +133,16 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
     >
       <Grid
         templateAreas={`
-        'name tags . . . . cNotes cNotes'
         'address address . . . . cNotes cNotes'
-        'aNotes aNotes . . . . . .'
+        'tags . . . . . aNotes aNotes'
         `}
         gap={2}
       >
-        <GridItem area="name">
+        {/* <GridItem area="name">
           <Heading fontStyle="italic" size="2xl" alignSelf="start" ml={4}>
             {customer?.displayname}
           </Heading>
-        </GridItem>
+        </GridItem> */}
         <GridItem area="tags">
           {location && (
             <VStack justifySelf="end" display="flex" spacing={1} align="end" mt={1}>
@@ -166,9 +167,10 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
           {location && (
             <HStack
               ml={4}
+              mt={4}
               p={2}
               borderWidth={1}
-              borderColor="blackAlpha.300"
+              borderColor="blackAlpha.50"
               borderRadius={4}
               bg={locBgColor}
               w="max-content"
@@ -205,21 +207,21 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
         </GridItem>
         <GridItem area="aNotes">
           {location && (
-            <Box minW="400px" alignSelf="start">
+            <Box minW="400px" alignSelf="start" mr={4}>
               <NoteSubmission
                 modelType="Location"
                 // modelId={location.customerId}
                 location={location}
                 onSuccess={async () => {
                   refetchCustomer()
-                  await refetchLocation()
+                  // await refetchLocations()
                 }}
               />
             </Box>
           )}
         </GridItem>
         <GridItem area="cNotes">
-          <Box minW="400px" alignSelf="start" p={4}>
+          <Box minW="400px" alignSelf="start" mt={4} mr={4}>
             <NoteSubmission
               modelType="Customer"
               customer={customer}

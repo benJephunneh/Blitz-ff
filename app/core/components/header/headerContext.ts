@@ -18,6 +18,7 @@ export type HeaderContext = {
   // gotoCustomer: (id: number) => void
 
   // Location
+  locations?: Location[]
   locationId?: number
   locationIds?: Array<{ id: number }>
   location?: Location

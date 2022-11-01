@@ -1,5 +1,5 @@
 import { useMutation } from "@blitzjs/rpc"
-import { Button, HStack, useColorModeValue } from "@chakra-ui/react"
+import { Button, HStack, Text, useColorModeValue } from "@chakra-ui/react"
 import { Customer, Estimate, Invoice, Job, Location } from "@prisma/client"
 import updateCustomer from "app/customers/mutations/updateCustomer"
 import updateJob from "app/jobs/mutations/updateJob"
@@ -11,6 +11,7 @@ import TextAreaField from "./components/TextAreaField"
 
 type NoteSubmissionProps = {
   modelType: "Customer" | "Location" | "Job" | "Estimate" | "Invoice" | "LineItem"
+  label?: string
   // modelId?: number
   customer?: Customer
   location?: Location
@@ -32,6 +33,7 @@ const NoteSchema = z.object({
 
 const NoteSubmission = ({
   modelType,
+  label,
   // modelId,
   customer,
   location,
@@ -147,10 +149,10 @@ const NoteSubmission = ({
           <form onSubmit={handleSubmit}>
             <TextAreaField
               name="notes"
-              label={`${modelType} notes`}
+              label={label}
               placeholder={`Add notes about this ${modelType.toLowerCase()}...`}
               bg={textFieldBg}
-              borderWidth={3}
+              borderWidth={1}
               borderColor={textFieldBorderColor}
             />
             {/* <Box borderRadius={4} {...boxProps}>
@@ -180,10 +182,14 @@ const NoteSubmission = ({
                 }
                 type="submit"
                 variant="ghost"
+                borderTopRadius={0}
                 // isDisabled={pristine || submitting}
               >
                 Update notes
               </Button>
+              <Text fontSize="xs" fontWeight="semibold">
+                {`${modelType} notes`}
+              </Text>
               {/* <Button
                 bg={buttonBg}
                 border={1}
@@ -217,6 +223,7 @@ const NoteSubmission = ({
                   setDeletingNote(true)
                 }}
                 type="submit"
+                borderTopRadius={0}
               >
                 Reset notes
               </Button>

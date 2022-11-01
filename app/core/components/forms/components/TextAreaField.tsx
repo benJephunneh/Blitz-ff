@@ -33,6 +33,7 @@ const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>(
           ref={ref}
           overflowX="hidden"
           minW="max-content"
+          borderBottomRadius={0}
         />
         <FormErrorMessage>{error}</FormErrorMessage>
       </FormControl>

@@ -9,6 +9,8 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import headerContext from "app/core/components/header/headerContext"
 import customerContext from "app/customers/contexts/customerContext"
@@ -24,8 +26,8 @@ type LocationPickerProps = {
 }
 
 const LocationPicker = ({ icon }: LocationPickerProps) => {
-  const { pickLocation } = useContext(headerContext)
-  const { locations, gotoLocation } = useContext(customerContext)
+  const { pickLocation, locations } = useContext(headerContext)
+  // const { locations, gotoLocation } = useContext(customerContext)
   // const [locations, { refetch: refetchLocations }] = useQuery(
   //   getLocations,
   //   {
@@ -59,7 +61,7 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
       >
         <HStack>
           <Icon as={icon} w={5} h={5} />
-          <Heading size="sm">
+          <Heading size="sm" opacity={useColorModeValue("0.7", "0.9")}>
             Location list
             {/* {`${primaryLocation?.house} ${primaryLocation?.street}, ${primaryLocation?.city}  ${primaryLocation?.zipcode}`} */}
             {/* {customer?.firstname} {customer?.lastname} */}
@@ -74,13 +76,17 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
           //   href={Routes.ShowLocationPage({ customerId: customer?.id, locationId: location.id })}
           //   passHref
           // >
-          <MenuItem
-            key={location.id}
-            fontWeight="semibold"
-            fontSize="sm"
-            onClick={() => pickLocation(location.id)}
-          >
-            {`${location.house} ${location.street}, ${location.city}  ${location.zipcode}`}
+          <MenuItem key={location.id} onClick={() => pickLocation(location.id)}>
+            <HStack>
+              <Text fontWeight="semibold">
+                {`${location.house} ${location.street}, ${location.city}  ${location.zipcode}`}
+              </Text>
+              {location.primary && (
+                <Text fontSize="xs" color="orange">
+                  (primary)
+                </Text>
+              )}
+            </HStack>
           </MenuItem>
           // </Link>
         ))}

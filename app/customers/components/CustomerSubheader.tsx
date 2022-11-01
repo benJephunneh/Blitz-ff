@@ -6,6 +6,7 @@ import React from "react"
 import { FcTimeline } from "react-icons/fc"
 import CustomerSubheaderActions from "./CustomerSubheaderActions"
 import CustomerProvider from "../providers/CustomerProvider"
+import LocationDisplay from "app/locations/components/LocationDisplay"
 
 // const CustomerPickerSubheader = () => {
 //   return <CustomerPicker2 />
@@ -22,9 +23,9 @@ const CustomerSubheader = () => {
         <HStack justify="space-between">
           <HStack spacing={4}>
             {/* <CustomerPickerSubheader /> */}
-            {/* <LocationPickerSubheader /> */}
-            <LocationPicker icon={FcTimeline} />
+            {/* <LocationPicker icon={FcTimeline} /> */}
             <SubheaderSearch />
+            <LocationDisplay />
           </HStack>
           <CustomerSubheaderActions />
         </HStack>

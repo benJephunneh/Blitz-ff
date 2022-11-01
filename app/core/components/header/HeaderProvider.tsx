@@ -1,5 +1,5 @@
 import { setPublicDataForUser } from "@blitzjs/auth"
-import { Routes, useParams } from "@blitzjs/next"
+import { Routes, useParam, useParams } from "@blitzjs/next"
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import {
   Box,
@@ -31,7 +31,7 @@ import updateLocation from "app/locations/mutations/updateLocation"
 import SearchInput from "app/search/SearchInput"
 import SearchResults from "app/search/SearchResults"
 import getStashes from "app/stashes/queries/getStashes"
-import db, { Job, StashType } from "db"
+import db, { Job, Location, StashType } from "db"
 import { useRouter } from "next/router"
 import { ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
@@ -60,7 +60,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [date, setDate] = useState<Date>()
 
   // Customer
-  const { customerId } = useParams("number")
   // const [customerId, setCustomerId] = useState<number>()
   // const fetchCustomerId = useCallback(async () => {
   //   // const { customerId: c } = router.query
@@ -68,17 +67,37 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   setCustomerId(c)
   //   // return c
   // }, [router.query.customerId])
+  // useEffect(() => {
+  //   if (!router.isReady) return
+  //   fetchCustomerId()
+  //     .catch(console.error)
+  // }, [router.isReady])
+  const customerId = useParam("customerId", "number")
   const [customer, { refetch: refetchCustomer }] = useQuery(
     getCustomer,
     {
       where: { id: customerId },
-      include: { locations: { orderBy: { primary: "desc" } } },
+      include: {
+        locations: {
+          orderBy: [
+            { primary: "desc" },
+            { zipcode: "asc" },
+            { city: "asc" },
+            { street: "asc" },
+            { house: "asc" },
+          ],
+        },
+      },
     },
     {
       enabled: !!customerId,
       refetchOnWindowFocus: false,
     }
   )
+  const [locations, setLocations] = useState<Location[]>()
+  useEffect(() => {
+    setLocations(customer ? customer["locations"] : undefined)
+  }, [customer])
   // useEffect(() => {
   //   if (!router.isReady) return
 
@@ -88,29 +107,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   useEffect(() => {
     refetchCustomer().catch(console.error)
   }, [customerId]) // eslint-disable-line
-
-  // const [customer, { refetch: refetchCustomer }] = useQuery(
-  //   getCustomer,
-  //   {
-  //     where: { id: customerId },
-  //     include: {
-  //       locations: {
-  //         select: { id: true, phones: true },
-  //         orderBy: { primary: "desc" },
-  //       },
-  //     },
-  //   },
-  //   {
-  //     enabled: !!customerId,
-  //     refetchOnWindowFocus: false,
-  //     staleTime: Infinity,
-  //   }
-  // )
-  // useEffect(() => {
-  //   // console.log({ customerId })
-  //   refetchCustomer()
-  //     .catch(console.error)
-  // }, [customerId])
 
   const [creatingCustomer, setCreatingCustomer] = useState(false)
   const [editingCustomer, setEditingCustomer] = useState(false)
@@ -245,6 +241,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         },
 
         customer,
+        locations,
         locationId,
         locationIds,
         customerStashes,

@@ -1,9 +1,11 @@
 import { useSession } from "@blitzjs/auth"
 import { Box, Flex, Heading, HStack, Icon, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import userContext from "app/auth/components/contexts/userContext"
+import LocationPicker from "app/locations/components/LocationPicker"
 import { useRouter } from "next/router"
 import { useContext, useEffect } from "react"
 import { useState } from "react"
+import { FcTimeline } from "react-icons/fc"
 import { GiMoon, GiSun } from "react-icons/gi"
 import HeaderActions from "./HeaderActions"
 import headerContext from "./headerContext"
@@ -12,6 +14,7 @@ import HeaderIconButton from "./HeaderIconButton"
 import HeaderLoggedIn from "./HeaderLoggedIn"
 import HeaderLoggedOut from "./HeaderLoggedOut"
 import HeaderProvider from "./HeaderProvider"
+import DataPicker from "./subheader/components/DataPicker"
 
 type HeaderProps = {
   children?: JSX.Element
@@ -19,6 +22,7 @@ type HeaderProps = {
 
 const Header = ({ children }: HeaderProps) => {
   const { isLoggedIn, isLoggedOut } = useContext(userContext)
+  const { customer } = useContext(headerContext)
   const router = useRouter()
   const pathname = router.pathname
   // const [drawerIsOpen, setDrawerIsOpen] = useState(false)
@@ -74,6 +78,8 @@ const Header = ({ children }: HeaderProps) => {
                   </Heading>
                 )}
               </Box>
+
+              {customer && <LocationPicker icon={FcTimeline} />}
             </HStack>
             {isLoggedOut && <HeaderLoggedOut />}
             {isLoggedIn && <HeaderLoggedIn />}
