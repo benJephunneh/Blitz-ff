@@ -106,100 +106,102 @@ const HeaderLoggedIn = () => {
       /> */}
 
       <HStack spacing={4}>
-        <Menu isLazy closeOnSelect={false}>
-          <Button
-            as={MenuButton}
-            size="sm"
-            colorScheme={numStashes ? "red" : "blue"}
-            animation={numStashes && stashAnimation}
-            variant={numStashes ? "solid" : "ghost"}
-            opacity={numStashes ? "1" : "0.5"}
-          >
-            {`${numStashes} stashed`}
-          </Button>
-          <MenuList>
-            {customerStashes?.map((c, ii) => (
-              <>
-                {/* <MenuItem key={ii} fontWeight='semibold' onClick={() => editStash(c.id, c.stashType)}> */}
+        <Box>
+          <Menu isLazy closeOnSelect={false}>
+            <Button
+              as={MenuButton}
+              size="sm"
+              colorScheme={numStashes ? "red" : "blue"}
+              animation={numStashes && stashAnimation}
+              variant={numStashes ? "solid" : "ghost"}
+              opacity={numStashes ? "1" : "0.5"}
+            >
+              {`${numStashes} stashed`}
+            </Button>
+            <MenuList>
+              {customerStashes?.map((c, ii) => (
+                <>
+                  {/* <MenuItem key={ii} fontWeight='semibold' onClick={() => editStash(c.id, c.stashType)}> */}
+                  <MenuItem
+                    key={ii}
+                    fontWeight="semibold"
+                    onKeyDownCapture={(e) => {
+                      console.log(e)
+                      e.key === "Enter" && editStash(c.id, "Customer")
+                    }}
+                    justifyContent="space-between"
+                  >
+                    <Text
+                      textOverflow="ellipsis"
+                      onClick={() => editStash(c.id, "Customer")}
+                      // onClick={() => {
+                      //   editStash(c.id, "Customer")
+                      // }}
+                    >
+                      {c.displayname}: {c.notes}
+                    </Text>
+                    <Icon
+                      as={FcFullTrash}
+                      h={5}
+                      w={5}
+                      onClick={async () => {
+                        deleteStashMutation({ id: c.id, stashType: "Customer" })
+                          .then(() => refetchStashes())
+                          .catch((e) => console.log(`Error deleting customer stash: ${e}`))
+                      }}
+                    />
+                  </MenuItem>
+                </>
+              ))}
+              {locationStashes?.map((l, jj) => (
                 <MenuItem
-                  key={ii}
+                  key={jj}
                   fontWeight="semibold"
-                  onKeyDownCapture={(e) => {
-                    console.log(e)
-                    e.key === "Enter" && editStash(c.id, "Customer")
-                  }}
+                  onKeyDownCapture={(e) => e.key === "Enter" && editStash(l.id, "Location")}
                   justifyContent="space-between"
                 >
-                  <Text
-                    textOverflow="ellipsis"
-                    onClick={() => editStash(c.id, "Customer")}
-                    // onClick={() => {
-                    //   editStash(c.id, "Customer")
-                    // }}
-                  >
-                    {c.displayname}: {c.notes}
+                  <Text textOverflow="ellipsis" onClick={() => editStash(l.id, "Location")}>
+                    {l.house} {l.street}: {JSON.parse(l.notes).content[0].content[0].text}
                   </Text>
+                  <Spacer />
                   <Icon
                     as={FcFullTrash}
                     h={5}
                     w={5}
                     onClick={async () => {
-                      deleteStashMutation({ id: c.id, stashType: "Customer" })
+                      deleteStashMutation({ id: l.id, stashType: "Location" })
                         .then(() => refetchStashes())
-                        .catch((e) => console.log(`Error deleting customer stash: ${e}`))
+                        .catch((e) => console.log(`Error deleting location stash: ${e}`))
                     }}
                   />
                 </MenuItem>
-              </>
-            ))}
-            {locationStashes?.map((l, jj) => (
-              <MenuItem
-                key={jj}
-                fontWeight="semibold"
-                onKeyDownCapture={(e) => e.key === "Enter" && editStash(l.id, "Location")}
-                justifyContent="space-between"
-              >
-                <Text textOverflow="ellipsis" onClick={() => editStash(l.id, "Location")}>
-                  {l.house} {l.street}: {JSON.parse(l.notes).content[0].content[0].text}
-                </Text>
-                <Spacer />
-                <Icon
-                  as={FcFullTrash}
-                  h={5}
-                  w={5}
-                  onClick={async () => {
-                    deleteStashMutation({ id: l.id, stashType: "Location" })
-                      .then(() => refetchStashes())
-                      .catch((e) => console.log(`Error deleting location stash: ${e}`))
-                  }}
-                />
-              </MenuItem>
-            ))}
-            {jobStashes?.map((j, kk) => (
-              <MenuItem
-                key={kk}
-                fontWeight="semibold"
-                onKeyDownCapture={(e) => e.key === "Enter" && editStash(j.id, "Job")}
-                justifyContent="space-between"
-              >
-                <Text textOverflow="ellipsis" onClick={() => editStash(j.id, "Job")}>
-                  {j.title}: {JSON.parse(j.notes).content[0].content[0].text}
-                </Text>
-                <Spacer />
-                <Icon
-                  as={FcFullTrash}
-                  h={5}
-                  w={5}
-                  onClick={async () => {
-                    deleteStashMutation({ id: j.id, stashType: "Job" })
-                      .then(() => refetchStashes())
-                      .catch((e) => console.log(`Error deleting job stash: ${e}`))
-                  }}
-                />
-              </MenuItem>
-            ))}
-          </MenuList>
-        </Menu>
+              ))}
+              {jobStashes?.map((j, kk) => (
+                <MenuItem
+                  key={kk}
+                  fontWeight="semibold"
+                  onKeyDownCapture={(e) => e.key === "Enter" && editStash(j.id, "Job")}
+                  justifyContent="space-between"
+                >
+                  <Text textOverflow="ellipsis" onClick={() => editStash(j.id, "Job")}>
+                    {j.title}: {JSON.parse(j.notes).content[0].content[0].text}
+                  </Text>
+                  <Spacer />
+                  <Icon
+                    as={FcFullTrash}
+                    h={5}
+                    w={5}
+                    onClick={async () => {
+                      deleteStashMutation({ id: j.id, stashType: "Job" })
+                        .then(() => refetchStashes())
+                        .catch((e) => console.log(`Error deleting job stash: ${e}`))
+                    }}
+                  />
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
+        </Box>
         <Button
           size="sm"
           variant="outline"

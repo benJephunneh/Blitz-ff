@@ -9,7 +9,7 @@ import updateJob from "../mutations/updateJob"
 import getJob from "../queries/getJob"
 import db, { Job, User } from "db"
 import EditorField from "app/core/components/editor/components/EditorField"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import createStash from "app/stashes/mutations/createStash"
 import updateStash from "app/stashes/mutations/updateStash"
@@ -34,6 +34,7 @@ import {
 import { Ctx } from "@blitzjs/next"
 import findJobsByWeek from "../queries/findJobsByWeek"
 import WeekView from "app/calendar/components/WeekView"
+import headerContext from "app/core/components/header/headerContext"
 
 const handleDayClick = async (d: Date) => {
   const dayBefore = subDays(d, 1)
@@ -77,6 +78,7 @@ const JobModalForm = ({
   onSuccess,
   ...props
 }: JobModalFormProps) => {
+  const { jobs } = useContext(headerContext)
   const [createJobMutation] = useMutation(createJob)
   const [updateJobMutation] = useMutation(updateJob)
   const [createStashMutation] = useMutation(createStash)
@@ -89,17 +91,19 @@ const JobModalForm = ({
   const stashType = "Job"
   const stashFootnoteColor = useColorModeValue("red", "cyan.200")
 
-  const [job, { refetch: refetchJob }] = useQuery(
-    getJob,
-    {
-      where: { id: jobId },
-    },
-    {
-      enabled: !!jobId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    }
-  )
+  const job = jobs?.find(({ id }) => id === jobId)
+  console.table({ ...job })
+  // const [job, { refetch: refetchJob }] = useQuery(
+  //   getJob,
+  //   {
+  //     where: { id: jobId },
+  //   },
+  //   {
+  //     enabled: !!jobId,
+  //     staleTime: Infinity,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // )
 
   const [jobStash] = useQuery(
     getStash,
@@ -133,7 +137,7 @@ const JobModalForm = ({
   }
 
   const onSubmit = async (values) => {
-    console.log(JSON.stringify(values))
+    console.table({ values })
     const { notes, stashing, range, ...formSubmission } = values
     const [start, end] = [...range.map((t) => new Date(t))]
     console.log({ start })
@@ -167,7 +171,6 @@ const JobModalForm = ({
           notes,
           ...formSubmission,
         })
-        refetchJob().catch((e) => console.log(e.message))
       } else {
         jobRet = createJobMutation({
           customerId,
@@ -239,7 +242,7 @@ const JobModalForm = ({
                 label="Date range"
                 start={start}
                 end={end}
-                onClickDay={console.log}
+                onClickDay={handleDayClick}
                 onClickWeekNumber={handleWeekNumberClick}
                 // console.log({ w })
                 // handleWeekNumberClick(w).catch((e) => console.error(e))

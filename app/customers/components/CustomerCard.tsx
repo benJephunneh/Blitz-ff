@@ -70,8 +70,15 @@ type CustomerCardProps = {
 }
 
 const CustomerCard = ({ ...props }: CustomerCardProps) => {
-  const { jobId, customer, refetchCustomer, locationId, locations, editLocation } =
-    useContext(headerContext)
+  const {
+    customer,
+    refetchCustomer,
+    locationId,
+    locations,
+    refetchLocations,
+    editLocation,
+    jobId,
+  } = useContext(headerContext)
   const location = locations?.find((l) => l.id === locationId)
   const [editingNote, setEditingNote] = useState(false)
   const router = useRouter()
@@ -230,7 +237,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
                 location={location}
                 onSuccess={async () => {
                   refetchCustomer()
-                  // await refetchLocations()
+                  refetchLocations()
                 }}
               />
             </Box>

@@ -25,6 +25,7 @@ import headerContext from "app/core/components/header/headerContext"
 import getLocation from "app/locations/queries/getLocation"
 import { FcAdvertising, FcDoughnutChart, FcElectricalSensor, FcPlus } from "react-icons/fc"
 import { FaEgg } from "react-icons/fa"
+import JobCard from "app/jobs/components/JobCard"
 
 const ShowCustomerPage: BlitzPage = () => {
   // const { customer, locationId } = useContext(headerContext)
@@ -48,6 +49,7 @@ const ShowCustomerPage: BlitzPage = () => {
       <Flex alignItems="start" p={4} position="absolute">
         {/* <HStack borderRadius="md" bg={useColorModeValue("blackAlpha.100", "gray.600")}> */}
         <CustomerCard />
+        <JobCard />
         {/* <Grid templateRows='repeat(3, 1fr)' gap={6} w={50} h='full'>
             {/* <Box bg='gray' h={5} w={50} borderWidth={1} />
             <Box bg='tomato' h={5} w={50} borderWidth={1} />

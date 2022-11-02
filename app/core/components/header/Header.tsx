@@ -22,7 +22,7 @@ type HeaderProps = {
 
 const Header = ({ children }: HeaderProps) => {
   const { isLoggedIn, isLoggedOut } = useContext(userContext)
-  const { customer } = useContext(headerContext)
+  const { customer, customerId } = useContext(headerContext)
   const router = useRouter()
   const pathname = router.pathname
   // const [drawerIsOpen, setDrawerIsOpen] = useState(false)
@@ -32,6 +32,8 @@ const Header = ({ children }: HeaderProps) => {
   // const isLoggedIn = !!session.userId
   // const isLoggedOut = !session.userId && !session.isLoading
   const [showBreadcrumbs, setShowBreadcrumbs] = useState(isLoggedIn)
+
+  // console.table({ ...customer })
 
   useEffect(() => {
     if (!router.isReady) return
@@ -79,7 +81,7 @@ const Header = ({ children }: HeaderProps) => {
                 )}
               </Box>
 
-              {customer && <LocationPicker icon={FcTimeline} />}
+              {customerId && <LocationPicker icon={FcTimeline} />}
             </HStack>
             {isLoggedOut && <HeaderLoggedOut />}
             {isLoggedIn && <HeaderLoggedIn />}

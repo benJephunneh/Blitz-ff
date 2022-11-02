@@ -36,29 +36,30 @@ const JobPanel = () => {
   const {
     locationId,
     jobId,
-    job,
+    jobs,
     jobStash,
     createJob,
     editJob,
     pickJob,
     refetchCustomer,
+    // refetchJob,
     refetchStashes,
   } = useContext(headerContext)
   // const [jobId, setJobId] = useState<number>()
   // const [job, setJob] = useState<Job>({} as Job)
-  const [jobs, { refetch: refetchJobs }] = useQuery(
-    getJobs,
-    {
-      where: { locationId },
-      orderBy: [{ start: "asc" }, { end: "asc" }, { title: "asc" }],
-    },
-    {
-      refetchOnWindowFocus: false,
-      // refetchInterval: 5000,
-      // refetchIntervalInBackground: true,
-      staleTime: Infinity,
-    }
-  )
+  // const [jobs, { refetch: refetchJobs }] = useQuery(
+  //   getJobs,
+  //   {
+  //     where: { locationId },
+  //     orderBy: [{ start: "asc" }, { end: "asc" }, { title: "asc" }],
+  //   },
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     // refetchInterval: 5000,
+  //     // refetchIntervalInBackground: true,
+  //     staleTime: Infinity,
+  //   }
+  // )
 
   // useEffect(() => {
   //   setJob(() => {
@@ -67,6 +68,11 @@ const JobPanel = () => {
   //   })
   // }, [jobId, jobs])
 
+  // console.table({ ...job })
+  // console.log({ jobId })
+
+  const locationJobs = jobs?.filter((j) => j.locationId === locationId)
+  const job = locationJobs?.find((j) => j.id === jobId)
   const [range, setRange] = useState<Range>()
   useEffect(() => {
     if (job) setRange([job.start as Date, job.end as Date])
@@ -83,30 +89,36 @@ const JobPanel = () => {
     <>
       <Flex justify="space-between" mb={4}>
         <HStack spacing={4}>
-          <Menu closeOnSelect={false}>
-            <MenuButton
-              as={Button}
-              size="sm"
-              variant="outline"
-              rightIcon={<Icon as={FaChevronDown} />}
-            >
-              Job list
-            </MenuButton>
-            <MenuList>
-              <MenuOptionGroup defaultValue={!jobId ? "all" : jobId.toString()} type="radio">
-                <MenuItemOption value="all" onClick={() => pickJob(undefined)}>
-                  All jobs
-                </MenuItemOption>
-                <MenuDivider />
-                {jobs.map((j, ii) => (
-                  <MenuItemOption value={jobId?.toString()} key={ii} onClick={() => pickJob(j.id)}>
-                    {j.title}
+          <Box>
+            <Menu closeOnSelect={false}>
+              <MenuButton
+                as={Button}
+                size="sm"
+                variant="outline"
+                rightIcon={<Icon as={FaChevronDown} />}
+              >
+                Job list
+              </MenuButton>
+              <MenuList>
+                <MenuOptionGroup defaultValue={!jobId ? "all" : jobId.toString()} type="radio">
+                  <MenuItemOption value="all" onClick={() => pickJob(undefined)}>
+                    All jobs
                   </MenuItemOption>
-                ))}
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          {jobId && (
+                  <MenuDivider />
+                  {locationJobs?.map((j, ii) => (
+                    <MenuItemOption
+                      value={jobId?.toString()}
+                      key={ii}
+                      onClick={() => pickJob(j.id)}
+                    >
+                      {j.title}
+                    </MenuItemOption>
+                  ))}
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+          </Box>
+          {job && (
             <Text
               fontSize="xl"
               fontWeight="semibold"
@@ -150,7 +162,7 @@ const JobPanel = () => {
         </ButtonGroup>
       </Flex>
 
-      {jobId && (
+      {job && (
         <>
           <Calendar value={range} />
 
@@ -159,15 +171,16 @@ const JobPanel = () => {
               modelType="Job"
               onSuccess={async () => {
                 refetchCustomer()
-                await refetchJobs()
+                // await refetchJob()
+                // await refetchJobs()
               }}
             />
           </Box>
         </>
       )}
-      {!jobId && (
+      {!job && (
         <UnorderedList>
-          {jobs.map((j, ii) => (
+          {locationJobs?.map((j, ii) => (
             <ListItem
               key={ii}
               onClick={() => pickJob(j.id)}

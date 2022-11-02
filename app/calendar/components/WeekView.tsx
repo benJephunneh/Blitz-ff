@@ -28,7 +28,7 @@ type WeekViewProps = {
   // onClose: () => void
 }
 
-const DayView = ({ weekNumber = getWeek(new Date()) }: WeekViewProps) => {
+const DayView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }: WeekViewProps) => {
   const [jobsByWeek, { refetch: refetchJobsWeek }] = useQuery(
     findJobsByWeek,
     { weekNumber },
@@ -37,18 +37,20 @@ const DayView = ({ weekNumber = getWeek(new Date()) }: WeekViewProps) => {
   // console.table({ ...jobsByWeek })
 
   return (
-    <Box borderWidth={1} borderColor="blue.400" borderRadius={4} w="full">
-      {jobsByWeek &&
-        jobsByWeek.map((j, ii) => (
-          <>
-            {/* onClick: Pick customer */}
-            {/* onClick: Pick location */}
-            {/* onClick: Pick job */}
-            {/* If completed, opacity change */}
-            <pre>{JSON.stringify(j, null, 2)}</pre>
-          </>
-        ))}
-    </Box>
+    <Flex>
+      <Box borderWidth={1} borderColor="blue.400" borderRadius={4} w="full">
+        {jobsByWeek &&
+          jobsByWeek.map((j, ii) => (
+            <>
+              {/* onClick: Pick customer */}
+              {/* onClick: Pick location */}
+              {/* onClick: Pick job */}
+              {/* If completed, opacity change */}
+              <pre>{JSON.stringify(j, null, 2)}</pre>
+            </>
+          ))}
+      </Box>
+    </Flex>
   )
 }
 

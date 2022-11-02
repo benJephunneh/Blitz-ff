@@ -34,7 +34,7 @@ const TestCalendar: BlitzPage = () => {
   const [value, onChange] = useState<Date>()
   const toast = useToast()
   const { isOpen, onClose, onToggle } = useDisclosure()
-  const [weekNumber, setWeekNumber] = useState(getWeek(new Date()))
+  const [weekNumber, setWeekNumber] = useState(getWeek(new Date()) - 1)
   const [calendarView, setCalendarView] = useState(<WeekView />)
 
   const handleWeekNumberClick = async (w: number) => {

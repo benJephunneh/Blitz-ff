@@ -11,6 +11,7 @@ import { createContext } from "react"
 
 export type HeaderContext = {
   // Customer
+  customerId?: number
   customer?: Customer | null
   createCustomer: () => void
   editCustomer: () => void
@@ -18,10 +19,9 @@ export type HeaderContext = {
   // gotoCustomer: (id: number) => void
 
   // Location
-  locations?: Location[]
   locationId?: number
   locationIds?: Array<{ id: number }>
-  location?: Location
+  locations?: Location[]
   createLocation: () => void
   editLocation: () => void
   deleteLocation: () => void
@@ -29,7 +29,8 @@ export type HeaderContext = {
 
   // Job
   jobId?: number
-  job?: Job | null
+  // job?: Job | null
+  jobs?: Job[]
   createJob: () => void
   editJob: () => void
   deleteJob: () => void
@@ -54,6 +55,9 @@ export type HeaderContext = {
   // searchResults: Customer[] | undefined
 
   refetchCustomer: () => void
+  refetchLocations: () => void
+  // refetchJob: () => void
+  refetchJobs: () => void
   refetchStashes: () => void
 }
 

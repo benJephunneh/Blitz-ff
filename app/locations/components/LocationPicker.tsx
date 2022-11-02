@@ -1,6 +1,7 @@
 import { Routes } from "@blitzjs/next"
 import { useQuery } from "@blitzjs/rpc"
 import {
+  Box,
   Button,
   Heading,
   HStack,
@@ -51,47 +52,49 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
   // const primaryLocation = locations?.locations.at(0)
 
   return (
-    <Menu>
-      <MenuButton
-        as={Button}
-        size="sm"
-        variant="ghost"
-        px={1}
-        rightIcon={<Icon pr={1} as={FaChevronDown} />}
-      >
-        <HStack>
-          <Icon as={icon} w={5} h={5} />
-          <Heading size="sm" opacity={useColorModeValue("0.7", "0.9")}>
-            Location list
-            {/* {`${primaryLocation?.house} ${primaryLocation?.street}, ${primaryLocation?.city}  ${primaryLocation?.zipcode}`} */}
-            {/* {customer?.firstname} {customer?.lastname} */}
-          </Heading>
-        </HStack>
-      </MenuButton>
+    <Box>
+      <Menu>
+        <MenuButton
+          as={Button}
+          size="sm"
+          variant="ghost"
+          px={1}
+          rightIcon={<Icon pr={1} as={FaChevronDown} />}
+        >
+          <HStack>
+            <Icon as={icon} w={5} h={5} />
+            <Heading size="sm" opacity={useColorModeValue("0.7", "0.9")}>
+              Location list
+              {/* {`${primaryLocation?.house} ${primaryLocation?.street}, ${primaryLocation?.city}  ${primaryLocation?.zipcode}`} */}
+              {/* {customer?.firstname} {customer?.lastname} */}
+            </Heading>
+          </HStack>
+        </MenuButton>
 
-      <MenuList>
-        {locations?.map((location) => (
-          // <Link
-          //   key={location.id}
-          //   href={Routes.ShowLocationPage({ customerId: customer?.id, locationId: location.id })}
-          //   passHref
-          // >
-          <MenuItem key={location.id} onClick={() => pickLocation(location.id)}>
-            <HStack>
-              <Text fontWeight="semibold">
-                {`${location.house} ${location.street}, ${location.city}  ${location.zipcode}`}
-              </Text>
-              {location.primary && (
-                <Text fontSize="xs" color="orange">
-                  (primary)
+        <MenuList>
+          {locations?.map((location) => (
+            // <Link
+            //   key={location.id}
+            //   href={Routes.ShowLocationPage({ customerId: customer?.id, locationId: location.id })}
+            //   passHref
+            // >
+            <MenuItem key={location.id} onClick={() => pickLocation(location.id)}>
+              <HStack>
+                <Text fontWeight="semibold">
+                  {`${location.house} ${location.street}, ${location.city}  ${location.zipcode}`}
                 </Text>
-              )}
-            </HStack>
-          </MenuItem>
-          // </Link>
-        ))}
-      </MenuList>
-    </Menu>
+                {location.primary && (
+                  <Text fontSize="xs" color="orange">
+                    (primary)
+                  </Text>
+                )}
+              </HStack>
+            </MenuItem>
+            // </Link>
+          ))}
+        </MenuList>
+      </Menu>
+    </Box>
   )
 }
 

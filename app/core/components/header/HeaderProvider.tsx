@@ -26,8 +26,10 @@ import JobModalForm from "app/jobs/components/JobModalForm"
 import { Range } from "app/jobs/components/JobPanel"
 import updateJob from "app/jobs/mutations/updateJob"
 import getJob from "app/jobs/queries/getJob"
+import getJobs from "app/jobs/queries/getJobs"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import updateLocation from "app/locations/mutations/updateLocation"
+import getLocation from "app/locations/queries/getLocation"
 import getLocations from "app/locations/queries/getLocations"
 import SearchInput from "app/search/SearchInput"
 import SearchResults from "app/search/SearchResults"
@@ -106,8 +108,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [stashType, setStashType] = useState<StashType>()
   const [editingStash, setEditingStash] = useState(false)
 
-  // Customer
-  const [customer, { refetch: refetchCustomer }] = useQuery(
+  // Data
+  const [customer, { setQueryData: setCustomerQueryData, refetch: refetchCustomer }] = useQuery(
     getCustomer,
     { where: { id: customerId } },
     { enabled: !!customerId, refetchOnWindowFocus: false }
@@ -129,13 +131,48 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
       refetchOnWindowFocus: false,
     }
   )
+  // const [location, { setQueryData: setLocationQueryData, refetch: refetchLocation }] = useQuery(
+  //   getLocation, {
+  //   where: { id: locationId }
+  // }, {
+  //   enabled: !!locationId,
+  //   staleTime: Infinity,
+  //   refetchOnWindowFocus: false,
+  // })
+  const [jobs, { refetch: refetchJobs }] = useQuery(
+    getJobs,
+    {
+      where: { customerId: customerId },
+      orderBy: { start: "asc" },
+    },
+    {
+      enabled: !!customerId && !!locationId,
+      refetchOnWindowFocus: false,
+      // staleTime: Infinity,
+    }
+  )
+  // const [job, { setQueryData: setJobQueryData, refetch: refetchJob }] = useQuery(
+  //   getJob,
+  //   { id: jobId },
+  //   { enabled: !!jobId, suspense: !!jobId, staleTime: Infinity }
+  // )
 
   useEffect(() => {
     refetchCustomer()
       .then(() => setJobId(undefined))
       .then(() => refetchLocations())
+      .then(() => refetchJobs())
       .catch(console.error)
   }, [customerId]) // eslint-disable-line
+  // useEffect(() => {
+  //   const j =
+  // })
+  // useEffect(() => {
+  //   refetchLocation()
+  //     .then(() => setJobId(undefined))
+  //     .then(() => refetchJobs())
+  //     .catch(console.error)
+  // }, [refetchLocation, refetchJobs, locationId])
   useEffect(() => {
     let ids: { id: number }[] = []
     if (locations) {
@@ -159,22 +196,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   // setLocation(locationIds?.length && locationIds.at(0)?.id)
   //   // console.log(`locationId (HeaderProvider): ${locationId}`)
   // }, [locationId]) // eslint-disable-line
-
-  // const refetchJob = useCallback(async () => {
-  //   const j = await db.job.findFirst({ where: { id: jobId } })
-  //   setJob(j ?? undefined)
-  // }, [jobId])
-
-  const [job, { setQueryData: setJobQueryData, refetch: refetchJob }] = useQuery(
-    getJob,
-    { id: jobId },
-    { enabled: !!jobId, suspense: !!jobId }
-  )
-
-  useEffect(() => {
-    refetchJob().catch(console.error)
-    // setJob(j)
-  }, [jobId]) // eslint-disable-line
 
   // Stash
   const [
@@ -234,11 +255,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         createJob: () => setCreatingJob(true),
         editJob: () => setEditingJob(true),
         deleteJob: () => setDeletingJob(true),
-        pickJob: async (id) => {
-          setJobId(id)
-          // const j = await db.job.findFirst({ where: { id } })
-          // setJob(j ?? undefined)
-        },
+        pickJob: (id) => setJobId(id),
 
         editStash: (id, type) => {
           setStashId(id)
@@ -246,15 +263,15 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
           setEditingStash(true)
         },
 
+        customerId,
         customer,
         locations,
         locationId,
         locationIds,
+        jobId,
+        jobs,
         customerStashes,
         locationStashes,
-        jobId,
-        job,
-        // jobStash,
         jobStashes,
         // estimateStashes,
         // invoiceStashes,
@@ -267,8 +284,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         openSearch,
         closeSearch,
 
-        // refetchCustomer,
         refetchCustomer,
+        refetchLocations,
+        // refetchJob,
+        refetchJobs,
         refetchStashes,
       }}
     >
@@ -292,11 +311,13 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             onSuccess={async (customer) => {
               if (customer) {
                 if ("stashType" in customer) await refetchStashes()
-                else if (editingCustomer) await refetchCustomer()
                 else {
+                  await setCustomerQueryData(customer)
                   setLocationId(undefined)
+                  setJobId(undefined)
                   editingStash && refetchStashes()
-                  await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
+                  if (creatingCustomer)
+                    await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
                 }
                 // await refetchCustomer()
                 //   .catch((e) =>
@@ -330,12 +351,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               if (location) {
                 if ("stashType" in location) await refetchStashes()
                 else {
-                  await refetchLocations()
                   setLocationId(location.id)
-                  if (editingStash) {
+                  setJobId(undefined)
+                  if (editingStash)
                     await router.push(Routes.ShowCustomerPage({ customerId: location.customerId }))
-                    // .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
-                  }
                 }
               }
 
@@ -361,10 +380,11 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               if (job) {
                 if ("stashType" in job) await refetchStashes()
                 else {
-                  await setJobQueryData(job)
+                  await refetchJobs()
                   setJobId(job.id)
+                  if (editingStash)
+                    await router.push(Routes.ShowCustomerPage({ customerId: job.customerId }))
                 }
-                // await refetchJobs()
               }
 
               creatingJob && setCreatingJob(false)
@@ -384,9 +404,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
             }}
             onConfirm={async () => {
               await deleteCustomerMutation({ id: customer!.id })
-                .then(() => refetchStashes())
-                .then(() => router.push(Routes.CustomersPage()))
-                .catch((e) => console.log(`customerProvider DeleteModal error: ${e.message}`))
+              await refetchStashes()
+              await router.push(Routes.CustomersPage())
             }}
           />
 

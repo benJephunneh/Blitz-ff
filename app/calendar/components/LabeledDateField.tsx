@@ -174,7 +174,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
                             </option>
                           ))}
                         </Select>
-                        <Text>{`${format(value.at(1), "EEEE")}`}</Text>
+                        <Text>{`${format(value.at(0), "EEEE")}`}</Text>
                       </HStack>
                       <StatHelpText>{formatDistance(value.at(0), new Date())}</StatHelpText>
                     </>

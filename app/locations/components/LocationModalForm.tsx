@@ -29,6 +29,7 @@ import TextAreaField from "app/core/components/forms/components/TextAreaField"
 import db from "db"
 import { useContext } from "react"
 import headerContext from "app/core/components/header/headerContext"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
 type Location = PromiseReturnType<typeof createLocation>
 
@@ -39,6 +40,7 @@ type LocationModalFormProps = {
   customerId?: number
   customerPhone?: string
   locationId?: number
+  location?: Location
   stashId?: number
   disableStash?: boolean
   // mutationType?: MutationType
@@ -52,8 +54,8 @@ const LocationModalForm = ({
   customerId,
   customerPhone,
   locationId,
-  stashId,
   // location,
+  stashId,
   // locationStash,
   disableStash,
   // mutationType = "New",
@@ -93,17 +95,18 @@ const LocationModalForm = ({
     }
   )
 
-  const [user] = useQuery(
-    getUser,
-    {
-      id: locationStash?.userId,
-    },
-    {
-      enabled: !!locationStash,
-      suspense: !!locationStash,
-      refetchOnWindowFocus: false,
-    }
-  )
+  // const [user] = useQuery(
+  //   getUser,
+  //   {
+  //     id: locationStash?.userId,
+  //   },
+  //   {
+  //     enabled: !!locationStash,
+  //     suspense: !!locationStash,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // )
+  const { user } = useCurrentUser()
 
   const textFootnoteColor = useColorModeValue("red", "cyan.200")
 
@@ -252,9 +255,9 @@ const LocationModalForm = ({
       submitText={location ? "Update" : "Create"}
       initialValues={initialValues}
       onSubmit={(values) => {
-        console.log(JSON.stringify(values, null, 2))
+        console.table({ values })
         onSubmit(values)
-          .then((location) => onSuccess?.(location))
+          .then(onSuccess)
           // .then(() => onClose())
           .catch((e) => handleError(e))
       }}

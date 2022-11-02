@@ -183,6 +183,7 @@ const CustomerModalForm = ({
     lastname: customerStash?.lastname || customer?.lastname || undefined,
     companyname: customerStash?.companyname || customer?.companyname || undefined,
     email: customerStash?.email || customer?.email || undefined,
+    phone: customerStash?.phone || customer?.phone || undefined,
     notes: customerStash?.notes || customer?.notes || null,
   }
 
