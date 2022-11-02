@@ -101,6 +101,11 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [weekNumber, setWeekNumber] = useState<number>()
   const [date, setDate] = useState<Date>()
 
+  // Stashes
+  const [stashId, setStashId] = useState<number>()
+  const [stashType, setStashType] = useState<StashType>()
+  const [editingStash, setEditingStash] = useState(false)
+
   // Customer
   const [customer, { refetch: refetchCustomer }] = useQuery(
     getCustomer,
@@ -187,10 +192,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
       // refetchIntervalInBackground: true,
     }
   )
-  const [stashId, setStashId] = useState<number>()
-  const [stashType, setStashType] = useState<StashType>()
-  const [editingStash, setEditingStash] = useState(false)
-
   // Search
   const { isOpen: searchIsOpen, onOpen: openSearch, onClose: closeSearch } = useDisclosure()
   const searchField = useRef<any>()
@@ -329,13 +330,12 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               if (location) {
                 if ("stashType" in location) await refetchStashes()
                 else {
-                  await refetchCustomer()
+                  await refetchLocations()
                   setLocationId(location.id)
                   if (editingStash) {
                     await router.push(Routes.ShowCustomerPage({ customerId: location.customerId }))
                     // .catch((e) => console.log(`customerProvider LocationModal error: ${e}`))
                   }
-                  // refetchCustomer()
                 }
               }
 

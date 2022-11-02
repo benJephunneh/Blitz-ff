@@ -28,53 +28,35 @@ import Calendar from "react-calendar"
 import Layout from "app/core/layouts/Layout"
 import "react-calendar/dist/Calendar.css"
 import DayView from "app/calendar/components/DayView"
+import WeekView from "app/calendar/components/WeekView"
 
 const TestCalendar: BlitzPage = () => {
   const [value, onChange] = useState<Date>()
   const toast = useToast()
   const { isOpen, onClose, onToggle } = useDisclosure()
-  const [startDateTime, setStartDateTime] = useState<Date>(new Date())
-  const [endDateTime, setEndDateTime] = useState<Date>(new Date())
-  const [monday, setMonday] = useState<Date>()
-  // const [friday, setFriday] = useState<Date>()
+  const [weekNumber, setWeekNumber] = useState(getWeek(new Date()))
+  const [calendarView, setCalendarView] = useState(<WeekView />)
 
   const handleWeekNumberClick = async (w: number) => {
     console.log({ w })
-    const today = new Date()
-    console.log({ today })
-    const currentWeek = getWeek(new Date())
-    const jan1Week = getWeek(new Date(today.getFullYear(), 0, 0))
-    console.log({ currentWeek })
-    console.log({ jan1Week })
-    const dayDifference = (currentWeek - (w + 1)) * 7
-    console.log({ dayDifference })
-    const monday = startOfWeek(subDays(new Date(), dayDifference), { weekStartsOn: 1 })
-    // const friday = addDays(monday, 4)
-
-    // console.log({ w })
-    // console.log({ currentWeek })
-    // console.log(`weeksToDays: ${weeksToDays(w)}`)
-    // console.table([{ Monday: monday, Friday: friday }])
-
-    // return {
-    //   monday,
-    //   friday,
-    // }
-
-    setMonday(monday)
-    // setFriday(friday)
+    setWeekNumber(w)
+    setCalendarView(<WeekView weekNumber={w} />)
+  }
+  const handleDayClick = async (d: Date) => {
+    console.log({ d })
+    setCalendarView(<DayView day={d} />)
   }
 
-  useEffect(() => {
-    // console.log(JSON.stringify(value))
-    if (Array.isArray(value)) {
-      if (value.some((v) => typeof v == undefined)) return
-      ;(async () => {
-        setStartDateTime(value.at(0).setHours(9, 0, 0, 0))
-        setEndDateTime(value.at(1).setHours(17, 0, 0, 0))
-      })().catch((e) => console.log(e.message))
-    }
-  }, [value])
+  // useEffect(() => {
+  //   // console.log(JSON.stringify(value))
+  //   if (Array.isArray(value)) {
+  //     if (value.some((v) => typeof v == undefined)) return
+  //     ;(async () => {
+  //       setStartDateTime(value.at(0).setHours(9, 0, 0, 0))
+  //       setEndDateTime(value.at(1).setHours(17, 0, 0, 0))
+  //     })().catch((e) => console.log(e.message))
+  //   }
+  // }, [value])
   // useEffect(() => {
   //   console.log(startDateTime)
   //   console.log(endDateTime)
@@ -98,22 +80,24 @@ const TestCalendar: BlitzPage = () => {
         value={value}
         selectRange
         showWeekNumbers
+        onClickDay={handleDayClick}
         onClickWeekNumber={handleWeekNumberClick}
       />
-      {monday && (
+      {calendarView}
+      {/* {monday && (
         <>
           <HStack justify="space-evenly" alignItems="start" mt={2} spacing={0}>
             <DayView date={monday} />
-            {/* <Divider orientation="vertical" /> */}
+            <Divider orientation="vertical" />
             <DayView date={addDays(monday, 1)} />
-            {/* <Divider orientation="vertical" /> */}
+            <Divider orientation="vertical" />
             <DayView date={addDays(monday, 2)} />
-            {/* <Divider orientation="vertical" /> */}
+            <Divider orientation="vertical" />
             <DayView date={addDays(monday, 3)} />
-            {/* <Divider orientation="vertical" /> */}
+            <Divider orientation="vertical" />
             <DayView date={addDays(monday, 4)} />
           </HStack>
-          {/* <Grid templateColumns="repeat(5, 1fr)" justifyContent="center" w="100vw">
+          <Grid templateColumns="repeat(5, 1fr)" justifyContent="center" w="100vw">
             <GridItem colSpan={1}>
               <Center>
                 <Text>Monday jobs</Text>
@@ -142,9 +126,9 @@ const TestCalendar: BlitzPage = () => {
               </Center>
             </GridItem>
           </Grid>
-          <Text>{monday?.toDateString()}</Text> */}
+          <Text>{monday?.toDateString()}</Text>
         </>
-      )}
+      )} */}
     </Flex>
   )
 }

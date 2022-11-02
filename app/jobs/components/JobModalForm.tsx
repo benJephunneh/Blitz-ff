@@ -9,7 +9,7 @@ import updateJob from "../mutations/updateJob"
 import getJob from "../queries/getJob"
 import db, { Job, User } from "db"
 import EditorField from "app/core/components/editor/components/EditorField"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import createStash from "app/stashes/mutations/createStash"
 import updateStash from "app/stashes/mutations/updateStash"
@@ -33,6 +33,7 @@ import {
 } from "date-fns"
 import { Ctx } from "@blitzjs/next"
 import findJobsByWeek from "../queries/findJobsByWeek"
+import WeekView from "app/calendar/components/WeekView"
 
 const handleDayClick = async (d: Date) => {
   const dayBefore = subDays(d, 1)
@@ -83,6 +84,7 @@ const JobModalForm = ({
   const [deleteStashMutation] = useMutation(deleteStash)
   const [user, setUser] = useState<User>()
   const [calendarValue, onCalendarChange] = useState(new Date())
+  const [calendarView, setCalendarView] = useState(<WeekView />)
 
   const stashType = "Job"
   const stashFootnoteColor = useColorModeValue("red", "cyan.200")
@@ -113,50 +115,21 @@ const JobModalForm = ({
   )
 
   const today = new Date()
-  let m: Date
-  if (isMonday(today)) m = today
-  else m = previousMonday(today)
-  const [monday, setMonday] = useState<Date | null>(m)
-  const [friday, setFriday] = useState<Date | null>(addDays(m, 4))
-
-  if (job) {
-    if (isMonday(job.start!)) {
-      setMonday(job.start)
-      setFriday(addDays(job.start!, 4))
-    } else {
-      const m = previousMonday(job.start!)
-      setMonday(m)
-      setFriday(addDays(m, 4))
-    }
-  } else if (jobStash) {
-    if (isMonday(jobStash.start!)) {
-      setMonday(jobStash.start)
-      setFriday(addDays(jobStash.start!, 4))
-    } else {
-      const m = previousMonday(jobStash.start!)
-      setMonday(m)
-      setFriday(addDays(m, 4))
-    }
-  }
-  const [jobsByWeek] = useQuery(
-    findJobsByWeek,
-    { range: [monday, friday] },
-    { refetchOnWindowFocus: false }
-  )
+  // let m: Date
+  // if (isMonday(today)) m = today
+  // else m = previousMonday(today)
+  // const [monday, setMonday] = useState<Date | null>(m)
+  // const [friday, setFriday] = useState<Date | null>(addDays(m, 4))
+  const [weekNumber, setWeekNumber] = useState(getWeek(today))
 
   const handleWeekNumberClick = async (w: number) => {
-    const currentWeek = getWeek(new Date())
-    const dayDifference = (currentWeek - (w + 1)) * 7
-    const monday = startOfWeek(subDays(new Date(), dayDifference), { weekStartsOn: 1 })
-    const friday = addDays(monday, 4)
-
     console.log({ w })
-    console.log({ currentWeek })
-    console.log(`weeksToDays: ${weeksToDays(w)}`)
-    console.table([{ Monday: monday, Friday: friday }])
-
-    setMonday(monday)
-    setFriday(friday)
+    setWeekNumber(w)
+    setCalendarView(<WeekView weekNumber={w} />)
+  }
+  const handleDayClick = async (d: Date) => {
+    console.log({ d })
+    setCalendarView(<DayView day={d} />)
   }
 
   const onSubmit = async (values) => {
@@ -267,18 +240,19 @@ const JobModalForm = ({
                 start={start}
                 end={end}
                 onClickDay={console.log}
-                onClickWeekNumber={(w) => {
-                  // console.log({ w })
-                  handleWeekNumberClick(w).catch((e) => console.error(e))
-                }}
+                onClickWeekNumber={handleWeekNumberClick}
+                // console.log({ w })
+                // handleWeekNumberClick(w).catch((e) => console.error(e))
+                // }}
               />
             </GridItem>
             <GridItem area="n">
               <TextAreaField name="notes" label="Notes" placeholder="Add notes about this job..." />
             </GridItem>
-            {/* <GridItem area="s">
-              <DayView date={new Date()} />
-            </GridItem> */}
+            <GridItem area="s">
+              {/* <DayView date={new Date()} /> */}
+              {calendarView}
+            </GridItem>
           </Grid>
           {/* <LabeledTextField name="start" label="Start date/time" /> */}
           {/* <LabeledTextField name="end" label="End date/time" /> */}

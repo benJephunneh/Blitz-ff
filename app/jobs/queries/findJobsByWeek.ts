@@ -1,4 +1,5 @@
 import { resolver } from "@blitzjs/rpc"
+import { getWeek, startOfWeek, addDays, subDays } from "date-fns"
 import db from "db"
 import { z } from "zod"
 import { Range } from "../components/JobPanel"
@@ -12,27 +13,39 @@ import { Range } from "../components/JobPanel"
 //   query: dateSchema,
 // })
 type FindJobsProps = {
-  range?: Range
+  // range?: Range
+  weekNumber: number
 }
 
 export default resolver.pipe(
   resolver.authorize(),
   // resolver.zod(FindJobsSchema),
 
-  async ({ range }: FindJobsProps) => {
-    if (!range || !Array.isArray(range) || range.some((d) => d == null)) return []
+  async ({ weekNumber }: FindJobsProps) => {
+    const currentWeek = getWeek(new Date())
+    const dayDifference = (currentWeek - (weekNumber + 1)) * 7
+    const start = startOfWeek(subDays(new Date(), dayDifference), { weekStartsOn: 1 }) // Monday
+    const end = addDays(start, 4) // Friday
+    // console.log({ start })
+    // console.log({ end })
+    // console.log({ currentWeek })
+    // console.log(`weeksToDays: ${weeksToDays(w)}`)
+    // console.table([{ Monday: monday, Friday: friday }])
 
-    console.log(`findJobsByWeek: ${range}`)
-    const start = range.at(0)!
-    const end = range.at(1)!
+    // if (!range || !Array.isArray(range) || range.some((d) => d == null)) return []
+
+    // console.log(`findJobsByWeek: ${range}`)
+    // const start = range.at(0)!
+    // const end = range.at(1)!
 
     const jobs = await db.job.findMany({
       where: {
         AND: [
-          { OR: [{ start: { gte: start } }, { end: { gte: start } }] }, // Starts or ends on Monday
-          { OR: [{ end: { lte: end } }, { end: { lte: end } }] }, // Starts or ends on Friday
+          { end: { gte: start } }, // Ends on or afer M
+          { start: { lte: end } }, // Starts on or before F
         ],
       },
+      orderBy: { start: "asc" },
     })
 
     return jobs

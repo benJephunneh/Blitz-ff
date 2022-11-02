@@ -17,56 +17,35 @@ import findJobs from "app/jobs/queries/findJobsByDate"
 import findJobsByWeek from "app/jobs/queries/findJobsByWeek"
 import findJobStartsByDate from "app/jobs/queries/findJobStartsByDate"
 import getJobs from "app/jobs/queries/getJobs"
-import { addDays, format, getWeek } from "date-fns"
+import { format, getWeek } from "date-fns"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 
-type DayViewProps = {
-  day?: Date
+type WeekViewProps = {
+  weekNumber?: number
   // isOpen: boolean
   // onOpen: () => void
   // onClose: () => void
 }
-const today = new Date()
 
-const DayView = ({ day = addDays(new Date(), 1) }: DayViewProps) => {
-  // console.log({ day })
-  const [jobStarts, { refetch }] = useQuery(
-    findJobsByDate,
-    {
-      query: day,
-      orderBy: { start: "asc" },
-    },
-    {
-      suspense: true,
-      refetchOnWindowFocus: false,
-      staleTime: Infinity,
-    }
+const DayView = ({ weekNumber = getWeek(new Date()) }: WeekViewProps) => {
+  const [jobsByWeek, { refetch: refetchJobsWeek }] = useQuery(
+    findJobsByWeek,
+    { weekNumber },
+    { refetchOnWindowFocus: false }
   )
-
-  // const [jobsByWeek, { refetch: refetchJobsWeek }] = useQuery(
-  //   findJobsByWeek,
-  //   { weekNumber },
-  //   { refetchOnWindowFocus: false }
-  // )
-
-  // useEffect(() => {
-  //   refetch().catch(console.error)
-  // }, [day])
+  // console.table({ ...jobsByWeek })
 
   return (
     <Box borderWidth={1} borderColor="blue.400" borderRadius={4} w="full">
-      <Text textAlign="center" fontWeight="semibold">
-        {format(day, "EEE, do LLL yy")}
-      </Text>
-      {jobStarts &&
-        jobStarts.map((j, ii) => (
+      {jobsByWeek &&
+        jobsByWeek.map((j, ii) => (
           <>
             {/* onClick: Pick customer */}
             {/* onClick: Pick location */}
             {/* onClick: Pick job */}
             {/* If completed, opacity change */}
-            <pre>{JSON.stringify(jobStarts, null, 2)}</pre>
+            <pre>{JSON.stringify(j, null, 2)}</pre>
           </>
         ))}
     </Box>
