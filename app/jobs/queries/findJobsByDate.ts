@@ -8,20 +8,20 @@ const dateSchema = z.preprocess((d) => {
 // type dateSchema = z.infer<typeof datePreProcess>
 
 const FindJobsSchema = z.object({
-  query: dateSchema,
+  date: dateSchema,
 })
 type FindJobsProps = {
-  query: Date
+  date: Date
 }
 
 export default resolver.pipe(
   resolver.authorize(),
-  resolver.zod(FindJobsSchema),
+  // resolver.zod(FindJobsSchema),
 
-  async ({ query }) => {
-    if (!query) return []
+  async ({ date }: FindJobsProps) => {
+    if (!date) return []
 
-    const start = new Date(query.getFullYear(), query.getMonth(), query.getDate())
+    const start = new Date(date.getFullYear(), date.getMonth(), date.getDate())
     console.log(`findJobsByDate: ${start}`)
 
     const jobs = await db.job.findMany({
@@ -29,7 +29,7 @@ export default resolver.pipe(
         OR: [
           { start: { equals: start } }, // starts today, or
           { end: { equals: start } }, // ends today, or
-          { AND: [{ start: { lt: start } }, { end: { gt: start } }] }, // started before today and ends after today
+          { AND: [{ end: { gte: start } }, { start: { lte: start } }] }, // started before today and ends after today
         ],
       },
     })

@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   ButtonGroup,
+  filter,
   Flex,
   HStack,
   Icon,
@@ -71,9 +72,14 @@ const JobPanel = () => {
   // console.table({ ...job })
   // console.log({ jobId })
 
-  const locationJobs = jobs?.filter((j) => j.locationId === locationId)
-  const job = locationJobs?.find((j) => j.id === jobId)
+  const [job, setJob] = useState<Job>()
+  const [relatedJobs, setRelatedJobs] = useState<Job[] | undefined>()
+  // const job = locationJobs?.find((j) => j.id === jobId)
   const [range, setRange] = useState<Range>()
+  useEffect(() => {
+    const filteredJobs = jobs?.filter((j) => j.locationId === locationId)
+    setRelatedJobs(filteredJobs)
+  }, [jobs, locationId])
   useEffect(() => {
     if (job) setRange([job.start as Date, job.end as Date])
   }, [job])
@@ -105,7 +111,7 @@ const JobPanel = () => {
                     All jobs
                   </MenuItemOption>
                   <MenuDivider />
-                  {locationJobs?.map((j, ii) => (
+                  {relatedJobs?.map((j, ii) => (
                     <MenuItemOption
                       value={jobId?.toString()}
                       key={ii}
@@ -130,6 +136,17 @@ const JobPanel = () => {
           )}
         </HStack>
 
+        <Button
+          size="sm"
+          py={0}
+          variant="outline"
+          bg={useColorModeValue("blackAlpha.200", "blackAlpha.400")}
+          borderColor="whiteAlpha.50"
+          onClick={console.log}
+          disabled={!jobId}
+        >
+          Mark complete
+        </Button>
         <ButtonGroup isAttached>
           <Button
             size="sm"
@@ -180,7 +197,7 @@ const JobPanel = () => {
       )}
       {!job && (
         <UnorderedList>
-          {locationJobs?.map((j, ii) => (
+          {relatedJobs?.map((j, ii) => (
             <ListItem
               key={ii}
               onClick={() => pickJob(j.id)}

@@ -250,7 +250,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         createLocation: () => setCreatingLocation(true),
         editLocation: () => setEditingLocation(true),
         deleteLocation: () => setDeletingLocation(true),
-        pickLocation: (id) => setLocationId(id),
+        pickLocation: (id) => {
+          setLocationId(id)
+          setJobId(undefined)
+        },
 
         createJob: () => setCreatingJob(true),
         editJob: () => setEditingJob(true),

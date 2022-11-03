@@ -137,6 +137,7 @@ model Invoice {
   updatedAt DateTime   @updatedAt
   title     String
   lineItems LineItem[]
+  paid      Boolean    @default(false)
   job       Job        @relation(fields: [jobId], references: [id])
   jobId     Int
   user      User       @relation(fields: [userId], references: [id])
@@ -278,6 +279,7 @@ model InvoiceArchive {
   updatedAt    DateTime    @updatedAt
   title        String
   lineItems    LineItem[]
+  paid         Boolean
   job          Job?        @relation(fields: [jobId], references: [id])
   jobId        Int
   jobArchive   JobArchive? @relation(fields: [jobArchiveId], references: [id])

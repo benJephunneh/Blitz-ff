@@ -6,11 +6,13 @@ import {
   Heading,
   HStack,
   SpaceProps,
+  Spacer,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Job, Location } from "@prisma/client"
 import headerContext from "app/core/components/header/headerContext"
+import LocationCard from "app/locations/components/LocationCard"
 import { isFuture, isPast } from "date-fns"
 import { useContext, useEffect, useState } from "react"
 
@@ -20,19 +22,34 @@ type JobCardProps = {
 
 const JobCard = ({ ...props }: JobCardProps) => {
   const { customer, locations, pickLocation, jobs } = useContext(headerContext)
-  const [incompleteJobs, setIncompleteJobs] = useState<Job[]>()
+  const [incompleteJobs, setIncompleteJobs] = useState<any[]>()
   const [incompleteJobLocations, setIncompleteJobLocations] = useState<Location[]>()
   useEffect(() => {
     const j = jobs?.filter(({ completed }) => !completed)
-    if (Array.isArray(j)) {
-      const filterIds = [...j.map(({ locationId }) => locationId)]
-      const l = [...locations!.filter(({ id }) => filterIds.includes(id))]
-      console.table({ ...l })
-      setIncompleteJobLocations(l)
+    if (Array.isArray(j) && Array.isArray(locations)) {
+      let newJobs: any[] = []
+      for (let ii = 0; ii < j.length; ii++) {
+        const job = j.at(ii)!
+        const loc = locations.find((l) => l.id === job.locationId)
+        const newJob = Object.assign(job, loc!)
+
+        newJobs.push(newJob)
+        // j.at(ii)!.location = locations?..find(l => l.id === jj?.locationId)
+        // Object.assign(jj, locations?.find(l => l.id === jj?.locationId))
+      }
+
+      // console.table({ ...newJobs })
+      setIncompleteJobs(newJobs)
     }
-    console.table({ ...j })
-    setIncompleteJobs(j)
-  }, [jobs]) // eslint-disable-line
+
+    // if (Array.isArray(j)) {
+    //   const filterIds = [...j.map(({ locationId }) => locationId)]
+    //   const l = [...locations!.filter(({ id }) => filterIds.includes(id))]
+    //   console.table({ ...l })
+    //   setIncompleteJobLocations(l)
+    // }
+    // setIncompleteJobs(j)
+  }, [jobs])
 
   return (
     <Flex
@@ -63,20 +80,20 @@ const JobCard = ({ ...props }: JobCardProps) => {
             onClick={() => pickLocation(j.locationId)}
             _hover={{ borderColor: "blue.400", cursor: "pointer" }}
           >
-            <HStack>
+            <HStack justify="space-between">
               <Heading size="md">{j.title}</Heading>
               <Text
                 ml={2}
                 fontSize="sm"
                 fontStyle="italic"
-                textColor={isPast(j.start!) ? "red" : "initial"}
+                textColor={isPast(j.start!) ? "red" : "cyan.700"}
               >
                 {isFuture(j.start!) ? "Future" : "Past"}
               </Text>
             </HStack>
             <Text ml={2} fontWeight="semibold">
-              {incompleteJobLocations?.at(ii)?.house} {incompleteJobLocations?.at(ii)?.street},{" "}
-              {incompleteJobLocations?.at(ii)?.city} {incompleteJobLocations?.at(ii)?.zipcode}
+              {incompleteJobs?.at(ii)?.house} {incompleteJobs?.at(ii)?.street},{" "}
+              {incompleteJobs?.at(ii)?.city} {incompleteJobs?.at(ii)?.zipcode}
             </Text>
           </Box>
         ))}

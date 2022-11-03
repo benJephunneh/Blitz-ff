@@ -17,33 +17,90 @@ import {
   ModalHeader,
   ModalOverlay,
   Spacer,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
   useDisclosure,
   useStyles,
   useToast,
 } from "@chakra-ui/react"
-import { addDays, format, getWeek, setHours, startOfWeek, subDays, weeksToDays } from "date-fns"
+import {
+  addDays,
+  format,
+  getWeek,
+  nextFriday,
+  previousMonday,
+  setHours,
+  startOfWeek,
+  subDays,
+  weeksToDays,
+} from "date-fns"
 import { Suspense, useEffect, useState } from "react"
 import Calendar from "react-calendar"
 import Layout from "app/core/layouts/Layout"
 import "react-calendar/dist/Calendar.css"
 import DayView from "app/calendar/components/DayView"
 import WeekView from "app/calendar/components/WeekView"
+import getJobs from "app/jobs/queries/getJobs"
+import findJobsByWeek from "app/jobs/queries/findJobsByWeek"
+import findJobsByDate from "app/jobs/queries/findJobsByDate"
+import getLocations from "app/locations/queries/getLocations"
+import { useQuery } from "@blitzjs/rpc"
 
 const TestCalendar: BlitzPage = () => {
   const [value, onChange] = useState<Date>()
   const toast = useToast()
   const { isOpen, onClose, onToggle } = useDisclosure()
+  const [date, setDate] = useState<Date>(new Date())
   const [weekNumber, setWeekNumber] = useState(getWeek(new Date()) - 1)
   const [calendarView, setCalendarView] = useState(<WeekView />)
+  // const locations = []
+  // const jobs = []
+  const customerId = 1
+  const [jobs, { refetch: refetchJobs }] = useQuery(
+    getJobs,
+    {
+      where: { customerId }, // date filtering cause perpetul calls -- because start/end are Date | undefined ?
+      orderBy: { start: "asc" },
+    },
+    {
+      enabled: !!customerId,
+      refetchOnWindowFocus: false,
+      // staleTime: Infinity,
+    }
+  )
+
+  useEffect(() => {
+    // refetch()
+    //   .catch(console.error)
+  }, [])
+  // const [jobsByWeek, { refetch: refetchWeekJobs }] = useQuery(
+  //   findJobsByWeek,
+  //   { weekNumber },
+  //   { refetchOnWindowFocus: false }
+  // )
+  // const [jobsByDay, { refetch: refetchDayJobs }] = useQuery(
+  //   findJobsByDate,
+  //   { date },
+  //   { refetchOnWindowFocus: false }
+  // )
 
   const handleWeekNumberClick = async (w: number) => {
     console.log({ w })
     setWeekNumber(w)
+    // await refetchWeekJobs()
     setCalendarView(<WeekView weekNumber={w} />)
   }
   const handleDayClick = async (d: Date) => {
     console.log({ d })
+    // await refetchDayJobs()
     setCalendarView(<DayView day={d} />)
   }
 
@@ -83,7 +140,42 @@ const TestCalendar: BlitzPage = () => {
         onClickDay={handleDayClick}
         onClickWeekNumber={handleWeekNumberClick}
       />
-      {calendarView}
+      <TableContainer>
+        <Table size="sm" w="50vw">
+          <TableCaption>Monday schedule</TableCaption>
+          <Thead>
+            <Tr>
+              <Th>Monday</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {jobs?.map((j, ii) => (
+              <Tr key={ii}>
+                <Td>{j.title}</Td>
+                <Td>{j.start?.toDateString()}</Td>
+                <Td>{j.end?.toDateString()}</Td>
+                <Td>{j.completed.toString()}</Td>
+              </Tr>
+            ))}
+            {/* {locations?.map((l, ii) => (
+              <Tr key={ii}>
+                <Td>{l.customerId}</Td>
+                <Td>{l.house}</Td>
+                <Td>{l.street}</Td>
+                <Td>{l.city}</Td>
+                <Td>{l.state}</Td>
+                <Td>{l.zipcode}</Td>
+              </Tr>
+            ))} */}
+          </Tbody>
+          <Tfoot>
+            <Tr>
+              <Th>Monday</Th>
+            </Tr>
+          </Tfoot>
+        </Table>
+      </TableContainer>
+      {/* {calendarView} */}
       {/* {monday && (
         <>
           <HStack justify="space-evenly" alignItems="start" mt={2} spacing={0}>
