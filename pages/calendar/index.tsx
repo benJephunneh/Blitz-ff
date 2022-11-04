@@ -1,22 +1,8 @@
 import { BlitzPage } from "@blitzjs/next"
 import {
   Box,
-  Button,
-  Center,
-  Container,
   Divider,
   Flex,
-  Grid,
-  GridItem,
-  HStack,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Spacer,
   Table,
   TableCaption,
   TableContainer,
@@ -28,59 +14,92 @@ import {
   Thead,
   Tr,
   useDisclosure,
-  useStyles,
   useToast,
 } from "@chakra-ui/react"
-import {
-  addDays,
-  format,
-  getWeek,
-  nextFriday,
-  previousMonday,
-  setHours,
-  startOfWeek,
-  subDays,
-  weeksToDays,
-} from "date-fns"
-import { Suspense, useEffect, useState } from "react"
+import { format, getWeek, Interval, isSameMinute, isWithinInterval } from "date-fns"
+import { useEffect, useState } from "react"
 import Calendar from "react-calendar"
 import Layout from "app/core/layouts/Layout"
-import "react-calendar/dist/Calendar.css"
 import DayView from "app/calendar/components/DayView"
 import WeekView from "app/calendar/components/WeekView"
-import getJobs from "app/jobs/queries/getJobs"
 import findJobsByWeek from "app/jobs/queries/findJobsByWeek"
 import findJobsByDate from "app/jobs/queries/findJobsByDate"
 import getLocations from "app/locations/queries/getLocations"
 import { useQuery } from "@blitzjs/rpc"
+import "react-calendar/dist/Calendar.css"
+import timeRange9_17 from "app/calendar/helpers/timeRange9_17"
+import { Job } from "@prisma/client"
+
+const formattedStart = (j: Job) => format(j.start!, "HHmm")
+const sametime = (j: Job, t: number) => {
+  const isMatch = formattedStart(j) === t.toString()
+  return isMatch
+}
+type ShowJobTimeMatchProps = {
+  time: number
+  jobs?: Job[]
+}
+
+const filterJobsByDate = (date: Date, jobs: Job[]) => {
+  if (!jobs) return []
+  for (let ii = 0; ii < jobs.length; ii++) {
+    const interval: Interval = {
+      start: jobs[ii]!.start!,
+      end: jobs[ii]!.end!,
+    }
+    const jj = jobs.findIndex((j) => isWithinInterval(date, interval))
+
+    // if (!isWithinInterval(date, interval)) {
+    //   jobs.splice(interval, 1)
+    // }
+  }
+
+  return jobs
+}
+
+export const ShowJobTimeMatch = ({ time, jobs }: ShowJobTimeMatchProps) => {
+  const js = jobs?.filter((j) => sametime(j, time))
+  // const j = jobs?.find((j) => sametime(j, time))
+
+  return (
+    <>
+      {js?.map((j, ii) => (
+        <Text key={ii}>{j?.title}</Text>
+      ))}
+    </>
+  )
+}
 
 const TestCalendar: BlitzPage = () => {
   const [value, onChange] = useState<Date>()
   const toast = useToast()
   const { isOpen, onClose, onToggle } = useDisclosure()
   const [date, setDate] = useState<Date>(new Date())
-  const [weekNumber, setWeekNumber] = useState(getWeek(new Date()) - 1)
+  const [weekNumber, setWeekNumber] = useState<number>(getWeek(new Date()) - 1)
   const [calendarView, setCalendarView] = useState(<WeekView />)
   // const locations = []
   // const jobs = []
   const customerId = 1
-  const [jobs, { refetch: refetchJobs }] = useQuery(
-    getJobs,
+  const [jobsByWeek, { refetch: refetchJobs }] = useQuery(
+    findJobsByWeek,
     {
-      where: { customerId }, // date filtering cause perpetul calls -- because start/end are Date | undefined ?
+      // where: { customerId }, // date filtering cause perpetul calls -- because start/end are Date | undefined ?
+      weekNumber,
       orderBy: { start: "asc" },
     },
     {
-      enabled: !!customerId,
+      enabled: !!customerId && !!weekNumber,
       refetchOnWindowFocus: false,
       // staleTime: Infinity,
     }
   )
 
-  useEffect(() => {
-    // refetch()
-    //   .catch(console.error)
-  }, [])
+  console.table({ ...jobsByWeek })
+
+  // useEffect(() => {
+  //   refetch()
+  //     .catch(console.error)
+  // }, [])
   // const [jobsByWeek, { refetch: refetchWeekJobs }] = useQuery(
   //   findJobsByWeek,
   //   { weekNumber },
@@ -96,12 +115,12 @@ const TestCalendar: BlitzPage = () => {
     console.log({ w })
     setWeekNumber(w)
     // await refetchWeekJobs()
-    setCalendarView(<WeekView weekNumber={w} />)
+    setCalendarView(<WeekView weekNumber={weekNumber} />)
   }
   const handleDayClick = async (d: Date) => {
     console.log({ d })
     // await refetchDayJobs()
-    setCalendarView(<DayView day={d} />)
+    setCalendarView(<DayView date={d} />)
   }
 
   // useEffect(() => {
@@ -140,8 +159,22 @@ const TestCalendar: BlitzPage = () => {
         onClickDay={handleDayClick}
         onClickWeekNumber={handleWeekNumberClick}
       />
-      <TableContainer>
-        <Table size="sm" w="50vw">
+      <Flex>
+        <Box bg="transparent">
+          {timeRange9_17().map((t, ii) => (
+            <>
+              <Text key={ii}>{t}</Text>
+              <ShowJobTimeMatch jobs={jobsByWeek} time={t} />
+              <Divider my={4} />
+            </>
+          ))}
+        </Box>
+        {/* <Box bg='blue.300' textColor='white'>
+          j0f we90f f32323 f
+        </Box> */}
+      </Flex>
+      {/* <TableContainer>
+        <Table size="sm" w="25vw">
           <TableCaption>Monday schedule</TableCaption>
           <Thead>
             <Tr>
@@ -149,15 +182,15 @@ const TestCalendar: BlitzPage = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {jobs?.map((j, ii) => (
+            {jobsByWeek?.map((j, ii) => (
               <Tr key={ii}>
                 <Td>{j.title}</Td>
-                <Td>{j.start?.toDateString()}</Td>
+                <Td>{j.start ? format(j.start, 'HHmm E d LLL y') : ''}</Td>
                 <Td>{j.end?.toDateString()}</Td>
                 <Td>{j.completed.toString()}</Td>
               </Tr>
             ))}
-            {/* {locations?.map((l, ii) => (
+            {locations?.map((l, ii) => (
               <Tr key={ii}>
                 <Td>{l.customerId}</Td>
                 <Td>{l.house}</Td>
@@ -166,7 +199,7 @@ const TestCalendar: BlitzPage = () => {
                 <Td>{l.state}</Td>
                 <Td>{l.zipcode}</Td>
               </Tr>
-            ))} */}
+            ))}
           </Tbody>
           <Tfoot>
             <Tr>
@@ -174,7 +207,7 @@ const TestCalendar: BlitzPage = () => {
             </Tr>
           </Tfoot>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
       {/* {calendarView} */}
       {/* {monday && (
         <>

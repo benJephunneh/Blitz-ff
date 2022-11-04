@@ -1,5 +1,5 @@
 import { resolver } from "@blitzjs/rpc"
-import db from "db"
+import db, { Prisma } from "db"
 import { z } from "zod"
 
 const dateSchema = z.preprocess((d) => {
@@ -10,7 +10,7 @@ const dateSchema = z.preprocess((d) => {
 const FindJobsSchema = z.object({
   date: dateSchema,
 })
-type FindJobsProps = {
+interface FindJobsProps extends Pick<Prisma.JobFindManyArgs, "orderBy"> {
   date: Date
 }
 
@@ -18,7 +18,7 @@ export default resolver.pipe(
   resolver.authorize(),
   // resolver.zod(FindJobsSchema),
 
-  async ({ date }: FindJobsProps) => {
+  async ({ date, orderBy }: FindJobsProps) => {
     if (!date) return []
 
     const start = new Date(date.getFullYear(), date.getMonth(), date.getDate())
@@ -32,6 +32,7 @@ export default resolver.pipe(
           { AND: [{ end: { gte: start } }, { start: { lte: start } }] }, // started before today and ends after today
         ],
       },
+      orderBy,
     })
 
     return jobs

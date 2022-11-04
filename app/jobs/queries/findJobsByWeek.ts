@@ -1,6 +1,6 @@
 import { resolver } from "@blitzjs/rpc"
-import { getWeek, startOfWeek, addDays, subDays } from "date-fns"
-import db from "db"
+import { getWeek, startOfWeek, addDays, subDays, isMonday } from "date-fns"
+import db, { Prisma } from "db"
 import { z } from "zod"
 import { Range } from "../components/JobPanel"
 
@@ -12,7 +12,7 @@ import { Range } from "../components/JobPanel"
 // const FindJobsSchema = z.object({
 //   query: dateSchema,
 // })
-type FindJobsProps = {
+interface FindJobsProps extends Pick<Prisma.JobFindManyArgs, "orderBy"> {
   // range?: Range
   weekNumber: number
 }
@@ -21,11 +21,12 @@ export default resolver.pipe(
   resolver.authorize(),
   // resolver.zod(FindJobsSchema),
 
-  async ({ weekNumber }: FindJobsProps) => {
+  async ({ weekNumber, orderBy }: FindJobsProps) => {
     const currentWeek = getWeek(new Date())
     const dayDifference = (currentWeek - (weekNumber + 1)) * 7
     const start = startOfWeek(subDays(new Date(), dayDifference), { weekStartsOn: 1 }) // Monday
     const end = addDays(start, 4) // Friday
+    // console.log(`Monday?: ${isMonday(start)}`)
     // console.log({ start })
     // console.log({ end })
     // console.log({ currentWeek })

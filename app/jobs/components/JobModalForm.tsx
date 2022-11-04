@@ -36,18 +36,18 @@ import findJobsByWeek from "../queries/findJobsByWeek"
 import WeekView from "app/calendar/components/WeekView"
 import headerContext from "app/core/components/header/headerContext"
 
-const handleDayClick = async (d: Date) => {
-  const dayBefore = subDays(d, 1)
-  const dayAfter = addDays(d, 1)
+// const handleDayClick = async (d: Date) => {
+//   const dayBefore = subDays(d, 1)
+//   const dayAfter = addDays(d, 1)
 
-  const jobs = await db.job.findMany({
-    where: {
-      AND: [{ start: { gte: dayBefore } }, { end: { lte: dayAfter } }],
-    },
-  })
+//   const jobs = await db.job.findMany({
+//     where: {
+//       AND: [{ start: { gte: dayBefore } }, { end: { lte: dayAfter } }],
+//     },
+//   })
 
-  return jobs
-}
+//   return jobs
+// }
 
 type JobModalFormProps = {
   customerId?: number
@@ -128,12 +128,12 @@ const JobModalForm = ({
 
   const handleWeekNumberClick = async (w: number) => {
     console.log({ w })
-    setWeekNumber(w)
+    // setWeekNumber(w)
     setCalendarView(<WeekView weekNumber={w} />)
   }
   const handleDayClick = async (d: Date) => {
     console.log({ d })
-    setCalendarView(<DayView day={d} />)
+    setCalendarView(<DayView date={d} />)
   }
 
   const onSubmit = async (values) => {
