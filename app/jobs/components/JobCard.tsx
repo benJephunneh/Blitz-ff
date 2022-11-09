@@ -63,6 +63,7 @@ const JobCard = ({ ...props }: JobCardProps) => {
       borderColor={useColorModeValue("gray.50", "gray.700")}
       bg={useColorModeValue("blackAlpha.100", "gray.600")}
       h="min-content"
+      overflowX="clip"
       {...props}
     >
       <Badge colorScheme="green">
@@ -81,17 +82,20 @@ const JobCard = ({ ...props }: JobCardProps) => {
             _hover={{ borderColor: "blue.400", cursor: "pointer" }}
           >
             <HStack justify="space-between">
-              <Heading size="md">{j.title}</Heading>
+              <Heading size="sm" whiteSpace="nowrap" textOverflow="ellipsis">
+                {j.title}
+              </Heading>
               <Text
                 ml={2}
                 fontSize="sm"
                 fontStyle="italic"
                 textColor={isPast(j.start!) ? "red" : "cyan.700"}
+                minW="max-content"
               >
                 {isFuture(j.start!) ? "Future" : "Past"}
               </Text>
             </HStack>
-            <Text ml={2} fontWeight="semibold">
+            <Text ml={2} fontWeight="semibold" fontSize="xs">
               {incompleteJobs?.at(ii)?.house} {incompleteJobs?.at(ii)?.street},{" "}
               {incompleteJobs?.at(ii)?.city} {incompleteJobs?.at(ii)?.zipcode}
             </Text>

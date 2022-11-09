@@ -1,5 +1,5 @@
 import { resolver } from "@blitzjs/rpc"
-import { getWeek, startOfWeek, addDays, subDays, isMonday } from "date-fns"
+import { getWeek, startOfWeek, addDays, subDays, isMonday, addHours, format } from "date-fns"
 import db, { Prisma } from "db"
 import { z } from "zod"
 import { Range } from "../components/JobPanel"
@@ -24,8 +24,14 @@ export default resolver.pipe(
   async ({ weekNumber, orderBy }: FindJobsProps) => {
     const currentWeek = getWeek(new Date())
     const dayDifference = (currentWeek - (weekNumber + 1)) * 7
-    const start = startOfWeek(subDays(new Date(), dayDifference), { weekStartsOn: 1 }) // Monday
+    const start = startOfWeek(subDays(new Date(), dayDifference), {
+      weekStartsOn: 1,
+    }) // Monday
     const end = addDays(start, 4) // Friday
+    start.setHours(9)
+    end.setHours(17)
+    // console.log(format(start, "Hmm EEE MM dd yy"))
+    // console.log(format(end, "Hmm EEE MM dd yy"))
     // console.log(`Monday?: ${isMonday(start)}`)
     // console.log({ start })
     // console.log({ end })

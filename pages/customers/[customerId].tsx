@@ -36,29 +36,29 @@ const ShowCustomerPage: BlitzPage = () => {
   const textColor = useColorModeValue("009a4c", "yellow.200")
 
   return (
-    <Box bg={useColorModeValue("white", "gray.800")}>
-      {/* <StashModalForm
-        customerId={customerId}
-        isOpen={stashing}
-        onClose={() => setStashing(false)}
-        onSuccess={() => {
-          setStashing(false)
-        }}
-      /> */}
+    // <Box maxWidth='100vw' bg={useColorModeValue("white", "gray.800")}>
+    // <StashModalForm
+    //     customerId={customerId}
+    //     isOpen={stashing}
+    //     onClose={() => setStashing(false)}
+    //     onSuccess={() => {
+    //       setStashing(false)
+    //     }}
+    //   />
 
-      <Flex alignItems="start" p={4} position="absolute">
-        {/* <HStack borderRadius="md" bg={useColorModeValue("blackAlpha.100", "gray.600")}> */}
-        <CustomerCard />
-        <JobCard />
-        {/* <Grid templateRows='repeat(3, 1fr)' gap={6} w={50} h='full'>
+    <Flex alignItems="start" p={4} position="absolute" overflowX="clip" maxW="100vw">
+      {/* <HStack borderRadius="md" bg={useColorModeValue("blackAlpha.100", "gray.600")}> */}
+      <CustomerCard />
+      <JobCard />
+      {/* <Grid templateRows='repeat(3, 1fr)' gap={6} w={50} h='full'>
             {/* <Box bg='gray' h={5} w={50} borderWidth={1} />
             <Box bg='tomato' h={5} w={50} borderWidth={1} />
             <Box bg='cyan' h={5} w={50} borderWidth={1} /> */}
-        {/* <GridItem h='100%' bg='gray' rowSpan={1} />
+      {/* <GridItem h='100%' bg='gray' rowSpan={1} />
             <GridItem h='100%' bg='tomato' />
             <GridItem h='100%' bg='cyan' />
           </Grid> */}
-        {/* <VStack alignContent="space-between">
+      {/* <VStack alignContent="space-between">
             <ButtonGroup isAttached flexDirection="column" variant="ghost" alignItems="start">
               <Button aria-label="adfe" rightIcon={<FcPlus />}>
                 Jobs
@@ -71,10 +71,10 @@ const ShowCustomerPage: BlitzPage = () => {
               </Button>
             </ButtonGroup>
           </VStack> */}
-        {/* <Spacer /> */}
-        {/* <Spacer /> */}
-        {/* </HStack> */}
-        {/* <LocationCard my={4} mx={4}>
+      {/* <Spacer /> */}
+      {/* <Spacer /> */}
+      {/* </HStack> */}
+      {/* <LocationCard my={4} mx={4}>
             <Heading ml={4} fontStyle="italic">
               {heading}
             </Heading>
@@ -107,21 +107,8 @@ const ShowCustomerPage: BlitzPage = () => {
               </VStack>
             </HStack>
           </LocationCard> */}
-
-        <Spacer />
-
-        {/* <InvoicesCard invoices="asdf" /> */}
-      </Flex>
-      {/* <Button
-        colorScheme="telegram"
-        justifySelf="end"
-        alignSelf="end"
-        rightIcon={<FaPlus />}
-        onClick={() => setStashing(true)}
-      >
-        Stash
-      </Button> */}
-    </Box>
+    </Flex>
+    // </Box> */}
   )
 }
 

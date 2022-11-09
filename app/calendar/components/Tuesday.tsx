@@ -12,9 +12,8 @@ import {
   DrawerOverlay,
   Flex,
   Text,
-  VStack,
 } from "@chakra-ui/react"
-import { Job, Prisma } from "@prisma/client"
+import { Prisma } from "@prisma/client"
 import findJobsByDate from "app/jobs/queries/findJobsByDate"
 import findJobs from "app/jobs/queries/findJobsByDate"
 import findJobsByWeek from "app/jobs/queries/findJobsByWeek"
@@ -27,36 +26,46 @@ import { useEffect, useState } from "react"
 import timeRange9_17 from "../helpers/timeRange9_17"
 import HourView from "./HourView"
 
-interface DayViewProps extends Pick<Prisma.JobFindManyArgs, "orderBy"> {
-  day: Date //'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'
+interface TuesdayProps extends Pick<Prisma.JobFindManyArgs, "orderBy"> {
+  day: "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday"
   date?: Date
-  jobs: Job[]
   // isOpen: boolean
   // onOpen: () => void
   // onClose: () => void
 }
 const today = new Date()
 
-const DayView = ({
-  day,
-  jobs,
-  date = addDays(new Date(), 1),
-  orderBy = { start: "asc" },
-}: DayViewProps) => {
+const Tuesday = ({ date = addDays(new Date(), 1), orderBy = { start: "asc" } }: TuesdayProps) => {
+  // console.log({ day })
+  const [jobStarts, { refetch }] = useQuery(
+    findJobsByDate,
+    {
+      date,
+      orderBy,
+    },
+    {
+      suspense: true,
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+    }
+  )
+  console.table({ ...jobStarts })
+
   return (
-    <VStack align="start">
-      <Text textAlign="left" fontWeight="semibold" bgColor="blackAlpha.100" my={0}>
-        {format(day, "EEE, do LLL yy")}
-      </Text>
-      {timeRange9_17().map((t, ii) => (
-        <HourView key={ii} time={t} jobs={jobs} />
-        // <>
-        //   <Text key={ii}>{t}</Text>
-        //   <ShowJobTimeMatch jobs={jobStarts} time={t} />
-        //   <Divider />
-        // </>
-      ))}
-      {/* <Box bg='blue'>
+    <Flex borderWidth={1} borderColor="blue.400" borderRadius={4} w="full">
+      <Box bg="transparent" position="relative">
+        <Text textAlign="center" fontWeight="semibold">
+          {format(date, "EEE, do LLL yy")}
+        </Text>
+        {timeRange9_17().map((t, ii) => (
+          <HourView key={ii} time={t} jobs={jobStarts} />
+          // <>
+          //   <Text key={ii}>{t}</Text>
+          //   <ShowJobTimeMatch jobs={jobStarts} time={t} />
+          //   <Divider />
+          // </>
+        ))}
+        {/* <Box bg='blue'>
         {jobStarts &&
           jobStarts.map((j, ii) => (
             <>
@@ -68,8 +77,9 @@ const DayView = ({
             </>
           ))}
         </Box> */}
-    </VStack>
+      </Box>
+    </Flex>
   )
 }
 
-export default DayView
+export default Tuesday

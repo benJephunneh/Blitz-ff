@@ -3,6 +3,7 @@ import {
   Box,
   Divider,
   Flex,
+  Heading,
   Table,
   TableCaption,
   TableContainer,
@@ -29,8 +30,12 @@ import { useQuery } from "@blitzjs/rpc"
 import "react-calendar/dist/Calendar.css"
 import timeRange9_17 from "app/calendar/helpers/timeRange9_17"
 import { Job } from "@prisma/client"
+import HourView from "app/calendar/components/HourView"
 
-const formattedStart = (j: Job) => format(j.start!, "HHmm")
+const formattedStart = (j: Job) => {
+  // console.log(format(j.start!, 'Hmm'))
+  return format(j.start!, "Hmm")
+}
 const sametime = (j: Job, t: number) => {
   const isMatch = formattedStart(j) === t.toString()
   return isMatch
@@ -60,6 +65,9 @@ const filterJobsByDate = (date: Date, jobs: Job[]) => {
 export const ShowJobTimeMatch = ({ time, jobs }: ShowJobTimeMatchProps) => {
   const js = jobs?.filter((j) => sametime(j, time))
   // const j = jobs?.find((j) => sametime(j, time))
+  // console.log({ time })
+  // console.log({ ...jobs })
+  // console.log(sametime(jobs?.[0]!, time))
 
   return (
     <>
@@ -75,26 +83,23 @@ const TestCalendar: BlitzPage = () => {
   const toast = useToast()
   const { isOpen, onClose, onToggle } = useDisclosure()
   const [date, setDate] = useState<Date>(new Date())
-  const [weekNumber, setWeekNumber] = useState<number>(getWeek(new Date()) - 1)
+  // const [weekNumber, setWeekNumber] = useState<number>(getWeek(new Date()) - 1)
   const [calendarView, setCalendarView] = useState(<WeekView />)
   // const locations = []
   // const jobs = []
-  const customerId = 1
-  const [jobsByWeek, { refetch: refetchJobs }] = useQuery(
-    findJobsByWeek,
-    {
-      // where: { customerId }, // date filtering cause perpetul calls -- because start/end are Date | undefined ?
-      weekNumber,
-      orderBy: { start: "asc" },
-    },
-    {
-      enabled: !!customerId && !!weekNumber,
-      refetchOnWindowFocus: false,
-      // staleTime: Infinity,
-    }
-  )
-
-  console.table({ ...jobsByWeek })
+  // const [jobsByWeek, { refetch: refetchJobs }] = useQuery(
+  //   findJobsByWeek,
+  //   {
+  //     // where: { customerId }, // date filtering cause perpetul calls -- because start/end are Date | undefined ?
+  //     weekNumber,
+  //     orderBy: { start: "asc" },
+  //   },
+  //   {
+  //     enabled: !!weekNumber,
+  //     refetchOnWindowFocus: false,
+  //     // staleTime: Infinity,
+  //   }
+  // )
 
   // useEffect(() => {
   //   refetch()
@@ -112,16 +117,16 @@ const TestCalendar: BlitzPage = () => {
   // )
 
   const handleWeekNumberClick = async (w: number) => {
-    console.log({ w })
-    setWeekNumber(w)
+    // console.log({ w })
+    // setWeekNumber(w)
     // await refetchWeekJobs()
-    setCalendarView(<WeekView weekNumber={weekNumber} />)
+    setCalendarView(<WeekView weekNumber={w} />)
   }
-  const handleDayClick = async (d: Date) => {
-    console.log({ d })
-    // await refetchDayJobs()
-    setCalendarView(<DayView date={d} />)
-  }
+  // const handleDayClick = async (d: Date) => {
+  //   // console.log({ d })
+  //   // await refetchDayJobs()
+  //   setCalendarView(<DayView day={d} />)
+  // }
 
   // useEffect(() => {
   //   // console.log(JSON.stringify(value))
@@ -154,25 +159,24 @@ const TestCalendar: BlitzPage = () => {
       <Calendar
         onChange={onChange}
         value={value}
-        selectRange
+        // selectRange
         showWeekNumbers
-        onClickDay={handleDayClick}
+        // onClickDay={handleDayClick}
         onClickWeekNumber={handleWeekNumberClick}
       />
-      <Flex>
+      {calendarView}
+      {/* <Flex>
         <Box bg="transparent">
           {timeRange9_17().map((t, ii) => (
-            <>
-              <Text key={ii}>{t}</Text>
-              <ShowJobTimeMatch jobs={jobsByWeek} time={t} />
-              <Divider my={4} />
-            </>
+            // <>
+            //   <Heading key={ii} size='sm'>{t}</Heading>
+            //   <ShowJobTimeMatch jobs={jobsByWeek} time={t} />
+            //   <Divider mt={4} />
+            // </>
+            <HourView key={ii} time={t} jobs={jobsByWeek} />
           ))}
         </Box>
-        {/* <Box bg='blue.300' textColor='white'>
-          j0f we90f f32323 f
-        </Box> */}
-      </Flex>
+      </Flex> */}
       {/* <TableContainer>
         <Table size="sm" w="25vw">
           <TableCaption>Monday schedule</TableCaption>
@@ -208,7 +212,6 @@ const TestCalendar: BlitzPage = () => {
           </Tfoot>
         </Table>
       </TableContainer> */}
-      {/* {calendarView} */}
       {/* {monday && (
         <>
           <HStack justify="space-evenly" alignItems="start" mt={2} spacing={0}>
