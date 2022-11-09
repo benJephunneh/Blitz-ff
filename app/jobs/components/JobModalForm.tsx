@@ -131,10 +131,10 @@ const JobModalForm = ({
     // setWeekNumber(w)
     setCalendarView(<WeekView weekNumber={w} />)
   }
-  const handleDayClick = async (d: Date) => {
-    console.log({ d })
-    setCalendarView(<DayView date={d} />)
-  }
+  // const handleDayClick = async (d: Date) => {
+  //   console.log({ d })
+  //   setCalendarView(<DayView date={d} />)
+  // }
 
   const onSubmit = async (values) => {
     console.table({ values })
@@ -242,7 +242,7 @@ const JobModalForm = ({
                 label="Date range"
                 start={start}
                 end={end}
-                onClickDay={handleDayClick}
+                // onClickDay={handleDayClick}
                 onClickWeekNumber={handleWeekNumberClick}
                 // console.log({ w })
                 // handleWeekNumberClick(w).catch((e) => console.error(e))
