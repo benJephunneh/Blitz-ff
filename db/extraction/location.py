@@ -1,5 +1,8 @@
+import re
+
+
 class Location(dict):
-  def __init__(self, fieldnames: list):
+  def __init__(self, fieldnames: list[str]):
     self.fieldnames = fieldnames
     for f in fieldnames:
       self[f] = ''
@@ -21,21 +24,36 @@ class Location(dict):
   def __eq__(self, location):
     if (self['zipcode'] == location['zipcode'] and
         self['city'] == location['city'] and
-       (self['address1'] == location['address1'] or
-        self['address1'] == location['address2'] or
-        self['address2'] == location['address1'] or
-        self['address2'] == location['address2'] or
-       (self['lot'] == location['lot'] and # or?
-        self['block'] == location['block']) or
-        self['parcel'] == location['parcel'])):
+        self['street'] == location['street'] and
+       (self['house'] == location['house'] or
+       (self['block'] == location['block'] and
+        self['lot'] == location['lot']) or
+        self['parcel'] == location['parce'])):
       return True
     return False
 
-  def setRow(self, row: dict):
-    self['address1'] = row['Street one']
-    self['address2'] = row['Street two']
+  def setLocation(self, row: dict):
+    addressPattern = re.compile('(?P<house>\d*)\s+(?P<street>.*)')
+    ret = addressPattern.findall(row['Street one'])
+    house, street = ret[0]
+    if len(house) > 0 and len(street) > 0:
+      self['house'] = house
+      self['street'] = street
+    else:
+      ret = addressPattern.findall(row['Street two'])
+      house, street = ret[0]
+      if len(house) > 0 and len(street) > 0:
+        self['house'] = house
+        self['street'] = street
+
     self['city'] = row['City']
     self['zipcode'] = row['Postal code']
     self['primary'] = True if row['Primary?'] == 'yes' else False
+
+def locationExists(location: Location, locations: list[Location]):
+  index = None
+  it = iter(((index, l) for index, l in enumerate(locations)), location)
+  return next(it, (None, None))
+#end customerExists
 #end Location class
 

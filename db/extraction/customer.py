@@ -1,9 +1,14 @@
+import queue as q
+import location as l
+
 class Customer(dict):
-  def __init__(self, fieldnames: list):
+  userId = 1 # 1 == benJephunneh's User entry.  Need importation to create link.
+  locations: q.Queue
+
+  def __init__(self, fieldnames: list[str]):
     self.fieldnames = fieldnames
     for fn in fieldnames:
       self[fn] = ''
-    self['userId'] = 1 # 1 == benJephunneh's User entry.  Need importation to create link.
     return super().__init__()
 
   def __setitem__(self, __key: str, __value) -> None:
@@ -32,13 +37,22 @@ class Customer(dict):
         else row['Mobile phone'] if len(row['Mobile phone']) in [7, 10] \
           else row['Home phone']
 
+  def addLocation(self, fieldnames: list[str], row: dict):
+    loc = l.Location(fieldnames)
+    loc.setLocation(row)
+    self.locations.put(loc)
+
+  def locationExists(self, location):
+    it = iter((index, loc) for index, loc in enumerate(self.locations) if loc == location)
+    return next(it, (None, None))
+
 # def createCustomerList():
 #   customers = [dict.fromkeys(customerFieldnames)]
 #   return customers
 #end createCustomerList
 
 
-def customerExists(email: str, customers: list):
+def customerExists(email: str, customers: list[Customer]):
   index = None
   it = iter((index, c) for index, c in enumerate(customers) if c['Email'] == email)
   return next(it, (None, None))
