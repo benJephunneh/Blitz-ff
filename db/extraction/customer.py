@@ -10,7 +10,6 @@ class Customer(dict):
     self.fieldnames = fieldnames
     for fn in fieldnames:
       self[fn] = ''
-    self.locations = []
     return super().__init__()
 
   def __setitem__(self, __key: str, __value) -> None:
