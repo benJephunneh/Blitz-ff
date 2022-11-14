@@ -1,9 +1,16 @@
+from csv import DictReader
+import location as l
+import pandas as pd
+
 class Customer(dict):
-  def __init__(self, fieldnames: list):
+  userId = 1 # 1 == benJephunneh's User entry.  Need importation to create link.
+  # locations: list
+
+  def __init__(self, fieldnames: list[str]):
     self.fieldnames = fieldnames
     for fn in fieldnames:
       self[fn] = ''
-    self['userId'] = 1 # 1 == benJephunneh's User entry.  Need importation to create link.
+    self.locations = []
     return super().__init__()
 
   def __setitem__(self, __key: str, __value) -> None:
@@ -32,27 +39,42 @@ class Customer(dict):
         else row['Mobile phone'] if len(row['Mobile phone']) in [7, 10] \
           else row['Home phone']
 
+  def addLocation(self, fieldnames: list[str], row: dict):
+    loc = l.Location(fieldnames)
+    loc.setLocation(row)
+    self.locations.append(loc)
+
+  def locationExists(self, location):
+    it = iter((index, loc) for index, loc in enumerate(self.locations) if loc == location)
+    return next(it, (None, None))
+
 # def createCustomerList():
 #   customers = [dict.fromkeys(customerFieldnames)]
 #   return customers
 #end createCustomerList
 
 
-def customerExists(email: str, customers: list):
+def customerExists(email: str, customers: list[Customer]):
   index = None
   it = iter((index, c) for index, c in enumerate(customers) if c['Email'] == email)
   return next(it, (None, None))
 #end customerExists
 
+def makeCustomer(row: dict):
+  fn = row['First name']
+  ln = row['Last name']
+  cn = row['Company name']
+  em = row['Email']
 
-def makeCustomer(row: dict, phones: list, locations: list):
+  # make customer
+  # return customer
   return {
-    'firstname': row['Firstname'],
-    'lastname': row['Last name'],
-    'companyname': row['Company name'],
-    'email': row['Email'],
-    'phones': locations,
-    'locations': locations,
+    'firstname': fn,
+    'lastname': ln,
+    'companyname': cn,
+    'email': em,
+    # 'phones': phones,
+    # 'locations': locations,
   }
 #end makeCustomer
 
@@ -69,7 +91,14 @@ def fillCustomerBlanks(row: dict, customer: dict):
 #end fillCustomerBlanks
 
 
-def makeCustomers(row: dict, phones: list, newLocations: list, customers: list):
+def makeCustomerList(customerCsvFile: str):
+  with open(customerCsvFile, 'r') as readFile:
+    csvDr = DictReader(readFile)
+
+    for row in csvDr:
+      ret = makeCustomer(row)
+
+  customerList = []
   email = row['Email'] if row['Email'] else None
   if not email: # Without an email, cannot identify unique customer:
     return customers
