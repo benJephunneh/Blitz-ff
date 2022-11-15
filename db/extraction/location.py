@@ -1,6 +1,5 @@
 import re
 
-
 class Location(dict):
   def __init__(self, fieldnames: list[str]):
     self.fieldnames = fieldnames

@@ -4,11 +4,21 @@ import pandas as pd
 
 class Customer(dict):
   userId = 1 # 1 == benJephunneh's User entry.  Need importation to create link.
+  fieldnames = [
+    'firstname',
+    'lastname',
+    'companyname',
+    'email',
+    'phone',
+  ]
   # locations: list
+  # Consider, instead of creating customer objects with attached data, Prisma doesn't need that level of organization.
+  # Create customer data.
+  # Create location data, with customerId (for Prisma).
+  # Create invoices, etc.
 
-  def __init__(self, fieldnames: list[str]):
-    self.fieldnames = fieldnames
-    for fn in fieldnames:
+  def __init__(self):
+    for fn in self.fieldnames:
       self[fn] = ''
     return super().__init__()
 
@@ -30,7 +40,7 @@ class Customer(dict):
   def setCustomer(self, row: dict):
     self['firstname'] = row['First name']
     self['lastname'] = row['Last name']
-    self['displayname'] = f"{self['firstname']} {self['lastname']}"
+    # self['displayname'] = f"{self['firstname']} {self['lastname']}"
     self['companyname'] = row['Company name']
     self['email'] = row['Email']
     self['phone'] = \
@@ -91,13 +101,15 @@ def fillCustomerBlanks(row: dict, customer: dict):
 
 
 def makeCustomerList(customerCsvFile: str):
+  customerList = []
+
   with open(customerCsvFile, 'r') as readFile:
     csvDr = DictReader(readFile)
 
     for row in csvDr:
-      ret = makeCustomer(row)
+      c = Customer()
+      c.setCustomer(row)
 
-  customerList = []
   email = row['Email'] if row['Email'] else None
   if not email: # Without an email, cannot identify unique customer:
     return customers
