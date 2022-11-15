@@ -4,35 +4,45 @@ import pandas as pd
 
 class Customer(dict):
   userId = 1 # 1 == benJephunneh's User entry.  Need importation to create link.
-  fieldnames = [
-    'firstname',
-    'lastname',
-    'companyname',
-    'email',
-    'phone',
-  ]
+  firstname = ''
+  lastname = ''
+  companyname = ''
+  email = ''
+  phone = ''
   # locations: list
   # Consider, instead of creating customer objects with attached data, Prisma doesn't need that level of organization.
   # Create customer data.
   # Create location data, with customerId (for Prisma).
   # Create invoices, etc.
 
-  def __init__(self):
-    for fn in self.fieldnames:
-      self[fn] = ''
-    return super().__init__()
+  def __init__(self, data: dict = None):
+    # fn, ln, cn, ph, em = data.values()
+    # self.firstname = fn
+    # self.lastname = ln
+    # self.companyname = cn
+    # self.phone = ph
+    # self.email = em
+    super(Customer, self).__init__()
+    if (data):
+      self._dict = dict(data)
+    else:
+      self._dict = dict()
 
   def __setitem__(self, __key: str, __value) -> None:
-    if __key not in self.fieldnames:
+    # if __key not in self.fieldnames:
+    if __key not in self._data:
       raise KeyError(__key)
     else:
       return super().__setitem__(__key, __value)
 
   def __repr__(self) -> str:
-    return super().__repr__()
+    return f"<{self.__class__.__name__} {self._dict}>"
 
   def __str__(self) -> str:
-    return f"{self['firstname']} {self['lastname']}\n{self['displayname']}\n{self['email']}, {self['phone']}\n"
+    fn, ln, _, ph, em = self._dict.values()
+    if len(ph) == 7:
+      return f"{fn} {ln}\n{ph[0:3]}.{ph[3:]}\n{em}"
+    return f"{fn} {ln}\n({ph[0:3]}) {ph[3:6]}.{ph[6:]}\n{em}"
 
   def __eq__(self, __o: object) -> bool:
     return super().__eq__(__o)
