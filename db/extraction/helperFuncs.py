@@ -1,6 +1,5 @@
 import re
 from typing import Iterator
-from customer import Customer
 from collections.abc import MutableSequence
 
 def rowparse(row: dict):
@@ -10,18 +9,16 @@ def rowparse(row: dict):
   pr = True if row['Primary?'] == 'yes' else False
   ph = phoneparse(row)
   em = row['Email']
-
-  addressPattern = re.compile('(\d*)\s+(.*)')
-  ret = addressPattern.findall(row['Street one'])
-  ho, st = ret[0]
-  if len(ho) == 0 and len(st) == 0:
-    ret = addressPattern.findall(row['Street two'])
-    ho, st = ret[0]
-
+  ho, st = streetparse(row)
   ci = row['City']
   fl = 'FL'
   zi = row['Postal code']
   no = row['Tags']
+
+  if ((fn == '' and ln == '' and cn == '') or
+      ph == '' or
+      not isValidEmail(em)):
+    raise TypeError(f'Insufficient data to create customer <row {row["ID"]}.')
 
   return {
     'customer': {
@@ -54,43 +51,40 @@ def phoneparse(row: dict):
             else ''
   return ph
 
-def newCustomer(row: dict):
-  customerData, _ = rowparse(row).values()
-  return Customer(customerData)
+def isValidEmail(em: str) -> bool:
+  if len(em) < 6: # len should minimally be a@a.co
+    return False
 
-def newCustomerList(data: list):
-  return CustomerList(data)
+  # emailPattern = re.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
+  # emailPattern = re.compile('^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$')
+  emailPattern = re.compile("^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+  if emailPattern.search(em):
+    return True
 
-class CustomerList(list):
-  userId: 1
+  return False
 
-  def __init__(self, customer):
-    super(CustomerList, self).__init__(customer)
+def streetparse(row: dict):
+  addressPattern = re.compile('(\d*)\s+(.*)')
+  ret = addressPattern.findall(row['Street one'])
+  try:
+    ho, st = ret[0]
+    if len(ho) == 0 and len(st) == 0:
+      ret = addressPattern.findall(row['Street two'])
+      try:
+        ho, st = ret[0]
+      except:
+        ho, st = ('', '')
+  except:
+    ho, st = ('', '')
 
-  # def __repr__(self) -> str:
-  #   return f"<{self.__class__.__name__} {self._list}>"
+  return (ho, st)
 
-  # def __iter__(self) -> Iterator[Customer]:
-  #   return super().__iter__()
+def customerExists(cl: list, c: dict):
+  return c in cl
 
-  # def __setitem__(self, index, customer: Customer):
-  #   super().__setitem__(index, customer)
+# def newCustomer(row: dict):
+#   customerData, _ = rowparse(row).values()
+#   return Customer(customerData)
 
-  # def __getitem__(self, index):
-  #   return self._list[index]
-
-  # def __delitem__(self, index):
-  #   del self._list[index]
-
-  # def __len__(self):
-  #   return len(self._list)
-
-  # def insert(self, index, customer: Customer):
-  #   super().insert(index, customer)
-
-  # def append(self, customer: Customer):
-  #   super().append(customer)
-
-  # def addCustomer(customer: Customer):
-  #   if customerExists(customer) return True
-
+# def newCustomerList(data: list):
+#   return CustomerList(data)

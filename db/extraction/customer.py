@@ -1,9 +1,9 @@
 from csv import DictReader
 import location as l
 import pandas as pd
+import helperFuncs as hf
 
 class Customer(dict):
-  userId = 1 # 1 == benJephunneh's User entry.  Need importation to create link.
   # firstname = ''
   # lastname = ''
   # companyname = ''
@@ -15,18 +15,18 @@ class Customer(dict):
   # Create location data, with customerId (for Prisma).
   # Create invoices, etc.
 
-  # def __init__(self, data: dict = None):
-  #   # fn, ln, cn, ph, em = data.values()
-  #   # self.firstname = fn
-  #   # self.lastname = ln
-  #   # self.companyname = cn
-  #   # self.phone = ph
-  #   # self.email = em
-  #   super(Customer, self).__init__()
-  #   if (data):
-  #     self._dict = dict(data)
-  #   else:
-  #     self._dict = dict()
+  def __init__(self, row: dict):
+    try:
+      customer, _ = hf.rowparse(row).values()
+      # fn, ln, cn, ph, em = customer.values()
+      # self.firstname = fn
+      # self.lastname = ln
+      # self.companyname = cn
+      # self.phone = ph
+      # self.email = em
+      return super(Customer, self).__init__(customer)
+    except:
+      return None
 
   # def __setitem__(self, __key: str, __value) -> None:
   #   # if __key not in self.fieldnames:
@@ -36,7 +36,7 @@ class Customer(dict):
   #     return super().__setitem__(__key, __value)
 
   # def __repr__(self) -> str:
-  #   return f"<{self.__class__.__name__} {self._dict}>"
+  #   return f"<{self.__class__.__name__}, {self.firstname} {self.lastname}>"
 
   # def __str__(self) -> str:
   #   fn, ln, _, ph, em = self._dict.values()
@@ -44,7 +44,15 @@ class Customer(dict):
   #     return f"{fn} {ln}\n{ph[0:3]}.{ph[3:]}\n{em}"
   #   return f"{fn} {ln}\n({ph[0:3]}) {ph[3:6]}.{ph[6:]}\n{em}"
 
-  # def __eq__(self, __o: object) -> bool:
+  def __eq__(self, c): # -> bool
+    if not isinstance(c, Customer):
+      return False
+    return self.get('email') == c.get('email')
+    # return selfEmail == cEmail
+    # if self.email == c.email: # and
+    #   return True
+    # return False
+
   #   return super().__eq__(__o)
 
   def setCustomer(self, row: dict):
@@ -73,10 +81,10 @@ class Customer(dict):
 #end createCustomerList
 
 
-def customerExists(email: str, customers: list[Customer]):
-  index = None
-  it = iter((index, c) for index, c in enumerate(customers) if c['Email'] == email)
-  return next(it, (None, None))
+# def customerExists(email: str, customers: list[Customer]):
+#   index = None
+#   it = iter((index, c) for index, c in enumerate(customers) if c['Email'] == email)
+#   return next(it, (None, None))
 #end customerExists
 
 def makeCustomer(row: dict):

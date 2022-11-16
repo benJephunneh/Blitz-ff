@@ -12,8 +12,8 @@ model Customer {
   id              Int             @id @default(autoincrement())
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  firstname       String
-  lastname        String
+  firstname       String?
+  lastname        String?
   companyname     String?
   displayname     String
   email           String
