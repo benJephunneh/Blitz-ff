@@ -58,33 +58,38 @@ def newCustomer(row: dict):
   customerData, _ = rowparse(row).values()
   return Customer(customerData)
 
+def newCustomerList(data: list):
+  return CustomerList(data)
+
 class CustomerList(list):
+  userId: 1
+
   def __init__(self, customer):
     super(CustomerList, self).__init__(customer)
 
-  def __repr__(self) -> str:
-    return f"<{self.__class__.__name__} {self._list}>"
+  # def __repr__(self) -> str:
+  #   return f"<{self.__class__.__name__} {self._list}>"
 
-  def __iter__(self) -> Iterator[Customer]:
-    return super().__iter__()
+  # def __iter__(self) -> Iterator[Customer]:
+  #   return super().__iter__()
 
-  def __setitem__(self, index, customer: Customer):
-    super().__setitem__(index, customer)
+  # def __setitem__(self, index, customer: Customer):
+  #   super().__setitem__(index, customer)
 
-  def __getitem__(self, index):
-    return self._list[index]
+  # def __getitem__(self, index):
+  #   return self._list[index]
 
-  def __delitem__(self, index):
-    del self._list[index]
+  # def __delitem__(self, index):
+  #   del self._list[index]
 
-  def __len__(self):
-    return len(self._list)
+  # def __len__(self):
+  #   return len(self._list)
 
-  def insert(self, index, customer: Customer):
-    super().insert(index, customer)
+  # def insert(self, index, customer: Customer):
+  #   super().insert(index, customer)
 
-  def append(self, customer: Customer):
-    super().append(customer)
+  # def append(self, customer: Customer):
+  #   super().append(customer)
 
   # def addCustomer(customer: Customer):
   #   if customerExists(customer) return True
