@@ -1,5 +1,5 @@
 import Papa, { ParseResult } from "papaparse"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 
 type CustomerModel = {
   firstname: string
@@ -14,22 +14,23 @@ type CustomerData = {
 }
 
 const useCsvParse = () => {
-  const [customerData, setCustomerData] = useState<CustomerData | undefined>()
+  const [customerData, setCustomerData] = useState<CustomerModel[] | undefined>()
 
-  const getCsv = () => {
-    Papa.parse("public/testfile.csv", {
+  const getCsv = useCallback(() => {
+    Papa.parse("/testfile.csv", {
       header: true,
-      skipEmptyLines: true,
+      download: true,
       delimiter: ",",
-      complete: (res: ParseResult<CustomerModel>) => {
-        setCustomerData(res)
+      complete: ({ data, errors, meta }: ParseResult<CustomerModel>) => {
+        setCustomerData(data)
+        console.log("Parse errors:", errors)
       },
     })
-  }
+  }, [])
 
   useEffect(() => {
     getCsv()
-  }, [])
+  }, [getCsv])
 
   return customerData
 }

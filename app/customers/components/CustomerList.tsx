@@ -56,7 +56,7 @@ const CustomersList = () => {
   const [{ customers, hasMore }] = usePaginatedQuery(
     getCustomers,
     {
-      orderBy: { lastname: sortMethod },
+      orderBy: { displayname: sortMethod },
       skip: ITEMS_PER_PAGE * page,
       take: ITEMS_PER_PAGE,
     },
@@ -159,7 +159,7 @@ const CustomersList = () => {
                     <Td>
                       <Link href={Routes.ShowCustomerPage({ customerId: customer.id })} passHref>
                         <Text as="a" fontWeight="semibold" textColor={linkText}>
-                          {`${customer.firstname} ${customer.lastname}`}
+                          {`${customer.displayname}`}
                         </Text>
                       </Link>
                     </Td>

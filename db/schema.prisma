@@ -6,6 +6,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // url      = env("postgresql://postgres:pgsql@localhost:5432/dev-ff")
 }
 
 model Customer {
@@ -16,7 +17,7 @@ model Customer {
   lastname        String?
   companyname     String?
   displayname     String
-  email           String
+  email           String          @unique
   phone           String
   locations       Location[]
   locationStashes LocationStash[]
@@ -229,7 +230,7 @@ model CustomerArchive {
   lastname          String?
   companyname       String?
   displayname       String
-  email             String
+  email             String            @unique
   phone             String
   notes             String?
   archivedLocations LocationArchive[]

@@ -10,11 +10,12 @@ const CsvPage: BlitzPage = () => {
   // })
 
   const customerData = useCsvParse()
-  console.table({ ...customerData })
+  // console.table({ ...customerData })
 
   return (
     <div>
       <p>See console for log.</p>
+      <pre>{JSON.stringify(customerData, null, 2)}</pre>
     </div>
   )
 }

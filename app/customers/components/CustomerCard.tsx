@@ -171,62 +171,84 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
           )}
         </GridItem> */}
         <GridItem area="address">
-          {location && (
-            <VStack justifySelf="end" display="flex" spacing={1} align="end" mt={1}>
-              <HStack
-                ml={2}
-                mt={2}
-                p={2}
-                borderWidth={1}
-                borderColor="blackAlpha.50"
-                borderRadius={4}
-                bg={locBgColor}
-                w="max-content"
-              >
-                <Link
-                  href={`http://maps.google.com/maps?q=${location.house}+${location.street.replace(
-                    " ",
-                    "+"
-                  )},+${location.city.replace(" ", "+")},+${location.state.replace(" ", "+")}`}
-                  passHref
+          <VStack justifySelf="end" display="flex" spacing={1} align="end" mt={1}>
+            {location && (
+              <>
+                <HStack
+                  ml={2}
+                  mt={2}
+                  p={2}
+                  borderWidth={1}
+                  borderColor="blackAlpha.50"
+                  borderRadius={4}
+                  bg={locBgColor}
+                  w="max-content"
                 >
-                  <a target="_blank" rel="noopener noreferrer">
-                    <Icon as={GiTreasureMap} w={8} h={8} mr={4} color="darkgreen" />
-                  </a>
-                </Link>
-                <Text fontWeight="semibold" opacity="0.8" textColor="gray.800">
-                  {location.house} {location.street}
-                  <br />
-                  {location.city}, {location.state} {location.zipcode}
-                </Text>
-                <IconButton
-                  icon={<MdOutlineEditLocation size={25} />}
-                  as={Button}
-                  // size="xs"
-                  aria-label="Edit location"
-                  alignSelf="start"
-                  onClick={editLocation}
-                  bg="transparent"
-                  color="darkslategray"
-                  // zIndex="overlay"
-                />
-              </HStack>
-              <Tag size="sm" bg={tagBgColor} opacity="0.9">
-                <TagLeftIcon as={FcPhone} />
-                <TagLabel>{phoneDisplay(location.phones!)}</TagLabel>
-              </Tag>
-              <Tag
-                as="a"
-                href={`mailto:${customer?.email}`}
-                size="sm"
-                bg={tagBgColor}
-                opacity="0.9"
-              >
-                <TagLeftIcon as={MdAlternateEmail} color="cyan.700" />
-                <TagLabel _hover={{ textDecoration: "underline" }}>{customer?.email}</TagLabel>
-              </Tag>
-            </VStack>
-          )}
+                  <Link
+                    href={`http://maps.google.com/maps?q=${
+                      location.house
+                    }+${location.street.replace(" ", "+")},+${location.city.replace(
+                      " ",
+                      "+"
+                    )},+${location.state.replace(" ", "+")}`}
+                    passHref
+                  >
+                    <a target="_blank" rel="noopener noreferrer">
+                      <Icon as={GiTreasureMap} w={8} h={8} mr={4} color="darkgreen" />
+                    </a>
+                  </Link>
+                  <Text fontWeight="semibold" opacity="0.8" textColor="gray.800">
+                    {location.house} {location.street}
+                    <br />
+                    {location.city}, {location.state} {location.zipcode}
+                  </Text>
+                  <IconButton
+                    icon={<MdOutlineEditLocation size={25} />}
+                    as={Button}
+                    // size="xs"
+                    aria-label="Edit location"
+                    alignSelf="start"
+                    onClick={editLocation}
+                    bg="transparent"
+                    color="darkslategray"
+                    // zIndex="overlay"
+                  />
+                </HStack>
+                <Tag size="sm" bg={tagBgColor} opacity="0.9">
+                  <TagLeftIcon as={FcPhone} />
+                  <TagLabel>{phoneDisplay(location.phones!)}</TagLabel>
+                </Tag>
+                <Tag
+                  as="a"
+                  href={`mailto:${customer?.email}`}
+                  size="sm"
+                  bg={tagBgColor}
+                  opacity="0.9"
+                >
+                  <TagLeftIcon as={MdAlternateEmail} color="cyan.700" />
+                  <TagLabel _hover={{ textDecoration: "underline" }}>{customer?.email}</TagLabel>
+                </Tag>
+              </>
+            )}
+            {!location && customer && (
+              <>
+                <Tag size="sm" bg={tagBgColor} opacity="0.9">
+                  <TagLeftIcon as={FcPhone} />
+                  <TagLabel>{phoneDisplay(customer.phone)}</TagLabel>
+                </Tag>
+                <Tag
+                  as="a"
+                  href={`mailto:${customer.email}`}
+                  size="sm"
+                  bg={tagBgColor}
+                  opacity="0.9"
+                >
+                  <TagLeftIcon as={MdAlternateEmail} color="cyan.700" />
+                  <TagLabel _hover={{ textDecoration: "underline" }}>{customer.email}</TagLabel>
+                </Tag>
+              </>
+            )}
+          </VStack>
         </GridItem>
         <GridItem area="aNotes">
           {location && (

@@ -20,9 +20,9 @@ export const textNotes = z.string()
 export const id = z.number()
 
 export const CustomerSkeleton = z.object({
-  firstname,
-  lastname,
-  companyname: companyname.nullable(),
+  firstname: firstname.nullable().optional(),
+  lastname: lastname.nullable().optional(),
+  companyname: companyname.nullable().optional(),
   email,
   phone,
 })
@@ -34,8 +34,8 @@ export const CreateCustomer = CustomerSkeleton.extend({
   notes: textNotes.nullable().optional(),
 })
 export const CreateCustomerStash = CustomerSkeleton.partial({
-  firstname: true,
-  lastname: true,
+  // firstname: true,
+  // lastname: true,
 }).extend({
   notes: textNotes,
 })
