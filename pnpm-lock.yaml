@@ -20,6 +20,7 @@ specifiers:
   "@tiptap/starter-kit": 2.0.0-beta.197
   "@types/jest": 27.4.1
   "@types/node": 17.0.16
+  "@types/papaparse": 5.3.5
   "@types/preview-email": 2.0.1
   "@types/react": 18.0.17
   "@types/react-calendar": 3.5.3
@@ -42,6 +43,7 @@ specifiers:
   lint-staged: 12.1.7
   lodash: 4.17.21
   next: 12.2.5
+  papaparse: 5.3.2
   prettier: ^2.7.1
   prettier-plugin-prisma: 3.8.0
   pretty-quick: 3.1.3
@@ -83,6 +85,7 @@ dependencies:
   html-to-text: 8.2.1
   lodash: 4.17.21
   next: 12.2.5_rlaikcoslzwwtqyk7brpdzej5y
+  papaparse: 5.3.2
   quirrel: registry.npmmirror.com/quirrel/1.9.3_redis-commands@1.7.0
   react: 18.2.0
   react-calendar: 3.9.0_biqbaboplfbrettd7655fr4n2y
@@ -99,6 +102,7 @@ devDependencies:
   "@testing-library/jest-dom": 5.16.3
   "@types/jest": 27.4.1
   "@types/node": 17.0.16
+  "@types/papaparse": 5.3.5
   "@types/preview-email": 2.0.1
   "@types/react": 18.0.17
   "@types/react-calendar": 3.5.3
@@ -1303,7 +1307,7 @@ packages:
     peerDependencies:
       "@babel/core": ^7.0.0-0
     dependencies:
-      "@babel/core": 7.18.13_supports-color@8.1.1
+      "@babel/core": 7.18.13
       "@babel/helper-plugin-utils": 7.18.9
 
   /@babel/plugin-transform-arrow-functions/7.18.6_@babel+core@7.12.10:
@@ -5392,6 +5396,15 @@ packages:
     resolution:
       {
         integrity: sha512-zuP3nBRQHI6M2PkXnGGy1Ww4VB+MyYHGgnfV2T+JR9KLkeWqPJuyVUgLpKXuFnA/b7pZaIDFh2sV4759B7jK1g==,
+      }
+    dependencies:
+      "@types/node": 17.0.16
+    dev: true
+
+  /@types/papaparse/5.3.5:
+    resolution:
+      {
+        integrity: sha512-R1icl/hrJPFRpuYj9PVG03WBAlghJj4JW9Py5QdR8FFSxaLmZRyu7xYDCCBZIJNfUv3MYaeBbhBoX958mUTAaw==,
       }
     dependencies:
       "@types/node": 17.0.16
@@ -12765,6 +12778,13 @@ packages:
       p-timeout: 3.2.0
     dev: true
 
+  /papaparse/5.3.2:
+    resolution:
+      {
+        integrity: sha512-6dNZu0Ki+gyV0eBsFKJhYr+MdQYAzFUGlBMNj3GNrmHxmz1lfRa24CjFObPXtjcetlOv5Ad299MhIK0znp3afw==,
+      }
+    dev: false
+
   /parent-module/1.0.1:
     resolution:
       {
@@ -16819,17 +16839,6 @@ packages:
     version: 4.0.2
     dev: false
 
-  registry.npmmirror.com/@types/node/17.0.16:
-    resolution:
-      {
-        integrity: sha512-ydLaGVfQOQ6hI1xK2A5nVh8bl0OGoIfYMxPWHqqYe9bTkWCfqiVvZoh2I/QF2sNSkZzZyROBoTefIEI+PB6iIA==,
-        registry: https://registry.npm.taobao.org/,
-        tarball: https://registry.npmmirror.com/@types/node/-/node-17.0.16.tgz,
-      }
-    name: "@types/node"
-    version: 17.0.16
-    dev: false
-
   registry.npmmirror.com/@vercel/fetch-retry/5.1.3_node-fetch@2.6.7:
     resolution:
       {
@@ -17716,7 +17725,7 @@ packages:
       "@datadog/native-metrics": registry.npmmirror.com/@datadog/native-metrics/1.4.3
       "@datadog/pprof": registry.npmmirror.com/@datadog/pprof/0.3.0
       "@datadog/sketches-js": registry.npmmirror.com/@datadog/sketches-js/1.0.5
-      "@types/node": registry.npmmirror.com/@types/node/17.0.16
+      "@types/node": 17.0.16
       crypto-randomuuid: registry.npmmirror.com/crypto-randomuuid/1.0.0
       form-data: registry.npmmirror.com/form-data/3.0.1
       import-in-the-middle: registry.npmmirror.com/import-in-the-middle/1.3.4
@@ -19900,7 +19909,7 @@ packages:
       "@protobufjs/pool": registry.npmmirror.com/@protobufjs/pool/1.1.0
       "@protobufjs/utf8": registry.npmmirror.com/@protobufjs/utf8/1.1.0
       "@types/long": registry.npmmirror.com/@types/long/4.0.2
-      "@types/node": registry.npmmirror.com/@types/node/17.0.16
+      "@types/node": 17.0.16
       long: registry.npmmirror.com/long/4.0.0
     dev: false
 
