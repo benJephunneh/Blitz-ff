@@ -16,7 +16,6 @@ class Customer(dict):
   # Create invoices, etc.
 
   def __init__(self, row: dict):
-    try:
       customer, _ = hf.rowparse(row).values()
       # fn, ln, cn, ph, em = customer.values()
       # self.firstname = fn
@@ -24,9 +23,10 @@ class Customer(dict):
       # self.companyname = cn
       # self.phone = ph
       # self.email = em
-      return super(Customer, self).__init__(customer)
-    except:
-      raise TypeError(f'Insufficient data to create customer <row {row["ID"]}>.')
+      if hf.validateCustomer(customer):
+        return super(Customer, self).__init__(customer)
+      else:
+        raise TypeError(f'Insufficient data to create customer <row {row["ID"]}>.')
 
   # def __setitem__(self, __key: str, __value) -> None:
   #   # if __key not in self.fieldnames:

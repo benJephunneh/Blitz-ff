@@ -22,13 +22,13 @@ class Location(dict):
   #   return f"{self['address1']} {self['address2']}\n{self['city']}, {self['state']}  {self['zipcode']}"
 
   def __eq__(self, location):
-    if ((self['zipcode'] == location['zipcode'] and
-        self['city'] == location['city'] and
-        self['street'] == location['street']) and
-       (self['house'] == location['house'] or
-       (self['block'] == location['block'] and
-        self['lot'] == location['lot'])) or
-        self['parcel'] == location['parce']):
+    if self['zipcode'] == location['zipcode'] and
+       self['city'] == location['city'] and
+       self['street'] == location['street'] and
+      (self['house'] == location['house'] or
+      (self['block'] == location['block'] and
+       self['lot'] == location['lot'])) or
+       self['parcel'] == location['parcel']):
       return True
     return False
 
