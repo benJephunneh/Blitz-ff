@@ -26,7 +26,7 @@ class Customer(dict):
       # self.email = em
       return super(Customer, self).__init__(customer)
     except:
-      return None
+      raise TypeError(f'Insufficient data to create customer <row {row["ID"]}>.')
 
   # def __setitem__(self, __key: str, __value) -> None:
   #   # if __key not in self.fieldnames:

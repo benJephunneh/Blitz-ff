@@ -18,7 +18,7 @@ def rowparse(row: dict):
   if ((fn == '' and ln == '' and cn == '') or
       ph == '' or
       not isValidEmail(em)):
-    raise TypeError(f'Insufficient data to create customer <row {row["ID"]}.')
+    raise TypeError(f'Insufficient data to create customer <row {row["ID"]}>.')
 
   return {
     'customer': {

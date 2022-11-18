@@ -1,33 +1,34 @@
 import re
+import helperFuncs as hf
 
 class Location(dict):
-  def __init__(self, fieldnames: list[str]):
-    self.fieldnames = fieldnames
-    for f in fieldnames:
-      self[f] = ''
-    self['state'] = 'FL'
-    return super().__init__()
+  def __init__(self, row: dict):
+    try:
+      _, location = hf.rowparse(row).values()
+      return super(Location, self).__init__(location)
+    except:
+      raise TypeError(f'Insufficient data to create location <row {row["ID"]}>.')
 
-  def __setitem__(self, __key: str, __value) -> None:
-    if __key not in self.fieldnames:
-      raise KeyError(__key)
-    else:
-      return super().__setitem__(__key, __value)
+  # def __setitem__(self, __key: str, __value) -> None:
+  #   if __key not in self.fieldnames:
+  #     raise KeyError(__key)
+  #   else:
+  #     return super().__setitem__(__key, __value)
 
-  def __repr__(self) -> str:
-    return super().__repr__()
+  # def __repr__(self) -> str:
+  #   return super().__repr__()
 
-  def __str__(self):
-    return f"{self['address1']} {self['address2']}\n{self['city']}, {self['state']}  {self['zipcode']}"
+  # def __str__(self):
+  #   return f"{self['address1']} {self['address2']}\n{self['city']}, {self['state']}  {self['zipcode']}"
 
   def __eq__(self, location):
-    if (self['zipcode'] == location['zipcode'] and
+    if ((self['zipcode'] == location['zipcode'] and
         self['city'] == location['city'] and
-        self['street'] == location['street'] and
+        self['street'] == location['street']) and
        (self['house'] == location['house'] or
        (self['block'] == location['block'] and
-        self['lot'] == location['lot']) or
-        self['parcel'] == location['parce'])):
+        self['lot'] == location['lot'])) or
+        self['parcel'] == location['parce']):
       return True
     return False
 
