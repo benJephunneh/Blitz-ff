@@ -10,14 +10,14 @@ class LocationList(list):
 
   def append(self, location: L) -> bool:
     if not isinstance(location, L):
-      print(f'Invalid location: <{location}>')
+      # print(f'Invalid location: <{location}>')
       return False
 
     if hf.locationExists(self, location):
-      print('Location already in the list.')
+      # print('Location already in the list.')
       return False
     super().append(location)
-    print('Location appended.')
+    # print('Location appended.')
     return True
 
   def toJson(self):

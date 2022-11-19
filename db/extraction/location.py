@@ -22,15 +22,19 @@ class Location(dict):
   #   return f"{self['address1']} {self['address2']}\n{self['city']}, {self['state']}  {self['zipcode']}"
 
   def __eq__(self, location):
-    if self['zipcode'] == location['zipcode'] and
-       self['city'] == location['city'] and
-       self['street'] == location['street'] and
-      (self['house'] == location['house'] or
-      (self['block'] == location['block'] and
-       self['lot'] == location['lot'])) or
-       self['parcel'] == location['parcel']):
-      return True
-    return False
+    for k, v in self.items():
+      if self[k] != location[k]:
+        return False
+    return True
+    # if self.get('parcel') == location.get('parcel') or \
+    #   (self.get('zipcode') == location.get('zipcode') and \
+    #    self.get('city') == location.get('city') and \
+    #    self.get('street') == location.get('street') and \
+    #   (self.get('house') == location.get('house') or \
+    #   (self.get('block') == location.get('block') and \
+    #    self.get('lot') == location.get('lot')))):
+    #   return True
+    # return False
 
   def setLocation(self, row: dict):
     addressPattern = re.compile('(?P<house>\d*)\s+(?P<street>.*)')
