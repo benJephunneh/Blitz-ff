@@ -21,8 +21,15 @@ const CustomerDrawer = ({ isOpen, onClose }: CustomerDrawerProps) => {
   // console.log(`Customer's firstname from CustomerDrawer: ${customer?.firstname}`)
 
   return (
-    <Drawer placement="right" size="xl" onClose={onClose} isOpen={isOpen}>
-      <DrawerOverlay backdropFilter="blur(2xp)" />
+    <Drawer
+      placement="right"
+      size="xl"
+      onClose={onClose}
+      isOpen={isOpen}
+      closeOnOverlayClick={false}
+    >
+      {/* <DrawerOverlay backdropFilter='auto' backdropBlur='lg' /> */}
+      <DrawerOverlay backdropFilter="blur(2px) invert(10%) hue-rotate(90deg)" />
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader borderBottomWidth={1}>
