@@ -3,9 +3,11 @@ import { Location, LocationType, PrismaClient } from "@prisma/client"
 import { parse, ParseResult } from "papaparse"
 import fs from "fs"
 import { customer } from "app/stashes/validations"
+import { SecurePassword } from "@blitzjs/auth"
+import db from "db"
 
-type LocationModel = {
-  primary: boolean
+interface LocationModel {
+  primary: string
   house: string
   street: string
   city: string
@@ -23,7 +25,7 @@ type CustomerModel = {
   companyname: string
   email: string
   phone: string
-  locations: LocationModel[]
+  locations: string
 }
 
 type CustomerData = {
@@ -44,11 +46,46 @@ const csvSeed = async () => {
       console.log("Finished parsing.")
       console.log("Start csv seed...")
       console.log(`data length: ${data.length}`)
+      // console.log(data)
+
+      // let pw = "calebcaleb"
+      // pw = await SecurePassword.hash(pw.trim())
+      // const user = await prisma.user.create({
+      //   data: {
+      //     username: "benJephunneh",
+      //     email: "caleb@email.com",
+      //     hashedPassword: pw,
+      //     role: "Admin",
+      //   },
+      //   select: {
+      //     id: true,
+      //     username: true,
+      //     email: true,
+      //     role: true,
+      //   },
+      // })
 
       for (const item of data) {
         const { locations, ...customer } = item
-        const locs = JSON.parse(locations)
-        console.log({ ...item })
+        let locs = locations.replaceAll(/(?<=[[{\s])'/g, '"')
+        locs = locs.replaceAll(/'(?=[:,}])/g, '"')
+        locs = locs.replaceAll("True", '"true"')
+        locs = locs.replaceAll("False", '"false"')
+        locs = locs.replaceAll("\xa0", " ")
+        const parsed: LocationModel[] = JSON.parse(locs)
+        console.log(parsed)
+        // try {
+        //   let asdf: LocationModel[] = JSON.parse(locs)
+        //   // JSON.parse(locs, (k, v) => {
+        //   //   if (k == "primary") {
+        //   //     if (v == "True") return true
+        //   //     else if (v == "False") return false
+        //   //   }
+        //   // })
+        // } catch (e) {
+        //   console.error(e.message)
+        //   console.log({ locs })
+        // }
         let displayname = ""
         if (item.firstname) {
           displayname = item.firstname
@@ -56,12 +93,18 @@ const csvSeed = async () => {
         } else if (item.lastname) displayname = item.lastname
         else displayname = item.companyname
         // console.table({ ...item })
-        console.log({ displayname })
+        // console.log({ displayname })
 
+        // const c = await prisma.customer.upsert({
+        //   where: { email: item.email },
+        //   update: {},
+        //   create: {
+        //     displayname,
+        //     userId: 1,
+        //     ...customer,
+        //   },
+        // })
         const c = await prisma.customer.create({
-          // where: { email: data[ii]!.email },
-          // update: {},
-          // create: {
           data: {
             displayname,
             userId: 1,
@@ -70,56 +113,59 @@ const csvSeed = async () => {
         })
 
         await prisma.customerArchive.create({
-          // where: { email: data[ii]!.email },
-          // update: {},
-          // create: {
           data: {
             displayname,
             ...customer,
           },
         })
 
-        // console.log("displayname", displayname)
+        //   // console.log("displayname", displayname)
 
-        locations.forEach(async (l) => {
+        parsed.forEach(async (l) => {
           const { primary, house, street, city, state, zipcode, block, lot, parcel, notes } = l
           const locationType: LocationType = locations.length > 1 ? "Managed" : "Personal"
           await prisma.location.create({
             data: {
+              primary: primary == "true" ? true : false,
+              house,
+              street,
+              city,
+              state,
+              zipcode,
+              block,
+              lot,
+              parcel,
               phones: c.phone,
               locationType,
               customerId: c.id,
               userId: 1,
-              ...l,
-              // primary,
-              // house,
-              // street,
-              // city,
-              // state,
-              // zipcode,
-              // block,
-              // lot,
-              // parcel,
-              // notes,
-              // phones: c.phone,
-              // customerId: c.id,
-              // userId: 1,
+              notes,
+              // ...l,
             },
           })
 
           await prisma.locationArchive.create({
             data: {
+              house,
+              street,
+              city,
+              state,
+              zipcode,
+              block,
+              lot,
+              parcel,
+              primary: primary == "true" ? true : false,
               phones: c.phone,
               locationType,
               customerId: c.id,
-              ...l,
+              // ...l,
             },
           })
         })
       }
 
       console.log("Finished seeding.")
-      console.error(errors)
+      console.error({ errors })
     },
   })
 }

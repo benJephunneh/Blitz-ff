@@ -4,11 +4,11 @@ import pandas as pd
 import helperFuncs as hf
 
 class Customer(dict):
-  # firstname = ''
-  # lastname = ''
-  # companyname = ''
-  # email = ''
-  # phone = ''
+  # firstname = ""
+  # lastname = ""
+  # companyname = ""
+  # email = ""
+  # phone = ""
   # locations: list
   # Consider, instead of creating customer objects with attached data, Prisma doesn't need that level of organization.
   # Create customer data.
@@ -47,7 +47,7 @@ class Customer(dict):
   def __eq__(self, c): # -> bool
     if not isinstance(c, Customer):
       return False
-    return self.get('email') == c.get('email')
+    return self.get("email") == c.get("email")
     # return selfEmail == cEmail
     # if self.email == c.email: # and
     #   return True
@@ -56,12 +56,12 @@ class Customer(dict):
   #   return super().__eq__(__o)
 
   def setCustomer(self, row: dict):
-    self['firstname'] = row['First name']
-    self['lastname'] = row['Last name']
-    # self['displayname'] = f"{self['firstname']} {self['lastname']}"
-    self['companyname'] = row['Company name']
-    self['email'] = row['Email']
-    self['phone'] = \
+    self["firstname"] = row['First name']
+    self["lastname"] = row['Last name']
+    # self["displayname"] = f"{self['firstname']} {self['lastname']}"
+    self["companyname"] = row['Company name']
+    self["email"] = row['Email']
+    self["phone"] = \
       row['Office phone'] if len(row['Office phone']) in [7, 10] \
         else row['Mobile phone'] if len(row['Mobile phone']) in [7, 10] \
           else row['Home phone']
@@ -96,23 +96,23 @@ def makeCustomer(row: dict):
   # make customer
   # return customer
   return {
-    'firstname': fn,
-    'lastname': ln,
-    'companyname': cn,
-    'email': em,
-    # 'phones': phones,
-    # 'locations': locations,
+    "firstname": fn,
+    "lastname": ln,
+    "companyname": cn,
+    "email": em,
+    # "phones": phones,
+    # "locations": locations,
   }
 #end makeCustomer
 
 
 def fillCustomerBlanks(row: dict, customer: dict):
-  if not customer['firstname']:
-    customer['firstname'] = row['First name']
-  if not customer['lastname']:
-    customer['lastname'] = row['Last name']
-  if not customer['companyname']:
-    customer['companyname'] = row['Company name']
+  if not customer["firstname"]:
+    customer["firstname"] = row['First name']
+  if not customer["lastname"]:
+    customer["lastname"] = row['Last name']
+  if not customer["companyname"]:
+    customer["companyname"] = row['Company name']
 
   return customer
 #end fillCustomerBlanks

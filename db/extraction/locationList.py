@@ -22,3 +22,7 @@ class LocationList(list):
 
   def toJson(self):
     return json.dumps(self, default=lambda o: o.__dict__)
+
+  # def replace(self, old, new):
+  #   for l in self:
+  #     l.

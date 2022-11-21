@@ -19,20 +19,24 @@ class Location(dict):
   #   return super().__repr__()
 
   # def __str__(self):
-  #   return f"{self['address1']} {self['address2']}\n{self['city']}, {self['state']}  {self['zipcode']}"
+  #   return f"{self.get('address1')} {self.get('address2')}\n{self.get('city')}, {self.get('state')}  {self.get('zipcode')}"
 
   def __eq__(self, location):
-    for k, v in self.items():
-      if self[k] != location[k]:
-        return False
-    return True
-    # if self.get('parcel') == location.get('parcel') or \
-    #   (self.get('zipcode') == location.get('zipcode') and \
-    #    self.get('city') == location.get('city') and \
-    #    self.get('street') == location.get('street') and \
-    #   (self.get('house') == location.get('house') or \
-    #   (self.get('block') == location.get('block') and \
-    #    self.get('lot') == location.get('lot')))):
+    if (self.get('street') == location.get('street') and len(self.get('street')) > 0) and \
+       (self.get('city') == location.get('city') and len(self.get('city')) > 0) and \
+      ((self.get('house') == location.get('house') and len(self.get('house')) > 0) or
+      ((self.get('block') == location.get('block') and len(self.get('block')) > 0) and
+       (self.get('lot') == location.get('lot') and len(self.get('lot')) > 0)) or
+       (self.get('parcel') == location.get('parcel') and len(self.get('parcel')) > 0)):
+       return True
+    return False
+    # if self.get("parcel") == location.get("parcel") or \
+    #   (self.get("zipcode") == location.get("zipcode") and \
+    #    self.get("city") == location.get("city") and \
+    #    self.get("street") == location.get("street") and \
+    #   (self.get("house") == location.get("house") or \
+    #   (self.get("block") == location.get("block") and \
+    #    self.get("lot") == location.get("lot")))):
     #   return True
     # return False
 
@@ -41,18 +45,18 @@ class Location(dict):
     ret = addressPattern.findall(row['Street one'])
     house, street = ret[0]
     if len(house) > 0 and len(street) > 0:
-      self['house'] = house
-      self['street'] = street
+      self["house"] = house
+      self["street"] = street
     else:
       ret = addressPattern.findall(row['Street two'])
       house, street = ret[0]
       if len(house) > 0 and len(street) > 0:
-        self['house'] = house
-        self['street'] = street
+        self["house"] = house
+        self["street"] = street
 
-    self['city'] = row['City']
-    self['zipcode'] = row['Postal code']
-    self['primary'] = True if row['Primary?'] == 'yes' else False
+    self["city"] = row['City']
+    self["zipcode"] = row['Postal code']
+    self["primary"] = True if row['Primary?'] == 'yes' else False
 
 def locationExists(location: Location, locations: list[Location]):
   index = None

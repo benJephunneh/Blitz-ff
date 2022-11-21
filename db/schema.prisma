@@ -17,7 +17,7 @@ model Customer {
   lastname        String?
   companyname     String?
   displayname     String
-  email           String          @unique
+  email           String
   phone           String
   locations       Location[]
   locationStashes LocationStash[]
@@ -59,7 +59,7 @@ model Location {
   lot          String?
   parcel       String?
   locationType LocationType @default(Personal)
-  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customer     Customer     @relation(fields: [customerId], references: [id])
   customerId   Int
   jobs         Job[]
   jobStashes   JobStash[]
@@ -83,7 +83,7 @@ model LocationStash {
   lot          String?
   parcel       String?
   locationType LocationType @default(Personal)
-  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customer     Customer     @relation(fields: [customerId], references: [id])
   customerId   Int
   stashType    StashType    @default(Location)
   user         User         @relation(fields: [userId], references: [id])
@@ -102,7 +102,7 @@ model Job {
   customer          Customer          @relation(fields: [customerId], references: [id])
   customerId        Int
   locationId        Int
-  location          Location          @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  location          Location          @relation(fields: [locationId], references: [id])
   user              User              @relation(fields: [userId], references: [id])
   userId            Int
   notes             String?
@@ -124,7 +124,7 @@ model JobStash {
   end        DateTime?
   customer   Customer  @relation(fields: [customerId], references: [id])
   customerId Int
-  location   Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  location   Location  @relation(fields: [locationId], references: [id])
   locationId Int
   stashType  StashType @default(Location)
   user       User      @relation(fields: [userId], references: [id])
@@ -230,7 +230,7 @@ model CustomerArchive {
   lastname          String?
   companyname       String?
   displayname       String
-  email             String            @unique
+  email             String
   phone             String
   notes             String?
   archivedLocations LocationArchive[]
@@ -253,7 +253,7 @@ model LocationArchive {
   parcel           String?
   notes            String?
   locationType     LocationType    @default(Personal)
-  archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id])
   customerId       Int
   archivedJobs     JobArchive[]
 }
@@ -268,8 +268,8 @@ model JobArchive {
   customerId        Int
   locationId        Int
   notes             String?
-  archivedCustomer  CustomerArchive   @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  archivedLocation  LocationArchive   @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  archivedCustomer  CustomerArchive   @relation(fields: [customerId], references: [id])
+  archivedLocation  LocationArchive   @relation(fields: [locationId], references: [id])
   archivedInvoices  InvoiceArchive[]
   archivedEstimates EstimateArchive[]
 }
