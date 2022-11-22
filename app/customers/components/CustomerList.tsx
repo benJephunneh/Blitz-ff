@@ -56,7 +56,7 @@ const CustomersList = () => {
   const [{ customers, hasMore }] = usePaginatedQuery(
     getCustomers,
     {
-      orderBy: { displayname: sortMethod },
+      orderBy: [{ lastname: sortMethod }],
       skip: ITEMS_PER_PAGE * page,
       take: ITEMS_PER_PAGE,
     },

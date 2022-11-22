@@ -12,7 +12,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import { Customer } from "@prisma/client"
+import { Location } from "@prisma/client"
 import LinkCard from "app/core/components/LinkCard"
 import phoneFormat from "app/core/helpers/phoneFormat"
 import Link from "next/link"
@@ -22,11 +22,11 @@ import { FcPhone } from "react-icons/fc"
 import { MdAlternateEmail } from "react-icons/md"
 
 type CustomerSearchResultProps = {
-  customer: Customer
+  location: Location
   props?: ComponentPropsWithoutRef<typeof LinkBox>
 }
 
-const CustomerSearchResult = ({ customer, ...props }: CustomerSearchResultProps) => {
+const CustomerSearchResult = ({ location, ...props }: CustomerSearchResultProps) => {
   const route = Routes.ShowCustomerPage
   const router = useRouter()
   const companynameColor = useColorModeValue("green.600", "green.300")
@@ -40,16 +40,10 @@ const CustomerSearchResult = ({ customer, ...props }: CustomerSearchResultProps)
       {...props}
     >
       <VStack alignItems="start">
-        <Link href={route({ customerId: customer.id })} passHref>
+        <Link href={route({ customerId: location.customerId })} passHref>
           <LinkOverlay>
             <HStack>
-              <Heading size="sm">{customer.displayname}</Heading>
-              {customer.companyname && (
-                <Text fontSize="sm" textColor={companynameColor}>
-                  {" "}
-                  - {customer.companyname}
-                </Text>
-              )}
+              <Heading size="sm">{`${location.house} ${location.street}`}</Heading>
             </HStack>
           </LinkOverlay>
         </Link>
@@ -58,17 +52,12 @@ const CustomerSearchResult = ({ customer, ...props }: CustomerSearchResultProps)
                 <TagLabel>{phoneFormat(customer.phone)}</TagLabel>
               </Tag> */}
         {/* <Link href={`mailto:${customer.email}`} passHref> */}
-        <Tag
-          as="a"
-          href={`mailto:${customer.email}`}
-          size="sm"
-          _hover={{ textDecor: "underline", cursor: "pointer" }}
-        >
+        {/* <Tag as='a' href={`mailto:${customer.email}`} size="sm" _hover={{ textDecor: 'underline', cursor: 'pointer' }}>
           <TagLeftIcon as={MdAlternateEmail} />
-          <TagLabel textColor={useColorModeValue("blue.600", "cyan.300")} fontWeight="hairline">
+          <TagLabel textColor={useColorModeValue('blue.600', 'cyan.300')} fontWeight='hairline'>
             {customer.email}
           </TagLabel>
-        </Tag>
+        </Tag> */}
         {/* </Link> */}
       </VStack>
     </LinkCard>

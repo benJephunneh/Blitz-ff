@@ -1,6 +1,6 @@
-import { HStack, LinkBox } from "@chakra-ui/react"
+import { Card, HStack, LinkBox, useColorModeValue } from "@chakra-ui/react"
 import { ComponentPropsWithoutRef, ReactNode } from "react"
-import Card from "./Card"
+// import Card from "./Card"
 
 type LinkCardProps = {
   // actions?: JSX.Element
@@ -12,25 +12,17 @@ const LinkCard = ({ children, ...props }) => {
   return (
     <LinkBox
       as={Card}
-      position="relative"
       h="full"
-      transition="border 50ms ease"
-      _hover={{ borderColor: "blue.400" }}
+      px={2}
+      py={2}
+      borderRadius="md"
+      borderWidth={1}
+      variant="outline"
+      bg={useColorModeValue("transparent", "gray.700")}
+      overflow="hidden"
+      display="block"
       {...props}
     >
-      {/* {actions && (
-        <HStack
-          position="absolute"
-          top={3}
-          right={3}
-          opacity="0.5"
-          zIndex={2}
-          _hover={{ opacity: 1 }}
-        >
-          {actions}
-        </HStack>
-      )} */}
-
       {children}
     </LinkBox>
   )

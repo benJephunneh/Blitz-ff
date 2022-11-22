@@ -28,7 +28,9 @@ import updateJob from "app/jobs/mutations/updateJob"
 import getJob from "app/jobs/queries/getJob"
 import getJobs from "app/jobs/queries/getJobs"
 import LocationModalForm from "app/locations/components/LocationModalForm"
+import LocationSearchResult from "app/locations/components/LocationSearchResult"
 import updateLocation from "app/locations/mutations/updateLocation"
+import findLocation from "app/locations/queries/findLocation"
 import getLocation from "app/locations/queries/getLocation"
 import getLocations from "app/locations/queries/getLocations"
 import SearchInput from "app/search/SearchInput"
@@ -218,8 +220,13 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const searchField = useRef<any>()
   const [searching, setSearching] = useState(false)
   const [query, setQuery] = useState("")
-  const [searchResults, { refetch: refetchCustomerSearch, isLoading }] = useQuery(
+  const [customerSearchResults, { refetch: refetchCustomerSearch, isLoading }] = useQuery(
     findCustomer,
+    { query },
+    { suspense: false, enabled: !!query }
+  )
+  const [locationSearchResults, { refetch: refetchLocationSearch }] = useQuery(
+    findLocation,
     { query },
     { suspense: false, enabled: !!query }
   )
@@ -316,8 +323,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
                 if ("stashType" in customer) await refetchStashes()
                 else {
                   await setCustomerQueryData(customer)
-                  setLocationId(undefined)
-                  setJobId(undefined)
+                  creatingCustomer && setLocationId(undefined)
+                  creatingCustomer && setJobId(undefined)
                   editingStash && refetchStashes()
                   if (creatingCustomer)
                     await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
@@ -431,10 +438,17 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
                     <SearchInput ref={searchField} search={setQuery} />
                   </Box>
                   {/* <Box>Results</Box> */}
-                  <SearchResults query={query} items={searchResults || []} isLoading={isLoading}>
+                  <SearchResults
+                    query={query}
+                    items={customerSearchResults || []}
+                    isLoading={isLoading}
+                  >
                     <SimpleGrid columns={1} spacing={3}>
-                      {searchResults?.map((r) => (
-                        <CustomerSearchResult key={r.id} customer={r} />
+                      {customerSearchResults?.map((r, ii) => (
+                        <CustomerSearchResult key={ii} customer={r} />
+                      ))}
+                      {locationSearchResults?.map((r, ii) => (
+                        <LocationSearchResult key={ii} location={r} />
                       ))}
                     </SimpleGrid>
                   </SearchResults>

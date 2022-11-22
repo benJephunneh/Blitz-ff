@@ -1,5 +1,5 @@
 import { Routes } from "@blitzjs/next"
-import { Button, HStack, Icon, LinkBox, LinkOverlay, Text } from "@chakra-ui/react"
+import { Button, HStack, Icon, IconButton, LinkBox, LinkOverlay, Text } from "@chakra-ui/react"
 import Card from "app/core/components/Card"
 import headerContext from "app/core/components/header/headerContext"
 import LinkCard from "app/core/components/LinkCard"
@@ -16,7 +16,7 @@ const SubheaderSearch = () => {
 
   return (
     <>
-      <SearchInput search={search} />
+      {/* <SearchInput search={search} onClick={openSearch} /> */}
       {/* <LinkBox>
       <Link href={Routes.SearchPage()} passHref>
         <LinkOverlay>
@@ -29,15 +29,20 @@ const SubheaderSearch = () => {
         </LinkOverlay>
       </Link>
     </LinkBox> */}
-      <Button
-        onClick={openSearch}
-        size="sm"
-        backdropFilter="auto"
-        backdropBlur="1px"
-        bg="transparent"
-      >
-        Search
-      </Button>
+      <HStack>
+        {/* <Icon as={FcSearch} mr={2} /> */}
+        <Button
+          leftIcon={<FcSearch />}
+          onClick={openSearch}
+          size="sm"
+          backdropFilter="auto"
+          backdropBlur="1px"
+          bg="transparent"
+          px={10}
+        >
+          Search
+        </Button>
+      </HStack>
     </>
   )
 }
