@@ -98,6 +98,7 @@ model Job {
   title             String
   start             DateTime?
   end               DateTime?
+  lineitems         LineItem[]
   completed         Boolean           @default(false)
   customer          Customer          @relation(fields: [customerId], references: [id])
   customerId        Int
@@ -202,6 +203,7 @@ model LineItem {
   cost              Int?
   quantity          Int                @default(1)
   notes             String?
+  jobs              Job[]
   invoices          Invoice[]
   invoiceStashes    InvoiceStash[]
   archivedInvoices  InvoiceArchive[]

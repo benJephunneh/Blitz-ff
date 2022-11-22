@@ -25,6 +25,7 @@ const TextAreaField = forwardRef<HTMLTextAreaElement, TextAreaFieldProps>(
       <FormControl isInvalid={meta.touched && error}>
         <FormLabel opacity=".9">{label}</FormLabel>
         <Textarea
+          bgColor='blackAlpha.100'
           textColor={textColor}
           {...input}
           disabled={meta.submitting}

@@ -54,8 +54,10 @@ const ModalForm: FormComponent<ModalFormProps> = ({
   children,
   ...props
 }) => {
-  const modalBgColor = useColorModeValue("gray.50", "gray.900")
-  const modalHeaderColor = useColorModeValue("black.900", "cyan.300")
+  const modalBgColor = useColorModeValue('gray.100', 'gray.600')
+  const modalBgGradient = useColorModeValue('linear(to-r, gray.300, gray.200)', 'linear(to-r, gray.800, gray.700)')
+  const modalHeaderTextColor = useColorModeValue("black.900", "cyan.300")
+  const modalHeaderColor = useColorModeValue("blackAlpha.300", "blackAlpha.500")
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside">
       <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px) invert(10%)" />
@@ -66,9 +68,9 @@ const ModalForm: FormComponent<ModalFormProps> = ({
         render={(phorm) => (
           <form onSubmit={phorm.handleSubmit} {...props}>
             <ModalContent bg={modalBgColor}>
-              <ModalHeader textColor={modalHeaderColor}>{title}</ModalHeader>
+              <ModalHeader borderBottomWidth={1} borderBottomColor='whiteAlpha.50' textColor={modalHeaderTextColor} bgColor={modalHeaderColor}> {title}</ModalHeader>
               <ModalCloseButton />
-              <ModalBody>
+              <ModalBody bg={modalBgColor}>
                 {phorm.submitError && (
                   <Alert status="error" mb={6}>
                     <AlertIcon />
@@ -116,9 +118,10 @@ const ModalForm: FormComponent<ModalFormProps> = ({
               </ModalFooter>
             </ModalContent>
           </form>
-        )}
+        )
+        }
       />
-    </Modal>
+    </Modal >
   )
 }
 
