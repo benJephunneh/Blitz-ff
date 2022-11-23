@@ -21,9 +21,18 @@ export default resolver.pipe(
     })
 
     if (email) throw new UniquityError()
+    const { firstname, lastname, companyname } = input
+    let displayname = ""
+    if (firstname) {
+      displayname = firstname
+      if (lastname) displayname += ` ${lastname}`
+    } else if (lastname) displayname = lastname
+    else if (companyname) displayname = companyname
+    if (displayname.length == 0)
+      throw new Error("First name, last name, or company name is required.")
 
     const data = {
-      displayname: `${input.firstname} ${input.lastname}`,
+      displayname,
       ...input,
     }
 

@@ -3,9 +3,9 @@ import { z } from "zod"
 
 const id = z.number()
 const name = z.string()
-const cost = z.number() // cents
+const cost = z.string() // Represent as cents or dollars?
 const quantity = z.number()
-export const notes = stashContentSchema
+export const notes = z.string()
 const query = z.string()
 
 export const LineItemSkeleton = z.object({
@@ -14,7 +14,7 @@ export const LineItemSkeleton = z.object({
   quantity,
 })
 
-export const CreateLineItem = LineItemSkeleton.extend({ id, notes: notes.nullable() })
-export const UpdateLineItem = LineItemSkeleton.extend({ id, notes: notes.nullable() })
-export const DeleteLineItem = LineItemSkeleton.extend({ id })
+export const CreateLineItem = LineItemSkeleton.extend({ notes: notes.nullable().optional() })
+export const UpdateLineItem = CreateLineItem.extend({ id })
+export const DeleteLineItem = z.object({ id })
 export const FindLineItem = z.object({ query })

@@ -1,4 +1,11 @@
-import { FormControl, FormLabel, Input, InputGroup, InputLeftAddon, useColorModeValue } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputLeftAddon,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { forwardRef, ComponentPropsWithoutRef, PropsWithoutRef } from "react"
 import { useField, UseFieldConfig } from "react-final-form"
 
@@ -8,7 +15,7 @@ export interface LabeledTextFieldProps extends ComponentPropsWithoutRef<typeof I
   /** Field label. */
   label: string
   /** Field type. Doesn't include radio buttons and checkboxes */
-  type?: "text" | "password" | "email" | "number" | 'price'
+  type?: "text" | "password" | "email" | "number" | "price"
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
   labelProps?: ComponentPropsWithoutRef<"label">
   fieldProps?: UseFieldConfig<string>
@@ -24,7 +31,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
         props.type === "number"
           ? (Number as any)
           : // Converting `""` to `null` ensures empty values will be set to null in the DB
-          (v) => (v === "" ? null : v),
+            (v) => (v === "" ? null : v),
       ...fieldProps,
     })
 
@@ -37,9 +44,9 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
         <FormLabel mb={0} {...labelProps}>
           {label}
         </FormLabel>
-        {type === 'price' &&
+        {type === "price" && (
           <InputGroup>
-            <InputLeftAddon children='$' />
+            <InputLeftAddon children="$" bg="green.200" /> {/* eslint-disable-line */}
             <Input
               {...input}
               disabled={submitting}
@@ -47,10 +54,11 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
               ref={ref}
               bg={bg}
               borderColor={borderColor}
+              type="number"
             />
           </InputGroup>
-        }
-        {type !== 'price' &&
+        )}
+        {type !== "price" && (
           <Input
             {...input}
             disabled={submitting}
@@ -59,7 +67,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
             bg={bg}
             borderColor={borderColor}
           />
-        }
+        )}
 
         {touched && normalizedError && (
           <div role="alert" style={{ color: "red" }}>

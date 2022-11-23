@@ -15,6 +15,8 @@ export default resolver.pipe(
         OR: [
           { name: { contains: search, mode: "insensitive" } },
           { name: { search, mode: "insensitive" } },
+          { notes: { contains: search, mode: "insensitive" } },
+          { notes: { search, mode: "insensitive" } },
         ],
       },
     })
