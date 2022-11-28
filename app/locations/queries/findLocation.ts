@@ -13,8 +13,8 @@ export default resolver.pipe(
   async ({ query }) => {
     if (!query) return []
 
-    const searchAnd = query.split(" ").join(" & ")
-    const searchOr = query.split(" ").join(" | ")
+    const searchAnd = query.trim().split(" ").join(" & ")
+    const searchOr = query.trim().split(" ").join(" | ")
 
     const locations = await db.location.findMany({
       where: {

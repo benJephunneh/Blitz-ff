@@ -18,6 +18,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import { Job } from "@prisma/client"
 import findJobsByDate from "app/jobs/queries/findJobsByDate"
 import findJobs from "app/jobs/queries/findJobsByDate"
 import findJobsByWeek from "app/jobs/queries/findJobsByWeek"
@@ -31,6 +32,7 @@ import {
   startOfWeek,
   addDays,
   subDays,
+  getHours,
 } from "date-fns"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -86,6 +88,53 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
   )
   // console.table({ ...jobsByWeek })
   // console.table({ ...mondayJobs })
+
+  const countJobsByHour = (jobs: Job[], hour: number) => {
+    const startArray = [
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 9) return j
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 10) return j
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 11) return j
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 12) return j
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 13) return j
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 14) return j
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 15) return j
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 16) return j
+      }).length,
+      0,
+    ]
+    const endArray = [
+      0,
+      ...jobs.map((j) => getHours(j.end!) == 10),
+      ...jobs.map((j) => getHours(j.end!) == 11),
+      ...jobs.map((j) => getHours(j.end!) == 12),
+      ...jobs.map((j) => getHours(j.end!) == 13),
+      ...jobs.map((j) => getHours(j.end!) == 14),
+      ...jobs.map((j) => getHours(j.end!) == 15),
+      ...jobs.map((j) => getHours(j.end!) == 16),
+      ...jobs.map((j) => getHours(j.end!) == 17),
+    ]
+
+    startArray.forEach((n, ii) => {
+      return n + endArray[ii]
+    })
+
+    return startArray + endArray
+  }
 
   const weekHeading = () => {
     if (monday.getMonth() == friday.getMonth()) {
@@ -158,7 +207,7 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
                         </GridItem>
                       ) : (
                         <GridItem key={ii} rowSpan={1} colStart={0} colEnd={1}>
-                          <Divider key={ii} w="97vw" />
+                          <Divider key={ii} w="100vw" />
                           {/* <Text key={ii}>asdf</Text> */}
                         </GridItem>
                       )}
@@ -167,7 +216,7 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
                 })}
               </Grid>
             </Box>
-            <DayView day={monday} jobs={mondayJobs} />
+            <DayView day={tuesday} jobs={tuesdayJobs} />
             {/* <DayView day={tuesday} jobs={tuesdayJobs} />
             <DayView day={wednesday} jobs={wednesdayJobs} />
             <DayView day={thursday} jobs={thursdayJobs} />

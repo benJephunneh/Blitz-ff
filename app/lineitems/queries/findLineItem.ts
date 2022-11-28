@@ -9,7 +9,8 @@ export default resolver.pipe(
   async ({ query }) => {
     if (!query) return []
 
-    const search = query.split(" ").join(" | ")
+    const search = query.trim().split(" ").join(" | ")
+
     const lineItems = await db.lineItem.findMany({
       where: {
         OR: [

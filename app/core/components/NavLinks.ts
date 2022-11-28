@@ -1,8 +1,8 @@
 export const NavLinks = [
   {
-    name: "Schedule",
-    href: "/schedule",
-    isDisabled: true,
+    name: "Calendar",
+    href: "/calendar",
+    isDisabled: false,
   },
   {
     name: "Search",

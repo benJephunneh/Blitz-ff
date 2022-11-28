@@ -56,6 +56,8 @@ const DayView = ({
   const one6 = jobs.filter((j) => getHours(j.start!) == 16)
   const one7 = jobs.filter((j) => getHours(j.start!) == 17)
 
+  console.log(getHours(o9[0]?.start!))
+
   return (
     <VStack alignSelf="start" justify="center" flexShrink={0}>
       <Grid>
@@ -77,7 +79,8 @@ const DayView = ({
                           pl={ii * 3}
                           bg={shades[ii % 3]}
                           fontSize="xs"
-                          rowSpan={differenceInHours(j.end!, j.start!)}
+                          rowStart={getHours(j.start!)}
+                          rowEnd={getHours(j.end!)}
                         >
                           {j.title}
                         </GridItem>

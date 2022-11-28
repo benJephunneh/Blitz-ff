@@ -1,4 +1,4 @@
-import { BlitzPage } from "@blitzjs/next"
+import { BlitzPage, Routes } from "@blitzjs/next"
 import {
   Box,
   Divider,
@@ -34,6 +34,8 @@ import timeRange9_17 from "app/calendar/helpers/timeRange9_17"
 import HourView from "app/calendar/components/HourView"
 
 import "react-calendar/dist/Calendar.css"
+import HeaderLayout from "app/core/layouts/HeaderLayout"
+import DashboardSubheader from "app/dashboard/DashboardSubheader"
 
 const formattedStart = (j: Job) => {
   // console.log(format(j.start!, 'Hmm'))
@@ -264,5 +266,11 @@ const TestCalendar: BlitzPage = () => {
   )
 }
 
-TestCalendar.getLayout = (page) => <Layout title="Calendar test page">{page}</Layout>
+TestCalendar.authenticate = { redirectTo: Routes.Home() }
+TestCalendar.getLayout = (page) => (
+  <HeaderLayout title="Customers" description="Customer list" subheader={<DashboardSubheader />}>
+    {page}
+  </HeaderLayout>
+)
+
 export default TestCalendar
