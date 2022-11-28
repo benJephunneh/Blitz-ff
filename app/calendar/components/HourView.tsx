@@ -56,9 +56,9 @@ const HourView = ({ time, jobs, showHour = true }: HourViewProps) => {
   return (
     <>
       {showHour && <Heading size="sm">{time}</Heading>}
-      {filteredJobs?.map((j, ii) => (
-        <Tooltip key={ii} label="Job details">
-          <VStack spacing={0}>
+      <VStack spacing={0} display="flex">
+        {filteredJobs?.map((j, ii) => (
+          <Tooltip key={ii} label="Job details">
             <Text
               ml={ii * 3}
               bgColor={bgColors[ii % 3]}
@@ -66,6 +66,7 @@ const HourView = ({ time, jobs, showHour = true }: HourViewProps) => {
               borderWidth={2}
               borderRadius={4}
               fontSize="xs"
+              noOfLines={1}
               onClick={async () => {
                 // pickJob(j.id) // "Not a function" error?
                 await router.push(Routes.ShowCustomerPage({ customerId: j.customerId }))
@@ -76,10 +77,10 @@ const HourView = ({ time, jobs, showHour = true }: HourViewProps) => {
               <br />
               {`${format(j.start!, "HHmm")} - ${format(j.end!, "HHmm")}`}
             </Text>
-          </VStack>
-        </Tooltip>
-      ))}
-      <Divider mt={4} />
+          </Tooltip>
+        ))}
+      </VStack>
+      {/* <Divider mt={4} /> */}
     </>
     // <Flex borderWidth={1} borderColor="blue.400" borderRadius={4} w="full">
     //   <Box bg="transparent" position="absolute">

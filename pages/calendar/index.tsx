@@ -3,6 +3,8 @@ import {
   Box,
   Divider,
   Flex,
+  Grid,
+  GridItem,
   Heading,
   Table,
   TableCaption,
@@ -27,10 +29,11 @@ import findJobsByWeek from "app/jobs/queries/findJobsByWeek"
 import findJobsByDate from "app/jobs/queries/findJobsByDate"
 import getLocations from "app/locations/queries/getLocations"
 import { useQuery } from "@blitzjs/rpc"
-import "react-calendar/dist/Calendar.css"
-import timeRange9_17 from "app/calendar/helpers/timeRange9_17"
 import { Job } from "@prisma/client"
+import timeRange9_17 from "app/calendar/helpers/timeRange9_17"
 import HourView from "app/calendar/components/HourView"
+
+import "react-calendar/dist/Calendar.css"
 
 const formattedStart = (j: Job) => {
   // console.log(format(j.start!, 'Hmm'))

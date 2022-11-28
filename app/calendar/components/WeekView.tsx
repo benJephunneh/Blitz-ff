@@ -2,6 +2,7 @@ import { useQuery } from "@blitzjs/rpc"
 import {
   Box,
   Button,
+  Divider,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -10,6 +11,8 @@ import {
   DrawerHeader,
   DrawerOverlay,
   Flex,
+  Grid,
+  GridItem,
   HStack,
   Spacer,
   Text,
@@ -84,9 +87,17 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
   // console.table({ ...jobsByWeek })
   // console.table({ ...mondayJobs })
 
+  const weekHeading = () => {
+    if (monday.getMonth() == friday.getMonth()) {
+      return `${format(monday, "d")} - ${format(friday, "d MMM yy")}`
+    } else {
+      return `${format(monday, "d MMM")} - ${format(friday, "d MMM yy")}`
+    }
+  }
+
   return (
     <Flex>
-      <Box w="100vw">
+      <Box w="100vw" m={2} borderWidth={1} borderColor="blue.400" borderRadius={3}>
         <HStack m={2} justify="space-between" align="start">
           {/* <Text textAlign='left' fontWeight='semibold' bgColor='blackAlpha.100'>
               {format(monday, 'EEE, do LLL yy')}
@@ -94,11 +105,74 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
             {timeRange9_17().map((t, ii) => (
               <HourView key={ii} time={t} jobs={mondayJobs} />
             ))} */}
-          <DayView day={monday} jobs={mondayJobs} />
-          <DayView day={tuesday} jobs={tuesdayJobs} />
-          <DayView day={wednesday} jobs={wednesdayJobs} />
-          <DayView day={thursday} jobs={thursdayJobs} />
-          <DayView day={friday} jobs={fridayJobs} />
+          {/* <Box position='absolute'>
+            <VStack align='start'>
+              <>
+                <Text>
+                  {`Week ${weekNumber}`}
+                </Text>
+                {timeRange9_17().map((t, ii) => {
+                  return (
+                    <>
+                      {
+                        ii % 2 == 1 ? (
+                          <Text key={ii}>{t.toString()}</Text>
+                        ) : (
+                          <Divider key={ii} w='100vw' />
+                          // <Text key={ii}>asdf</Text>
+                        )
+                      }
+                    </>
+                  )
+                })}
+              </>
+            </VStack>
+          </Box> */}
+          <HStack position="relative">
+            <Box w="150px">
+              <Grid
+                templateRows="repeat(10, 1fr)"
+                templateColumns="repeat(6, 1fr)"
+                // templateAreas={`'9 m t w th f'
+                //                 '10 m t w th f'
+                //                 '11 m t w th f'
+                //                 '12 m t w th f'
+                //                 '13 m t w th f'
+                //                 '14 m t w th f'
+                //                 '15 m t w th f'
+                //                 '16 m t w th f'
+                //                 '17 m t w th f'`}
+              >
+                <GridItem rowSpan={1} colStart={0} colEnd={1} w="max">
+                  <Text fontWeight="bold">
+                    {/* {`Week ${weekNumber}`} */}
+                    {weekHeading()}
+                  </Text>
+                </GridItem>
+                {timeRange9_17().map((t, ii) => {
+                  return (
+                    <>
+                      {ii % 2 == 1 ? (
+                        <GridItem key={ii} rowSpan={1} colStart={0} colEnd={1}>
+                          <Text>{t.toString()}</Text>
+                        </GridItem>
+                      ) : (
+                        <GridItem key={ii} rowSpan={1} colStart={0} colEnd={1}>
+                          <Divider key={ii} w="97vw" />
+                          {/* <Text key={ii}>asdf</Text> */}
+                        </GridItem>
+                      )}
+                    </>
+                  )
+                })}
+              </Grid>
+            </Box>
+            <DayView day={monday} jobs={mondayJobs} />
+            {/* <DayView day={tuesday} jobs={tuesdayJobs} />
+            <DayView day={wednesday} jobs={wednesdayJobs} />
+            <DayView day={thursday} jobs={thursdayJobs} />
+            <DayView day={friday} jobs={fridayJobs} /> */}
+          </HStack>
         </HStack>
         {/* {jobsByWeek?.map((j, ii) => (
           <>
