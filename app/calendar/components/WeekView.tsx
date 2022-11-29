@@ -119,21 +119,46 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
     ]
     const endArray = [
       0,
-      ...jobs.map((j) => getHours(j.end!) == 10),
-      ...jobs.map((j) => getHours(j.end!) == 11),
-      ...jobs.map((j) => getHours(j.end!) == 12),
-      ...jobs.map((j) => getHours(j.end!) == 13),
-      ...jobs.map((j) => getHours(j.end!) == 14),
-      ...jobs.map((j) => getHours(j.end!) == 15),
-      ...jobs.map((j) => getHours(j.end!) == 16),
-      ...jobs.map((j) => getHours(j.end!) == 17),
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 10) return j
+        else return null
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 11) return j
+        else return null
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 12) return j
+        else return null
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 13) return j
+        else return null
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 14) return j
+        else return null
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 15) return j
+        else return null
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 16) return j
+        else return null
+      }).length,
+      jobs.filter((j) => {
+        if (getHours(j.start!) == 17) return j
+        else return null
+      }).length,
     ]
 
-    startArray.forEach((n, ii) => {
-      return n + endArray[ii]
-    })
+    const arraySum: number[] = []
+    for (let ii = 0; ii < startArray.length; ii++) {
+      arraySum.push(startArray[ii]! + endArray[ii]!)
+    }
 
-    return startArray + endArray
+    return arraySum
   }
 
   const weekHeading = () => {
