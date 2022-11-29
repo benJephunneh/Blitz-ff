@@ -29,7 +29,7 @@ const HeaderLayout: BlitzLayout<HeaderLayoutProps> = ({
 
   return (
     <UserProvider>
-      <Flex direction="column" h="100vh">
+      <Flex direction="column">
         <PageTitle title={title} />
 
         {isLoggedIn && (

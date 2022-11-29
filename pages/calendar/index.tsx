@@ -151,7 +151,7 @@ const TestCalendar: BlitzPage = () => {
   // }, [startDateTime, endDateTime])
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" overflowX="hidden">
       {/* <Button onClick={onToggle}>Click</Button> */}
       {/* <Modal isOpen={isOpen} onClose={onClose} size="sm">
         <ModalOverlay backdropFilter="blur(2px)" />
@@ -268,7 +268,7 @@ const TestCalendar: BlitzPage = () => {
 
 TestCalendar.authenticate = { redirectTo: Routes.Home() }
 TestCalendar.getLayout = (page) => (
-  <HeaderLayout title="Customers" description="Customer list" subheader={<DashboardSubheader />}>
+  <HeaderLayout title="Calendar" description="Calendar view" subheader={<DashboardSubheader />}>
     {page}
   </HeaderLayout>
 )

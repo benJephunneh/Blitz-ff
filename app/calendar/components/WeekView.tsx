@@ -19,6 +19,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Job } from "@prisma/client"
+import jobsByHour from "app/jobs/components/jobsByHour"
 import findJobsByDate from "app/jobs/queries/findJobsByDate"
 import findJobs from "app/jobs/queries/findJobsByDate"
 import findJobsByWeek from "app/jobs/queries/findJobsByWeek"
@@ -33,6 +34,7 @@ import {
   addDays,
   subDays,
   getHours,
+  getMinutes,
 } from "date-fns"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -86,80 +88,20 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
   const fridayJobs = jobsByWeek.filter((j) =>
     areIntervalsOverlapping({ start: j.start!, end: j.end! }, fridayInterval)
   )
+
+  const { starts, stops } = jobsByHour(jobsByWeek)
+  // const mondayJobsBySlot = jobsByHour(mondayJobs)
+  const { jobs: tuesdayJobsBySlot } = jobsByHour(tuesdayJobs)
+  // const wednesdayJobsBySlot = jobsByHour(wednesdayJobs)
+  // const thursdayJobsBySlot = jobsByHour(thursdayJobs)
+  // const fridayJobsBySlot = jobsByHour(fridayJobs)
+
   // console.table({ ...jobsByWeek })
   // console.table({ ...mondayJobs })
+  // console.log('rowSpans', rowSpans)
 
-  const countJobsByHour = (jobs: Job[], hour: number) => {
-    const startArray = [
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 9) return j
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 10) return j
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 11) return j
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 12) return j
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 13) return j
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 14) return j
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 15) return j
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 16) return j
-      }).length,
-      0,
-    ]
-    const endArray = [
-      0,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 10) return j
-        else return null
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 11) return j
-        else return null
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 12) return j
-        else return null
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 13) return j
-        else return null
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 14) return j
-        else return null
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 15) return j
-        else return null
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 16) return j
-        else return null
-      }).length,
-      jobs.filter((j) => {
-        if (getHours(j.start!) == 17) return j
-        else return null
-      }).length,
-    ]
-
-    const arraySum: number[] = []
-    for (let ii = 0; ii < startArray.length; ii++) {
-      arraySum.push(startArray[ii]! + endArray[ii]!)
-    }
-
-    return arraySum
-  }
+  // const tuesdayJobCountsByHour = countJobsByHour(tuesdayJobs)
+  // console.log({ tuesdayJobCountsByHour })
 
   const weekHeading = () => {
     if (monday.getMonth() == friday.getMonth()) {
@@ -171,15 +113,15 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
 
   return (
     <Flex>
-      <Box w="100vw" m={2} borderWidth={1} borderColor="blue.400" borderRadius={3}>
-        <HStack m={2} justify="space-between" align="start">
-          {/* <Text textAlign='left' fontWeight='semibold' bgColor='blackAlpha.100'>
+      <Box w="max" m={2} p={2} borderWidth={1} borderColor="blue.400" borderRadius={3}>
+        {/* <HStack m={2} justify="space-between" align="start"> */}
+        {/* <Text textAlign='left' fontWeight='semibold' bgColor='blackAlpha.100'>
               {format(monday, 'EEE, do LLL yy')}
             </Text>
             {timeRange9_17().map((t, ii) => (
               <HourView key={ii} time={t} jobs={mondayJobs} />
             ))} */}
-          {/* <Box position='absolute'>
+        {/* <Box position='absolute'>
             <VStack align='start'>
               <>
                 <Text>
@@ -202,52 +144,62 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
               </>
             </VStack>
           </Box> */}
-          <HStack position="relative">
-            <Box w="150px">
-              <Grid
-                templateRows="repeat(10, 1fr)"
-                templateColumns="repeat(6, 1fr)"
-                // templateAreas={`'9 m t w th f'
-                //                 '10 m t w th f'
-                //                 '11 m t w th f'
-                //                 '12 m t w th f'
-                //                 '13 m t w th f'
-                //                 '14 m t w th f'
-                //                 '15 m t w th f'
-                //                 '16 m t w th f'
-                //                 '17 m t w th f'`}
-              >
-                <GridItem rowSpan={1} colStart={0} colEnd={1} w="max">
-                  <Text fontWeight="bold">
-                    {/* {`Week ${weekNumber}`} */}
-                    {weekHeading()}
-                  </Text>
+        {/* <HStack position="relative" m={2}> */}
+        {/* <Box w="max"> */}
+        <Grid
+          templateRows="repeat(18, 1fr)"
+          templateColumns="repeat(6, 1fr)"
+          // templateAreas={`'9 m t w th f'
+          //                 '10 m t w th f'
+          //                 '11 m t w th f'
+          //                 '12 m t w th f'
+          //                 '13 m t w th f'
+          //                 '14 m t w th f'
+          //                 '15 m t w th f'
+          //                 '16 m t w th f'
+          //                 '17 m t w th f'`}
+        >
+          <GridItem rowStart={0} rowEnd={1} colStart={0} colEnd={1} w="max">
+            <Text fontWeight="bold">
+              {/* {`Week ${weekNumber}`} */}
+              {weekHeading()}
+            </Text>
+          </GridItem>
+          {timeRange9_17().map((t, ii) => (
+            <>
+              {ii % 2 == 0 ? (
+                <GridItem
+                  key={ii}
+                  rowStart={starts.at(ii)! + 1}
+                  rowEnd={stops.at(ii)! + 1}
+                  colStart={0}
+                  colEnd={1}
+                >
+                  <Divider />
+                  <Text>{t}</Text>
                 </GridItem>
-                {timeRange9_17().map((t, ii) => {
-                  return (
-                    <>
-                      {ii % 2 == 1 ? (
-                        <GridItem key={ii} rowSpan={1} colStart={0} colEnd={1}>
-                          <Text>{t.toString()}</Text>
-                        </GridItem>
-                      ) : (
-                        <GridItem key={ii} rowSpan={1} colStart={0} colEnd={1}>
-                          <Divider key={ii} w="100vw" />
-                          {/* <Text key={ii}>asdf</Text> */}
-                        </GridItem>
-                      )}
-                    </>
-                  )
-                })}
-              </Grid>
-            </Box>
-            <DayView day={tuesday} jobs={tuesdayJobs} />
-            {/* <DayView day={tuesday} jobs={tuesdayJobs} />
-            <DayView day={wednesday} jobs={wednesdayJobs} />
-            <DayView day={thursday} jobs={thursdayJobs} />
-            <DayView day={friday} jobs={fridayJobs} /> */}
-          </HStack>
-        </HStack>
+              ) : (
+                <GridItem
+                  key={ii}
+                  rowStart={starts.at(ii)! + 1}
+                  rowEnd={stops.at(ii)! + 1}
+                  colStart={0}
+                  colEnd={1}
+                >
+                  <Divider ml={20} />
+                </GridItem>
+              )}
+            </>
+          ))}
+          {/* <DayView day={monday} jobs={mondayJobsBySlot} /> */}
+          <DayView day={tuesday} jobs={tuesdayJobsBySlot} starts={starts} stops={stops} />
+          {/* <DayView day={wednesday} jobs={wednesdayJobBysSlot} /> */}
+          {/* <DayView day={thursday} jobs={thursdayJobsBySlot} /> */}
+          {/* <DayView day={friday} jobs={fridayJobsBySlot} /> */}
+        </Grid>
+        {/* </Box> */}
+        {/* </HStack> */}
+        {/* </HStack> */}
         {/* {jobsByWeek?.map((j, ii) => (
           <>
             onClick: Pick customer
