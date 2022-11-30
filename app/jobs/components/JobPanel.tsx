@@ -15,6 +15,7 @@ import {
   MenuList,
   MenuOptionGroup,
   Text,
+  Tooltip,
   UnorderedList,
   useColorModeValue,
 } from "@chakra-ui/react"
@@ -112,11 +113,7 @@ const JobPanel = () => {
                   </MenuItemOption>
                   <MenuDivider />
                   {relatedJobs?.map((j, ii) => (
-                    <MenuItemOption
-                      value={jobId?.toString()}
-                      key={ii}
-                      onClick={() => pickJob(j.id)}
-                    >
+                    <MenuItemOption value={jobId?.toString()} key={ii} onClick={() => setJob(j)}>
                       {j.title}
                     </MenuItemOption>
                   ))}
@@ -198,17 +195,20 @@ const JobPanel = () => {
       {!job && (
         <UnorderedList>
           {relatedJobs?.map((j, ii) => (
-            <ListItem
-              key={ii}
-              onClick={() => pickJob(j.id)}
-              textColor={isPast(j.start!) ? inactiveJobColor : "initial"}
-            >
-              {isSameMonth(j.start!, j.end!)
-                ? isSameDay(j.start!, j.end!)
-                  ? `${j.title}: ${format(j.start!, "HHmm")} - ${format(j.end!, "HHmm, d MMM")}`
-                  : `${j.title}: ${format(j.start!, "d")} - ${format(j.end!, "d MMM")}`
-                : `${j.title}: ${format(j.start!, "d MMM")} - ${format(j.end!, "d MMM")}`}
-            </ListItem>
+            <Tooltip key={ii} label={j.id}>
+              <ListItem
+                key={ii}
+                onClick={() => setJob(j)}
+                textColor={isPast(j.start!) ? inactiveJobColor : "initial"}
+                _hover={{ cursor: "pointer" }}
+              >
+                {isSameMonth(j.start!, j.end!)
+                  ? isSameDay(j.start!, j.end!)
+                    ? `${j.title}: ${format(j.start!, "HHmm")} - ${format(j.end!, "HHmm, d MMM")}`
+                    : `${j.title}: ${format(j.start!, "d")} - ${format(j.end!, "d MMM")}`
+                  : `${j.title}: ${format(j.start!, "d MMM")} - ${format(j.end!, "d MMM")}`}
+              </ListItem>
+            </Tooltip>
           ))}
         </UnorderedList>
       )}

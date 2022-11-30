@@ -16,10 +16,12 @@ import {
   HStack,
   Spacer,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import { Job } from "@prisma/client"
 import jobsByHour from "app/jobs/components/jobsByHour"
+import rowSpacing from "app/jobs/helpers/rowSpacing"
 import findJobsByDate from "app/jobs/queries/findJobsByDate"
 import findJobs from "app/jobs/queries/findJobsByDate"
 import findJobsByWeek from "app/jobs/queries/findJobsByWeek"
@@ -89,16 +91,17 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
     areIntervalsOverlapping({ start: j.start!, end: j.end! }, fridayInterval)
   )
 
-  const { starts, stops } = jobsByHour(jobsByWeek)
+  const { rowStarts, rowEnds } = rowSpacing(jobsByWeek)
   const { jobs: mondayJobsBySlot } = jobsByHour(mondayJobs)
   const { jobs: tuesdayJobsBySlot } = jobsByHour(tuesdayJobs)
   const { jobs: wednesdayJobsBySlot } = jobsByHour(wednesdayJobs)
   const { jobs: thursdayJobsBySlot } = jobsByHour(thursdayJobs)
   const { jobs: fridayJobsBySlot } = jobsByHour(fridayJobs)
 
-  // console.table({ ...jobsByWeek })
-  // console.table({ ...mondayJobs })
+  console.table({ ...jobsByWeek })
+  // console.table({ ...mondayJobsBySlot })
   // console.log('rowSpans', rowSpans)
+  // console.log(rowStarts, rowEnds)
 
   // const tuesdayJobCountsByHour = countJobsByHour(tuesdayJobs)
   // console.log({ tuesdayJobCountsByHour })
@@ -164,35 +167,39 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
           </GridItem>
           {timeRange9_17().map((t, ii) => (
             <>
-              {ii % 2 == 0 ? (
-                <GridItem
-                  key={ii}
-                  rowStart={starts.at(ii)! + 1}
-                  rowEnd={stops.at(ii)! + 1}
-                  colStart={0}
-                  colEnd={1}
-                >
-                  <Divider />
-                  <Text>{t}</Text>
-                </GridItem>
-              ) : (
-                <GridItem
-                  key={ii}
-                  rowStart={starts.at(ii)! + 1}
-                  rowEnd={stops.at(ii)! + 1}
-                  colStart={0}
-                  colEnd={1}
-                >
-                  <Divider ml={20} />
-                </GridItem>
-              )}
+              {
+                ii % 2 == 0 && (
+                  <GridItem
+                    key={ii}
+                    rowStart={rowStarts.at(ii)! + 1}
+                    rowEnd={rowEnds.at(ii)! + 1}
+                    colStart={0}
+                    colEnd={1}
+                    bg="gray.100"
+                  >
+                    <Divider />
+                    <Text>{t}</Text>
+                  </GridItem>
+                )
+                // ) : (
+                // <GridItem
+                //   key={ii}
+                //   // rowStart={rowStarts.at(ii)! + 1}
+                //   // rowEnd={rowEnds.at(ii)! + 1}
+                //   rowSpan={1}
+                //   colStart={0}
+                //   colEnd={1}
+                // >
+                //   <Divider ml={10} />
+                // </GridItem>
+              }
             </>
           ))}
-          <DayView day={monday} jobs={mondayJobsBySlot} starts={starts} stops={stops} />
-          <DayView day={tuesday} jobs={tuesdayJobsBySlot} starts={starts} stops={stops} />
-          <DayView day={wednesday} jobs={wednesdayJobsBySlot} starts={starts} stops={stops} />
-          <DayView day={thursday} jobs={thursdayJobsBySlot} starts={starts} stops={stops} />
-          <DayView day={friday} jobs={fridayJobsBySlot} starts={starts} stops={stops} />
+          <DayView day={monday} jobs={mondayJobsBySlot} starts={rowStarts} stops={rowEnds} />
+          <DayView day={tuesday} jobs={tuesdayJobsBySlot} starts={rowStarts} stops={rowEnds} />
+          <DayView day={wednesday} jobs={wednesdayJobsBySlot} starts={rowStarts} stops={rowEnds} />
+          <DayView day={thursday} jobs={thursdayJobsBySlot} starts={rowStarts} stops={rowEnds} />
+          <DayView day={friday} jobs={fridayJobsBySlot} starts={rowStarts} stops={rowEnds} />
         </Grid>
         {/* </Box> */}
         {/* </HStack> */}

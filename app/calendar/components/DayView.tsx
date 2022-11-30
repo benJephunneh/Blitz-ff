@@ -15,6 +15,7 @@ import {
   Grid,
   GridItem,
   Text,
+  useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import { Job, Prisma } from "@prisma/client"
@@ -76,7 +77,6 @@ const jobSpan = (job: Job) => {
   }
 }
 
-const shades = ["red.200", "green.200", "blue.200"]
 const jobIndex = (job: Job, date: Date) => {
   const jobKey = {
     9: 0,
@@ -129,8 +129,25 @@ const DayView = ({
   date = addDays(new Date(), 1),
   orderBy = { start: "asc" },
 }: DayViewProps) => {
+  let ii = 0
   const router = useRouter()
   const { pickLocation } = useContext(headerContext)
+  const lightShades = ["red.200", "green.200", "blue.200"]
+  const darkShades = ["red.400", "green.400", "blue.400"]
+  const bgGradient = [
+    useColorModeValue(
+      `linear(to-r, ${lightShades[0]}, whiteAlpha.900)`,
+      `linear(to-r, ${darkShades[0]}, blackAlpha.50)`
+    ),
+    useColorModeValue(
+      `linear(to-r, ${lightShades[1]}, whiteAlpha.900)`,
+      `linear(to-r, ${darkShades[1]}, blackAlpha.50)`
+    ),
+    useColorModeValue(
+      `linear(to-r, ${lightShades[2]}, whiteAlpha.900)`,
+      `linear(to-r, ${darkShades[2]}, blackAlpha.50)`
+    ),
+  ]
   // const slots = slotsOfBusinessDay(9, jobs[0]!)
   // console.log('slots', slots)
 
@@ -163,7 +180,8 @@ const DayView = ({
                   key={ii}
                   ml={4 + ii * 3}
                   // bg={shades[ji % 3]}
-                  bgGradient={`linear(to-r, ${shades[ii % 3]}, whiteAlpha.900)`}
+                  // bgGradient={`linear(to-r, ${shades[ii % 3]}, whiteAlpha.900)`}
+                  bgGradient={bgGradient[ii]}
                   fontSize="xs"
                   rowStart={starts[ji.jobStart]! + ii + 1}
                   rowEnd={stops[ji.jobEnd]! + 1}

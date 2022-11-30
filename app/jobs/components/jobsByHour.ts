@@ -1,5 +1,5 @@
 import { Job } from "@prisma/client"
-import { getHours, getMinutes } from "date-fns"
+import { getDay, getHours, getMinutes } from "date-fns"
 
 export interface IFinalJobsByHour {
   jobs: Job[][]
@@ -32,7 +32,7 @@ const jobsByHour = (jobs: Job[]) => {
 
   // const startArrayLengths = [...startArray.map((arr) => arr.length)]
 
-  console.log("startArray", startArray)
+  // console.log("startArray", startArray)
   // console.log("startArrayLengths", startArrayLengths)
 
   const endArray: Job[][] = [
@@ -57,13 +57,18 @@ const jobsByHour = (jobs: Job[]) => {
 
   let finalArray: IFinalJobsByHour
   let start: number
-  let stop: number = 0
+  let stop = 0
+  let length = 0
   let jobsCombined: Job[][] = []
   let starts: number[] = []
   let stops: number[] = []
 
   for (var ii = 0; ii < startArray.length; ii++) {
     const jobsRow = [...(startArray.at(ii) ?? []), ...(endArray.at(ii) ?? [])]
+    // for (var jj = 0; jj < jobsRow.length; jj++) {
+    //   if (jobsRow.filter(j => getDay(j.start)))
+    // }
+
     jobsCombined.push(jobsRow)
     const length = jobsRow.length
     start = ii === 0 ? 0 : stop
@@ -85,7 +90,7 @@ const jobsByHour = (jobs: Job[]) => {
     stops,
   }
 
-  console.log(jobsCombined, starts, stops)
+  // console.log(jobsCombined, starts, stops)
 
   return finalArray
 }
