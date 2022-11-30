@@ -85,7 +85,7 @@ const jobsByHour = (jobs: Job[]) => {
     stops,
   }
 
-  // console.log(jobsCombined, starts, stops)
+  console.log(jobsCombined, starts, stops)
 
   return finalArray
 }

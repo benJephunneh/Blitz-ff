@@ -1,3 +1,4 @@
+import { Routes } from "@blitzjs/next"
 import { useQuery } from "@blitzjs/rpc"
 import {
   Box,
@@ -17,16 +18,29 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Job, Prisma } from "@prisma/client"
+import headerContext from "app/core/components/header/headerContext"
 import { IFinalJobsByHour } from "app/jobs/components/jobsByHour"
 import findJobsByDate from "app/jobs/queries/findJobsByDate"
 import findJobs from "app/jobs/queries/findJobsByDate"
 import findJobsByWeek from "app/jobs/queries/findJobsByWeek"
 import findJobStartsByDate from "app/jobs/queries/findJobStartsByDate"
 import getJobs from "app/jobs/queries/getJobs"
-import { addDays, differenceInHours, format, getHours, getMinutes, getWeek } from "date-fns"
+import {
+  addDays,
+  differenceInHours,
+  format,
+  getDay,
+  getHours,
+  getMinutes,
+  getWeek,
+  isAfter,
+  isBefore,
+  isSameDay,
+} from "date-fns"
 import Link from "next/link"
+import { useRouter } from "next/router"
 import { ShowJobTimeMatch } from "pages/calendar"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import timeRange9_17 from "../helpers/timeRange9_17"
 import HourView from "./HourView"
 
@@ -63,6 +77,49 @@ const jobSpan = (job: Job) => {
 }
 
 const shades = ["red.200", "green.200", "blue.200"]
+const jobIndex = (job: Job, date: Date) => {
+  const jobKey = {
+    9: 0,
+    930: 1,
+    10: 2,
+    1030: 3,
+    11: 4,
+    1130: 5,
+    12: 6,
+    1230: 7,
+    13: 8,
+    1330: 9,
+    14: 10,
+    1430: 11,
+    15: 12,
+    1530: 13,
+    16: 14,
+    1630: 15,
+    17: 16,
+  }
+  let hour: string, minutes: number
+  if (isSameDay(job.start!, job.end!) || isAfter(job.end!, date)) {
+    hour = getHours(job.start!).toString()
+    minutes = getMinutes(job.start!)
+    if (minutes === 30) hour.concat(minutes.toString())
+  } else hour = "0"
+  const jobStart = jobKey[hour]
+
+  if (isSameDay(job.start!, job.end!) || isBefore(job.start!, date)) {
+    hour = getHours(job.end!).toString()
+    minutes = getMinutes(job.end!)
+    if (minutes === 30) hour.concat(minutes.toString())
+  } else hour = "17"
+  const jobEnd = jobKey[hour]
+
+  // console.log('jobStart', jobStart)
+  // console.log('jobEnd', jobEnd)
+
+  return {
+    jobStart,
+    jobEnd,
+  }
+}
 
 const DayView = ({
   day,
@@ -72,6 +129,8 @@ const DayView = ({
   date = addDays(new Date(), 1),
   orderBy = { start: "asc" },
 }: DayViewProps) => {
+  const router = useRouter()
+  const { pickLocation } = useContext(headerContext)
   // const slots = slotsOfBusinessDay(9, jobs[0]!)
   // console.log('slots', slots)
 
@@ -96,27 +155,40 @@ const DayView = ({
       </GridItem>
       {jobs.map((jj, hh) => (
         <>
-          {jj.jobs.map((j, ji) => (
-            <>
-              <GridItem
-                key={ji}
-                ml={4 + ji * 3}
-                bg={shades[ji % 3]}
-                fontSize="xs"
-                rowStart={starts[ji]! + 1}
-                rowEnd={stops[ji]! + 1}
-                colStart={1}
-                colEnd={2}
-                w="max"
-              >
-                {j.title}
-              </GridItem>
-              {/* <HourView key={ii} time={t} jobs={jobs} showHour={false} />
+          {jj.map((j, ii) => {
+            const ji = jobIndex(j, day)
+            return (
+              <>
+                <GridItem
+                  key={ii}
+                  ml={4 + ii * 3}
+                  // bg={shades[ji % 3]}
+                  bgGradient={`linear(to-r, ${shades[ii % 3]}, whiteAlpha.900)`}
+                  fontSize="xs"
+                  rowStart={starts[ji.jobStart]! + ii + 1}
+                  rowEnd={stops[ji.jobEnd]! + 1}
+                  colStart={getDay(j.start!)}
+                  colEnd={getDay(j.end!) + 1}
+                  w="full"
+                  // position=
+                  // transform=
+                  onClick={() => {
+                    router
+                      .push(Routes.ShowCustomerPage({ customerId: j.customerId }))
+                      .then(() => pickLocation(j.locationId))
+                      .catch(console.error)
+                  }}
+                  _hover={{ cursor: "pointer" }}
+                >
+                  {j.title}
+                </GridItem>
+                {/* <HourView key={ii} time={t} jobs={jobs} showHour={false} />
               <Text key={ii}>{t}</Text>
               <ShowJobTimeMatch jobs={jobStarts} time={t} />
               <Divider /> */}
-            </>
-          ))}
+              </>
+            )
+          })}
         </>
       ))}
     </>

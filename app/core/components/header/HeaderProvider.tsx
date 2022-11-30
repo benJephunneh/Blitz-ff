@@ -177,16 +177,16 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   // }, [refetchLocation, refetchJobs, locationId])
   useEffect(() => {
     let ids: { id: number }[] = []
-    if (locations) {
-      ids = [...locations?.map(({ id }) => ({ id }))]
-      setLocationId(ids.at(0)?.id)
-    }
+    // if (locations) {
+    //   ids = [...locations?.map(({ id }) => ({ id }))]
+    //   setLocationId(ids.at(0)?.id)
+    // }
     setLocationIds(ids)
     setCustomerPhone(customer ? customer.phone : undefined)
   }, [customer, locations])
-  useEffect(() => {
-    setLocationId(locationIds?.length && locationIds.at(0)?.id)
-  }, [customerId, locationIds])
+  // useEffect(() => {
+  //   setLocationId(locationIds?.length && locationIds.at(0)?.id)
+  // }, [customerId, locationIds])
   // useEffect(() => {
   //   // Can't have just any re-render changing chosen locationId.
   //   // if (!router.isReady) return

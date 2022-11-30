@@ -90,11 +90,11 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
   )
 
   const { starts, stops } = jobsByHour(jobsByWeek)
-  // const mondayJobsBySlot = jobsByHour(mondayJobs)
+  const { jobs: mondayJobsBySlot } = jobsByHour(mondayJobs)
   const { jobs: tuesdayJobsBySlot } = jobsByHour(tuesdayJobs)
-  // const wednesdayJobsBySlot = jobsByHour(wednesdayJobs)
-  // const thursdayJobsBySlot = jobsByHour(thursdayJobs)
-  // const fridayJobsBySlot = jobsByHour(fridayJobs)
+  const { jobs: wednesdayJobsBySlot } = jobsByHour(wednesdayJobs)
+  const { jobs: thursdayJobsBySlot } = jobsByHour(thursdayJobs)
+  const { jobs: fridayJobsBySlot } = jobsByHour(fridayJobs)
 
   // console.table({ ...jobsByWeek })
   // console.table({ ...mondayJobs })
@@ -160,10 +160,7 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
           //                 '17 m t w th f'`}
         >
           <GridItem rowStart={0} rowEnd={1} colStart={0} colEnd={1} w="max">
-            <Text fontWeight="bold">
-              {/* {`Week ${weekNumber}`} */}
-              {weekHeading()}
-            </Text>
+            <Text fontWeight="bold">{weekHeading()}</Text>
           </GridItem>
           {timeRange9_17().map((t, ii) => (
             <>
@@ -191,11 +188,11 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
               )}
             </>
           ))}
-          {/* <DayView day={monday} jobs={mondayJobsBySlot} /> */}
+          <DayView day={monday} jobs={mondayJobsBySlot} starts={starts} stops={stops} />
           <DayView day={tuesday} jobs={tuesdayJobsBySlot} starts={starts} stops={stops} />
-          {/* <DayView day={wednesday} jobs={wednesdayJobBysSlot} /> */}
-          {/* <DayView day={thursday} jobs={thursdayJobsBySlot} /> */}
-          {/* <DayView day={friday} jobs={fridayJobsBySlot} /> */}
+          <DayView day={wednesday} jobs={wednesdayJobsBySlot} starts={starts} stops={stops} />
+          <DayView day={thursday} jobs={thursdayJobsBySlot} starts={starts} stops={stops} />
+          <DayView day={friday} jobs={fridayJobsBySlot} starts={starts} stops={stops} />
         </Grid>
         {/* </Box> */}
         {/* </HStack> */}
