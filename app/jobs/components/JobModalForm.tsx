@@ -35,6 +35,7 @@ import { Ctx } from "@blitzjs/next"
 import findJobsByWeek from "../queries/findJobsByWeek"
 import WeekView from "app/calendar/components/WeekView"
 import headerContext from "app/core/components/header/headerContext"
+import LineItemSearch from "app/lineitems/components/LineItemSearch"
 
 // const handleDayClick = async (d: Date) => {
 //   const dayBefore = subDays(d, 1)
@@ -210,7 +211,7 @@ const JobModalForm = ({
 
   return (
     <ModalForm
-      size="4xl"
+      size="6xl"
       isOpen={isOpen}
       onClose={onClose}
       disableStash={disableStash}
@@ -222,19 +223,26 @@ const JobModalForm = ({
         onSubmit(values).then(onSuccess).catch(handleError)
       }}
       render={() => (
-        <HStack>
+        <>
           <Grid
             templateAreas={`
-                'title title title s s s'
-                'c c c s s s'
-                'n n n s s s'
+                't s'
+                'q s'
+                'c s'
+                'c s'
+                'n s'
               `}
-            templateColumns="repeat(6, 1fr)"
-            w="full"
-            gap={4}
+            gridTemplateColumns="40% 60%"
+            gridTemplateRows="60px 200px repeat(3, 1fr)"
+            // w="full"
+            // h='100%'
+            gap={3}
           >
-            <GridItem area="title">
+            <GridItem area="t">
               <LabeledTextField name="title" label="Title" />
+            </GridItem>
+            <GridItem area="q">
+              <LineItemSearch />
             </GridItem>
             <GridItem area="c">
               <LabeledDateField
@@ -252,7 +260,7 @@ const JobModalForm = ({
             <GridItem area="n">
               <TextAreaField name="notes" label="Notes" placeholder="Add notes about this job..." />
             </GridItem>
-            <GridItem area="s">
+            <GridItem area="s" h="100%">
               {/* <DayView date={new Date()} /> */}
               {calendarView}
             </GridItem>
@@ -275,7 +283,7 @@ const JobModalForm = ({
               Stashed by {user?.username}
             </Text>
           )}
-        </HStack>
+        </>
       )}
       {...props}
     />

@@ -83,7 +83,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [editingCustomer, setEditingCustomer] = useState(false)
   const [deletingCustomer, setDeletingCustomer] = useState(false)
   const [customerPhone, setCustomerPhone] = useState<string>()
-  const [updateCustomerMutation] = useMutation(updateCustomer)
+  // const [updateCustomerMutation] = useMutation(updateCustomer)
   const [deleteCustomerMutation] = useMutation(deleteCustomer)
 
   // Location
@@ -92,18 +92,18 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [deletingLocation, setDeletingLocation] = useState(false)
   const [locationIds, setLocationIds] = useState<{ id: number }[]>()
   const [locationId, setLocationId] = useState<number>()
-  const [updateLocationMutation] = useMutation(updateLocation)
+  // const [updateLocationMutation] = useMutation(updateLocation)
 
   // Job
   const [creatingJob, setCreatingJob] = useState(false)
   const [editingJob, setEditingJob] = useState(false)
   const [deletingJob, setDeletingJob] = useState(false)
   const [jobId, setJobId] = useState<number>()
-  const [updateJobMutation] = useMutation(updateJob)
+  // const [updateJobMutation] = useMutation(updateJob)
 
   // Calendar
-  const [weekNumber, setWeekNumber] = useState<number>()
-  const [date, setDate] = useState<Date>()
+  // const [weekNumber, setWeekNumber] = useState<number>()
+  // const [date, setDate] = useState<Date>()
 
   // Stashes
   const [stashId, setStashId] = useState<number>()
@@ -160,11 +160,13 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   // )
 
   useEffect(() => {
-    refetchCustomer()
-      .then(() => setJobId(undefined))
-      .then(() => refetchLocations())
-      .then(() => refetchJobs())
-      .catch(console.error)
+    if (customerId) {
+      refetchCustomer()
+        .then(() => setJobId(undefined))
+        .then(() => refetchLocations())
+        .then(() => refetchJobs())
+        .catch(console.error)
+    }
   }, [customerId]) // eslint-disable-line
   // useEffect(() => {
   //   const j =

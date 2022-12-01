@@ -1,12 +1,27 @@
 import { useSession } from "@blitzjs/auth"
-import { Box, Flex, Heading, HStack, Icon, useColorMode, useColorModeValue } from "@chakra-ui/react"
+import {
+  Badge,
+  Box,
+  Flex,
+  Heading,
+  HStack,
+  Icon,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  Tooltip,
+  useColorMode,
+  useColorModeValue,
+  VStack,
+} from "@chakra-ui/react"
 import userContext from "app/auth/components/contexts/userContext"
 import LocationPicker from "app/locations/components/LocationPicker"
 import { useRouter } from "next/router"
 import { useContext, useEffect } from "react"
 import { useState } from "react"
-import { FcTimeline } from "react-icons/fc"
+import { FcPhone, FcTimeline } from "react-icons/fc"
 import { GiMoon, GiSun } from "react-icons/gi"
+import phoneDisplay from "../methods/phoneDisplay"
 import HeaderActions from "./HeaderActions"
 import headerContext from "./headerContext"
 import HeaderCrumbs from "./HeaderCrumbs"
@@ -73,7 +88,25 @@ const Header = ({ children }: HeaderProps) => {
               />
               <Box justifySelf="flex-start">
                 {showBreadcrumbs ? (
-                  <HeaderCrumbs pathname={pathname} />
+                  <HStack>
+                    <HeaderCrumbs pathname={pathname} />
+                    {customer && (
+                      <>
+                        <Badge variant="subtle" colorScheme="gray">
+                          {phoneDisplay(customer.phone)}
+                        </Badge>
+                        <Badge
+                          variant="subtle"
+                          colorScheme="gray"
+                          as="a"
+                          href={`mailto:${customer.email}`}
+                          _hover={{ textDecoration: "underline" }}
+                        >
+                          {customer.email}
+                        </Badge>
+                      </>
+                    )}
+                  </HStack>
                 ) : (
                   <Heading size="md" display={{ base: "none", md: "block" }} textColor="#009a4c">
                     Apalachee Backhoe & Septic Tank, LLC
