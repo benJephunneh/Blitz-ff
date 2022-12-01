@@ -32,6 +32,9 @@ import {
   endOfDay,
   format,
   getWeek,
+  isBefore,
+  isSameDay,
+  isSameHour,
   startOfWeek,
   addDays,
   subDays,
@@ -75,21 +78,22 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
   const fridayInterval: Interval = { start: friday, end: endOfDay(friday) }
   // console.log({ monday })
 
-  const mondayJobs = jobsByWeek.filter((j) =>
-    areIntervalsOverlapping({ start: j.start!, end: j.end! }, mondayInterval)
-  )
-  const tuesdayJobs = jobsByWeek.filter((j) =>
-    areIntervalsOverlapping({ start: j.start!, end: j.end! }, tuesdayInterval)
-  )
-  const wednesdayJobs = jobsByWeek.filter((j) =>
-    areIntervalsOverlapping({ start: j.start!, end: j.end! }, wednesdayInterval)
-  )
-  const thursdayJobs = jobsByWeek.filter((j) =>
-    areIntervalsOverlapping({ start: j.start!, end: j.end! }, thursdayInterval)
-  )
-  const fridayJobs = jobsByWeek.filter((j) =>
-    areIntervalsOverlapping({ start: j.start!, end: j.end! }, fridayInterval)
-  )
+  const mondayJobs = jobsByWeek
+    .filter((j) => areIntervalsOverlapping({ start: j.start!, end: j.end! }, mondayInterval))
+    .sort((a, b) => (isBefore(a.start!, b.start!) ? 1 : -1))
+  // .sort((a, b) => isSameHour(a.start!, b.start!) && (a.title > b.title) ? 1 : -1)
+  const tuesdayJobs = jobsByWeek
+    .filter((j) => areIntervalsOverlapping({ start: j.start!, end: j.end! }, tuesdayInterval))
+    .sort((a, b) => (isBefore(a.start!, b.start!) ? 1 : -1))
+  const wednesdayJobs = jobsByWeek
+    .filter((j) => areIntervalsOverlapping({ start: j.start!, end: j.end! }, wednesdayInterval))
+    .sort((a, b) => (isBefore(a.start!, b.start!) ? 1 : -1))
+  const thursdayJobs = jobsByWeek
+    .filter((j) => areIntervalsOverlapping({ start: j.start!, end: j.end! }, thursdayInterval))
+    .sort((a, b) => (isBefore(a.start!, b.start!) ? 1 : -1))
+  const fridayJobs = jobsByWeek
+    .filter((j) => areIntervalsOverlapping({ start: j.start!, end: j.end! }, fridayInterval))
+    .sort((a, b) => (isBefore(a.start!, b.start!) ? 1 : -1))
 
   const { rowStarts, rowEnds } = rowSpacing(jobsByWeek)
   const { jobs: mondayJobsBySlot } = jobsByHour(mondayJobs)
@@ -98,7 +102,7 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
   const { jobs: thursdayJobsBySlot } = jobsByHour(thursdayJobs)
   const { jobs: fridayJobsBySlot } = jobsByHour(fridayJobs)
 
-  console.table({ ...jobsByWeek })
+  // console.table({ ...mondayJobs, ...tuesdayJobs, ...wednesdayJobs, ...thursdayJobs, ...fridayJobs })
   // console.table({ ...mondayJobsBySlot })
   // console.log('rowSpans', rowSpans)
   // console.log(rowStarts, rowEnds)
@@ -150,6 +154,7 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
         {/* <HStack position="relative" m={2}> */}
         {/* <Box w="max"> */}
         <Grid
+          columnGap={4}
           templateRows="repeat(18, 1fr)"
           templateColumns="repeat(6, 1fr)"
           // templateAreas={`'9 m t w th f'

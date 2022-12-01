@@ -19,13 +19,13 @@ model Customer {
   displayname     String
   email           String
   phone           String
+  notes           String?
   locations       Location[]
   locationStashes LocationStash[]
   jobs            Job[]
   jobStashes      JobStash[]
   user            User            @relation(fields: [userId], references: [id])
   userId          Int
-  notes           String?
 }
 
 model CustomerStash {
@@ -36,12 +36,12 @@ model CustomerStash {
   lastname    String?
   companyname String?
   displayname String?
-  email       String[]
-  phone       String[]
+  email       String
+  phone       String
+  notes       String
   stashType   StashType @default(Customer)
   user        User      @relation(fields: [userId], references: [id])
   userId      Int
-  notes       String
 }
 
 model Location {
@@ -58,14 +58,14 @@ model Location {
   block        String?
   lot          String?
   parcel       String?
+  notes        String?
   locationType LocationType @default(Personal)
   customer     Customer     @relation(fields: [customerId], references: [id])
-  customerId   Int
   jobs         Job[]
   jobStashes   JobStash[]
   user         User         @relation(fields: [userId], references: [id])
+  customerId   Int
   userId       Int
-  notes        String?
 }
 
 model LocationStash {
@@ -82,13 +82,13 @@ model LocationStash {
   block        String?
   lot          String?
   parcel       String?
-  locationType LocationType @default(Personal)
-  customer     Customer     @relation(fields: [customerId], references: [id])
-  customerId   Int
-  stashType    StashType    @default(Location)
-  user         User         @relation(fields: [userId], references: [id])
-  userId       Int
   notes        String
+  locationType LocationType @default(Personal)
+  stashType    StashType    @default(Location)
+  customer     Customer     @relation(fields: [customerId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+  customerId   Int
+  userId       Int
 }
 
 model Job {
@@ -98,39 +98,40 @@ model Job {
   title             String
   start             DateTime?
   end               DateTime?
-  lineitems         LineItem[]
   completed         Boolean           @default(false)
-  customer          Customer          @relation(fields: [customerId], references: [id])
-  customerId        Int
-  locationId        Int
-  location          Location          @relation(fields: [locationId], references: [id])
-  user              User              @relation(fields: [userId], references: [id])
-  userId            Int
   notes             String?
+  lineitems         LineItem[]
+  customer          Customer          @relation(fields: [customerId], references: [id])
+  location          Location          @relation(fields: [locationId], references: [id])
   invoices          Invoice[]
   invoiceStashes    InvoiceStash[]
   archivedInvoices  InvoiceArchive[]
   estimates         Estimate[]
   estimateStashes   EstimateStash[]
   archivedEstimates EstimateArchive[]
+  user              User              @relation(fields: [userId], references: [id])
+  customerId        Int
+  locationId        Int
+  userId            Int
   // Show warranty on customer page, calculated from date of completion.
 }
 
 model JobStash {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id         Int        @id @default(autoincrement())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
   title      String?
   start      DateTime?
   end        DateTime?
-  customer   Customer  @relation(fields: [customerId], references: [id])
-  customerId Int
-  location   Location  @relation(fields: [locationId], references: [id])
-  locationId Int
-  stashType  StashType @default(Location)
-  user       User      @relation(fields: [userId], references: [id])
-  userId     Int
   notes      String
+  lineitems  LineItem[]
+  stashType  StashType  @default(Job)
+  customer   Customer   @relation(fields: [customerId], references: [id])
+  location   Location   @relation(fields: [locationId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+  customerId Int
+  locationId Int
+  userId     Int
 }
 
 model Invoice {
@@ -138,13 +139,14 @@ model Invoice {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   title     String
-  lineItems LineItem[]
   paid      Boolean    @default(false)
-  job       Job        @relation(fields: [jobId], references: [id])
-  jobId     Int
-  user      User       @relation(fields: [userId], references: [id])
-  userId    Int
+  sent      Boolean    @default(false)
   notes     String?
+  lineItems LineItem[]
+  job       Job        @relation(fields: [jobId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
+  jobId     Int
+  userId    Int
 }
 
 model InvoiceStash {
@@ -152,12 +154,13 @@ model InvoiceStash {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   title     String
-  lineItems LineItem[]
-  job       Job        @relation(fields: [jobId], references: [id])
-  jobId     Int
-  user      User       @relation(fields: [userId], references: [id])
-  userId    Int
   notes     String
+  lineItems LineItem[]
+  stashType StashType  @default(Invoice)
+  job       Job        @relation(fields: [jobId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
+  jobId     Int
+  userId    Int
 }
 
 model Estimate {
@@ -165,11 +168,11 @@ model Estimate {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   title     String
-  job       Job        @relation(fields: [jobId], references: [id])
-  jobId     Int
-  lineItems LineItem[]
   total     Int        @default(0)
+  lineItems LineItem[]
+  job       Job        @relation(fields: [jobId], references: [id])
   user      User       @relation(fields: [userId], references: [id])
+  jobId     Int
   userId    Int
 }
 
@@ -178,11 +181,12 @@ model EstimateStash {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   title     String
-  job       Job        @relation(fields: [jobId], references: [id])
-  jobId     Int
-  lineItems LineItem[]
   total     Int        @default(0)
+  lineItems LineItem[]
+  stashType StashType  @default(Estimate)
+  job       Job        @relation(fields: [jobId], references: [id])
   user      User       @relation(fields: [userId], references: [id])
+  jobId     Int
   userId    Int
 }
 
@@ -204,6 +208,7 @@ model LineItem {
   quantity          Int                @default(1)
   notes             String?
   jobs              Job[]
+  jobStashes        JobStash[]
   invoices          Invoice[]
   invoiceStashes    InvoiceStash[]
   archivedInvoices  InvoiceArchive[]
@@ -219,9 +224,9 @@ model LineItemTemplate {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   name      String
-  lineItems LineItem[]
   cost      Int
   notes     String
+  lineItems LineItem[]
 }
 
 model CustomerArchive {
@@ -256,8 +261,8 @@ model LocationArchive {
   notes            String?
   locationType     LocationType    @default(Personal)
   archivedCustomer CustomerArchive @relation(fields: [customerId], references: [id])
-  customerId       Int
   archivedJobs     JobArchive[]
+  customerId       Int
 }
 
 model JobArchive {
@@ -281,13 +286,13 @@ model InvoiceArchive {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   title        String
-  lineItems    LineItem[]
   paid         Boolean
-  job          Job?        @relation(fields: [jobId], references: [id])
-  jobId        Int
-  jobArchive   JobArchive? @relation(fields: [jobArchiveId], references: [id])
-  jobArchiveId Int
   notes        String?
+  lineItems    LineItem[]
+  job          Job?        @relation(fields: [jobId], references: [id])
+  jobArchive   JobArchive? @relation(fields: [jobArchiveId], references: [id])
+  jobId        Int
+  jobArchiveId Int
 }
 
 model EstimateArchive {
@@ -295,22 +300,25 @@ model EstimateArchive {
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   title        String
+  total        Int         @default(0)
+  lineItems    LineItem[]
   job          Job?        @relation(fields: [jobId], references: [id])
   jobArchive   JobArchive? @relation(fields: [jobArchiveId], references: [id])
-  lineItems    LineItem[]
-  total        Int         @default(0)
   jobId        Int?
   jobArchiveId Int?
 }
 
 model User {
-  id              Int             @id @default(autoincrement())
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  username        String          @unique
-  email           String          @unique
-  hashedPassword  String?
-  role            UserRole        @default(Tech)
+  id             Int       @id @default(autoincrement())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  username       String    @unique
+  email          String    @unique
+  hashedPassword String?
+  role           UserRole  @default(Tech)
+  sessions       Session[]
+  tokens         Token[]
+
   customers       Customer[]
   locations       Location[]
   jobs            Job[]
@@ -319,8 +327,6 @@ model User {
   locationStashes LocationStash[]
   jobStashes      JobStash[]
   invoiceStashes  InvoiceStash[]
-  sessions        Session[]
-  tokens          Token[]
   Estimate        Estimate[]
   EstimateStash   EstimateStash[]
 }
@@ -335,8 +341,8 @@ model Session {
   antiCSRFToken      String?
   publicData         String?
   privateData        String?
-  userId             Int?
   user               User?     @relation(fields: [userId], references: [id])
+  userId             Int?
 }
 
 model Token {
@@ -344,11 +350,11 @@ model Token {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   hashedToken String
-  type        TokenType
   expiresAt   DateTime
   sentTo      String
-  userId      Int
+  type        TokenType
   user        User      @relation(fields: [userId], references: [id])
+  userId      Int
 
   @@unique([hashedToken, type])
 }

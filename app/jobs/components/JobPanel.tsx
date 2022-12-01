@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   ButtonGroup,
-  filter,
   Flex,
   HStack,
   Icon,
@@ -82,7 +81,8 @@ const JobPanel = () => {
     setRelatedJobs(filteredJobs)
   }, [jobs, locationId])
   useEffect(() => {
-    if (job) setRange([job.start as Date, job.end as Date])
+    // if (job) setRange([job.start as Date, job.end as Date])
+    if (job) setRange([job.start, job.end])
   }, [job])
 
   const headingColor = useColorModeValue("green", "khaki")
@@ -108,7 +108,13 @@ const JobPanel = () => {
               </MenuButton>
               <MenuList>
                 <MenuOptionGroup defaultValue={!jobId ? "all" : jobId.toString()} type="radio">
-                  <MenuItemOption value="all" onClick={() => pickJob(undefined)}>
+                  <MenuItemOption
+                    value="all"
+                    onClick={() => {
+                      pickJob(undefined)
+                      setJob(undefined)
+                    }}
+                  >
                     All jobs
                   </MenuItemOption>
                   <MenuDivider />
@@ -195,10 +201,13 @@ const JobPanel = () => {
       {!job && (
         <UnorderedList>
           {relatedJobs?.map((j, ii) => (
-            <Tooltip key={ii} label={j.id}>
+            <Tooltip key={ii} label={j.title}>
               <ListItem
-                key={ii}
-                onClick={() => setJob(j)}
+                // key={ii}
+                onClick={() => {
+                  pickJob(j.id)
+                  setJob(j)
+                }}
                 textColor={isPast(j.start!) ? inactiveJobColor : "initial"}
                 _hover={{ cursor: "pointer" }}
               >

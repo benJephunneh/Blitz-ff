@@ -165,8 +165,8 @@ const DayView = ({
 
   return (
     <>
-      <GridItem rowStart={0} rowEnd={1} ml={4} w="max">
-        <Text textAlign="left" fontWeight="semibold" bgColor="blackAlpha.100" my={0}>
+      <GridItem rowStart={0} rowEnd={1} w="max">
+        <Text textAlign="left" fontWeight="semibold" my={0}>
           {format(day, "EEE d")}
         </Text>
       </GridItem>
@@ -177,18 +177,29 @@ const DayView = ({
             return (
               <>
                 <GridItem
+                  ml={ii * 4}
+                  bgGradient={bgGradient[ii]}
+                  rowStart={starts[ji.jobStart]! + ii + 1}
+                  rowEnd={stops[ji.jobEnd]! + 1}
+                  colStart={getDay(j.start!)}
+                  colEnd={getDay(j.start!) + 1}
+                  w={4}
+                />
+                <GridItem
                   key={ii}
-                  ml={4 + ii * 3}
+                  ml={ii * 4}
                   // bg={shades[ji % 3]}
                   // bgGradient={`linear(to-r, ${shades[ii % 3]}, whiteAlpha.900)`}
                   bgGradient={bgGradient[ii]}
                   fontSize="xs"
                   rowStart={starts[ji.jobStart]! + ii + 1}
-                  rowEnd={stops[ji.jobEnd]! + 1}
+                  rowEnd={starts[ji.jobStart]! + ii + 2}
+                  // rowEnd={stops[ji.jobEnd]! + 1}
                   colStart={getDay(j.start!)}
                   colEnd={getDay(j.end!) + 1}
                   w="full"
-                  // position=
+                  // position='relative'
+                  display="inline-grid"
                   // transform=
                   onClick={() => {
                     router
@@ -214,17 +225,17 @@ const DayView = ({
 }
 {
   /* <Box bg='blue'>
-        {jobStarts &&
-          jobStarts.map((j, ii) => (
-            <>
-              onClick: Pick customer
-              onClick: Pick location
-              onClick: Pick job
-              If completed, opacity change
-              <pre>{JSON.stringify(jobStarts, null, 2)}</pre>
-            </>
-          ))}
-        </Box> */
+      {jobStarts &&
+      jobStarts.map((j, ii) => (
+        <>
+        onClick: Pick customer
+        onClick: Pick location
+        onClick: Pick job
+        If completed, opacity change
+        <pre>{JSON.stringify(jobStarts, null, 2)}</pre>
+        </>
+      ))}
+      </Box> */
 }
 
 export default DayView

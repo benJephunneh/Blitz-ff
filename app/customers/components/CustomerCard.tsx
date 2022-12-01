@@ -1,5 +1,3 @@
-import { Routes, useParam, useParams } from "@blitzjs/next"
-import { useQuery } from "@blitzjs/rpc"
 import {
   Box,
   Button,
@@ -7,15 +5,10 @@ import {
   Flex,
   Grid,
   GridItem,
-  Heading,
   HStack,
   Icon,
   IconButton,
-  LinkBox,
-  LinkOverlay,
-  SimpleGrid,
   SpaceProps,
-  Spacer,
   Tab,
   TabList,
   TabPanel,
@@ -25,20 +18,16 @@ import {
   TagLabel,
   TagLeftIcon,
   Text,
-  Textarea,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import { Customer, Location } from "@prisma/client"
 import NoteSubmission from "app/core/components/forms/NoteSubmission"
-import TextAreaField from "app/core/components/forms/components/TextAreaField"
 import headerContext from "app/core/components/header/headerContext"
 import phoneDisplay from "app/core/components/methods/phoneDisplay"
 import JobPanel from "app/jobs/components/JobPanel"
-import getLocation from "app/locations/queries/getLocation"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
 import { BsReceipt } from "react-icons/bs"
 import { FaEdit } from "react-icons/fa"
 import { FcAdvertising, FcEditImage, FcHome, FcMoneyTransfer, FcPhone } from "react-icons/fc"
@@ -56,8 +45,6 @@ import {
 } from "react-icons/gi"
 import { MdAlternateEmail, MdOutlineEditLocation } from "react-icons/md"
 import { TbBackhoe } from "react-icons/tb"
-import customerContext from "../contexts/customerContext"
-import getCustomer from "../queries/getCustomer"
 import InvoicesCard from "./InvoicesCard"
 
 type CustomerCardProps = {
@@ -348,17 +335,17 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
 
       <Tabs variant="enclosed" alignSelf="start" w="full" isLazy>
         <TabList>
-          <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
+          <Tab fontWeight="semibold" borderColor="whiteAlpha.50" _selected={{ bg: tabBgColor }}>
             <Icon as={GiBulldozer} mr={2} h={6} w={6} />
             Jobs
           </Tab>
 
-          <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
+          <Tab fontWeight="semibold" borderColor="whiteAlpha.50" _selected={{ bg: tabBgColor }}>
             <Icon as={GiCalculator} mr={2} h={6} w={6} />
             Estimates
           </Tab>
 
-          <Tab fontWeight="semibold" _selected={{ bg: tabBgColor }} borderColor="whiteAlpha.50">
+          <Tab fontWeight="semibold" borderColor="whiteAlpha.50" _selected={{ bg: tabBgColor }}>
             <Icon as={GiBleedingWound} color="crimson" mr={2} h={6} w={6} />
             {/* x icon when open/unpaid invoices, y icon when none/paid */}
             Invoices
