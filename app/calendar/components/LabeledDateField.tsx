@@ -108,10 +108,6 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
       onChange(r)
     }
 
-    const test = (t: Date) => {
-      console.log({ t })
-    }
-
     // useEffect(() => {
     //   onChange([start, end])
     // }, [])

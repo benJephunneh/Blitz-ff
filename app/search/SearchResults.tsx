@@ -10,7 +10,7 @@ type SearchResultsProps = {
 }
 
 const SearchResults = ({ query, message, isLoading, items, children }: SearchResultsProps) => {
-  console.log(`isLoading: ${isLoading}`)
+  // console.log(`isLoading: ${isLoading}`)
 
   return (
     <Box mt={4}>

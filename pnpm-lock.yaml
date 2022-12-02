@@ -9,7 +9,7 @@ specifiers:
   "@emotion/react": 11.10.0
   "@emotion/styled": 11.10.0
   "@next/bundle-analyzer": 12.0.8
-  "@prisma/client": ^4.7.0
+  "@prisma/client": ^4.7.1
   "@testing-library/jest-dom": 5.16.3
   "@tiptap/extension-focus": 2.0.0-beta.197
   "@tiptap/extension-image": 2.0.0-beta.197
@@ -49,9 +49,10 @@ specifiers:
   prettier-plugin-prisma: 3.8.0
   pretty-quick: 3.1.3
   preview-email: 3.0.7
-  prisma: ^4.7.0
+  prisma: ^4.7.1
   quirrel: 1.x
   react: 18.2.0
+  react-beautiful-dnd: 13.1.1
   react-calendar: 3.9.0
   react-dom: 18.2.0
   react-final-form: 6.5.9
@@ -71,7 +72,7 @@ dependencies:
   "@chakra-ui/react": 2.4.1_ixfl56scjaxabwzz2ckk36742u
   "@emotion/react": 11.10.0_tu23i5xxn6kbev62oblybgbdem
   "@emotion/styled": 11.10.0_j46kbo7layvgw6ebzgyotlgnfu
-  "@prisma/client": 4.7.0_prisma@4.7.0
+  "@prisma/client": 4.7.1_prisma@4.7.1
   "@tiptap/extension-focus": 2.0.0-beta.197_7ucu3cj5vc65mnzl27ajc44kci
   "@tiptap/extension-image": 2.0.0-beta.197_7ucu3cj5vc65mnzl27ajc44kci
   "@tiptap/extension-link": 2.0.0-beta.197_7ucu3cj5vc65mnzl27ajc44kci
@@ -91,6 +92,7 @@ dependencies:
   papaparse: 5.3.2
   quirrel: 1.13.1
   react: 18.2.0
+  react-beautiful-dnd: 13.1.1_biqbaboplfbrettd7655fr4n2y
   react-calendar: 3.9.0_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
   react-final-form: 6.5.9_b76tjmhm4bpbaoui6lan2hu4pm
@@ -124,7 +126,7 @@ devDependencies:
   prettier-plugin-prisma: 3.8.0_prettier@2.7.1
   pretty-quick: 3.1.3_prettier@2.7.1
   preview-email: 3.0.7
-  prisma: 4.7.0
+  prisma: 4.7.1
   react-lorem-ipsum: 1.4.10
   ts-jest: 28.0.7_j6hoxoxzlghyymqqpiirnf3goa
   ts-node: 10.9.1_lc4xspwhl7x4jkigfhc4n62xkm
@@ -5004,10 +5006,10 @@ packages:
       }
     dev: false
 
-  /@prisma/client/4.7.0_prisma@4.7.0:
+  /@prisma/client/4.7.1_prisma@4.7.1:
     resolution:
       {
-        integrity: sha512-keXMa0oJWJGOzMEFKp+CEgzJPwnOtGSrnTWw6qMYxnypYrRFdNxqyA06EzELZexBhgM4oLooZ1jDJ3iy46wExA==,
+        integrity: sha512-/GbnOwIPtjiveZNUzGXOdp7RxTEkHL4DZP3vBaFNadfr6Sf0RshU5EULFzVaSi9i9PIK9PYd+1Rn7z2B2npb9w==,
       }
     engines: { node: ">=14.17" }
     requiresBuild: true
@@ -5017,21 +5019,21 @@ packages:
       prisma:
         optional: true
     dependencies:
-      "@prisma/engines-version": 4.7.0-74.39190b250ebc338586e25e6da45e5e783bc8a635
-      prisma: 4.7.0
+      "@prisma/engines-version": 4.7.1-1.272861e07ab64f234d3ffc4094e32bd61775599c
+      prisma: 4.7.1
     dev: false
 
-  /@prisma/engines-version/4.7.0-74.39190b250ebc338586e25e6da45e5e783bc8a635:
+  /@prisma/engines-version/4.7.1-1.272861e07ab64f234d3ffc4094e32bd61775599c:
     resolution:
       {
-        integrity: sha512-ImczGEQ8NS1OUApEeyAGxC4uLTtQp0wI1+2wM4MeQLVwIQbyMHk1vOhWWE8Pwbi3rnzLcPvsIrd9sm6oNXhERw==,
+        integrity: sha512-Bd4LZ+WAnUHOq31e9X/ihi5zPlr4SzTRwUZZYxvWOxlerIZ7HJlVa9zXpuKTKLpI9O1l8Ec4OYCKsivWCs5a3Q==,
       }
     dev: false
 
-  /@prisma/engines/4.7.0:
+  /@prisma/engines/4.7.1:
     resolution:
       {
-        integrity: sha512-afKrVFktaZ1pOK12/uFl2hRsBWIJZuC5FdDtacuKk5x/mR+rC5AbA+PlN3ZCZbmYTaeiBMHjcU5wbT5z2N3nSQ==,
+        integrity: sha512-zWabHosTdLpXXlMefHmnouhXMoTB1+SCbUU3t4FCmdrtIOZcarPKU3Alto7gm/pZ9vHlGOXHCfVZ1G7OIrSbog==,
       }
     requiresBuild: true
 
@@ -6040,6 +6042,18 @@ packages:
       }
     dependencies:
       "@types/react": 18.0.17
+
+  /@types/react-redux/7.1.24:
+    resolution:
+      {
+        integrity: sha512-7FkurKcS1k0FHZEtdbbgN8Oc6b+stGSfZYjQGicofJ0j4U0qIn/jaSvnP2pLwZKiai3/17xqqxkkrxTgN8UNbQ==,
+      }
+    dependencies:
+      "@types/hoist-non-react-statics": 3.3.1
+      "@types/react": 18.0.17
+      hoist-non-react-statics: 3.3.2
+      redux: 4.2.0
+    dev: false
 
   /@types/react/18.0.17:
     resolution:
@@ -13237,6 +13251,13 @@ packages:
       p-is-promise: 2.1.0
     dev: false
 
+  /memoize-one/5.2.1:
+    resolution:
+      {
+        integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==,
+      }
+    dev: false
+
   /merge-class-names/1.4.2:
     resolution:
       {
@@ -14663,16 +14684,16 @@ packages:
       uuid: 8.3.2
     dev: true
 
-  /prisma/4.7.0:
+  /prisma/4.7.1:
     resolution:
       {
-        integrity: sha512-VsecNo0Ca3+bDTzSpJqIpdupKVhhQ8aOYeWc09JlUM89knqvhSrlMrg0U8BiOD4tFrY1OPaCcraK8leDBxKMBg==,
+        integrity: sha512-CCQP+m+1qZOGIZlvnL6T3ZwaU0LAleIHYFPN9tFSzjs/KL6vH9rlYbGOkTuG9Q1s6Ki5D0LJlYlW18Z9EBUpGg==,
       }
     engines: { node: ">=14.17" }
     hasBin: true
     requiresBuild: true
     dependencies:
-      "@prisma/engines": 4.7.0
+      "@prisma/engines": 4.7.1
 
   /process-nextick-args/2.0.1:
     resolution:
@@ -15146,6 +15167,13 @@ packages:
       - utf-8-validate
     dev: false
 
+  /raf-schd/4.0.3:
+    resolution:
+      {
+        integrity: sha512-tQkJl2GRWh83ui2DiPTJz9wEiMN20syf+5oKfB03yYP7ioZcJwsIK8FjrtLwH1m7C7e+Tt2yYBlrOpdT+dyeIQ==,
+      }
+    dev: false
+
   /railroad-diagrams/1.0.0:
     resolution:
       {
@@ -15181,6 +15209,28 @@ packages:
       http-errors: 2.0.0
       iconv-lite: 0.4.24
       unpipe: 1.0.0
+    dev: false
+
+  /react-beautiful-dnd/13.1.1_biqbaboplfbrettd7655fr4n2y:
+    resolution:
+      {
+        integrity: sha512-0Lvs4tq2VcrEjEgDXHjT98r+63drkKEgqyxdA7qD3mvKwga6a5SscbdLPO2IExotU1jW8L0Ksdl0Cj2AF67nPQ==,
+      }
+    peerDependencies:
+      react: ^16.8.5 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.5 || ^17.0.0 || ^18.0.0
+    dependencies:
+      "@babel/runtime": 7.18.9
+      css-box-model: 1.2.1
+      memoize-one: 5.2.1
+      raf-schd: 4.0.3
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-redux: 7.2.9_biqbaboplfbrettd7655fr4n2y
+      redux: 4.2.0
+      use-memo-one: 1.1.3_react@18.2.0
+    transitivePeerDependencies:
+      - react-native
     dev: false
 
   /react-calendar/3.9.0_biqbaboplfbrettd7655fr4n2y:
@@ -15358,7 +15408,6 @@ packages:
       {
         integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==,
       }
-    dev: true
 
   /react-is/18.2.0:
     resolution:
@@ -15387,6 +15436,31 @@ packages:
       object-assign: 4.1.1
       react: 18.2.0
       scheduler: 0.20.2
+    dev: false
+
+  /react-redux/7.2.9_biqbaboplfbrettd7655fr4n2y:
+    resolution:
+      {
+        integrity: sha512-Gx4L3uM182jEEayZfRbI/G11ZpYdNAnBs70lFVMNdHJI76XYtR+7m0MN+eAs7UHBPhWXcnFPaS+9owSCJQHNpQ==,
+      }
+    peerDependencies:
+      react: ^16.8.3 || ^17 || ^18
+      react-dom: "*"
+      react-native: "*"
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      "@babel/runtime": 7.18.9
+      "@types/react-redux": 7.1.24
+      hoist-non-react-statics: 3.3.2
+      loose-envify: 1.4.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-is: 17.0.2
     dev: false
 
   /react-remove-scroll-bar/2.3.3_ug65io7jkbhmo4fihdmbrh3ina:
@@ -15587,6 +15661,15 @@ packages:
     engines: { node: ">=4" }
     dependencies:
       redis-errors: 1.2.0
+    dev: false
+
+  /redux/4.2.0:
+    resolution:
+      {
+        integrity: sha512-oSBmcKKIuIR4ME29/AeNUnl5L+hvBq7OaJWzaptTQJAntaPvxIJqfnjbaEiCzzaIz+XmVILfqAM3Ob0aXLPfjA==,
+      }
+    dependencies:
+      "@babel/runtime": 7.18.9
     dev: false
 
   /regenerate-unicode-properties/10.0.1:
@@ -17581,6 +17664,17 @@ packages:
       "@types/react": 18.0.17
       react: 18.2.0
       tslib: 2.4.0
+    dev: false
+
+  /use-memo-one/1.1.3_react@18.2.0:
+    resolution:
+      {
+        integrity: sha512-g66/K7ZQGYrI6dy8GLpVcMsBp4s17xNkYJVSMvTEevGy3nDxHOfE6z8BVE22+5G5x7t3+bhzrlTDB7ObrEE0cQ==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /use-sidecar/1.1.2_ug65io7jkbhmo4fihdmbrh3ina:

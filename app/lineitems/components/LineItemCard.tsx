@@ -1,7 +1,9 @@
 import { useQuery } from "@blitzjs/rpc"
 import {
+  Button,
   Card,
   CardBody,
+  CardFooter,
   Heading,
   Icon,
   Popover,
@@ -30,9 +32,11 @@ import { CgDollar } from "react-icons/cg"
 type LineItemCardProps = {
   lineitem: LineItem
   props?: SpaceProps
+  onAdd: (lineitemId: number) => void
+  itemizing?: boolean
 }
 
-const LineItemCard = ({ lineitem, props }: LineItemCardProps) => {
+const LineItemCard = ({ lineitem, props, onAdd, itemizing }: LineItemCardProps) => {
   const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.100")
   const hoverBorderColor = useColorModeValue("blue.500", "blue.300")
 
@@ -70,6 +74,19 @@ const LineItemCard = ({ lineitem, props }: LineItemCardProps) => {
             </PopoverBody>
           </PopoverContent>
         </Popover>
+
+        {itemizing && (
+          <CardFooter>
+            <Button
+              variant="solid"
+              colorScheme="orange"
+              onClick={() => onAdd(lineitem.id)}
+              size="xs"
+            >
+              Add to job
+            </Button>
+          </CardFooter>
+        )}
       </CardBody>
     </Card>
   )

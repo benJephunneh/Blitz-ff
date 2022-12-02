@@ -165,6 +165,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         .then(() => setJobId(undefined))
         .then(() => refetchLocations())
         .then(() => refetchJobs())
+        .then(() => setLocationId(locations?.find((l) => l.primary == true)?.id))
         .catch(console.error)
     }
   }, [customerId]) // eslint-disable-line

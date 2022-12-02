@@ -1,14 +1,23 @@
 import { useQuery } from "@blitzjs/rpc"
 import { Box, Container, SimpleGrid, Stack } from "@chakra-ui/react"
+import { LineItem } from "@prisma/client"
 import SearchInput from "app/search/SearchInput"
 import SearchResults from "app/search/SearchResults"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import findLineItem from "../queries/findLineItem"
 import LineItemCard from "./LineItemCard"
 
-type LineItemSearchProps = {}
+type LineItemSearchProps = {
+  message?: string
+  onAdd: (lineitemId: number) => void
+  itemizing?: boolean
+}
 
-const LineItemSearch = () => {
+const LineItemSearch = ({
+  message = "Search to add jobs",
+  onAdd,
+  itemizing = false,
+}: LineItemSearchProps) => {
   const [query, setQuery] = useState("")
   const [lineitemSearchResults, { isLoading }] = useQuery(
     findLineItem,
@@ -20,20 +29,18 @@ const LineItemSearch = () => {
     <Stack spacing={3}>
       <SearchInput search={setQuery} />
 
-      <Container flex="1 0 auto">
-        <SearchResults
-          message="Search to add jobs"
-          query={query}
-          items={lineitemSearchResults || []}
-          isLoading={isLoading}
-        >
-          <SimpleGrid columns={1} spacing={1}>
-            {lineitemSearchResults?.map((li, ii) => (
-              <LineItemCard key={ii} lineitem={li} />
-            ))}
-          </SimpleGrid>
-        </SearchResults>
-      </Container>
+      <SearchResults
+        message={message}
+        query={query}
+        items={lineitemSearchResults || []}
+        isLoading={isLoading}
+      >
+        <SimpleGrid columns={1} spacing={1}>
+          {lineitemSearchResults?.map((li, ii) => (
+            <LineItemCard key={ii} lineitem={li} onAdd={onAdd} itemizing={itemizing} />
+          ))}
+        </SimpleGrid>
+      </SearchResults>
     </Stack>
   )
 }
