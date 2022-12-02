@@ -25,6 +25,7 @@ import SearchResults from "app/search/SearchResults"
 import { LineItem } from "@prisma/client"
 import { FaRegMoneyBillAlt } from "react-icons/fa"
 import { SlNotebook } from "react-icons/sl"
+import { CgDollar } from "react-icons/cg"
 
 type LineItemCardProps = {
   lineitem: LineItem
@@ -51,14 +52,14 @@ const LineItemCard = ({ lineitem, props }: LineItemCardProps) => {
       <CardBody borderRadius="md" borderWidth={1} borderColor={borderColor} bg="white">
         <Tooltip label="cost">
           <Tag colorScheme="teal" size="sm">
-            <TagLeftIcon as={FaRegMoneyBillAlt} />
+            <TagLeftIcon as={CgDollar} />
             <TagLabel>{lineitem.cost}</TagLabel>
           </Tag>
         </Tooltip>
 
         <Popover trigger="hover">
           <PopoverTrigger>
-            <Tag colorScheme="gray" size="sm">
+            <Tag colorScheme="gray" size="sm" ml={2}>
               <Icon as={SlNotebook} />
             </Tag>
           </PopoverTrigger>

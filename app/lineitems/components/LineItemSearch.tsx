@@ -20,7 +20,7 @@ const LineItemSearch = () => {
     <Stack spacing={3}>
       <SearchInput search={setQuery} />
 
-      <Container>
+      <Container flex="1 0 auto">
         <SearchResults
           message="Search to add jobs"
           query={query}
