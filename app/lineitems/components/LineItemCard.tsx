@@ -109,12 +109,12 @@ const LineItemCard = ({
               </PopoverContent>
             </Popover>
 
-            {itemizing && (
+            {itemizing && onAdd && (
               <CardFooter p={0} pt={1}>
                 <Button
                   variant="solid"
                   bg="red.100"
-                  onClick={() => onAdd!(lineitem.id)}
+                  onClick={() => onAdd(lineitem.id)}
                   size="xs"
                   borderWidth="1px solid"
                   _hover={{ borderColor: "red.300" }}

@@ -5,18 +5,14 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Button,
   Divider,
   Flex,
   FormControl,
-  FormLabel,
   Heading,
   HStack,
   Input,
   Select,
-  Spacer,
   Stat,
-  StatGroup,
   StatHelpText,
   StatLabel,
   StatNumber,
@@ -25,21 +21,13 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import getFieldErrorMessage from "app/core/components/forms/helpers/getFieldErrorMessage"
-import { addDays, format, formatDistance } from "date-fns"
-import { useRouter } from "next/router"
-import React, {
-  ComponentPropsWithoutRef,
-  forwardRef,
-  PropsWithoutRef,
-  useEffect,
-  useState,
-} from "react"
-import { Calendar, Detail } from "react-calendar"
+import { format, formatDistance } from "date-fns"
+import React, { ComponentPropsWithoutRef, forwardRef, PropsWithoutRef } from "react"
+import { Calendar } from "react-calendar"
 import { useField, UseFieldConfig } from "react-final-form"
+import timeRange9_17 from "../helpers/timeRange9_17"
 
 import "react-calendar/dist/Calendar.css"
-import { r } from "@blitzjs/auth/dist/index-57d74361"
-import timeRange9_17 from "../helpers/timeRange9_17"
 
 // const timerange = () => {
 //   const timeArray = Array<number>(17)

@@ -41,7 +41,7 @@ import {
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { ShowJobTimeMatch } from "pages/calendar"
-import { useContext, useEffect, useState } from "react"
+import { Fragment, useContext, useEffect, useState } from "react"
 import timeRange9_17 from "../helpers/timeRange9_17"
 import HourView from "./HourView"
 
@@ -171,11 +171,11 @@ const DayView = ({
         </Text>
       </GridItem>
       {jobs.map((jj, hh) => (
-        <>
+        <Fragment key={hh}>
           {jj.map((j, ii) => {
             const ji = jobIndex(j, day)
             return (
-              <>
+              <Fragment key={ii}>
                 <GridItem
                   ml={ii * 4}
                   bgGradient={bgGradient[ii]}
@@ -215,10 +215,10 @@ const DayView = ({
               <Text key={ii}>{t}</Text>
               <ShowJobTimeMatch jobs={jobStarts} time={t} />
               <Divider /> */}
-              </>
+              </Fragment>
             )
           })}
-        </>
+        </Fragment>
       ))}
     </>
   )

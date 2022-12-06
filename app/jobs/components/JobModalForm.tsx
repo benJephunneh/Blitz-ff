@@ -1,55 +1,28 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import { FORM_ERROR } from "final-form"
-import { JobFormSchema, JobSkeleton, textNotes } from "../validations"
-import {
-  Box,
-  Grid,
-  GridItem,
-  Heading,
-  HStack,
-  ModalProps,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { JobFormSchema } from "../validations"
+import { Box, Grid, GridItem, Heading, Text, useColorModeValue } from "@chakra-ui/react"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import createJob from "../mutations/createJob"
 import updateJob from "../mutations/updateJob"
-import getJob from "../queries/getJob"
-import db, { Job, JobStash, User } from "db"
-import EditorField from "app/core/components/editor/components/EditorField"
-import { useContext, useEffect, useState } from "react"
+import { Job, LineItem, User } from "db"
+import { useContext, useState } from "react"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import createStash from "app/stashes/mutations/createStash"
 import updateStash from "app/stashes/mutations/updateStash"
 import { LabeledDateField } from "app/calendar/components/LabeledDateField"
 import getStash from "app/stashes/queries/getStash"
 import TextAreaField from "app/core/components/forms/components/TextAreaField"
-import DayView from "app/calendar/components/DayView"
-import { Range } from "./JobPanel"
-import getJobs from "../queries/getJobs"
-import {
-  addBusinessDays,
-  addDays,
-  getWeek,
-  isFriday,
-  isMonday,
-  lastDayOfWeek,
-  previousMonday,
-  startOfWeek,
-  subDays,
-  weeksToDays,
-} from "date-fns"
-import { Ctx } from "@blitzjs/next"
-import findJobsByWeek from "../queries/findJobsByWeek"
+import { addBusinessDays, getWeek } from "date-fns"
 import WeekView from "app/calendar/components/WeekView"
 import headerContext from "app/core/components/header/headerContext"
-import LineItemSearch from "app/lineitems/components/LineItemSearch"
-import LineItemField from "app/lineitems/components/LineItemField"
-import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd"
+import LineItemSearchField from "app/lineitems/components/LineItemSearchField"
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 import dragAndDropListItemContext, {
   DragAndDropJob,
 } from "app/lineitems/contexts/dragAndDropListItemContext"
+import LineItemCard from "app/lineitems/components/LineItemCard"
 
 // const handleDayClick = async (d: Date) => {
 //   const dayBefore = subDays(d, 1)
@@ -229,7 +202,57 @@ const JobModalForm = ({
     notes: jobStash ? JSON.parse(jobStash.notes) : job?.notes ? JSON.parse(job.notes) : null,
   }
 
-  const onDragEnd = ({ source, destination, draggableId }) => {}
+  const dummyArray = [
+    {
+      id: 0,
+      name: "zero",
+    },
+    {
+      id: 1,
+      name: "one",
+    },
+    {
+      id: 2,
+      name: "two",
+    },
+    {
+      id: 3,
+      name: "three",
+    },
+  ]
+  const jobListId = "job-lineitems"
+  const searchListId = "search-lineitems"
+  const [lineitemId, setLineitemId] = useState<number>()
+  const [lineitems, setLineitems] = useState<LineItem[]>([])
+  const onDragEnd = ({ source, destination, draggableId }) => {
+    if (!destination) return
+    console.log(source, destination, draggableId)
+
+    const start = source.droppableId
+    const end = destination.droppableId
+    if (start === end) {
+      if (source.index === destination.index) return
+      if (start !== jobListId) return
+
+      const sortOrder = [...dummyArray.map(({ id }) => id)]
+      // const sortOrder = [...lineitems.map(({ id }) => id)]
+      console.log({ sortOrder })
+      const spliced = sortOrder.splice(source.index, 1)
+      sortOrder.splice(destination.index, 0, spliced.at(0)!)
+      dummyArray.sort((a, b) => {
+        return sortOrder.indexOf(a.id) - sortOrder.indexOf(b.id)
+      })
+      // lineitems.sort((a, b) => {
+      //   return sortOrder.indexOf(a.id) - sortOrder.indexOf(b.id)
+      // })
+    }
+
+    // const newLineitems = Array.from(lineitems)
+    // newLineitems.splice(destination.index, 0, source.index)
+
+    // setLineitems(newLineitems)
+    // console.log({ ...newLineitems })
+  }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -250,11 +273,11 @@ const JobModalForm = ({
           <>
             <Grid
               templateAreas={`
-                't li s'
-                'q li s'
-                'c li s'
-                'c li s'
-                'n li s'
+                'title search sched'
+                'items search sched'
+                'cal search sched'
+                'cal search sched'
+                'notes search sched'
               `}
               gridTemplateColumns="30% 30% 40%"
               gridTemplateRows="60px repeat(4, 1fr)"
@@ -262,16 +285,17 @@ const JobModalForm = ({
               // h='100%'
               gap={3}
             >
-              <GridItem area="t">
+              <GridItem area="title">
                 <LabeledTextField name="title" label="Title" />
               </GridItem>
-              <GridItem area="q">
-                <Droppable droppableId="job-lineitems">
+
+              <GridItem area="items">
+                <Droppable droppableId={jobListId}>
                   {(provided, snapshot) => (
                     <Box
                       border="1px solid"
                       borderRadius="md"
-                      bg={snapshot.isDraggingOver ? "lemonchiffon" : "white"}
+                      bg={snapshot.isDraggingOver ? "lemonchiffon" : "inherit"}
                       borderColor="blackAlpha.50"
                       h="100%"
                       transition="1s ease"
@@ -282,12 +306,38 @@ const JobModalForm = ({
                         Line items
                       </Heading>
 
-                      {/* array map of dropped lineitems */}
+                      {/* {lineitems.map((li, ii) => (
+                        <LineItemCard
+                          key={li.id}
+                          lineitem={li}
+                          draggableIndex={ii}
+                          mb='8px'
+                        />
+                      ))} */}
+                      {dummyArray.map((li, ii) => (
+                        // {lineitems.map((li, ii) => (
+                        <Draggable key={li.id} draggableId={li.name} index={ii}>
+                          {(provided) => (
+                            <Box
+                              border="1px solid lightgray"
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              bg="white"
+                              m="8px"
+                            >
+                              {li.name}
+                            </Box>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
                     </Box>
                   )}
                 </Droppable>
               </GridItem>
-              <GridItem area="c">
+
+              <GridItem area="cal">
                 <LabeledDateField
                   name="range"
                   label="Date range"
@@ -300,19 +350,26 @@ const JobModalForm = ({
                   // }}
                 />
               </GridItem>
-              <GridItem area="n">
+
+              <GridItem area="notes">
                 <TextAreaField
                   name="notes"
                   label="Notes"
                   placeholder="Add notes about this job..."
                 />
               </GridItem>
-              <GridItem area="s" h="100%">
+
+              <GridItem area="search">
+                <LineItemSearchField
+                  name="lineitems"
+                  label="Search to add jobs"
+                  lineitems={{ lineitems, setLineitems }}
+                />
+              </GridItem>
+
+              <GridItem area="sched" h="100%">
                 {/* <DayView date={new Date()} /> */}
                 {calendarView}
-              </GridItem>
-              <GridItem area="li">
-                <LineItemField name="lineitems" />
               </GridItem>
             </Grid>
             {/* <LabeledTextField name="start" label="Start date/time" /> */}

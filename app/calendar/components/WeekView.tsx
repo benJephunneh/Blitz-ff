@@ -42,7 +42,7 @@ import {
   getMinutes,
 } from "date-fns"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import timeRange9_17 from "../helpers/timeRange9_17"
 import DayView from "./DayView"
 import HourView from "./HourView"
@@ -171,11 +171,10 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
             <Text fontWeight="bold">{weekHeading()}</Text>
           </GridItem>
           {timeRange9_17().map((t, ii) => (
-            <>
+            <Fragment key={ii}>
               {
                 ii % 2 == 0 && (
                   <GridItem
-                    key={ii}
                     rowStart={rowStarts.at(ii)! + 1}
                     rowEnd={rowEnds.at(ii)! + 1}
                     colStart={0}
@@ -198,7 +197,7 @@ const WeekView = ({ weekNumber = getWeek(new Date(), { weekStartsOn: 1 }) - 1 }:
                 //   <Divider ml={10} />
                 // </GridItem>
               }
-            </>
+            </Fragment>
           ))}
           <DayView day={monday} jobs={mondayJobsBySlot} starts={rowStarts} stops={rowEnds} />
           <DayView day={tuesday} jobs={tuesdayJobsBySlot} starts={rowStarts} stops={rowEnds} />
