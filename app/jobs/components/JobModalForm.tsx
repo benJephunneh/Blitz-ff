@@ -46,7 +46,7 @@ import WeekView from "app/calendar/components/WeekView"
 import headerContext from "app/core/components/header/headerContext"
 import LineItemSearch from "app/lineitems/components/LineItemSearch"
 import LineItemField from "app/lineitems/components/LineItemField"
-import { DragDropContext, DropResult } from "react-beautiful-dnd"
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd"
 import dragAndDropListItemContext, {
   DragAndDropJob,
 } from "app/lineitems/contexts/dragAndDropListItemContext"
@@ -76,11 +76,11 @@ type JobModalFormProps = {
   isOpen: boolean
   onClose: () => void
   onSuccess?: (job: Job) => void
-  handleDrop?: (drop: DropResult) => void
+  // handleDrop?: (drop: DropResult) => void
   // props?: Partial<ModalProps>
 }
 
-const { Provider: DragAndDropProvider } = dragAndDropListItemContext
+// const { Provider: DragAndDropProvider } = dragAndDropListItemContext
 
 const JobModalForm = ({
   customerId,
@@ -94,7 +94,7 @@ const JobModalForm = ({
   isOpen,
   onClose,
   onSuccess,
-  handleDrop,
+  // handleDrop,
   ...props
 }: JobModalFormProps) => {
   const { jobs } = useContext(headerContext)
@@ -229,85 +229,97 @@ const JobModalForm = ({
     notes: jobStash ? JSON.parse(jobStash.notes) : job?.notes ? JSON.parse(job.notes) : null,
   }
 
+  const onDragEnd = ({ source, destination, draggableId }) => {}
+
   return (
-    <DragDropContext onDragEnd={handleDrop || (() => null)}>
-      <DragAndDropProvider value={props}>
-        <ModalForm
-          size="full"
-          isOpen={isOpen}
-          onClose={onClose}
-          disableStash={disableStash}
-          schema={JobFormSchema}
-          title={job ? "Edit job" : "New job"}
-          submitText={job ? "Update" : "Create"}
-          initialValues={initialValues}
-          onSubmit={(values) => {
-            onSubmit(values).then(onSuccess).catch(handleError)
-          }}
-          render={() => (
-            <>
-              <Grid
-                templateAreas={`
+    <DragDropContext onDragEnd={onDragEnd}>
+      {/* <DragAndDropProvider value={props}> */}
+      <ModalForm
+        size="full"
+        isOpen={isOpen}
+        onClose={onClose}
+        disableStash={disableStash}
+        schema={JobFormSchema}
+        title={job ? "Edit job" : "New job"}
+        submitText={job ? "Update" : "Create"}
+        initialValues={initialValues}
+        onSubmit={(values) => {
+          onSubmit(values).then(onSuccess).catch(handleError)
+        }}
+        render={() => (
+          <>
+            <Grid
+              templateAreas={`
                 't li s'
                 'q li s'
                 'c li s'
                 'c li s'
                 'n li s'
               `}
-                gridTemplateColumns="30% 30% 40%"
-                gridTemplateRows="60px repeat(4, 1fr)"
-                // w="full"
-                // h='100%'
-                gap={3}
-              >
-                <GridItem area="t">
-                  <LabeledTextField name="title" label="Title" />
-                </GridItem>
-                <GridItem area="q">
-                  {/* Droppable */}
-                  <Box
-                    border="1px solid"
-                    borderRadius="md"
-                    bg="white"
-                    borderColor="blackAlpha.50"
-                    h="100%"
-                  >
-                    <Heading size="xs">Line items</Heading>
-                  </Box>
-                </GridItem>
-                <GridItem area="c">
-                  <LabeledDateField
-                    name="range"
-                    label="Date range"
-                    start={start}
-                    end={end}
-                    // onClickDay={handleDayClick}
-                    onClickWeekNumber={handleWeekNumberClick}
-                    // console.log({ w })
-                    // handleWeekNumberClick(w).catch((e) => console.error(e))
-                    // }}
-                  />
-                </GridItem>
-                <GridItem area="n">
-                  <TextAreaField
-                    name="notes"
-                    label="Notes"
-                    placeholder="Add notes about this job..."
-                  />
-                </GridItem>
-                <GridItem area="s" h="100%">
-                  {/* <DayView date={new Date()} /> */}
-                  {calendarView}
-                </GridItem>
-                <GridItem area="li">
-                  <LineItemField name="lineitems" />
-                </GridItem>
-              </Grid>
-              {/* <LabeledTextField name="start" label="Start date/time" /> */}
-              {/* <LabeledTextField name="end" label="End date/time" /> */}
-              {/* <LabeledDateField name="end" label="End" initialDate={endDateTime} /> */}
-              {/* <LabeledDateRangeField name='dateRange' label='Date range' /> */}
-              {/* <EditorField
+              gridTemplateColumns="30% 30% 40%"
+              gridTemplateRows="60px repeat(4, 1fr)"
+              // w="full"
+              // h='100%'
+              gap={3}
+            >
+              <GridItem area="t">
+                <LabeledTextField name="title" label="Title" />
+              </GridItem>
+              <GridItem area="q">
+                <Droppable droppableId="job-lineitems">
+                  {(provided, snapshot) => (
+                    <Box
+                      border="1px solid"
+                      borderRadius="md"
+                      bg={snapshot.isDraggingOver ? "lemonchiffon" : "white"}
+                      borderColor="blackAlpha.50"
+                      h="100%"
+                      transition="1s ease"
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                    >
+                      <Heading size="xs" textAlign="center" bg="gray.200">
+                        Line items
+                      </Heading>
+
+                      {/* array map of dropped lineitems */}
+                    </Box>
+                  )}
+                </Droppable>
+              </GridItem>
+              <GridItem area="c">
+                <LabeledDateField
+                  name="range"
+                  label="Date range"
+                  start={start}
+                  end={end}
+                  // onClickDay={handleDayClick}
+                  onClickWeekNumber={handleWeekNumberClick}
+                  // console.log({ w })
+                  // handleWeekNumberClick(w).catch((e) => console.error(e))
+                  // }}
+                />
+              </GridItem>
+              <GridItem area="n">
+                <TextAreaField
+                  name="notes"
+                  label="Notes"
+                  placeholder="Add notes about this job..."
+                />
+              </GridItem>
+              <GridItem area="s" h="100%">
+                {/* <DayView date={new Date()} /> */}
+                {calendarView}
+              </GridItem>
+              <GridItem area="li">
+                <LineItemField name="lineitems" />
+              </GridItem>
+            </Grid>
+            {/* <LabeledTextField name="start" label="Start date/time" /> */}
+            {/* <LabeledTextField name="end" label="End date/time" /> */}
+            {/* <LabeledDateField name="end" label="End" initialDate={endDateTime} /> */}
+            {/* <LabeledDateRangeField name='dateRange' label='Date range' /> */}
+            {/* <EditorField
             name="notes"
             fontSize="md"
             label="Stash notes"
@@ -316,15 +328,15 @@ const JobModalForm = ({
               horizontalRule: true,
             }}
           /> */}
-              {jobStash && (
-                <Text fontSize="xs" color={stashFootnoteColor}>
-                  Stashed by {user?.username}
-                </Text>
-              )}
-            </>
-          )}
-        />
-      </DragAndDropProvider>
+            {jobStash && (
+              <Text fontSize="xs" color={stashFootnoteColor}>
+                Stashed by {user?.username}
+              </Text>
+            )}
+          </>
+        )}
+      />
+      {/* </DragAndDropProvider> */}
     </DragDropContext>
   )
 }
