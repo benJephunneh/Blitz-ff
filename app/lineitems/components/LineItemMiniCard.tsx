@@ -1,14 +1,24 @@
+import { useQuery } from "@blitzjs/rpc"
 import {
+  Button,
   Card,
   CardBody,
+  CardFooter,
+  CardHeader,
+  CardProps,
+  ComponentWithAs,
+  FilterProps,
   Heading,
   HStack,
   Icon,
   IconButton,
   Popover,
+  PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  SimpleGrid,
+  SpaceProps,
   Tag,
   TagLabel,
   TagLeftIcon,
@@ -23,7 +33,7 @@ import { SlNotebook } from "react-icons/sl"
 import { CgDollar } from "react-icons/cg"
 import { FcAddRow, FcDeleteRow } from "react-icons/fc"
 
-type LineItemCardProps = {
+type LineItemMiniCardProps = {
   lineitem: LineItem
   itemizing?: boolean
   onAdd?: (lineitemId: number) => void
@@ -32,13 +42,13 @@ type LineItemCardProps = {
   // isDragging?: boolean
 }
 
-const LineItemCard = ({
+const LineItemMiniCard = ({
   lineitem,
   itemizing,
   onAdd,
   onDelete,
 }: // draggableIndex,
-LineItemCardProps) => {
+LineItemMiniCardProps) => {
   const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.100")
   const hoverBorderColor = useColorModeValue("blue.500", "blue.300")
   const headingBgColor = useColorModeValue("blackAlpha.300", "blackAlpha.400")
@@ -60,69 +70,66 @@ LineItemCardProps) => {
     // {...spaceProps}
     // m={m}
     >
-      <Heading
-        size="xs"
+      <CardBody
+        // size="xs"
         p={2}
         // bg={headingBgColor}
+        // bg={bodyBgColor}
         bgGradient="linear(to-b, blackAlpha.300, aliceblue)"
         borderBottomColor="cyan.300"
         borderBottomWidth={1}
         borderTopRadius="sm"
+        // backdropFilter='blur(3px)'
       >
         <HStack justify="space-between">
-          <Text fontWeight="semibold">{lineitem.name}</Text>
-          {itemizing && onAdd && (
-            <IconButton
-              aria-label="Add lineitem"
-              as={FcAddRow}
-              variant="ghost"
-              // colorScheme='red'
-              onClick={() => onAdd(lineitem.id)}
-              size="xs"
-              _hover={{ cursor: "pointer" }}
-            />
-          )}
-          {itemizing && onDelete && (
-            <IconButton
-              aria-label="Delete lineitem"
-              as={FcDeleteRow}
-              variant="ghost"
-              // colorScheme='red'
-              onClick={() => onDelete(lineitem.id)}
-              size="xs"
-              _hover={{ cursor: "pointer" }}
-            />
-          )}
-        </HStack>
-      </Heading>
+          <Text fontWeight="semibold" textOverflow="ellipsis">
+            {lineitem.name}
+          </Text>
+          <HStack justify="right">
+            <Tooltip label="cost">
+              <Tag colorScheme="teal" size="sm">
+                <TagLeftIcon as={CgDollar} />
+                <TagLabel>{lineitem.cost}</TagLabel>
+              </Tag>
+            </Tooltip>
 
-      <CardBody
-        bg={bodyBgColor}
-        // backdropFilter='blur(3px)'
-        p={2}
-      >
-        <Tooltip label="cost">
-          <Tag colorScheme="teal" size="sm">
-            <TagLeftIcon as={CgDollar} />
-            <TagLabel>{lineitem.cost}</TagLabel>
-          </Tag>
-        </Tooltip>
+            <Popover trigger="hover" placement="auto">
+              <PopoverTrigger>
+                <Tag colorScheme="gray" size="sm" ml={2}>
+                  <Icon as={SlNotebook} />
+                </Tag>
+              </PopoverTrigger>
+              <PopoverContent bg="white">
+                {/* <PopoverArrow /> */}
+                <PopoverBody p={0} bg="white">
+                  <Textarea maxH="fit-content" bg="white" defaultValue={lineitem.notes ?? ""} />
+                </PopoverBody>
+              </PopoverContent>
+            </Popover>
+            {itemizing && onAdd && (
+              <IconButton
+                aria-label="Add lineitem"
+                as={FcAddRow}
+                variant="ghost"
+                // colorScheme='red'
+                onClick={() => onAdd(lineitem.id)}
+                size="xs"
+                _hover={{ cursor: "pointer" }}
+              />
+            )}
+            {itemizing && onDelete && (
+              <IconButton
+                aria-label="Delete lineitem"
+                as={FcDeleteRow}
+                variant="ghost"
+                // colorScheme='red'
+                onClick={() => onDelete(lineitem.id)}
+                size="xs"
+                _hover={{ cursor: "pointer" }}
+              />
+            )}
 
-        <Popover trigger="hover" placement="top">
-          <PopoverTrigger>
-            <Tag colorScheme="gray" size="sm" ml={2}>
-              <Icon as={SlNotebook} />
-            </Tag>
-          </PopoverTrigger>
-          <PopoverContent bg="white">
-            {/* <PopoverArrow /> */}
-            <PopoverBody p={0} bg="white">
-              <Textarea maxH="fit-content" bg="white" defaultValue={lineitem.notes ?? ""} />
-            </PopoverBody>
-          </PopoverContent>
-        </Popover>
-
-        {/* {itemizing && onAdd && (
+            {/* {itemizing && onAdd && (
           <CardFooter p={0} pt={1}>
             <Button
               variant="solid"
@@ -136,7 +143,7 @@ LineItemCardProps) => {
             </Button>
           </CardFooter>
         )} */}
-        {/* {itemizing && onDelete && (
+            {/* {itemizing && onDelete && (
               <CardFooter p={0} pt={1}>
                 <Button
                   variant="solid"
@@ -150,9 +157,11 @@ LineItemCardProps) => {
                 </Button>
               </CardFooter>
             )} */}
+          </HStack>
+        </HStack>
       </CardBody>
     </Card>
   )
 }
 
-export default LineItemCard
+export default LineItemMiniCard

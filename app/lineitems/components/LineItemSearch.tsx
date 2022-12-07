@@ -6,12 +6,12 @@ import SearchResults from "app/search/SearchResults"
 import { useEffect, useState } from "react"
 import findLineItem from "../queries/findLineItem"
 import LineItemCard from "./LineItemCard"
-import { DragDropContext, Droppable } from "react-beautiful-dnd"
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"
 
 type LineItemSearchProps = {
   message?: string
-  onAdd: (lineitemId: number) => void
   itemizing?: boolean
+  onAdd: (lineitemId: number) => void
   searchProvider: {
     query: string
     setQuery: (q: string) => void
@@ -24,8 +24,8 @@ type LineItemSearchProps = {
 
 const LineItemSearch = ({
   message,
-  onAdd,
   itemizing = false,
+  onAdd,
   searchProvider,
 }: LineItemSearchProps) => {
   const { query, setQuery, lineitemSearchResults, isLoading } = searchProvider
@@ -46,14 +46,28 @@ const LineItemSearch = ({
         isLoading={isLoading}
       >
         {lineitemSearchResults?.map((li, ii) => (
-          <LineItemCard
-            key={li.id}
-            lineitem={li}
-            onAdd={onAdd}
-            itemizing={itemizing}
-            draggableIndex={ii}
-            mb="8px"
-          />
+          <Draggable key={li.id} draggableId={li.id.toString()} index={ii}>
+            {(provided, isDragging: boolean) => (
+              <Box
+                border="1px solid"
+                borderColor="transparent"
+                borderRadius="sm"
+                bgColor={isDragging ? "whiteAlpha.600" : "white"}
+                p={0}
+                m="4px"
+                // mb="8px"
+                transition="100ms ease-in-out"
+                backdropFilter="auto"
+                backdropBlur={isDragging ? "2px" : "0px"}
+                _hover={{ borderColor: "blue.400" }}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                ref={provided.innerRef}
+              >
+                <LineItemCard lineitem={li} onAdd={onAdd} itemizing={itemizing} />
+              </Box>
+            )}
+          </Draggable>
         ))}
       </SearchResults>
     </Stack>

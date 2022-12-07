@@ -27,6 +27,7 @@ model Customer {
   jobStashes        JobStash[]
   user              User              @relation(fields: [userId], references: [id])
   userId            Int
+  JobArchive        JobArchive[]
 }
 
 model CustomerStash {
@@ -67,6 +68,7 @@ model Location {
   user         User         @relation(fields: [userId], references: [id])
   customerId   Int
   userId       Int
+  JobArchive   JobArchive[]
 }
 
 model LocationStash {
@@ -136,18 +138,20 @@ model JobStash {
 }
 
 model Invoice {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  title     String
-  paid      Boolean    @default(false)
-  sent      Boolean    @default(false)
-  notes     String?
-  lineItems LineItem[]
-  job       Job        @relation(fields: [jobId], references: [id])
-  user      User       @relation(fields: [userId], references: [id])
-  jobId     Int
-  userId    Int
+  id           Int         @id @default(autoincrement())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  title        String
+  paid         Boolean     @default(false)
+  sent         Boolean     @default(false)
+  notes        String?
+  lineItems    LineItem[]
+  job          Job         @relation(fields: [jobId], references: [id])
+  user         User        @relation(fields: [userId], references: [id])
+  jobId        Int
+  userId       Int
+  JobArchive   JobArchive? @relation(fields: [jobArchiveId], references: [id])
+  jobArchiveId Int?
 }
 
 model InvoiceStash {
@@ -210,6 +214,7 @@ model LineItem {
   notes             String?
   jobs              Job[]
   jobStashes        JobStash[]
+  archivedJobs      JobArchive[]
   invoices          Invoice[]
   invoiceStashes    InvoiceStash[]
   archivedInvoices  InvoiceArchive[]
@@ -275,13 +280,20 @@ model JobArchive {
   title             String
   start             DateTime?
   end               DateTime?
-  customerId        Int
-  locationId        Int
+  completed         Boolean           @default(false)
   notes             String?
-  archivedCustomer  CustomerArchive   @relation(fields: [customerId], references: [id])
-  archivedLocation  LocationArchive   @relation(fields: [locationId], references: [id])
+  lineitems         LineItem[]
+  customer          Customer          @relation(fields: [customerId], references: [id])
+  archivedCustomer  CustomerArchive   @relation(fields: [customerArchiveId], references: [id])
+  location          Location          @relation(fields: [locationId], references: [id])
+  archivedLocation  LocationArchive   @relation(fields: [locationArchiveId], references: [id])
+  Invoices          Invoice[]
   archivedInvoices  InvoiceArchive[]
   archivedEstimates EstimateArchive[]
+  customerId        Int
+  customerArchiveId Int
+  locationId        Int
+  locationArchiveId Int
 }
 
 model InvoiceArchive {

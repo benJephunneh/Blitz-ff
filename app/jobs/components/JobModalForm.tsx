@@ -24,6 +24,7 @@ import dragAndDropListItemContext, {
 } from "app/lineitems/contexts/dragAndDropListItemContext"
 import LineItemCard from "app/lineitems/components/LineItemCard"
 import findLineItem from "app/lineitems/queries/findLineItem"
+import LineItemMiniCard from "app/lineitems/components/LineItemMiniCard"
 
 // const handleDayClick = async (d: Date) => {
 //   const dayBefore = subDays(d, 1)
@@ -135,7 +136,7 @@ const JobModalForm = ({
     console.table({ values })
     const { notes, stashing, range, ...formSubmission } = values
     const [start, end] = [...range.map((t) => new Date(t))]
-    console.log({ start })
+    // console.log({ start })
     formSubmission["start"] = start
     formSubmission["end"] = end
 
@@ -167,6 +168,8 @@ const JobModalForm = ({
           ...formSubmission,
         })
       } else {
+        console.log("creating job...")
+        console.log({ locationId })
         jobRet = createJobMutation({
           customerId,
           locationId,
@@ -229,7 +232,7 @@ const JobModalForm = ({
   const [lineitemSearchResults, { isLoading }] = useQuery(
     findLineItem,
     { query },
-    { enabled: !!query }
+    { enabled: !!query, refetchOnWindowFocus: false }
   )
   const searchProvider = {
     query,
@@ -240,19 +243,26 @@ const JobModalForm = ({
     setLineitems,
   }
 
+  const onDelete = (lineitemId: number) => {
+    const idx = lineitems.findIndex(({ id }) => id === lineitemId)
+    lineitems.splice(idx, 1)
+    setLineitems([...lineitems])
+  }
+
   const onDragEnd = ({ source, destination, draggableId }) => {
     if (!destination) return
     console.log(source, destination, draggableId)
 
     const start = source.droppableId
     const end = destination.droppableId
+    const sortOrder = [...lineitems.map(({ id }) => id)]
+    // const sortOrder = [...dummyArray.map(({ id }) => id)]
+    // console.log({ sortOrder })
+
     if (start === end) {
       if (source.index === destination.index) return
       if (start !== jobListId) return
 
-      // const sortOrder = [...dummyArray.map(({ id }) => id)]
-      const sortOrder = [...lineitems.map(({ id }) => id)]
-      // console.log({ sortOrder })
       const spliced = sortOrder.splice(source.index, 1)
       sortOrder.splice(destination.index, 0, spliced.at(0)!)
       // dummyArray.sort((a, b) => {
@@ -266,7 +276,9 @@ const JobModalForm = ({
     } else {
       if (lineitems.findIndex(({ id }) => id == draggableId) !== -1) return
       const moving = lineitemSearchResults?.find(({ id }) => id == draggableId)
-      setLineitems(lineitems.splice(destination.index, 0, moving!))
+      const tempLineitems = lineitems
+      tempLineitems.splice(destination.index, 0, moving!)
+      setLineitems(tempLineitems)
     }
 
     // const newLineitems = Array.from(lineitems)
@@ -289,6 +301,9 @@ const JobModalForm = ({
         submitText={job ? "Update" : "Create"}
         initialValues={initialValues}
         onSubmit={(values) => {
+          // console.log({ ...lineitems })
+          values.lineitems = lineitems
+          // console.log({ ...values })
           onSubmit(values).then(onSuccess).catch(handleError)
         }}
         render={() => (
@@ -311,13 +326,13 @@ const JobModalForm = ({
                 <LabeledTextField name="title" label="Title" />
               </GridItem>
 
-              <GridItem area="items">
+              <GridItem area="items" maxH="200px">
                 <Droppable droppableId={jobListId}>
                   {(provided, snapshot) => (
                     <Flex
                       border="1px solid"
                       borderRadius="md"
-                      bg={snapshot.isDraggingOver ? "lemonchiffon" : "inherit"}
+                      bg={snapshot.isDraggingOver ? "lemonchiffon" : "white"}
                       borderColor="blackAlpha.50"
                       display="flex"
                       flexDirection="column"
@@ -339,17 +354,31 @@ const JobModalForm = ({
                       ))} */}
                       {/* {dummyArray.map((li, ii) => ( */}
                       {lineitems.map((li, ii) => (
-                        <Draggable key={li.id} draggableId={li.name} index={ii}>
-                          {(provided) => (
+                        <Draggable key={li.id} draggableId={li.id.toString()} index={ii}>
+                          {(provided, isDragging: boolean) => (
                             <Box
-                              border="1px solid lightgray"
+                              border="1px solid"
+                              borderColor="transparent"
+                              borderRadius="sm"
+                              bgColor={isDragging ? "whiteAlpha.600" : "white"}
+                              p={0}
+                              m="4px"
+                              // mb="8px"
+                              transition="100ms ease-in-out"
+                              backdropFilter="auto"
+                              backdropBlur={isDragging ? "2px" : "0px"}
+                              _hover={{ borderColor: "blue.400" }}
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
-                              bg="white"
-                              m="8px"
                             >
-                              {li.name}
+                              <LineItemMiniCard
+                                key={li.id}
+                                lineitem={li}
+                                onDelete={onDelete}
+                                itemizing={true}
+                                // draggableIndex={ii}
+                              />
                             </Box>
                           )}
                         </Draggable>

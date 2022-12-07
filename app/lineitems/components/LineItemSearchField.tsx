@@ -11,6 +11,7 @@ interface LineItemSearchFieldProps extends ComponentPropsWithoutRef<typeof Input
   message?: string
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
   labelProps?: ComponentPropsWithoutRef<"label">
+  // onDelete?: (lineitemId: number) => void
   searchProvider: {
     query: string
     setQuery: (q: string) => void
@@ -33,11 +34,12 @@ const LineItemSearchField = forwardRef<HTMLInputElement, LineItemSearchFieldProp
 
       const addition = lineitemSearchResults.find(({ id }) => id === lineitemId)
       if (addition) setLineitems([...lineitems, addition])
-      onChange(lineitems)
+      onChange([...lineitems])
+      console.log({ ...lineitems })
     }
 
     return (
-      <FormControl {...outerProps} overflowY="scroll">
+      <FormControl {...outerProps}>
         <FormLabel mb={0} {...labelProps}>
           {label}
         </FormLabel>
@@ -46,9 +48,8 @@ const LineItemSearchField = forwardRef<HTMLInputElement, LineItemSearchFieldProp
             <Flex
               ref={provided.innerRef}
               {...provided.droppableProps}
-              maxH="100%"
+              maxH="600px"
               direction="column"
-              overflow="hidden"
               backgroundClip="padding-box"
             >
               <LineItemSearch

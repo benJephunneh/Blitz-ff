@@ -54,8 +54,11 @@ const ModalForm: FormComponent<ModalFormProps> = ({
   children,
   ...props
 }) => {
-  const modalBgColor = useColorModeValue('gray.100', 'gray.600')
-  const modalBgGradient = useColorModeValue('linear(to-r, gray.300, gray.200)', 'linear(to-r, gray.800, gray.700)')
+  const modalBgColor = useColorModeValue("gray.100", "gray.600")
+  const modalBgGradient = useColorModeValue(
+    "linear(to-r, gray.300, gray.200)",
+    "linear(to-r, gray.800, gray.700)"
+  )
   const modalHeaderTextColor = useColorModeValue("black.900", "cyan.300")
   const modalHeaderColor = useColorModeValue("blackAlpha.300", "blackAlpha.500")
   return (
@@ -68,7 +71,15 @@ const ModalForm: FormComponent<ModalFormProps> = ({
         render={(phorm) => (
           <form onSubmit={phorm.handleSubmit} {...props}>
             <ModalContent bg={modalBgColor}>
-              <ModalHeader borderBottomWidth={1} borderBottomColor='whiteAlpha.50' textColor={modalHeaderTextColor} bgColor={modalHeaderColor}> {title}</ModalHeader>
+              <ModalHeader
+                borderBottomWidth={1}
+                borderBottomColor="whiteAlpha.50"
+                textColor={modalHeaderTextColor}
+                bgColor={modalHeaderColor}
+              >
+                {" "}
+                {title}
+              </ModalHeader>
               <ModalCloseButton />
               <ModalBody bg={modalBgColor}>
                 {phorm.submitError && (
@@ -113,15 +124,13 @@ const ModalForm: FormComponent<ModalFormProps> = ({
                   </Button>
                   <Button onClick={onClose}>Cancel</Button>
                 </HStack>
-
-                {/* <pre>{JSON.stringify(phorm.values, null, 2)}</pre> */}
               </ModalFooter>
+              <pre>{JSON.stringify(phorm.values, null, 2)}</pre>
             </ModalContent>
           </form>
-        )
-        }
+        )}
       />
-    </Modal >
+    </Modal>
   )
 }
 
