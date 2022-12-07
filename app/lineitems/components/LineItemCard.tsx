@@ -50,6 +50,7 @@ const LineItemCard = ({
   const hoverBorderColor = useColorModeValue("blue.500", "blue.300")
   const headingBgColor = useColorModeValue("blackAlpha.300", "blackAlpha.400")
   const bodyBgColor = useColorModeValue("whiteAlpha.600", "blackAlpha.400")
+  console.log({ props })
 
   return (
     <Draggable draggableId={lineitem.id.toString()} index={draggableIndex}>
@@ -62,7 +63,7 @@ const LineItemCard = ({
           backdropFilter="auto"
           backdropBlur={isDragging ? "3px" : "0px"}
           bgColor="whiteAlpha.700"
-          mx="8px"
+          flex="1 0 auto"
           ref={provided.innerRef}
           _hover={{ borderColor: hoverBorderColor }}
           {...provided.draggableProps}

@@ -11,7 +11,7 @@ import { FcSearch } from "react-icons/fc"
 import debounce from "lodash/debounce"
 
 type SearchInputProps = {
-  search: (val: string) => void
+  search: (q: string) => void
   props?: ComponentPropsWithoutRef<typeof Input>
 }
 

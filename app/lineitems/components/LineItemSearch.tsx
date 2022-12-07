@@ -12,15 +12,28 @@ type LineItemSearchProps = {
   message?: string
   onAdd: (lineitemId: number) => void
   itemizing?: boolean
+  searchProvider: {
+    query: string
+    setQuery: (q: string) => void
+    lineitems: LineItem[]
+    lineitemSearchResults: LineItem[]
+    isLoading: boolean
+    setLineitems: (lineitems: LineItem[]) => void
+  }
 }
 
-const LineItemSearch = ({ message, onAdd, itemizing = false }: LineItemSearchProps) => {
-  const [query, setQuery] = useState("")
-  const [lineitemSearchResults, { isLoading }] = useQuery(
-    findLineItem,
-    { query },
-    { suspense: false, enabled: !!query }
-  )
+const LineItemSearch = ({
+  message,
+  onAdd,
+  itemizing = false,
+  searchProvider,
+}: LineItemSearchProps) => {
+  const { query, setQuery, lineitemSearchResults, isLoading } = searchProvider
+  // const [lineitemSearchResults, { isLoading }] = useQuery(
+  //   findLineItem,
+  //   { query },
+  //   { suspense: false, enabled: !!query }
+  // )
 
   return (
     <Stack spacing={3}>

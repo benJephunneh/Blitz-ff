@@ -23,17 +23,17 @@ export default resolver.pipe(resolver.zod(CreateJob), resolver.authorize(), asyn
   })
   await db.jobArchive.create({ data })
 
-  if (job) {
-    // Create invoice
-    await db.invoice.create({
-      data: {
-        title: `${job.id}: ${job.title} c:${job.customerId} l:${job.locationId}`,
-        jobId: job.id,
-        userId: ctx.session.userId,
-        lineItems: job.lineItems,
-      },
-    })
-  }
+  // if (job) {
+  //   // Create invoice
+  //   await db.invoice.create({
+  //     data: {
+  //       title: `${job.id}: ${job.title} c:${job.customerId} l:${job.locationId}`,
+  //       jobId: job.id,
+  //       userId: ctx.session.userId,
+  //       lineItems: job.lineItems,
+  //     },
+  //   })
+  // }
 
   return job
 })

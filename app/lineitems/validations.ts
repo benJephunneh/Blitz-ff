@@ -14,7 +14,8 @@ export const LineItemSkeleton = z.object({
   quantity,
 })
 
+export const FullLineItem = LineItemSkeleton.extend({ id, notes: notes.nullable().optional() })
 export const CreateLineItem = LineItemSkeleton.extend({ notes: notes.nullable().optional() })
-export const UpdateLineItem = CreateLineItem.extend({ id })
+export const UpdateLineItem = FullLineItem
 export const DeleteLineItem = z.object({ id })
 export const FindLineItem = z.object({ query })

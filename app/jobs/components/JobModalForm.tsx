@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import { FORM_ERROR } from "final-form"
 import { JobFormSchema } from "../validations"
-import { Box, Grid, GridItem, Heading, Text, useColorModeValue } from "@chakra-ui/react"
+import { Box, Flex, Grid, GridItem, Heading, Text, useColorModeValue } from "@chakra-ui/react"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import createJob from "../mutations/createJob"
@@ -23,6 +23,7 @@ import dragAndDropListItemContext, {
   DragAndDropJob,
 } from "app/lineitems/contexts/dragAndDropListItemContext"
 import LineItemCard from "app/lineitems/components/LineItemCard"
+import findLineItem from "app/lineitems/queries/findLineItem"
 
 // const handleDayClick = async (d: Date) => {
 //   const dayBefore = subDays(d, 1)
@@ -224,6 +225,21 @@ const JobModalForm = ({
   const searchListId = "search-lineitems"
   const [lineitemId, setLineitemId] = useState<number>()
   const [lineitems, setLineitems] = useState<LineItem[]>([])
+  const [query, setQuery] = useState("")
+  const [lineitemSearchResults, { isLoading }] = useQuery(
+    findLineItem,
+    { query },
+    { enabled: !!query }
+  )
+  const searchProvider = {
+    query,
+    setQuery,
+    lineitems,
+    lineitemSearchResults,
+    isLoading,
+    setLineitems,
+  }
+
   const onDragEnd = ({ source, destination, draggableId }) => {
     if (!destination) return
     console.log(source, destination, draggableId)
@@ -234,17 +250,23 @@ const JobModalForm = ({
       if (source.index === destination.index) return
       if (start !== jobListId) return
 
-      const sortOrder = [...dummyArray.map(({ id }) => id)]
-      // const sortOrder = [...lineitems.map(({ id }) => id)]
-      console.log({ sortOrder })
+      // const sortOrder = [...dummyArray.map(({ id }) => id)]
+      const sortOrder = [...lineitems.map(({ id }) => id)]
+      // console.log({ sortOrder })
       const spliced = sortOrder.splice(source.index, 1)
       sortOrder.splice(destination.index, 0, spliced.at(0)!)
-      dummyArray.sort((a, b) => {
-        return sortOrder.indexOf(a.id) - sortOrder.indexOf(b.id)
-      })
-      // lineitems.sort((a, b) => {
+      // dummyArray.sort((a, b) => {
       //   return sortOrder.indexOf(a.id) - sortOrder.indexOf(b.id)
       // })
+      setLineitems(
+        lineitems.sort((a, b) => {
+          return sortOrder.indexOf(a.id) - sortOrder.indexOf(b.id)
+        })
+      )
+    } else {
+      if (lineitems.findIndex(({ id }) => id == draggableId) !== -1) return
+      const moving = lineitemSearchResults?.find(({ id }) => id == draggableId)
+      setLineitems(lineitems.splice(destination.index, 0, moving!))
     }
 
     // const newLineitems = Array.from(lineitems)
@@ -292,12 +314,13 @@ const JobModalForm = ({
               <GridItem area="items">
                 <Droppable droppableId={jobListId}>
                   {(provided, snapshot) => (
-                    <Box
+                    <Flex
                       border="1px solid"
                       borderRadius="md"
                       bg={snapshot.isDraggingOver ? "lemonchiffon" : "inherit"}
                       borderColor="blackAlpha.50"
-                      h="100%"
+                      display="flex"
+                      flexDirection="column"
                       transition="1s ease"
                       ref={provided.innerRef}
                       {...provided.droppableProps}
@@ -314,8 +337,8 @@ const JobModalForm = ({
                           mb='8px'
                         />
                       ))} */}
-                      {dummyArray.map((li, ii) => (
-                        // {lineitems.map((li, ii) => (
+                      {/* {dummyArray.map((li, ii) => ( */}
+                      {lineitems.map((li, ii) => (
                         <Draggable key={li.id} draggableId={li.name} index={ii}>
                           {(provided) => (
                             <Box
@@ -332,7 +355,7 @@ const JobModalForm = ({
                         </Draggable>
                       ))}
                       {provided.placeholder}
-                    </Box>
+                    </Flex>
                   )}
                 </Droppable>
               </GridItem>
@@ -363,7 +386,8 @@ const JobModalForm = ({
                 <LineItemSearchField
                   name="lineitems"
                   label="Search to add jobs"
-                  lineitems={{ lineitems, setLineitems }}
+                  // lineitems={{ lineitems, setLineitems }}
+                  searchProvider={searchProvider}
                 />
               </GridItem>
 
