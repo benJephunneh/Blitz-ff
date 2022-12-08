@@ -11,17 +11,36 @@ import { CreateJob } from "../validations"
 
 // const CreateJob = JobSkeleton.extend({ locationId, notes: notes.nullable() })
 
-export default resolver.pipe(resolver.zod(CreateJob), resolver.authorize(), async (data, ctx) => {
+export default resolver.pipe(resolver.zod(CreateJob), resolver.authorize(), async (input, ctx) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+  const { lineitems, ...data } = input
+  let lineitemIds: { id: number }[] = []
+  if (Array.isArray(lineitems))
+    lineitemIds = [
+      ...lineitems?.map(({ id }) => ({
+        id,
+      })),
+    ]
+
   const job = await db.job.create({
     data: {
       // locationId,
       // notes: JSON.stringify(notes),
       userId: ctx.session.userId,
+      lineitems: {
+        connect: [...lineitemIds],
+      },
       ...data,
     },
   })
-  await db.jobArchive.create({ data })
+  await db.jobArchive.create({
+    data: {
+      lineitems: {
+        connect: [...lineitemIds],
+      },
+      ...data,
+    },
+  })
 
   // if (job) {
   //   // Create invoice

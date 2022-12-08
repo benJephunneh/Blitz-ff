@@ -134,6 +134,7 @@ const JobModalForm = ({
 
   const onSubmit = async (values) => {
     console.table({ values })
+    console.log({ locationId })
     const { notes, stashing, range, ...formSubmission } = values
     const [start, end] = [...range.map((t) => new Date(t))]
     // console.log({ start })
