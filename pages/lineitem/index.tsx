@@ -46,8 +46,9 @@ const LineItemPage: BlitzPage = () => {
   )
 
   const onSubmit = async (values) => {
-    console.log(JSON.stringify(values, null, 2))
-    const li = await createLineItemMutation(values)
+    const { cost, ...vals } = values
+    // console.log(JSON.stringify(values, null, 2))
+    const li = await createLineItemMutation({ ...vals, cost: Number(cost) })
 
     setLineItem(undefined)
   }

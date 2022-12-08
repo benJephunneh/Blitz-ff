@@ -6,15 +6,10 @@ export default resolver.pipe(
   resolver.zod(CreateLineItem),
   resolver.authorize(),
 
-  async (input) => {
-    let { cost, ...data } = input
-    const price = Number(cost)
-    const lineItem = await db.lineItem.create({
-      data: {
-        cost: price,
-        ...data,
-      },
-    })
+  async (data) => {
+    // let { cost, ...data } = input
+    // const price = Number(cost)
+    const lineItem = await db.lineItem.create({ data })
 
     return lineItem
   }

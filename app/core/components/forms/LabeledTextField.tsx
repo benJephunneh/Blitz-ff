@@ -44,20 +44,21 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
         <FormLabel mb={0} {...labelProps}>
           {label}
         </FormLabel>
-        {type === "price" && (
-          <InputGroup>
-            <InputLeftAddon children="$" bg="green.200" /> {/* eslint-disable-line */}
-            <Input
-              {...input}
-              disabled={submitting}
-              {...props}
-              ref={ref}
-              bg={bg}
-              borderColor={borderColor}
-              type="number"
-            />
-          </InputGroup>
-        )}
+        {/* {type === "price" && ( */}
+        <InputGroup>
+          {type === "price" && <InputLeftAddon children="$" bg="green.200" />}{" "}
+          {/* eslint-disable-line */}
+          <Input
+            {...input}
+            disabled={submitting}
+            {...props}
+            ref={ref}
+            bg={bg}
+            borderColor={borderColor}
+            type={type === "price" ? "number" : "text"}
+          />
+        </InputGroup>
+        {/* )}
         {type !== "price" && (
           <Input
             {...input}
@@ -67,7 +68,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
             bg={bg}
             borderColor={borderColor}
           />
-        )}
+        )} */}
 
         {touched && normalizedError && (
           <div role="alert" style={{ color: "red" }}>
