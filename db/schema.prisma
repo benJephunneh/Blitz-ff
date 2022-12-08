@@ -251,26 +251,26 @@ model CustomerArchive {
 }
 
 model LocationArchive {
-  id                Int             @id @default(autoincrement())
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-  primary           Boolean         @default(true)
+  id                Int              @id @default(autoincrement())
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  primary           Boolean          @default(true)
   house             String?
   street            String
   city              String
-  state             String          @default("FL")
+  state             String           @default("FL")
   zipcode           String
   phones            String
   block             String?
   lot               String?
   parcel            String?
   notes             String?
-  locationType      LocationType    @default(Personal)
-  customer          Customer        @relation(fields: [customerId], references: [id])
-  archivedCustomer  CustomerArchive @relation(fields: [customerArchiveId], references: [id])
+  locationType      LocationType     @default(Personal)
+  customer          Customer?        @relation(fields: [customerId], references: [id])
+  archivedCustomer  CustomerArchive? @relation(fields: [customerArchiveId], references: [id])
   archivedJobs      JobArchive[]
-  customerId        Int
-  customerArchiveId Int
+  customerId        Int?
+  customerArchiveId Int?
 }
 
 model JobArchive {
@@ -283,17 +283,17 @@ model JobArchive {
   completed         Boolean           @default(false)
   notes             String?
   lineitems         LineItem[]
-  customer          Customer          @relation(fields: [customerId], references: [id])
-  archivedCustomer  CustomerArchive   @relation(fields: [customerArchiveId], references: [id])
-  location          Location          @relation(fields: [locationId], references: [id])
-  archivedLocation  LocationArchive   @relation(fields: [locationArchiveId], references: [id])
+  customer          Customer?         @relation(fields: [customerId], references: [id])
+  archivedCustomer  CustomerArchive?  @relation(fields: [customerArchiveId], references: [id])
+  location          Location?         @relation(fields: [locationId], references: [id])
+  archivedLocation  LocationArchive?  @relation(fields: [locationArchiveId], references: [id])
   Invoices          Invoice[]
   archivedInvoices  InvoiceArchive[]
   archivedEstimates EstimateArchive[]
-  customerId        Int
-  customerArchiveId Int
-  locationId        Int
-  locationArchiveId Int
+  customerId        Int?
+  customerArchiveId Int?
+  locationId        Int?
+  locationArchiveId Int?
 }
 
 model InvoiceArchive {
@@ -306,8 +306,8 @@ model InvoiceArchive {
   lineItems    LineItem[]
   job          Job?        @relation(fields: [jobId], references: [id])
   jobArchive   JobArchive? @relation(fields: [jobArchiveId], references: [id])
-  jobId        Int
-  jobArchiveId Int
+  jobId        Int?
+  jobArchiveId Int?
 }
 
 model EstimateArchive {

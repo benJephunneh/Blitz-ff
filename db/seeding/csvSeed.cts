@@ -124,9 +124,8 @@ const csvSeed = async () => {
         parsed.forEach(async (l) => {
           const { primary, house, street, city, state, zipcode, block, lot, parcel, notes } = l
           const locationType: LocationType = locations.length > 1 ? "Managed" : "Personal"
-          await prisma.location.create({
+          const location = await prisma.location.create({
             data: {
-              primary: primary == "true" ? true : false,
               house,
               street,
               city,
@@ -135,6 +134,7 @@ const csvSeed = async () => {
               block,
               lot,
               parcel,
+              primary: primary == "true" ? true : false,
               phones: c.phone,
               locationType,
               customerId: c.id,
