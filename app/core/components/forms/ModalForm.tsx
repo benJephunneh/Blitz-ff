@@ -54,9 +54,9 @@ const ModalForm: FormComponent<ModalFormProps> = ({
   children,
   ...props
 }) => {
-  const modalBgColor = useColorModeValue("gray.100", "gray.600")
+  const modalBgColor = useColorModeValue("white", "gray.600")
   const modalBgGradient = useColorModeValue(
-    "linear(to-r, gray.300, gray.200)",
+    "linear(to-r, white, gray.200)",
     "linear(to-r, gray.800, gray.700)"
   )
   const modalHeaderTextColor = useColorModeValue("black.900", "cyan.300")
@@ -73,9 +73,10 @@ const ModalForm: FormComponent<ModalFormProps> = ({
             <ModalContent bg={modalBgColor}>
               <ModalHeader
                 borderBottomWidth={1}
-                borderBottomColor="whiteAlpha.50"
+                borderBottomColor="whiteAlpha.100"
                 textColor={modalHeaderTextColor}
-                bgColor={modalHeaderColor}
+                // bg={modalHeaderColor}
+                bgGradient={modalBgGradient}
               >
                 {" "}
                 {title}
@@ -125,7 +126,7 @@ const ModalForm: FormComponent<ModalFormProps> = ({
                   <Button onClick={onClose}>Cancel</Button>
                 </HStack>
               </ModalFooter>
-              <pre>{JSON.stringify(phorm.values, null, 2)}</pre>
+              {/* <pre>{JSON.stringify(phorm.values, null, 2)}</pre> */}
             </ModalContent>
           </form>
         )}

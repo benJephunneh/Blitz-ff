@@ -186,6 +186,9 @@ const JobModalForm = ({
       }
     }
 
+    setLineitemSearchData([])
+      .then(() => setQuery(''))
+      .catch(console.error)
     return jobRet
   }
 
@@ -205,6 +208,7 @@ const JobModalForm = ({
     title: jobStash?.title || job?.title || undefined,
     range: start && end ? [start, end] : undefined,
     notes: jobStash ? JSON.parse(jobStash.notes) : job?.notes ? JSON.parse(job.notes) : null,
+    lineitems: jobStash?.lineitems || job?.lineitems || [],
   }
 
   const dummyArray = [
@@ -230,7 +234,7 @@ const JobModalForm = ({
   const [lineitemId, setLineitemId] = useState<number>()
   const [lineitems, setLineitems] = useState<LineItem[]>([])
   const [query, setQuery] = useState("")
-  const [lineitemSearchResults, { isLoading }] = useQuery(
+  const [lineitemSearchResults, { setQueryData: setLineitemSearchData, isLoading }] = useQuery(
     findLineItem,
     { query },
     { enabled: !!query, refetchOnWindowFocus: false }
@@ -275,7 +279,8 @@ const JobModalForm = ({
         })
       )
     } else {
-      if (lineitems.findIndex(({ id }) => id == draggableId) !== -1) return
+      // if (lineitems.findIndex(({ id }) => id == draggableId) !== -1) return
+      if (lineitems.includes(draggableId)) return
       const moving = lineitemSearchResults?.find(({ id }) => id == draggableId)
       const tempLineitems = lineitems
       tempLineitems.splice(destination.index, 0, moving!)
@@ -311,13 +316,13 @@ const JobModalForm = ({
           <>
             <Grid
               templateAreas={`
-                'title search sched'
-                'items search sched'
+                'title items sched'
+                '. items sched'
                 'cal search sched'
                 'cal search sched'
                 'notes search sched'
               `}
-              gridTemplateColumns="30% 30% 40%"
+              gridTemplateColumns="25% 30% 40%"
               gridTemplateRows="60px repeat(4, 1fr)"
               // w="full"
               // h='100%'
@@ -331,13 +336,14 @@ const JobModalForm = ({
                 <Droppable droppableId={jobListId}>
                   {(provided, snapshot) => (
                     <Flex
-                      border="1px solid"
+                      border="3px solid"
                       borderRadius="md"
                       bg={snapshot.isDraggingOver ? "lemonchiffon" : "white"}
-                      borderColor="blackAlpha.50"
+                      borderColor="gray.100"
                       display="flex"
                       flexDirection="column"
                       transition="1s ease"
+                      minH='200px'
                       ref={provided.innerRef}
                       {...provided.droppableProps}
                     >
@@ -378,7 +384,7 @@ const JobModalForm = ({
                                 lineitem={li}
                                 onDelete={onDelete}
                                 itemizing={true}
-                                // draggableIndex={ii}
+                              // draggableIndex={ii}
                               />
                             </Box>
                           )}
@@ -398,9 +404,9 @@ const JobModalForm = ({
                   end={end}
                   // onClickDay={handleDayClick}
                   onClickWeekNumber={handleWeekNumberClick}
-                  // console.log({ w })
-                  // handleWeekNumberClick(w).catch((e) => console.error(e))
-                  // }}
+                // console.log({ w })
+                // handleWeekNumberClick(w).catch((e) => console.error(e))
+                // }}
                 />
               </GridItem>
 

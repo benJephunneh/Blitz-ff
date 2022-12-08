@@ -1,5 +1,6 @@
 import { useQuery } from "@blitzjs/rpc"
 import {
+  Box,
   Button,
   Card,
   CardBody,
@@ -48,7 +49,7 @@ const LineItemMiniCard = ({
   onAdd,
   onDelete,
 }: // draggableIndex,
-LineItemMiniCardProps) => {
+  LineItemMiniCardProps) => {
   const borderColor = useColorModeValue("blackAlpha.200", "whiteAlpha.100")
   const hoverBorderColor = useColorModeValue("blue.500", "blue.300")
   const headingBgColor = useColorModeValue("blackAlpha.300", "blackAlpha.400")
@@ -79,7 +80,7 @@ LineItemMiniCardProps) => {
         borderBottomColor="cyan.300"
         borderBottomWidth={1}
         borderTopRadius="sm"
-        // backdropFilter='blur(3px)'
+      // backdropFilter='blur(3px)'
       >
         <HStack justify="space-between">
           <Text fontWeight="semibold" textOverflow="ellipsis">
@@ -93,19 +94,21 @@ LineItemMiniCardProps) => {
               </Tag>
             </Tooltip>
 
-            <Popover trigger="hover" placement="auto">
-              <PopoverTrigger>
-                <Tag colorScheme="gray" size="sm" ml={2}>
-                  <Icon as={SlNotebook} />
-                </Tag>
-              </PopoverTrigger>
-              <PopoverContent bg="white">
-                {/* <PopoverArrow /> */}
-                <PopoverBody p={0} bg="white">
-                  <Textarea maxH="fit-content" bg="white" defaultValue={lineitem.notes ?? ""} />
-                </PopoverBody>
-              </PopoverContent>
-            </Popover>
+            <Box>
+              <Popover trigger="hover" placement="auto">
+                <PopoverTrigger>
+                  <Tag colorScheme="gray" size="sm" ml={2}>
+                    <Icon as={SlNotebook} />
+                  </Tag>
+                </PopoverTrigger>
+                <PopoverContent bg="white">
+                  {/* <PopoverArrow /> */}
+                  <PopoverBody p={0} bg="white">
+                    <Textarea maxH="fit-content" bg="white" defaultValue={lineitem.notes ?? ""} />
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
+            </Box>
             {itemizing && onAdd && (
               <IconButton
                 aria-label="Add lineitem"

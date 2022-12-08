@@ -3,6 +3,7 @@ import {
   CustomerStash,
   Job,
   JobStash,
+  LineItem,
   Location,
   LocationStash,
   StashType,
@@ -30,7 +31,7 @@ export type HeaderContext = {
   // Job
   jobId?: number
   // job?: Job | null
-  jobs?: Job[]
+  jobs?: (Job & { lineitems: LineItem[] })[]
   createJob: () => void
   editJob: () => void
   deleteJob: () => void

@@ -8,7 +8,13 @@ export default resolver.pipe(
 
   async ({ where, orderBy }: GetJobsInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const jobs = await db.job.findMany({ where, orderBy })
+    const jobs = await db.job.findMany({
+      where,
+      include: {
+        lineitems: true,
+      },
+      orderBy,
+    })
 
     return jobs
   }

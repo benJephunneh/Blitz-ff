@@ -170,5 +170,13 @@ const csvSeed = async () => {
   })
 }
 
-csvSeed().catch(console.error)
+csvSeed()
+  .then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error()
+    await prisma.$disconnect()
+    process.exit(1)
+  })
 // export default csvParse

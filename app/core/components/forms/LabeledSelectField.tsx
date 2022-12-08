@@ -20,7 +20,7 @@ const LabeledSelectField = forwardRef<HTMLSelectElement, LabeledSelectFieldProps
     return (
       <FormControl {...outerProps} isInvalid={meta.touched && error}>
         {label && <FormLabel {...labelProps}>{label}</FormLabel>}
-        <Select {...input} value={input.value} disabled={meta.submitting} {...props} ref={ref}>
+        <Select bg='gray.100' borderColor='whiteAlpha.100' {...input} value={input.value} disabled={meta.submitting} {...props} ref={ref}>
           {children}
         </Select>
       </FormControl>

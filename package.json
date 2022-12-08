@@ -10,7 +10,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "prepare": "husky install",
-    "seed": "ts-node -r esm db/seeding/csvSeed.cts"
+    "seedCustomersLocations": "ts-node -r esm db/seeding/csvSeed.cts",
+    "seedLineitems": "ts-node -r esm db/seeding/lineitemSeed.cts"
   },
   "prisma": {
     "schema": "db/schema.prisma"

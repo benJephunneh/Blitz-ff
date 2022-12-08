@@ -31,13 +31,13 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
         props.type === "number"
           ? (Number as any)
           : // Converting `""` to `null` ensures empty values will be set to null in the DB
-            (v) => (v === "" ? null : v),
+          (v) => (v === "" ? null : v),
       ...fieldProps,
     })
 
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
-    const bg = useColorModeValue("white", "gray.700")
-    const borderColor = useColorModeValue("blackAlpha.100", "whiteAlpha.100")
+    const bg = useColorModeValue("gray.100", "gray.700")
+    const borderColor = useColorModeValue("whiteAlpha.100", "whiteAlpha.100")
 
     return (
       <FormControl {...outerProps}>
@@ -46,8 +46,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
         </FormLabel>
         {/* {type === "price" && ( */}
         <InputGroup>
-          {type === "price" && <InputLeftAddon children="$" bg="green.200" />}{" "}
-          {/* eslint-disable-line */}
+          {type === "price" && <InputLeftAddon children="$" bg="green.200" />}{/* eslint-disable-line */}
           <Input
             {...input}
             disabled={submitting}
@@ -55,7 +54,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
             ref={ref}
             bg={bg}
             borderColor={borderColor}
-            type={type === "price" ? "number" : "text"}
+            type={type === "price" ? "number" : type}
           />
         </InputGroup>
         {/* )}
