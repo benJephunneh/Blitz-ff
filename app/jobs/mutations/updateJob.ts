@@ -14,9 +14,25 @@ import { UpdateJob } from "../validations"
 export default resolver.pipe(
   resolver.zod(UpdateJob),
   resolver.authorize(),
-  async ({ id, ...data }) => {
+  async ({ id, ...input }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const job = await db.job.update({ where: { id }, data })
+    const { lineitems, ...data } = input
+    const lineitemIds: { id: number }[] = [...(lineitems?.map(({ id }) => ({ id })) ?? [])]
+    const j = await db.job.findFirst({ where: { id } })
+
+    if (j) console.log({ j })
+    else console.log("not found")
+    return j
+
+    const job = await db.job.update({
+      where: { id },
+      data: {
+        lineitems: {
+          connect: [...lineitemIds],
+        },
+        ...data,
+      },
+    })
     await db.jobArchive.update({ where: { id }, data })
 
     return job

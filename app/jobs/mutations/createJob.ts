@@ -14,13 +14,13 @@ import { CreateJob } from "../validations"
 export default resolver.pipe(resolver.zod(CreateJob), resolver.authorize(), async (input, ctx) => {
   // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const { lineitems, ...data } = input
-  let lineitemIds: { id: number }[] = []
-  if (Array.isArray(lineitems))
-    lineitemIds = [
-      ...lineitems?.map(({ id }) => ({
-        id,
-      })),
-    ]
+  let lineitemIds: { id: number }[] = [...(lineitems?.map(({ id }) => ({ id })) ?? [])]
+  // if (Array.isArray(lineitems))
+  //   lineitemIds = [
+  //     ...lineitems?.map(({ id }) => ({
+  //       id,
+  //     })),
+  //   ]
 
   const job = await db.job.create({
     data: {

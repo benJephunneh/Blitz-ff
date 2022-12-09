@@ -1,6 +1,6 @@
-import { setPublicDataForUser } from "@blitzjs/auth"
-import { Routes, useParam, useParams } from "@blitzjs/next"
-import { useMutation, useQuery } from "@blitzjs/rpc"
+import { SessionContext, setPublicDataForUser } from "@blitzjs/auth"
+import { Ctx, Routes, useParam, useParams } from "@blitzjs/next"
+import { invokeWithCtx, useMutation, useQuery } from "@blitzjs/rpc"
 import {
   Box,
   Drawer,
@@ -24,6 +24,7 @@ import findCustomer from "app/customers/queries/findCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
 import JobModalForm from "app/jobs/components/JobModalForm"
 import { Range } from "app/jobs/components/JobPanel"
+import { useJobs } from "app/jobs/hooks/useJobs"
 import updateJob from "app/jobs/mutations/updateJob"
 import getJob from "app/jobs/queries/getJob"
 import getJobs from "app/jobs/queries/getJobs"
@@ -36,7 +37,7 @@ import getLocations from "app/locations/queries/getLocations"
 import SearchInput from "app/search/SearchInput"
 import SearchResults from "app/search/SearchResults"
 import getStashes from "app/stashes/queries/getStashes"
-import db, { Job, Location, StashType } from "db"
+import db, { Job, LineItem, Location, StashType } from "db"
 import { useRouter } from "next/router"
 import { ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
@@ -46,6 +47,7 @@ const { Provider } = headerContext
 
 type HeaderProviderProps = {
   children?: ReactNode
+  // publicData: SessionContext["$publicData"]
 }
 
 type StashProps = {
@@ -65,7 +67,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   // const [customerId, setCustomerId] = useState<number>()
   // const fetchCustomerId = useCallback(async () => {
   //   // const { customerId: c } = router.query
-  //   const c = Number(decodeURIComponent(router.query.customerId as string))
+  //   const c = +decodeURIComponent(router.query.customerId as string)
   //   setCustomerId(c)
   //   // return c
   // }, [router.query.customerId])
@@ -141,18 +143,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   staleTime: Infinity,
   //   refetchOnWindowFocus: false,
   // })
-  const [jobs, { refetch: refetchJobs }] = useQuery(
-    getJobs,
-    {
-      where: { customerId: customerId },
-      orderBy: { start: "asc" },
-    },
-    {
-      enabled: !!customerId && !!locationId,
-      refetchOnWindowFocus: false,
-      // staleTime: Infinity,
-    }
-  )
+  const { jobs, refetch: refetchJobs } = useJobs(customerId)
+  // console.table(jobs)
+  console.table({ ...jobs }, ["id", "title", "customerId", "locationId", "notes"])
+
   // const [job, { setQueryData: setJobQueryData, refetch: refetchJob }] = useQuery(
   //   getJob,
   //   { id: jobId },
@@ -164,14 +158,11 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
       refetchCustomer()
         .then(() => setJobId(undefined))
         .then(() => refetchLocations())
-        .then(() => refetchJobs())
-        .then(() => setLocationId(locations?.find((l) => l.primary == true)?.id))
+        // .then(() => refetchJobs())
+        .then(() => setLocationId(locations?.find(({ primary }) => primary == true)?.id))
         .catch(console.error)
     }
   }, [customerId]) // eslint-disable-line
-  // useEffect(() => {
-  //   const j =
-  // })
   // useEffect(() => {
   //   refetchLocation()
   //     .then(() => setJobId(undefined))
@@ -179,12 +170,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //     .catch(console.error)
   // }, [refetchLocation, refetchJobs, locationId])
   useEffect(() => {
-    let ids: { id: number }[] = []
-    // if (locations) {
-    //   ids = [...locations?.map(({ id }) => ({ id }))]
-    //   setLocationId(ids.at(0)?.id)
-    // }
-    setLocationIds(ids)
+    setLocationIds([...(locations?.map(({ id }) => ({ id })) ?? [])])
     setCustomerPhone(customer ? customer.phone : undefined)
   }, [customer, locations])
   // useEffect(() => {
@@ -240,10 +226,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
     : deletingLocation
-      ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
-      : deletingJob
-        ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
-        : ""
+    ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
+    : deletingJob
+    ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
+    : ""
 
   return (
     <Provider
@@ -268,7 +254,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         createJob: () => setCreatingJob(true),
         editJob: () => setEditingJob(true),
         deleteJob: () => setDeletingJob(true),
-        pickJob: (id) => setJobId(id),
+        pickJob: (id) => {
+          const newId = jobs.find((j) => j.id === id)
+          setJobId(newId)
+        },
 
         editStash: (id, type) => {
           setStashId(id)

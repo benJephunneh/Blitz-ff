@@ -333,7 +333,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
 
       <Divider my={4} borderColor={useColorModeValue("gray.300", "gray.500")} />
 
-      <Tabs variant="enclosed" alignSelf="start" w="full" isLazy>
+      <Tabs variant="enclosed" alignSelf="start" w="full" isLazy h="max-content">
         <TabList>
           <Tab fontWeight="semibold" borderColor="whiteAlpha.50" _selected={{ bg: tabBgColor }}>
             <Icon as={GiBulldozer} mr={2} h={6} w={6} />
@@ -366,7 +366,6 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-      <Text>{jobId}</Text>
       {/* </VStack>
 
         <Box minW="400px" alignSelf="start" p={4}>

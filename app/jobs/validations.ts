@@ -36,8 +36,13 @@ export const CreateJobStash = JobSkeleton.partial().extend({
   locationId,
 })
 
-export const UpdateJob = CreateJob.extend({ id })
+export const UpdateJob = CreateJob.partial().extend({ id })
 export const UpdateJobStash = CreateJobStash.extend({ id })
 
 export const DeleteJob = z.object({ id })
 export const ArchiveJob = z.object({ id })
+
+export const GetJobsSchema = z.object({
+  customerId: customerId.optional(),
+  locationId: locationId.optional(),
+})

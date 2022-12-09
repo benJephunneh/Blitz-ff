@@ -1,4 +1,4 @@
-import { useQuery } from "@blitzjs/rpc"
+import { useMutation, useQuery } from "@blitzjs/rpc"
 import {
   Box,
   Button,
@@ -23,11 +23,12 @@ import NoteSubmission from "app/core/components/forms/NoteSubmission"
 import headerContext from "app/core/components/header/headerContext"
 import { validateZodSchema } from "blitz"
 import { format, isPast, isSameDay, isSameMonth } from "date-fns"
-import { Job } from "db"
+import { Job, LineItem } from "db"
 import { useContext, useEffect, useState } from "react"
 import { Calendar } from "react-calendar"
 import { Form as FinalForm } from "react-final-form"
 import { FaChevronDown, FaPlus } from "react-icons/fa"
+import updateJob from "../mutations/updateJob"
 import getJobs from "../queries/getJobs"
 import { textNotes } from "../validations"
 
@@ -35,7 +36,7 @@ export type Range = [Date | null, Date | null] | Date | null | undefined
 
 const JobPanel = () => {
   const {
-    locationId,
+    locationId: lId,
     jobId,
     jobs,
     jobStash,
@@ -46,6 +47,7 @@ const JobPanel = () => {
     // refetchJob,
     refetchStashes,
   } = useContext(headerContext)
+  const [updateJobMutation] = useMutation(updateJob)
   // const [jobId, setJobId] = useState<number>()
   // const [job, setJob] = useState<Job>({} as Job)
   // const [jobs, { refetch: refetchJobs }] = useQuery(
@@ -72,32 +74,33 @@ const JobPanel = () => {
   // console.table({ ...job })
   // console.log({ jobId })
 
-  const [job, setJob] = useState(jobs?.find(({ id }) => id === jobId) ?? ({} as Job))
-  const [relatedJobs, setRelatedJobs] = useState<Job[] | undefined>()
+  const [job, setJob] = useState(jobs?.find(({ id }) => id === jobId))
+  const [relatedJobs, setRelatedJobs] = useState<(Job & { lineitems: LineItem[] })[] | undefined>()
   // const job = locationJobs?.find((j) => j.id === jobId)
-  const [range, setRange] = useState<Range>()
+  const [range, setRange] = useState<Range>([job?.start ?? null, job?.end ?? null])
+
   useEffect(() => {
-    const filteredJobs = jobs?.filter((j) => j.locationId === locationId)
+    const filteredJobs = jobs?.filter(({ locationId }) => locationId === lId)
     setRelatedJobs(filteredJobs)
-  }, [jobs, locationId])
+  }, [jobs, lId])
   useEffect(() => {
-    // if (job) setRange([job.start as Date, job.end as Date])
-    if (job) setRange([job.start, job.end])
+    setRange([job?.start ?? null, job?.end ?? null])
   }, [job])
   useEffect(() => {
-    setJob(jobs?.find(({ id }) => id === jobId) ?? ({} as Job))
+    setJob(jobs?.find(({ id }) => id === jobId))
   }, [jobs, jobId])
 
   const headingColor = useColorModeValue("green", "khaki")
   const inactiveJobColor = "gray.400"
 
-  const onSubmit = async (values) => {
-    console.log("submitted on job panel")
+  const markComplete = async () => {
+    updateJobMutation({ id: jobId!, completed: true }).catch(console.error)
+    // console.log("submitted on job panel")
   }
 
   return (
     <>
-      <Flex justify="space-between" mb={4}>
+      <Flex justify="space-between" mb={4} flexGrow={1}>
         <HStack spacing={4}>
           <Box>
             <Menu closeOnSelect={false}>
@@ -122,7 +125,7 @@ const JobPanel = () => {
                   </MenuItemOption>
                   <MenuDivider />
                   {relatedJobs?.map((j, ii) => (
-                    <MenuItemOption value={jobId?.toString()} key={ii} onClick={() => setJob(j)}>
+                    <MenuItemOption value={j.id.toString()} key={ii} onClick={() => setJob(j)}>
                       {j.title}
                     </MenuItemOption>
                   ))}
@@ -148,7 +151,7 @@ const JobPanel = () => {
           variant="outline"
           bg={useColorModeValue("blackAlpha.200", "blackAlpha.400")}
           borderColor="whiteAlpha.50"
-          onClick={console.log}
+          onClick={markComplete}
           disabled={!jobId}
         >
           Mark complete
@@ -199,6 +202,7 @@ const JobPanel = () => {
               }}
             />
           </Box>
+          <pre>{JSON.stringify(job, null, 2)}</pre>
         </>
       )}
       {!job && (

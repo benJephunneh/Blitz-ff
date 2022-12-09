@@ -1,21 +1,24 @@
 import { resolver } from "@blitzjs/rpc"
 import db, { Prisma } from "db"
+import { GetJobsSchema } from "../validations"
 
 interface GetJobsInput extends Pick<Prisma.JobFindManyArgs, "where" | "include" | "orderBy"> {}
 
 export default resolver.pipe(
+  resolver.zod(GetJobsSchema),
   resolver.authorize(),
 
-  async ({ where, orderBy }: GetJobsInput) => {
+  async ({ customerId, locationId, ...data }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const jobs = await db.job.findMany({
-      where,
+      where: { customerId, locationId },
       include: {
         lineitems: true,
       },
-      orderBy,
+      orderBy: { start: "asc" },
     })
 
+    console.table(jobs)
     return jobs
   }
 )
