@@ -72,7 +72,7 @@ const JobPanel = () => {
   // console.table({ ...job })
   // console.log({ jobId })
 
-  const [job, setJob] = useState<Job>()
+  const [job, setJob] = useState(jobs?.find(({ id }) => id === jobId) ?? ({} as Job))
   const [relatedJobs, setRelatedJobs] = useState<Job[] | undefined>()
   // const job = locationJobs?.find((j) => j.id === jobId)
   const [range, setRange] = useState<Range>()
@@ -84,6 +84,9 @@ const JobPanel = () => {
     // if (job) setRange([job.start as Date, job.end as Date])
     if (job) setRange([job.start, job.end])
   }, [job])
+  useEffect(() => {
+    setJob(jobs?.find(({ id }) => id === jobId) ?? ({} as Job))
+  }, [jobs, jobId])
 
   const headingColor = useColorModeValue("green", "khaki")
   const inactiveJobColor = "gray.400"

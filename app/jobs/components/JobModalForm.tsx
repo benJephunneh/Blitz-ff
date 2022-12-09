@@ -187,7 +187,7 @@ const JobModalForm = ({
     }
 
     setLineitemSearchData([])
-      .then(() => setQuery(''))
+      .then(() => setQuery(""))
       .catch(console.error)
     return jobRet
   }
@@ -199,40 +199,10 @@ const JobModalForm = ({
     }
   }
 
-  // const [startDateTime, setStartDateTime] = useState(addDays(new Date().setHours(9, 0, 0, 0), 1))
-  // const [endDateTime, setEndDateTime] = useState(addDays(new Date().setHours(17, 0, 0, 0), 1))
-  const start = jobStash?.start || job?.start || addBusinessDays(new Date(), 1).setHours(9, 0, 0, 0)
-  const end = jobStash?.end || job?.end || addBusinessDays(new Date(), 1).setHours(17, 0, 0, 0)
-
-  const initialValues = {
-    title: jobStash?.title || job?.title || undefined,
-    range: start && end ? [start, end] : undefined,
-    notes: jobStash ? JSON.parse(jobStash.notes) : job?.notes ? JSON.parse(job.notes) : null,
-    lineitems: jobStash?.lineitems || job?.lineitems || [],
-  }
-
-  const dummyArray = [
-    {
-      id: 0,
-      name: "zero",
-    },
-    {
-      id: 1,
-      name: "one",
-    },
-    {
-      id: 2,
-      name: "two",
-    },
-    {
-      id: 3,
-      name: "three",
-    },
-  ]
   const jobListId = "job-lineitems"
   const searchListId = "search-lineitems"
   const [lineitemId, setLineitemId] = useState<number>()
-  const [lineitems, setLineitems] = useState<LineItem[]>([])
+  const [lineitems, setLineitems] = useState(job?.lineitems ?? ([] as LineItem[]))
   const [query, setQuery] = useState("")
   const [lineitemSearchResults, { setQueryData: setLineitemSearchData, isLoading }] = useQuery(
     findLineItem,
@@ -246,6 +216,16 @@ const JobModalForm = ({
     lineitemSearchResults,
     isLoading,
     setLineitems,
+  }
+  // const [startDateTime, setStartDateTime] = useState(addDays(new Date().setHours(9, 0, 0, 0), 1))
+  // const [endDateTime, setEndDateTime] = useState(addDays(new Date().setHours(17, 0, 0, 0), 1))
+  const start = jobStash?.start || job?.start || addBusinessDays(new Date(), 1).setHours(9, 0, 0, 0)
+  const end = jobStash?.end || job?.end || addBusinessDays(new Date(), 1).setHours(17, 0, 0, 0)
+  const initialValues = {
+    title: jobStash?.title || job?.title || undefined,
+    range: start && end ? [start, end] : undefined,
+    notes: jobStash ? JSON.parse(jobStash.notes) : job?.notes ? JSON.parse(job.notes) : null,
+    lineitems: jobStash?.lineitems || job?.lineitems || [],
   }
 
   const onDelete = (lineitemId: number) => {
@@ -343,7 +323,7 @@ const JobModalForm = ({
                       display="flex"
                       flexDirection="column"
                       transition="1s ease"
-                      minH='200px'
+                      minH="200px"
                       ref={provided.innerRef}
                       {...provided.droppableProps}
                     >
@@ -384,7 +364,7 @@ const JobModalForm = ({
                                 lineitem={li}
                                 onDelete={onDelete}
                                 itemizing={true}
-                              // draggableIndex={ii}
+                                // draggableIndex={ii}
                               />
                             </Box>
                           )}
@@ -404,9 +384,9 @@ const JobModalForm = ({
                   end={end}
                   // onClickDay={handleDayClick}
                   onClickWeekNumber={handleWeekNumberClick}
-                // console.log({ w })
-                // handleWeekNumberClick(w).catch((e) => console.error(e))
-                // }}
+                  // console.log({ w })
+                  // handleWeekNumberClick(w).catch((e) => console.error(e))
+                  // }}
                 />
               </GridItem>
 
