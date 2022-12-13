@@ -18,8 +18,8 @@ const lineitems = lineitem.array()
 
 export const JobSkeleton = z.object({
   title,
-  start,
-  end,
+  start: start.nullable().optional(),
+  end: end.nullable().optional(),
   completed,
   lineitems: lineitems.optional(),
 })

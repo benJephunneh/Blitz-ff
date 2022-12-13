@@ -43,11 +43,11 @@ const JobPanel = () => {
     createJob,
     editJob,
     pickJob,
-    refetchCustomer,
+    refetchCustomerData,
     // refetchJob,
     refetchStashes,
   } = useContext(headerContext)
-  if (Array.isArray(jobs) && jobs.at(0)!.id > 0) console.table(jobs)
+  // if (Array.isArray(jobs) && jobs.at(0)!.id > 0) console.table(jobs)
   const [updateJobMutation] = useMutation(updateJob)
   // const [jobId, setJobId] = useState<number>()
   // const [job, setJob] = useState<Job>({} as Job)
@@ -197,7 +197,7 @@ const JobPanel = () => {
             <NoteSubmission
               modelType="Job"
               onSuccess={async () => {
-                refetchCustomer()
+                refetchCustomerData()
                 // await refetchJob()
                 // await refetchJobs()
               }}

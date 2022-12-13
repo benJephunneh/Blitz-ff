@@ -65,92 +65,148 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
 
   // Customer
   const customerId = useParam("customerId", "number")
-  const [customer, setCustomer] = useState<Customer | undefined>()
-  const [locations, setLocations] = useState<
-    | (Location & {
-        jobs: (Job & {
-          lineitems: LineItem[]
-        })[]
-      })[]
-    | undefined
-  >()
-  const [location, setLocation] = useState<
-    | (Location & {
-        jobs: (Job & {
-          lineitems: LineItem[]
-        })[]
-      })
-    | undefined
-  >()
+  const [customer, setCustomer] = useState<Customer>()
+  const [locations, setLocations] = useState<Location[]>()
+  // const [locations, setLocations] = useState<
+  //   | (Location & {
+  //     jobs: (Job & {
+  //       lineitems: LineItem[]
+  //     })[]
+  //   })[]
+  //   | undefined
+  // >()
+  const [location, setLocation] = useState<Location>()
+  // const [location, setLocation] = useState<
+  //   | (Location & {
+  //     jobs: (Job & {
+  //       lineitems: LineItem[]
+  //     })[]
+  //   })
+  //   | undefined
+  // >()
   const [locationId, setLocationId] = useState<number>()
-  const [jobs, setJobs] = useState<
-    | (Job & {
-        lineitems: LineItem[]
-      })[]
-    | undefined
-  >()
-  const [job, setJob] = useState<
-    | (Job & {
-        lineitems: LineItem[]
-      })
-    | undefined
-  >()
+  const [jobs, setJobs] = useState<Job[]>()
+  // const [jobs, setJobs] = useState<
+  //   | (Job & {
+  //     lineitems: LineItem[]
+  //   })[]
+  //   | undefined
+  // >()
+  const [job, setJob] = useState<Job>()
+  // const [job, setJob] = useState<
+  //   | (Job & {
+  //     lineitems: LineItem[]
+  //   })
+  //   | undefined
+  // >()
   const [jobId, setJobId] = useState<number>()
 
-  const [customerData, { refetch: refetchCustomerData }] = useQuery(
-    getCustomerData,
-    { id: customerId },
-    { enabled: !!customerId, refetchOnWindowFocus: false, staleTime: Infinity }
-  )
+  // const [customerData, { refetch: refetchCustomerData }] = useQuery(
+  //   getCustomerData,
+  //   { id: customerId },
+  //   { enabled: !!customerId, refetchOnWindowFocus: false, staleTime: Infinity }
+  // )
 
-  useEffect(() => {
-    if (customerId) {
-      refetchCustomerData().catch(console.error)
-    } else {
-      // Are there cases where I still want this data to be available?
-      setLocations(undefined)
-      setLocation(undefined)
-      setLocationId(undefined)
-      setJobs(undefined)
-      setJob(undefined)
-      setJobId(undefined)
-    }
-  }, [customerId]) // eslint-disable-line
-  useEffect(() => {
-    if (customerData) {
-      const {
-        id,
-        createdAt,
-        updatedAt,
-        firstname,
-        lastname,
-        companyname,
-        displayname,
-        phone,
-        email,
-        notes,
-        userId,
-      } = customerData!
-      setCustomer({
-        id,
-        createdAt,
-        updatedAt,
-        firstname,
-        lastname,
-        companyname,
-        displayname,
-        phone,
-        email,
-        notes,
-        userId,
-      } as Customer)
+  // useEffect(() => {
+  //   if (customerId) {
+  //     refetchCustomerData().catch(console.error)
+  //     console.table({ location, locationId, job, jobId })
+  //   } else {
+  //     // Are there cases where I still want this data to be available?
+  //     setLocations(undefined)
+  //     setLocation(undefined)
+  //     setLocationId(undefined)
+  //     setJobs(undefined)
+  //     setJob(undefined)
+  //     setJobId(undefined)
+  //   }
+  // }, [customerId]) // eslint-disable-line
 
-      const locations = customerData!.locations
-      console.table(locations)
-      setLocations(locations)
-      setLocationId(locations.at(0)?.id)
+  const getPageLoadData = useCallback(() => {
+    const [customer] = useQuery(
+      getCustomer, {
+      where: { id: customerId }
+    }, {
+      staleTime: Infinity, refetchOnWindowFocus: false
+    })
+    const [locations] = useQuery(
+      getLocations, {
+      where: { customerId },
+      orderBy: [
+        { primary: 'desc' },
+        { zipcode: 'asc' },
+        { city: 'asc' },
+        { house: 'asc' },
+      ]
+    }, {
+      staleTime: Infinity, refetchOnWindowFocus: false
+    })
+    if (customer) {
+      setCustomer(customer)
+      setCustomerPhone(customer.phone)
+      if (0 in locations) {
+        setLocations(locations)
+        setLocationId(locations.at(0)!.id)
+      }
+      // const {
+      //   id,
+      //   createdAt,
+      //   updatedAt,
+      //   firstname,
+      //   lastname,
+      //   companyname,
+      //   displayname,
+      //   phone,
+      //   email,
+      //   notes,
+      //   userId,
+      // } = customerData!
+      // setCustomer({
+      //   id,
+      //   createdAt,
+      //   updatedAt,
+      //   firstname,
+      //   lastname,
+      //   companyname,
+      //   displayname,
+      //   phone,
+      //   email,
+      //   notes,
+      //   userId,
+      // } as Customer)
     }
+  }, [customerId])
+
+  const getJobsData = useCallback(() => {
+    const [jobs] = useQuery(
+      getJobs, {
+      where: { locationId },
+      orderBy: [
+        { start: 'asc' },
+        { end: 'asc' },
+        { createdAt: 'asc' },
+      ]
+    })
+
+    if (jobs) {
+      setJobs(jobs)
+
+      if (!locations.some(({ id }) => id === locationId))
+        setLocationId(locations.at(0)?.id)
+    }
+  }, [customerData?.locations])
+
+  const setJobsObject = useCallback(() => {
+    if (location) {
+      const jobs = location.jobs
+    }
+  }, [location])
+
+  useEffect(() => { // setCustomer and setLocations, and potentially setLocationId
+    getPageLoadData()
+    getJobsData()
   }, [customerData])
+
   useEffect(() => {
     if (locations) {
       const l = locations.find(({ id }) => id === locationId)
@@ -158,12 +214,14 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
       setJobs(l?.jobs)
     }
   }, [locations, locationId]) // eslint-disable-line
+
   useEffect(() => {
     if (jobs) {
       const j = jobs.find(({ id }) => id === jobId)
       setJob(j)
     }
   }, [jobs, jobId])
+
   // const fetchCustomerId = useCallback(async () => {
   //   // const { customerId: c } = router.query
   //   const c = +decodeURIComponent(router.query.customerId as string)
@@ -209,62 +267,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [stashType, setStashType] = useState<StashType>()
   const [editingStash, setEditingStash] = useState(false)
 
-  // Data
-  // const [locations, { refetch: refetchLocations }] = useQuery(
-  //   getLocations,
-  //   {
-  //     where: { customerId: customer?.id },
-  //     orderBy: [
-  //       { primary: "desc" },
-  //       { zipcode: "asc" },
-  //       { city: "asc" },
-  //       { street: "asc" },
-  //       { house: "asc" },
-  //     ],
-  //   },
-  //   {
-  //     enabled: !!customerId,
-  //     refetchOnWindowFocus: false,
-  //   }
-  // )
-
-  // const { jobs: tempJobs, refetch: refetchJobs } = useJobs({ customerId })
-  useEffect(() => {
-    if (customerId) {
-      refetchCustomerData() // Get customer.
-        .then(() => setJobId(undefined))
-        // .then(() => setLocationId(locations?.find(({ primary }) => primary == true)?.id))
-        .catch(console.error)
-    }
-  }, [customerId]) // eslint-disable-line
-  // console.table(jobs)
-  // console.table({ ...jobs }, ["id", "title", "customerId", "locationId", "notes"])
-
-  // useEffect(() => {
-  //   refetchLocation()
-  //     .then(() => setJobId(undefined))
-  //     .then(() => refetchJobs())
-  //     .catch(console.error)
-  // }, [refetchLocation, refetchJobs, locationId])
-  useEffect(() => {
-    setLocationIds([...(locations?.map(({ id }) => ({ id })) ?? [])])
-    setCustomerPhone(customer ? customer.phone : undefined)
-  }, [customer, locations])
-  // useEffect(() => {
-  //   setLocationId(locationIds?.length && locationIds.at(0)?.id)
-  // }, [customerId, locationIds])
-  // useEffect(() => {
-  //   // Can't have just any re-render changing chosen locationId.
-  //   // if (!router.isReady) return
-  //   async () => {
-  //     let l = await db.location.findFirst({ where: { id: locationId } })
-  //     setLocation(l)
-  //   }
-  //   // setLocation()
-  //   // setLocation(locationIds?.length && locationIds.at(0)?.id)
-  //   // console.log(`locationId (HeaderProvider): ${locationId}`)
-  // }, [locationId]) // eslint-disable-line
-
   // Stash
   const [
     { customerStashes, locationStashes, jobStashes, count: numStashes },
@@ -303,10 +305,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
     : deletingLocation
-    ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
-    : deletingJob
-    ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
-    : ""
+      ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
+      : deletingJob
+        ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
+        : ""
 
   return (
     <Provider
