@@ -1,12 +1,19 @@
 import { useQuery } from "@blitzjs/rpc"
 import { Job, LineItem } from "@prisma/client"
+import { useCallback, useEffect, useState } from "react"
 import getJobs from "../queries/getJobs"
 
-export const useJobs = (customerId: number | undefined) => {
+type UseJobsProps = {
+  customerId?: number
+  locationId?: number
+}
+
+export const useJobs = ({ customerId, locationId }: UseJobsProps) => {
   const [jobs, { refetch }] = useQuery(
     getJobs,
     {
       customerId,
+      locationId,
     },
     {
       refetchOnWindowFocus: false,
@@ -15,7 +22,6 @@ export const useJobs = (customerId: number | undefined) => {
     }
   )
 
-  // if (!customerId) return {} as (Job & { lineitems: LineItem[] })[]
   return {
     jobs,
     refetch,

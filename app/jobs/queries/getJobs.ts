@@ -15,10 +15,10 @@ export default resolver.pipe(
       include: {
         lineitems: true,
       },
-      orderBy: { start: "asc" },
+      orderBy: [{ start: "asc" }, { end: "asc" }, { createdAt: "asc" }],
     })
 
-    console.table(jobs)
+    // console.table(jobs)
     return jobs
   }
 )

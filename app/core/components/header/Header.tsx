@@ -91,7 +91,7 @@ const Header = ({ children }: HeaderProps) => {
                   <HStack>
                     <HeaderCrumbs pathname={pathname} />
                     {customer && (
-                      <>
+                      <VStack spacing={0} align="start">
                         <Badge variant="subtle" colorScheme="gray">
                           {phoneDisplay(customer.phone)}
                         </Badge>
@@ -104,7 +104,7 @@ const Header = ({ children }: HeaderProps) => {
                         >
                           {customer.email}
                         </Badge>
-                      </>
+                      </VStack>
                     )}
                   </HStack>
                 ) : (

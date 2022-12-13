@@ -17,13 +17,13 @@ export default resolver.pipe(
   // resolver.zod(GetCustomer),
 
   // async ({ id }) => {
-  async ({ where }: CustomerFindFirstArgs) => {
+  async ({ ...args }: CustomerFindFirstArgs) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
 
     // if (!id) return null
 
     const customer = await db.customer.findFirst({
-      where,
+      ...args,
       // include: {
       //   locations: {
       //     select: { id: true },

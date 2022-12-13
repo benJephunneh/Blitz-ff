@@ -66,7 +66,7 @@ const CustomerCard = ({ ...props }: CustomerCardProps) => {
     editLocation,
     jobId,
   } = useContext(headerContext)
-  const location = locations?.find((l) => l.id === locationId)
+  const location = locations?.find(({ id }) => id === locationId)
   const [editingNote, setEditingNote] = useState(false)
   const router = useRouter()
   // const [location, { refetch: refetchLocation }] = useQuery(

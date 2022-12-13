@@ -55,10 +55,10 @@ export type HeaderContext = {
   // search: (query: string) => void
   // searchResults: Customer[] | undefined
 
-  refetchCustomer: () => void
-  refetchLocations: () => void
+  refetchCustomerData: () => void
+  // refetchLocations: () => void
   // refetchJob: () => void
-  refetchJobs: () => void
+  // refetchJobs: () => void
   refetchStashes: () => void
 }
 

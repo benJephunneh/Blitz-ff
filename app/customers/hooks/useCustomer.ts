@@ -3,40 +3,28 @@ import { Prisma } from "@prisma/client"
 import { useEffect } from "react"
 import getCustomer from "../queries/getCustomer"
 
-interface UseCustomerOptions extends Pick<Prisma.CustomerFindFirstArgs, "where" | "include"> {
-  id?: number
-  suspense?: boolean
-  // enabled?: boolean
-  refetchOnWindowFocus?: boolean
-  staleTime?: number
+interface UseCustomerProps
+  extends Pick<Prisma.CustomerFindFirstArgs, "where" | "include" | "orderBy"> {
+  customerId?: number
 }
 
-const useCustomer = ({
-  id,
-  suspense = true,
-  // enabled,
-  refetchOnWindowFocus = false,
-  staleTime = Infinity,
-  where,
-  include,
-}: UseCustomerOptions) => {
-  const [customer, { refetch: refetchCustomer }] = useQuery(
+const useCustomer = ({ customerId, where, include, orderBy }: UseCustomerProps) => {
+  const [customer, { refetch }] = useQuery(
     getCustomer,
     {
       where,
       include,
     },
     {
-      suspense,
-      enabled: !!id,
-      refetchOnWindowFocus,
-      staleTime,
+      refetchOnWindowFocus: false,
+      staleTime: Infinity,
+      enabled: !!customerId,
     }
   )
 
   return {
     customer,
-    refetchCustomer,
+    refetch,
   }
 }
 

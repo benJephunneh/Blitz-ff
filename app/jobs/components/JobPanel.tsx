@@ -47,6 +47,7 @@ const JobPanel = () => {
     // refetchJob,
     refetchStashes,
   } = useContext(headerContext)
+  if (Array.isArray(jobs) && jobs.at(0)!.id > 0) console.table(jobs)
   const [updateJobMutation] = useMutation(updateJob)
   // const [jobId, setJobId] = useState<number>()
   // const [job, setJob] = useState<Job>({} as Job)

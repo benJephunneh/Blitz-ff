@@ -22,6 +22,7 @@ import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import updateCustomer from "app/customers/mutations/updateCustomer"
 import findCustomer from "app/customers/queries/findCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
+import getCustomerData from "app/customers/queries/getCustomerData"
 import JobModalForm from "app/jobs/components/JobModalForm"
 import { Range } from "app/jobs/components/JobPanel"
 import { useJobs } from "app/jobs/hooks/useJobs"
@@ -37,7 +38,7 @@ import getLocations from "app/locations/queries/getLocations"
 import SearchInput from "app/search/SearchInput"
 import SearchResults from "app/search/SearchResults"
 import getStashes from "app/stashes/queries/getStashes"
-import db, { Job, LineItem, Location, StashType } from "db"
+import db, { Customer, Job, LineItem, Location, StashType } from "db"
 import { useRouter } from "next/router"
 import { ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
@@ -64,7 +65,105 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
 
   // Customer
   const customerId = useParam("customerId", "number")
-  // const [customerId, setCustomerId] = useState<number>()
+  const [customer, setCustomer] = useState<Customer | undefined>()
+  const [locations, setLocations] = useState<
+    | (Location & {
+        jobs: (Job & {
+          lineitems: LineItem[]
+        })[]
+      })[]
+    | undefined
+  >()
+  const [location, setLocation] = useState<
+    | (Location & {
+        jobs: (Job & {
+          lineitems: LineItem[]
+        })[]
+      })
+    | undefined
+  >()
+  const [locationId, setLocationId] = useState<number>()
+  const [jobs, setJobs] = useState<
+    | (Job & {
+        lineitems: LineItem[]
+      })[]
+    | undefined
+  >()
+  const [job, setJob] = useState<
+    | (Job & {
+        lineitems: LineItem[]
+      })
+    | undefined
+  >()
+  const [jobId, setJobId] = useState<number>()
+
+  const [customerData, { refetch: refetchCustomerData }] = useQuery(
+    getCustomerData,
+    { id: customerId },
+    { enabled: !!customerId, refetchOnWindowFocus: false, staleTime: Infinity }
+  )
+
+  useEffect(() => {
+    if (customerId) {
+      refetchCustomerData().catch(console.error)
+    } else {
+      // Are there cases where I still want this data to be available?
+      setLocations(undefined)
+      setLocation(undefined)
+      setLocationId(undefined)
+      setJobs(undefined)
+      setJob(undefined)
+      setJobId(undefined)
+    }
+  }, [customerId]) // eslint-disable-line
+  useEffect(() => {
+    if (customerData) {
+      const {
+        id,
+        createdAt,
+        updatedAt,
+        firstname,
+        lastname,
+        companyname,
+        displayname,
+        phone,
+        email,
+        notes,
+        userId,
+      } = customerData!
+      setCustomer({
+        id,
+        createdAt,
+        updatedAt,
+        firstname,
+        lastname,
+        companyname,
+        displayname,
+        phone,
+        email,
+        notes,
+        userId,
+      } as Customer)
+
+      const locations = customerData!.locations
+      console.table(locations)
+      setLocations(locations)
+      setLocationId(locations.at(0)?.id)
+    }
+  }, [customerData])
+  useEffect(() => {
+    if (locations) {
+      const l = locations.find(({ id }) => id === locationId)
+      setLocation(l)
+      setJobs(l?.jobs)
+    }
+  }, [locations, locationId]) // eslint-disable-line
+  useEffect(() => {
+    if (jobs) {
+      const j = jobs.find(({ id }) => id === jobId)
+      setJob(j)
+    }
+  }, [jobs, jobId])
   // const fetchCustomerId = useCallback(async () => {
   //   // const { customerId: c } = router.query
   //   const c = +decodeURIComponent(router.query.customerId as string)
@@ -93,14 +192,12 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [editingLocation, setEditingLocation] = useState(false)
   const [deletingLocation, setDeletingLocation] = useState(false)
   const [locationIds, setLocationIds] = useState<{ id: number }[]>()
-  const [locationId, setLocationId] = useState<number>()
   // const [updateLocationMutation] = useMutation(updateLocation)
 
   // Job
   const [creatingJob, setCreatingJob] = useState(false)
   const [editingJob, setEditingJob] = useState(false)
   const [deletingJob, setDeletingJob] = useState(false)
-  const [jobId, setJobId] = useState<number>()
   // const [updateJobMutation] = useMutation(updateJob)
 
   // Calendar
@@ -113,56 +210,36 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [editingStash, setEditingStash] = useState(false)
 
   // Data
-  const [customer, { setQueryData: setCustomerQueryData, refetch: refetchCustomer }] = useQuery(
-    getCustomer,
-    { where: { id: customerId } },
-    { enabled: !!customerId, refetchOnWindowFocus: false }
-  )
-  const [locations, { refetch: refetchLocations }] = useQuery(
-    getLocations,
-    {
-      where: { customerId: customer?.id },
-      orderBy: [
-        { primary: "desc" },
-        { zipcode: "asc" },
-        { city: "asc" },
-        { street: "asc" },
-        { house: "asc" },
-      ],
-    },
-    {
-      enabled: !!customerId,
-      refetchOnWindowFocus: false,
-    }
-  )
-  // const [location, { setQueryData: setLocationQueryData, refetch: refetchLocation }] = useQuery(
-  //   getLocation, {
-  //   where: { id: locationId }
-  // }, {
-  //   enabled: !!locationId,
-  //   staleTime: Infinity,
-  //   refetchOnWindowFocus: false,
-  // })
-  const { jobs, refetch: refetchJobs } = useJobs(customerId)
-  // console.table(jobs)
-  console.table({ ...jobs }, ["id", "title", "customerId", "locationId", "notes"])
-
-  // const [job, { setQueryData: setJobQueryData, refetch: refetchJob }] = useQuery(
-  //   getJob,
-  //   { id: jobId },
-  //   { enabled: !!jobId, suspense: !!jobId, staleTime: Infinity }
+  // const [locations, { refetch: refetchLocations }] = useQuery(
+  //   getLocations,
+  //   {
+  //     where: { customerId: customer?.id },
+  //     orderBy: [
+  //       { primary: "desc" },
+  //       { zipcode: "asc" },
+  //       { city: "asc" },
+  //       { street: "asc" },
+  //       { house: "asc" },
+  //     ],
+  //   },
+  //   {
+  //     enabled: !!customerId,
+  //     refetchOnWindowFocus: false,
+  //   }
   // )
 
+  // const { jobs: tempJobs, refetch: refetchJobs } = useJobs({ customerId })
   useEffect(() => {
     if (customerId) {
-      refetchCustomer()
+      refetchCustomerData() // Get customer.
         .then(() => setJobId(undefined))
-        .then(() => refetchLocations())
-        // .then(() => refetchJobs())
-        .then(() => setLocationId(locations?.find(({ primary }) => primary == true)?.id))
+        // .then(() => setLocationId(locations?.find(({ primary }) => primary == true)?.id))
         .catch(console.error)
     }
   }, [customerId]) // eslint-disable-line
+  // console.table(jobs)
+  // console.table({ ...jobs }, ["id", "title", "customerId", "locationId", "notes"])
+
   // useEffect(() => {
   //   refetchLocation()
   //     .then(() => setJobId(undefined))
@@ -255,8 +332,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         editJob: () => setEditingJob(true),
         deleteJob: () => setDeletingJob(true),
         pickJob: (id) => {
-          const newId = jobs.find((j) => j.id === id)
-          setJobId(newId)
+          const temp = jobs?.find((j) => j.id === id)?.id
+          // console.log(`pickJob: ${id}`)
+          setJobId(temp)
         },
 
         editStash: (id, type) => {
@@ -286,10 +364,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         openSearch,
         closeSearch,
 
-        refetchCustomer,
-        refetchLocations,
+        refetchCustomerData,
+        // refetchLocations,
         // refetchJob,
-        refetchJobs,
+        // refetchJobs,
         refetchStashes,
       }}
     >
@@ -314,12 +392,13 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               if (customer) {
                 if ("stashType" in customer) await refetchStashes()
                 else {
-                  await setCustomerQueryData(customer)
+                  if (creatingCustomer)
+                    await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
+
+                  // await setCustomerQueryData(customer)
                   creatingCustomer && setLocationId(undefined)
                   creatingCustomer && setJobId(undefined)
                   editingStash && refetchStashes()
-                  if (creatingCustomer)
-                    await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
                 }
                 // await refetchCustomer()
                 //   .catch((e) =>
@@ -382,10 +461,26 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               if (job) {
                 if ("stashType" in job) await refetchStashes()
                 else {
-                  await refetchJobs()
+                  if (editingStash) {
+                    if (job.customerId != customerId) {
+                      router
+                        .push(Routes.ShowCustomerPage({ customerId: job.customerId }))
+                        .then(() => setLocationId(job.locationId))
+                        .then(() => setJobId(job.id))
+                        .catch(console.error)
+                    } else if (job.locationId != locationId) {
+                      refetchCustomerData()
+                        .then(() => setLocationId(job.locationId))
+                        .then(() => setJobId(job.id))
+                        .catch(console.error)
+                    } else {
+                      refetchCustomerData()
+                        .then(() => setJobId(job.id))
+                        .catch(console.error)
+                    }
+                    // await refetchJobs()
+                  }
                   setJobId(job.id)
-                  if (editingStash)
-                    await router.push(Routes.ShowCustomerPage({ customerId: job.customerId }))
                 }
               }
 
