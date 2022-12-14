@@ -33,7 +33,7 @@ export default resolver.pipe(
   resolver.zod(CreateStash),
   resolver.authorize(),
 
-  async ({ stashType, notes, customerId, locationId, customer, location, job }, ctx) => {
+  async ({ stashType, customer, location, job }, ctx) => {
     // async ({ input, stashType }: CreateStashProps, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     // console.log(`customer input to createStash: ${JSON.stringify(customer)}`)
@@ -45,13 +45,14 @@ export default resolver.pipe(
         if (customer!.firstname) {
           displayname = customer!.firstname
           if (customer!.lastname) displayname += ` ${customer!.lastname}`
-        } else if (customer!.companyname) displayname = customer!.companyname
+        } else if (customer!.lastname) displayname = customer!.lastname
+        else if (customer!.companyname) displayname = customer!.companyname
 
         stash = await db.customerStash.create({
           data: {
             displayname,
             stashType,
-            notes,
+            // notes,
             // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
             ...customer,
@@ -62,9 +63,9 @@ export default resolver.pipe(
       case "Location":
         stash = await db.locationStash.create({
           data: {
-            customerId: customerId!,
+            // customerId: customerId!,
             stashType,
-            notes,
+            // notes,
             // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
             ...location,
@@ -75,10 +76,10 @@ export default resolver.pipe(
       case "Job":
         stash = await db.jobStash.create({
           data: {
-            customerId: customerId!,
-            locationId: locationId!,
+            // customerId: customerId!,
+            // locationId: locationId!,
             stashType,
-            notes,
+            // notes,
             // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
             ...job,

@@ -13,13 +13,14 @@ import {
   MenuList,
   MenuItem,
 } from "@chakra-ui/react"
+import headerContext from "app/core/components/header/headerContext"
 import { MutationType } from "app/core/components/types/MutationType"
 import createLocation from "app/locations/mutations/createLocation"
 import getLocations from "app/locations/queries/getLocations"
 import { PromiseReturnType } from "blitz"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { FcExpand, FcGlobe, FcNext, FcPrevious } from "react-icons/fc"
 import LocationListItem from "./LocationListItem"
 import LocationMenuListItem from "./LocationMenuListItem"
@@ -71,20 +72,21 @@ const LocationMenuList = ({ customerId }: { customerId: number }) => {
   const router = useRouter()
   const [creatingLocation, setCreatingLocation] = useState(false)
   const [mutationState, setMutationState] = useState<MutationType>("New")
-  const [{ locations, count }] = useQuery(getLocations, {
-    where: { customerId },
-    orderBy: [
-      { primary: "asc" },
-      { zipcode: "asc" },
-      { city: "asc" },
-      { street: "asc" },
-      { house: "asc" },
-    ],
-  })
+  // const [{ locations, count }] = useQuery(getLocations, {
+  //   where: { customerId },
+  //   orderBy: [
+  //     { primary: "asc" },
+  //     { zipcode: "asc" },
+  //     { city: "asc" },
+  //     { street: "asc" },
+  //     { house: "asc" },
+  //   ],
+  // })
+  const { locations } = useContext(headerContext)
 
   return (
     <>
-      {locations.map((location, ii) => {
+      {locations?.map((location, ii) => {
         return (
           <LocationMenuListItem key={ii} location={location}>
             {location.house} {location.street} {location.city}, {location.zipcode}

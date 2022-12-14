@@ -54,7 +54,7 @@ const JobProvider = ({ locationId, jobId, children }: JobProviderProps) => {
         refetchJob,
       }}
     >
-      <JobModalForm
+      {/* <JobModalForm
         jobId={job.id}
         isOpen={editingJob}
         onClose={() => setEditingJob(false)}
@@ -62,7 +62,7 @@ const JobProvider = ({ locationId, jobId, children }: JobProviderProps) => {
           refetchJob().catch((e) => console.log(`JobProvider JobModal error: ${e}`))
           setEditingJob(false)
         }}
-      />
+      /> */}
 
       <JobDrawer onClose={() => setShowingDetails(false)} isOpen={showingDetails} />
 

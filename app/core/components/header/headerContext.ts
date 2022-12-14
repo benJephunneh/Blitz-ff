@@ -30,8 +30,8 @@ export type HeaderContext = {
 
   // Job
   jobId?: number
-  // job?: Job | null
-  jobs?: Job[]
+  job?: Job & { lineitems: LineItem[] }
+  jobs?: (Job & { lineitems: LineItem[] })[]
   createJob: () => void
   editJob: () => void
   deleteJob: () => void
@@ -55,8 +55,8 @@ export type HeaderContext = {
   // search: (query: string) => void
   // searchResults: Customer[] | undefined
 
-  // refetchCustomerData: () => void
-  // refetchLocations: () => void
+  refetchCustomer: () => void
+  refetchLocations: () => void
   // refetchJob: () => void
   // refetchJobs: () => void
   refetchStashes: () => void

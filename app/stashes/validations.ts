@@ -24,19 +24,17 @@ const notes = stashContentSchema
 
 export const CreateStash = z.object({
   stashType,
-  customerId: customerId.optional(),
-  customer: CustomerSkeleton.partial().optional(),
-  locationId: locationId.optional(),
-  location: LocationSkeleton.partial().optional(),
-  jobId: jobId.optional(),
-  job: job.partial().optional(),
-  estimateId: estimateId.optional(),
+  // customerId: customerId.optional(),
+  customer: customer.optional(),
+  // locationId: locationId.optional(),
+  location: location.optional(),
+  // jobId: jobId.optional(),
+  job: job.optional(),
+  // estimateId: estimateId.optional(),
   // estimate: estimateId.partial().optional(),
-  invoiceId: invoiceId.optional(),
+  // invoiceId: invoiceId.optional(),
   // invoice: invoiceId.partial().optional(),
-  notes: textNotes,
+  // notes: textNotes, // Since this is in each other stash (e.g. in CreateCustomerStash), do I need this?
 })
 
-export const UpdateStash = CreateStash.extend({
-  id,
-})
+export const UpdateStash = CreateStash.extend({ id })

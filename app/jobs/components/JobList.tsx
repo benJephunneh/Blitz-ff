@@ -20,12 +20,13 @@ import {
   Box,
   Text,
 } from "@chakra-ui/react"
+import headerContext from "app/core/components/header/headerContext"
 import createLocation from "app/locations/mutations/createLocation"
 import getLocations from "app/locations/queries/getLocations"
 import { PromiseReturnType } from "blitz"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import React from "react"
+import React, { useContext } from "react"
 import { useState } from "react"
 import { FcGlobe, FcNumericalSorting12, FcNumericalSorting21 } from "react-icons/fc"
 import createJob from "../mutations/createJob"
@@ -39,6 +40,7 @@ type ChakraFragment = ChakraComponent<"div", {}>
 const ITEMS_PER_PAGE = 20
 const JobList = ({ locationId }: { locationId: number }) => {
   const router = useRouter()
+  const { jobs } = useContext(headerContext)
   const hovered = useColorModeValue("gray.50", "gray.700")
   const textColor = useColorModeValue("gray.800", "gray.400")
   const initialSortBy = [
@@ -49,10 +51,6 @@ const JobList = ({ locationId }: { locationId: number }) => {
 
   const [sortMethod, setSortMethod] = useState<SortOrder>("asc")
   const [sortBy, setSortBy] = useState(initialSortBy)
-  const [{ jobs }] = useQuery(getJobs, {
-    where: { locationId },
-    orderBy: sortBy,
-  })
 
   return (
     <Flex justifyContent="space-around">
@@ -138,7 +136,7 @@ const JobList = ({ locationId }: { locationId: number }) => {
                 </Tr>
               </Thead>
               <Tbody bg={useColorModeValue("gray.100", "gray.800")}>
-                {jobs.map((job) => {
+                {jobs?.map((job) => {
                   return (
                     <Tr key={job.id} _hover={{ bg: hovered }}>
                       <Td>

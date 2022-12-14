@@ -1,8 +1,8 @@
 import { resolver } from "@blitzjs/rpc"
 import { CustomerSkeleton } from "app/customers/validations"
 import { LocationSkeleton } from "app/locations/validations"
-import { JobSkeleton } from "app/jobs/validations"
-import db, { StashType } from "db"
+import { isJobWithLineitems, JobSkeleton, jobStashType, jobType } from "app/jobs/validations"
+import db, { Job, LineItem, StashType } from "db"
 import { z } from "zod"
 import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
 import { UpdateStash } from "../validations"
@@ -27,7 +27,7 @@ export default resolver.pipe(
 
   async ({ id, stashType, customer, location, job }, ctx) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    console.log(JSON.stringify(customer))
+    // console.log(JSON.stringify(customer))
 
     let stash
     switch (stashType) {
@@ -73,13 +73,17 @@ export default resolver.pipe(
         })
         break
       case "Job":
+        const { lineitems, userId, ...jobVals } = job as jobStashType
+        const lineitemIds = [...lineitems.map(({ id }) => ({ id }))]
+
         await db.jobStash.update({
           where: { id },
           data: {
-            stashType,
+            lineitems: { connect: [...lineitemIds] },
+            // stashType,
             // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
-            ...job,
+            ...jobVals,
           },
         })
         break

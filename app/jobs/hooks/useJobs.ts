@@ -12,8 +12,7 @@ export const useJobs = ({ customerId, locationId }: UseJobsProps) => {
   const [jobs, { refetch }] = useQuery(
     getJobs,
     {
-      customerId,
-      locationId,
+      where: { customerId, locationId },
     },
     {
       refetchOnWindowFocus: false,

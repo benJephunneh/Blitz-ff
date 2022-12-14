@@ -50,8 +50,8 @@ const JobWizardForm = ({ customerId, locationId, jobId, stashId, disableStash, i
     // setPage()
   }
 
-  const { lineitems, ...j } = jobs?.find(({ id }) => id === jobId)
-  const lineitems = job?.lineitems
+  // const { lineitems, ...j } = jobs?.find(({ id }) => id === jobId)
+  // const lineitems = job?.lineitems
   // let title = ''
   // let start: Date | null
   // let end: Date | null
@@ -60,11 +60,11 @@ const JobWizardForm = ({ customerId, locationId, jobId, stashId, disableStash, i
   const { title, start, end, notes } = job
     ? job
     : { title: '', start: null, end: null, notes: null }
-  console.log(title, start, end, notes, lineitems)
+  // console.log(title, start, end, notes, lineitems)
 
-  return (
+  // return (
 
-  )
+  // )
 }
 
 export default JobWizardForm

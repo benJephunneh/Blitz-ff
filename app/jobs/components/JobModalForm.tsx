@@ -72,7 +72,7 @@ const JobModalForm = ({
   // handleDrop,
   ...props
 }: JobModalFormProps) => {
-  const { jobs } = useContext(headerContext)
+  const { job, jobs, jobStash } = useContext(headerContext)
   // const [dragAndDropState, setDragAndDropState] = useState<DragAndDropJob>({ id: jobId, title, lineitems } as Job)
 
   const [createJobMutation] = useMutation(createJob)
@@ -87,7 +87,7 @@ const JobModalForm = ({
   const stashType = "Job"
   const stashFootnoteColor = useColorModeValue("red", "cyan.200")
 
-  const job = jobs?.find(({ id }) => id === jobId)
+  // const job = jobs?.find(({ id }) => id === jobId)
   // console.table({ ...job })
   // const [job, { refetch: refetchJob }] = useQuery(
   //   getJob,
@@ -101,18 +101,18 @@ const JobModalForm = ({
   //   }
   // )
 
-  const [jobStash] = useQuery(
-    getStash,
-    {
-      id: stashId,
-      stashType,
-    },
-    {
-      enabled: !!stashId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    }
-  )
+  // const [jobStash] = useQuery(
+  //   getStash,
+  //   {
+  //     id: stashId,
+  //     stashType,
+  //   },
+  //   {
+  //     enabled: !!stashId,
+  //     staleTime: Infinity,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // )
 
   const today = new Date()
   // let m: Date
@@ -202,7 +202,7 @@ const JobModalForm = ({
   const jobListId = "job-lineitems"
   const searchListId = "search-lineitems"
   const [lineitemId, setLineitemId] = useState<number>()
-  const [lineitems, setLineitems] = useState(job?.lineitems ?? ([] as LineItem[]))
+  const [lineitems, setLineitems] = useState<LineItem[] | undefined>(job?.lineitems)
   const [query, setQuery] = useState("")
   const [lineitemSearchResults, { setQueryData: setLineitemSearchData, isLoading }] = useQuery(
     findLineItem,
@@ -229,9 +229,9 @@ const JobModalForm = ({
   }
 
   const onDelete = (lineitemId: number) => {
-    const idx = lineitems.findIndex(({ id }) => id === lineitemId)
-    lineitems.splice(idx, 1)
-    setLineitems([...lineitems])
+    const idx = lineitems!.findIndex(({ id }) => id === lineitemId)
+    lineitems!.splice(idx, 1)
+    setLineitems([...lineitems!])
   }
 
   const onDragEnd = ({ source, destination, draggableId }) => {
@@ -240,7 +240,7 @@ const JobModalForm = ({
 
     const start = source.droppableId
     const end = destination.droppableId
-    const sortOrder = [...lineitems.map(({ id }) => id)]
+    const sortOrder = [...lineitems!.map(({ id }) => id)]
     // const sortOrder = [...dummyArray.map(({ id }) => id)]
     // console.log({ sortOrder })
 
@@ -254,16 +254,16 @@ const JobModalForm = ({
       //   return sortOrder.indexOf(a.id) - sortOrder.indexOf(b.id)
       // })
       setLineitems(
-        lineitems.sort((a, b) => {
+        lineitems!.sort((a, b) => {
           return sortOrder.indexOf(a.id) - sortOrder.indexOf(b.id)
         })
       )
     } else {
       // if (lineitems.findIndex(({ id }) => id == draggableId) !== -1) return
-      if (lineitems.includes(draggableId)) return
+      if (lineitems!.includes(draggableId)) return
       const moving = lineitemSearchResults?.find(({ id }) => id == draggableId)
       const tempLineitems = lineitems
-      tempLineitems.splice(destination.index, 0, moving!)
+      tempLineitems!.splice(destination.index, 0, moving!)
       setLineitems(tempLineitems)
     }
 
@@ -340,7 +340,7 @@ const JobModalForm = ({
                         />
                       ))} */}
                       {/* {dummyArray.map((li, ii) => ( */}
-                      {lineitems.map((li, ii) => (
+                      {lineitems?.map((li, ii) => (
                         <Draggable key={li.id} draggableId={li.id.toString()} index={ii}>
                           {(provided, isDragging: boolean) => (
                             <Box
@@ -364,7 +364,7 @@ const JobModalForm = ({
                                 lineitem={li}
                                 onDelete={onDelete}
                                 itemizing={true}
-                                // draggableIndex={ii}
+                              // draggableIndex={ii}
                               />
                             </Box>
                           )}
@@ -384,9 +384,9 @@ const JobModalForm = ({
                   end={end}
                   // onClickDay={handleDayClick}
                   onClickWeekNumber={handleWeekNumberClick}
-                  // console.log({ w })
-                  // handleWeekNumberClick(w).catch((e) => console.error(e))
-                  // }}
+                // console.log({ w })
+                // handleWeekNumberClick(w).catch((e) => console.error(e))
+                // }}
                 />
               </GridItem>
 

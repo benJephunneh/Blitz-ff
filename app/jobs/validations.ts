@@ -1,5 +1,6 @@
-import { LineItem } from "@prisma/client"
+import { LineItem, Prisma } from "@prisma/client"
 import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
+import getLineItems from "app/lineitems/queries/getLineItems"
 import { FullLineItem } from "app/lineitems/validations"
 import { z, ZodDate } from "zod"
 
@@ -13,27 +14,50 @@ const customerId = z.number()
 const locationId = z.number()
 const notes = stashContentSchema
 export const textNotes = z.string()
-const lineitem = FullLineItem
-const lineitems = lineitem.array()
+
+const jobValidator = Prisma.validator<Prisma.JobArgs>()({
+  include: {
+    lineitems: true,
+  },
+})
+export type jobType = Prisma.JobGetPayload<typeof jobValidator>
+export const isJobWithLineitems = (x: any): x is jobType =>
+  Object.hasOwn(x, "completed") && Object.hasOwn(x, "lineitems")
+
+const jobStashValidator = Prisma.validator<Prisma.JobStashArgs>()({
+  include: {
+    lineitems: true,
+  },
+})
+export type jobStashType = Prisma.JobStashGetPayload<typeof jobValidator>
+export const isJobStashWithLineitems = (x: any): x is jobStashType =>
+  Object.hasOwn(x, "completed") && Object.hasOwn(x, "lineitems")
+
+const lineitemValidator = Prisma.validator<Prisma.LineItemArgs>()({})
+type lineitemType = Prisma.LineItemGetPayload<typeof lineitemValidator>
+const isLineitem = (x: any): x is lineitemType => x.quantity !== undefined
+// const isLineitem = (x: any): x is LineItem => x.quantity !== undefined
+const lineitem = z.custom<LineItem>((val) => isLineitem(val))
 
 export const JobSkeleton = z.object({
   title,
   start: start.nullable().optional(),
   end: end.nullable().optional(),
   completed,
-  lineitems: lineitems.optional(),
+  lineitems: lineitem.array().optional(),
 })
 export const JobFormSchema = JobSkeleton.partial().extend({
   notes: textNotes.nullable().optional(),
 })
 export const CreateJob = JobSkeleton.extend({
-  notes: textNotes.nullable().optional(),
   customerId,
   locationId,
+  notes: textNotes.nullable().optional(),
 })
 export const CreateJobStash = JobSkeleton.partial().extend({
-  notes: textNotes,
+  customerId,
   locationId,
+  notes: textNotes,
 })
 
 export const UpdateJob = CreateJob.partial().extend({ id })

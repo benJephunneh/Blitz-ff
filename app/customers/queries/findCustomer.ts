@@ -1,6 +1,6 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
-import { Op, or, Sequelize } from "sequelize/types"
+// import { Op, or, Sequelize } from "sequelize/types"
 import { z } from "zod"
 
 const FindCustomer = z.object({

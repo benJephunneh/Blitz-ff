@@ -21,10 +21,11 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { Location } from "@prisma/client"
+import headerContext from "app/core/components/header/headerContext"
 import getLocations from "app/locations/queries/getLocations"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import React from "react"
+import React, { useContext } from "react"
 import { useState } from "react"
 import { FaEdit } from "react-icons/fa"
 import { FcEditImage, FcGlobe, FcNumericalSorting12, FcNumericalSorting21 } from "react-icons/fc"
@@ -90,18 +91,19 @@ const LocationList = ({ customerId }: { customerId: number }) => {
 
   const [sortMethod, setSortMethod] = useState<SortOrder>("asc")
   const [sortBy, setSortBy] = useState(initialSortBy)
-  const [{ locations }] = useQuery(
-    getLocations,
-    {
-      where: { customerId },
-      orderBy: sortBy,
-    },
-    {
-      refetchOnWindowFocus: false,
-      // refetchInterval: 60000,
-      // refetchIntervalInBackground: true,
-    }
-  )
+  // const [{ locations }] = useQuery(
+  //   getLocations,
+  //   {
+  //     where: { customerId },
+  //     orderBy: sortBy,
+  //   },
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     // refetchInterval: 60000,
+  //     // refetchIntervalInBackground: true,
+  //   }
+  // )
+  const { locations } = useContext(headerContext)
 
   return (
     <Flex justifyContent="space-around">
@@ -201,7 +203,7 @@ const LocationList = ({ customerId }: { customerId: number }) => {
                 </Tr>
               </Thead>
               <Tbody bg={useColorModeValue("gray.100", "gray.800")}>
-                {locations.map((location) => {
+                {locations?.map((location) => {
                   return (
                     <Tr key={location.id} _hover={{ bg: hovered }}>
                       <Td>

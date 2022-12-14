@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client"
 import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
 import { z } from "zod"
 
@@ -20,23 +21,21 @@ export const textNotes = z.string()
 export const id = z.number()
 
 export const CustomerSkeleton = z.object({
-  firstname: firstname.nullable().optional(),
-  lastname: lastname.nullable().optional(),
-  companyname: companyname.nullable().optional(),
   email,
   phone,
 })
-export const CustomerFormSchema = CustomerSkeleton.partial().extend({
+export const CustomerFormSchema = CustomerSkeleton.extend({
+  firstname: firstname.nullable().optional(),
+  lastname: lastname.nullable().optional(),
+  companyname: companyname.nullable().optional(),
   notes: textNotes.nullable().optional(),
 })
 
-export const CreateCustomer = CustomerSkeleton.extend({
-  notes: textNotes.nullable().optional(),
-})
-export const CreateCustomerStash = CustomerSkeleton.partial({
-  // firstname: true,
-  // lastname: true,
-}).extend({
+export const CreateCustomer = CustomerFormSchema
+export const CreateCustomerStash = CustomerSkeleton.extend({
+  firstname: firstname.nullable().optional(),
+  lastname: lastname.nullable().optional(),
+  companyname: companyname.nullable().optional(),
   notes: textNotes,
 })
 
@@ -60,3 +59,6 @@ export const ArchiveCustomer = z.object({ id })
 
 // export type CustomerCreation = ICustomer | ICustomerStash
 // export declare function CustomerOrStash(): CustomerCreation
+
+const customer = Prisma.validator<Prisma.CustomerArgs>()({})
+export type CustomerType = Prisma.CustomerGetPayload<typeof customer>

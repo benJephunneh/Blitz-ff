@@ -35,8 +35,7 @@ type CustomerPickerProps = {
 }
 
 const CustomerPicker2 = () => {
-  const { customer } = useContext(headerContext)
-  const { locations } = useContext(customerContext)
+  const { customer, locations } = useContext(headerContext)
   const [query, setQuery] = useState("")
   const displayname = customer?.displayname
 
@@ -61,7 +60,7 @@ const CustomerPicker2 = () => {
           rightIcon={
             <Icon color={useColorModeValue("cyan.400", "cyan.600")} pr={1} as={FaChevronDown} />
           }
-          // zIndex={10}
+        // zIndex={10}
         >
           <HStack>
             <Icon

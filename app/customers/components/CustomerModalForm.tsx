@@ -22,9 +22,9 @@ type CustomerModalFormProps = {
   onClose: () => void
   onSuccess?: (customer: Customer | CustomerStash | void) => void
   // customerId?: number
-  stashId?: number
-  customer?: Customer | null
-  // customerStash?: CustomerStash // | LocationStash
+  // stashId?: number
+  customer?: Customer // | null
+  customerStash?: CustomerStash
   disableStash?: boolean
   // mutationType?: MutationType
   props?: Partial<ModalProps>
@@ -35,7 +35,8 @@ const CustomerModalForm = ({
   onClose,
   onSuccess,
   // customerId,
-  stashId,
+  // stashId,
+  customerStash,
   customer,
   // customerStash,
   disableStash,
@@ -67,31 +68,28 @@ const CustomerModalForm = ({
 
   // const customerStash = useStash(stashId, stashType)
 
-  const [customerStash] = useQuery(
-    getStash,
-    {
-      id: stashId,
-      stashType,
-    },
-    {
-      suspense: !!stashId,
-      enabled: !!stashId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    }
-  )
+  // const [customerStash] = useQuery(
+  //   getStash,
+  //   {
+  //     id: stashId,
+  //     stashType,
+  //   },
+  //   {
+  //     suspense: !!stashId,
+  //     enabled: !!stashId,
+  //     staleTime: Infinity,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // )
 
   const [user] = useQuery(
-    getUser,
-    {
-      id: customerStash?.userId,
-    },
-    {
-      enabled: !!customerStash,
-      suspense: !!customerStash,
-      refetchOnWindowFocus: false,
-    }
-  )
+    getUser, {
+    id: customerStash?.userId,
+  }, {
+    // suspense: !!customerStash,
+    enabled: !!customerStash,
+    refetchOnWindowFocus: false,
+  })
 
   const textFootnoteColor = useColorModeValue("red", "cyan.200")
 
@@ -127,7 +125,7 @@ const CustomerModalForm = ({
     // console.log(`values.stashing: ${values.stashing}`)
 
     // const formSubmission = (({ firstname, lastname, companyname, email }) => ({ firstname, lastname, companyname, email }))(values)
-    const { notes, ...formSubmission } = values
+    // const { notes, ...formSubmission } = values
 
     let customerRet
     if (values.stashing) {
@@ -137,16 +135,16 @@ const CustomerModalForm = ({
         customerRet = await updateStashMutation({
           id: customerStash.id,
           stashType,
-          customer: formSubmission,
-          notes,
+          ...values,
+          // notes,
         })
         // await refetchStash()
       } else {
         // console.log("\t\tcreate stash")
         customerRet = await createStashMutation({
           stashType,
-          customer: formSubmission,
-          notes,
+          ...values,
+          // notes,
         })
       }
     } else {

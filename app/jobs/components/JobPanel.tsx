@@ -43,7 +43,7 @@ const JobPanel = () => {
     createJob,
     editJob,
     pickJob,
-    refetchCustomerData,
+    refetchCustomer,
     // refetchJob,
     refetchStashes,
   } = useContext(headerContext)
@@ -197,7 +197,7 @@ const JobPanel = () => {
             <NoteSubmission
               modelType="Job"
               onSuccess={async () => {
-                refetchCustomerData()
+                refetchCustomer()
                 // await refetchJob()
                 // await refetchJobs()
               }}

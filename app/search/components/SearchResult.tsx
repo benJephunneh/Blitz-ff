@@ -10,9 +10,10 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Customer, Location } from "@prisma/client"
+import headerContext from "app/core/components/header/headerContext"
 import LinkCard from "app/core/components/LinkCard"
 import Link from "next/link"
-import { ComponentPropsWithoutRef } from "react"
+import { ComponentPropsWithoutRef, useContext } from "react"
 import { MdAlternateEmail } from "react-icons/md"
 
 type SearchResultProps = {
@@ -21,6 +22,7 @@ type SearchResultProps = {
 }
 
 const SearchResult = ({ result, ...props }: SearchResultProps) => {
+  const { customer } = useContext(headerContext)
   const route = Routes.ShowCustomerPage
   const href =
     "firstname" in result
@@ -46,7 +48,7 @@ const SearchResult = ({ result, ...props }: SearchResultProps) => {
               </Tag> */}
               <Tag size="sm">
                 <TagLeftIcon as={MdAlternateEmail} />
-                <TagLabel>{customer.email}</TagLabel>
+                <TagLabel>{customer?.email}</TagLabel>
               </Tag>
             </VStack>
           </HStack>

@@ -98,7 +98,7 @@ const JobModalForm = ({
 
   const onSubmit = async (values) => {
     console.log(JSON.stringify(values))
-    const { notes, stashing, range, ...formSubmission } = values
+    const { stashing, range, ...formSubmission } = values
     const start = range?.at(0).setHours(9, 0, 0, 0)
     const end = range?.at(1).setHours(17, 0, 0, 0)
     formSubmission["start"] = new Date(start)
@@ -112,14 +112,14 @@ const JobModalForm = ({
           id: jobStash.id,
           stashType,
           job: formSubmission,
-          notes,
+          // notes,
         })
       } else {
         jobRet = await createStashMutation({
           locationId,
           stashType,
           job: formSubmission,
-          notes,
+          // notes,
         })
       }
     } else {

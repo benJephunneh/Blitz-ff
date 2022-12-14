@@ -1,4 +1,5 @@
 import { Button, HStack, Icon, MenuItem, MenuList } from "@chakra-ui/react"
+import headerContext from "app/core/components/header/headerContext"
 import SettingsMenuButton from "app/core/components/SettingsMenuButton"
 import JobModalForm from "app/locations/components/LocationModalForm"
 import { useContext } from "react"
@@ -6,21 +7,21 @@ import { useState } from "react"
 import { FaArrowRight } from "react-icons/fa"
 import { FcDoughnutChart } from "react-icons/fc"
 import { TiEdit } from "react-icons/ti"
-import jobContext from "../contexts/jobContext"
+// import jobContext from "../contexts/jobContext"
 
 const JobSubheaderActions = () => {
   const [editingJob, setEditingJob] = useState(false)
-  const { job, showDetails, editJob, refetchJob } = useContext(jobContext)
+  const { job, editJob } = useContext(headerContext)
 
   return (
     <>
-      <JobModalForm
+      {/* <JobModalForm
         customerId={job.locationId}
         locationId={job.id}
         isOpen={editingJob}
         onClose={() => setEditingJob(false)}
         onSuccess={() => refetchJob()}
-      />
+      /> */}
 
       <HStack>
         <SettingsMenuButton>

@@ -97,14 +97,14 @@ const NoteSubmission = ({
     notes: customer
       ? customer.notes
       : location
-      ? location.notes
-      : job
-      ? job.notes
-      : invoice
-      ? invoice.notes
-      : // estimate ?
-        // estimate.notes :
-        undefined,
+        ? location.notes
+        : job
+          ? job.notes
+          : invoice
+            ? invoice.notes
+            : // estimate ?
+            // estimate.notes :
+            undefined,
   }
 
   const buttonBg = useColorModeValue("blackAlpha.200", "blackAlpha.400")
@@ -183,7 +183,7 @@ const NoteSubmission = ({
                 type="submit"
                 variant="ghost"
                 borderTopRadius={0}
-                // isDisabled={pristine || submitting}
+              // isDisabled={pristine || submitting}
               >
                 Update notes
               </Button>

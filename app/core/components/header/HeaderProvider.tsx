@@ -38,7 +38,7 @@ import getLocations from "app/locations/queries/getLocations"
 import SearchInput from "app/search/SearchInput"
 import SearchResults from "app/search/SearchResults"
 import getStashes from "app/stashes/queries/getStashes"
-import db, { Customer, Job, LineItem, Location, StashType } from "db"
+import db, { Customer, CustomerStash, Job, JobStash, LineItem, Location, LocationStash, StashType } from "db"
 import { useRouter } from "next/router"
 import { ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
@@ -85,14 +85,14 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   | undefined
   // >()
   const [locationId, setLocationId] = useState<number>()
-  const [jobs, setJobs] = useState<Job[]>()
+  const [jobs, setJobs] = useState<(Job & { lineitems: LineItem[] })[]>()
   // const [jobs, setJobs] = useState<
   //   | (Job & {
   //     lineitems: LineItem[]
   //   })[]
   //   | undefined
   // >()
-  const [job, setJob] = useState<Job>()
+  const [job, setJob] = useState<(Job & { lineitems: LineItem[] })>()
   // const [job, setJob] = useState<
   //   | (Job & {
   //     lineitems: LineItem[]
@@ -138,7 +138,6 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   })
   const [j, { refetch: refetchJobs }] = useQuery(getJobs, {
     where: { locationId },
-    include: { lineitems: true },
     orderBy: [{ start: "asc" }, { end: "asc" }, { createdAt: "asc" }],
   })
 
@@ -233,6 +232,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [editingStash, setEditingStash] = useState(false)
 
   // Stash
+  const [customerStash, setCustomerStash] = useState<CustomerStash>()
+  const [locationStash, setLocationStash] = useState<LocationStash>()
+  const [jobStash, setJobStash] = useState<JobStash>()
   const [
     { customerStashes, locationStashes, jobStashes, count: numStashes },
     { refetch: refetchStashes },
@@ -248,6 +250,24 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
       // refetchIntervalInBackground: true,
     }
   )
+  useEffect(() => {
+    switch (stashType) {
+      case 'Customer':
+        setCustomerStash(customerStashes.find(({ id }) => id === stashId))
+        break;
+      case 'Location':
+        setLocationStash(locationStashes.find(({ id }) => id === stashId))
+        break;
+      case 'Job':
+        setJobStash(jobStashes.find(({ id }) => id === stashId))
+        break;
+      default:
+        setCustomerStash(undefined)
+        setLocationStash(undefined)
+        setJobStash(undefined)
+    }
+  }, [stashType, stashId]) // eslint-disable-line
+
   // Search
   const { isOpen: searchIsOpen, onOpen: openSearch, onClose: closeSearch } = useDisclosure()
   const searchField = useRef<any>()
@@ -270,10 +290,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
     : deletingLocation
-    ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
-    : deletingJob
-    ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
-    : ""
+      ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
+      : deletingJob
+        ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
+        : ""
 
   return (
     <Provider
@@ -317,6 +337,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         locationIds,
         jobId,
         jobs,
+        job,
         customerStashes,
         locationStashes,
         jobStashes,
@@ -331,8 +352,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         openSearch,
         closeSearch,
 
-        // refetchCustomerData,
-        // refetchLocations,
+        refetchCustomer,
+        refetchLocations,
         // refetchJob,
         // refetchJobs,
         refetchStashes,
@@ -343,7 +364,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
           <CustomerModalForm
             // customerId={customerId}
             customer={editingCustomer ? customer : undefined}
-            stashId={editingStash ? stashId : undefined}
+            customerStash={editingStash ? customerStash : undefined}
+            // stashId={editingStash ? stashId : undefined}
             isOpen={
               creatingCustomer ||
               editingCustomer ||
@@ -374,7 +396,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               }
               creatingCustomer && setCreatingCustomer(false)
               editingCustomer && setEditingCustomer(false)
-              editingStash && setEditingStash(false)
+              if (editingStash) {
+                setStashId(undefined)
+                setEditingStash(false)
+              }
             }}
           />
 

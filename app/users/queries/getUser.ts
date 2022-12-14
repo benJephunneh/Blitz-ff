@@ -1,11 +1,12 @@
 import { resolver } from "@blitzjs/rpc"
 import { NotFoundError } from "blitz"
-import db from "db"
+import db, { Prisma } from "db"
 import { z } from "zod"
 
 const GetUser = z.object({
   id: z.number().optional().refine(Boolean, "Required"),
 })
+interface GetUserProps extends Pick<Prisma.UserFindFirstArgs, "where" | "select"> {}
 
 export default resolver.pipe(
   resolver.authorize(),

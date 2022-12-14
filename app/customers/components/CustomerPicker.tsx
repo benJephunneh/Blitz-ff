@@ -13,6 +13,7 @@ import {
   MenuList,
   useColorModeValue,
 } from "@chakra-ui/react"
+import headerContext from "app/core/components/header/headerContext"
 import dashboardContext from "app/dashboard/dashboardContext"
 import SearchInput from "app/search/SearchInput"
 import Link from "next/link"
@@ -34,7 +35,7 @@ const CustomerPicker = () => {
     { orderBy: { lastname: "asc" } },
     { suspense: true }
   )
-  const { customer } = useContext(customerContext)
+  const { customer } = useContext(headerContext)
   const [query, setQuery] = useState("")
 
   const tempArray = [1, 2, 3]

@@ -37,7 +37,7 @@ const CustomerListItem = ({ customerId, children }: CustomerListItemProps) => {
         customerId={customerId!}
         isOpen={creatingLocation}
         onClose={() => setCreatingLocation(false)}
-        mutationType={"New" as MutationType}
+        // mutationType={"New" as MutationType}
         onSuccess={async (_location) => {
           setCreatingLocation(false)
           await router.push(

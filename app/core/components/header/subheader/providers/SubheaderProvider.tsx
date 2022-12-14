@@ -20,7 +20,7 @@ type CustomerProviderProps = {
 
 const SubheaderProvider = ({ children }: CustomerProviderProps) => {
   const router = useRouter()
-  const { customer, pickLocation, locationId, refetchStashes } = useContext(headerContext)
+  const { customer, locations, pickLocation, locationId, refetchStashes } = useContext(headerContext)
   // const [location, setLocation] = useState<Location>()
 
   // Location
@@ -36,18 +36,18 @@ const SubheaderProvider = ({ children }: CustomerProviderProps) => {
   //     refetchOnWindowFocus: false,
   //   }
   // )
-  const [locations, { refetch: refetchLocations }] = useQuery(
-    getLocations,
-    {
-      where: { customerId: customer!.id },
-      orderBy: { primary: "desc" },
-    },
-    {
-      enabled: !!customer,
-      refetchOnWindowFocus: false,
-      refetchInterval: 5000,
-    }
-  )
+  // const [locations, { refetch: refetchLocations }] = useQuery(
+  //   getLocations,
+  //   {
+  //     where: { customerId: customer!.id },
+  //     orderBy: { primary: "desc" },
+  //   },
+  //   {
+  //     enabled: !!customer,
+  //     refetchOnWindowFocus: false,
+  //     refetchInterval: 5000,
+  //   }
+  // )
 
   // useEffect(() => {
   //   refetchLocation().catch((e) => console.log(e))
@@ -86,12 +86,15 @@ const SubheaderProvider = ({ children }: CustomerProviderProps) => {
 
         // customer: customer as Customer,
         // displayname: customer!.displayname,
-        locations,
+        // locations,
         // location,
         // locationId: locationId,
 
+        searchParams: searchQuery,
+        search: p => setSearchQuery(p),
+
         // refetchCustomer,
-        refetchLocations,
+        // refetchLocations,
       }}
     >
       {/* <LocationModalForm

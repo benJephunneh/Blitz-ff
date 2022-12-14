@@ -16,8 +16,8 @@ export type CustomerContext = {
   // location?: Location
   // locationId?: number
 
-  search: (p: string) => void
   searchParams: string
+  search: (p: string) => void
 
   // amountPaid: number
   // amountOwed: number
