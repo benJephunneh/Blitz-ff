@@ -5,20 +5,19 @@ import { GetJobsSchema } from "../validations"
 interface GetJobsInput extends Pick<Prisma.JobFindManyArgs, "where" | "include" | "orderBy"> {}
 
 export default resolver.pipe(
-  resolver.zod(GetJobsSchema),
   resolver.authorize(),
+  // resolver.zod(GetJobsSchema),
 
-  async ({ customerId, locationId, ...data }) => {
+  async ({ where, orderBy }: GetJobsInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const jobs = await db.job.findMany({
-      where: { customerId, locationId },
+      where,
+      orderBy,
       include: {
         lineitems: true,
       },
-      orderBy: [{ start: "asc" }, { end: "asc" }, { createdAt: "asc" }],
     })
 
-    // console.table(jobs)
     return jobs
   }
 )

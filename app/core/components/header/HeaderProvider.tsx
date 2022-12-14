@@ -122,105 +122,70 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   }
   // }, [customerId]) // eslint-disable-line
 
-  const getPageLoadData = useCallback(() => {
-    const [customer] = useQuery(
-      getCustomer, {
-      where: { id: customerId }
-    }, {
-      staleTime: Infinity, refetchOnWindowFocus: false
-    })
-    const [locations] = useQuery(
-      getLocations, {
-      where: { customerId },
-      orderBy: [
-        { primary: 'desc' },
-        { zipcode: 'asc' },
-        { city: 'asc' },
-        { house: 'asc' },
-      ]
-    }, {
-      staleTime: Infinity, refetchOnWindowFocus: false
-    })
-    if (customer) {
-      setCustomer(customer)
-      setCustomerPhone(customer.phone)
-      if (0 in locations) {
-        setLocations(locations)
-        setLocationId(locations.at(0)!.id)
-      }
-      // const {
-      //   id,
-      //   createdAt,
-      //   updatedAt,
-      //   firstname,
-      //   lastname,
-      //   companyname,
-      //   displayname,
-      //   phone,
-      //   email,
-      //   notes,
-      //   userId,
-      // } = customerData!
-      // setCustomer({
-      //   id,
-      //   createdAt,
-      //   updatedAt,
-      //   firstname,
-      //   lastname,
-      //   companyname,
-      //   displayname,
-      //   phone,
-      //   email,
-      //   notes,
-      //   userId,
-      // } as Customer)
+  const [c, { refetch: refetchCustomer }] = useQuery(
+    getCustomer,
+    {
+      where: { id: customerId },
+    },
+    {
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
     }
-  }, [customerId])
+  )
+  const [l, { refetch: refetchLocations }] = useQuery(getLocations, {
+    where: { customerId },
+    orderBy: [{ primary: "desc" }, { zipcode: "asc" }, { city: "asc" }, { house: "asc" }],
+  })
+  const [j, { refetch: refetchJobs }] = useQuery(getJobs, {
+    where: { locationId },
+    include: { lineitems: true },
+    orderBy: [{ start: "asc" }, { end: "asc" }, { createdAt: "asc" }],
+  })
 
-  const getJobsData = useCallback(() => {
-    const [jobs] = useQuery(
-      getJobs, {
-      where: { locationId },
-      orderBy: [
-        { start: 'asc' },
-        { end: 'asc' },
-        { createdAt: 'asc' },
-      ]
-    })
+  const setPageLoadData = useCallback(() => {
+    setCustomer(c ?? undefined)
+    setCustomerPhone(c?.phone)
+  }, [c])
 
-    if (jobs) {
-      setJobs(jobs)
+  const setLocationsData = useCallback(() => {
+    setLocations(l)
+  }, [l])
 
-      if (!locations.some(({ id }) => id === locationId))
-        setLocationId(locations.at(0)?.id)
-    }
-  }, [customerData?.locations])
-
-  const setJobsObject = useCallback(() => {
-    if (location) {
-      const jobs = location.jobs
-    }
-  }, [location])
-
-  useEffect(() => { // setCustomer and setLocations, and potentially setLocationId
-    getPageLoadData()
-    getJobsData()
-  }, [customerData])
+  const setJobsData = useCallback(() => {
+    setJobs(j)
+  }, [j])
 
   useEffect(() => {
+    // Get customer data, relevant locations, and relevant jobs.
+    setPageLoadData()
+    setLocationsData()
+    setJobsData()
+  }, [customerId, setPageLoadData, setLocationsData, setJobsData])
+
+  useEffect(() => {
+    // Set default location, given unrelated id.
+    if (locations?.some(({ id }) => id !== locationId)) setLocationId(locations.at(0)?.id)
+  }, [locations]) // eslint-disable-line
+
+  useEffect(() => {
+    // Set location, given id.
     if (locations) {
       const l = locations.find(({ id }) => id === locationId)
       setLocation(l)
-      setJobs(l?.jobs)
     }
-  }, [locations, locationId]) // eslint-disable-line
+  }, [locationId]) // eslint-disable-line
 
   useEffect(() => {
+    if (jobs?.some(({ id }) => id !== jobId)) setJobId(undefined)
+  }, [jobs]) // eslint-disable-line
+
+  useEffect(() => {
+    // Set job, given id.
     if (jobs) {
       const j = jobs.find(({ id }) => id === jobId)
       setJob(j)
     }
-  }, [jobs, jobId])
+  }, [jobId]) // eslint-disable-line
 
   // const fetchCustomerId = useCallback(async () => {
   //   // const { customerId: c } = router.query
@@ -305,10 +270,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
     : deletingLocation
-      ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
-      : deletingJob
-        ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
-        : ""
+    ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
+    : deletingJob
+    ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
+    : ""
 
   return (
     <Provider
@@ -366,7 +331,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         openSearch,
         closeSearch,
 
-        refetchCustomerData,
+        // refetchCustomerData,
         // refetchLocations,
         // refetchJob,
         // refetchJobs,
@@ -471,14 +436,11 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
                         .then(() => setJobId(job.id))
                         .catch(console.error)
                     } else if (job.locationId != locationId) {
-                      refetchCustomerData()
-                        .then(() => setLocationId(job.locationId))
-                        .then(() => setJobId(job.id))
-                        .catch(console.error)
+                      setLocationId(job.locationId)
+                      setJobId(job.id)
                     } else {
-                      refetchCustomerData()
-                        .then(() => setJobId(job.id))
-                        .catch(console.error)
+                      setJobId(job.id)
+                      await setJobsData()
                     }
                     // await refetchJobs()
                   }
