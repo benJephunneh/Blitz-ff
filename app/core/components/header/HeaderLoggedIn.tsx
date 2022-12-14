@@ -27,7 +27,6 @@ import deleteStash from "app/stashes/mutations/deleteStash"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import headerContext from "./headerContext"
 import userContext from "app/auth/components/contexts/userContext"
-import { j } from "@blitzjs/auth/dist/index-57d74361"
 
 const HeaderLoggedIn = () => {
   const router = useRouter()
