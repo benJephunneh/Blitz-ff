@@ -5,6 +5,7 @@ import {
   Button,
   Code,
   Container,
+  Flex,
   Heading,
   HStack,
   Text,
@@ -50,8 +51,8 @@ const Dashboard: BlitzPage = () => {
   const { user: currentUser } = useCurrentUser({ suspense: false })
 
   return (
-    <>
-      <Box bg={useColorModeValue("gray.200", "gray.600")} h="full">
+    <Flex flexDirection='column'>
+      <Box bg={useColorModeValue("gray.200", "gray.900")} h="full">
         <Container textAlign="center">
           <Heading size="2xl" my={2}>
             {currentUser?.username}
@@ -92,7 +93,7 @@ const Dashboard: BlitzPage = () => {
           </Link>
         </HStack>
       </footer>
-    </>
+    </Flex>
   )
 }
 

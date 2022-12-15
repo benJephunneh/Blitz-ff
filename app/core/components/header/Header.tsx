@@ -72,7 +72,7 @@ const Header = ({ children }: HeaderProps) => {
       <Box position="sticky" top={0} zIndex={3} boxShadow={useColorModeValue("md", "lg")}>
         <Box
           as="header"
-          bg={useColorModeValue("white", "gray.600")}
+          bg={useColorModeValue("white", "gray.800")}
           borderBottom={1}
           borderBottomColor={useColorModeValue("blackAlpha.100", "whiteAlpha.100")}
           transition="border 0.2s ease"
