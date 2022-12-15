@@ -17,7 +17,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import headerContext from "app/core/components/header/headerContext"
-import SearchInput from "app/search/SearchInput"
+import SearchInput from "app/search/searchInput"
 import SearchInputMenu from "app/search/SearchInputMenu"
 import SearchResults from "app/search/SearchResults"
 import Link from "next/link"
@@ -60,7 +60,7 @@ const CustomerPicker2 = () => {
           rightIcon={
             <Icon color={useColorModeValue("cyan.400", "cyan.600")} pr={1} as={FaChevronDown} />
           }
-        // zIndex={10}
+          // zIndex={10}
         >
           <HStack>
             <Icon

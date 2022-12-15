@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react"
 import headerContext from "app/core/components/header/headerContext"
 import dashboardContext from "app/dashboard/dashboardContext"
-import SearchInput from "app/search/SearchInput"
+import SearchInput from "app/search/searchInput"
 import Link from "next/link"
 import { useContext, useState } from "react"
 import { IconType } from "react-icons"

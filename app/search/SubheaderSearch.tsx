@@ -1,7 +1,7 @@
 import { useQuery } from "@blitzjs/rpc"
 import findCustomer from "app/customers/queries/findCustomer"
 import { useState } from "react"
-import SearchInput from "./SearchInput"
+import SearchInput from "./searchInput"
 import SearchResults from "./SearchResults"
 
 const SubheaderSearch = () => {

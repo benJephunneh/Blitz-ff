@@ -6,7 +6,7 @@ import CustomerSearchResult from "app/customers/components/CustomerSearchResult"
 import { useEffect, useState } from "react"
 import findCustomer from "../customers/queries/findCustomer"
 import search from "./queries/search"
-import SearchInput from "./SearchInput"
+import SearchInput from "./searchInput"
 import SearchResults from "./SearchResults"
 
 type CustomerSearchProps = {

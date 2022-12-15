@@ -1,6 +1,5 @@
-import { SessionContext, setPublicDataForUser } from "@blitzjs/auth"
-import { Ctx, Routes, useParam, useParams } from "@blitzjs/next"
-import { invokeWithCtx, useMutation, useQuery } from "@blitzjs/rpc"
+import { Routes, useParam } from "@blitzjs/next"
+import { useMutation, useQuery } from "@blitzjs/rpc"
 import {
   Box,
   Drawer,
@@ -9,7 +8,6 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
-  Input,
   SimpleGrid,
   Stack,
   useDisclosure,
@@ -17,28 +15,28 @@ import {
 import userContext from "app/auth/components/contexts/userContext"
 import CustomerModalForm from "app/customers/components/CustomerModalForm"
 import CustomerSearchResult from "app/customers/components/CustomerSearchResult"
-import useCustomer from "app/customers/hooks/useCustomer"
 import deleteCustomer from "app/customers/mutations/deleteCustomer"
-import updateCustomer from "app/customers/mutations/updateCustomer"
 import findCustomer from "app/customers/queries/findCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
-import getCustomerData from "app/customers/queries/getCustomerData"
 import JobModalForm from "app/jobs/components/JobModalForm"
-import { Range } from "app/jobs/components/JobPanel"
-import { useJobs } from "app/jobs/hooks/useJobs"
-import updateJob from "app/jobs/mutations/updateJob"
-import getJob from "app/jobs/queries/getJob"
 import getJobs from "app/jobs/queries/getJobs"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import LocationSearchResult from "app/locations/components/LocationSearchResult"
-import updateLocation from "app/locations/mutations/updateLocation"
 import findLocation from "app/locations/queries/findLocation"
-import getLocation from "app/locations/queries/getLocation"
 import getLocations from "app/locations/queries/getLocations"
-import SearchInput from "app/search/SearchInput"
+import SearchInput from "app/search/searchInput"
 import SearchResults from "app/search/SearchResults"
 import getStashes from "app/stashes/queries/getStashes"
-import db, { Customer, CustomerStash, Job, JobStash, LineItem, Location, LocationStash, StashType } from "db"
+import db, {
+  Customer,
+  CustomerStash,
+  Job,
+  JobStash,
+  LineItem,
+  Location,
+  LocationStash,
+  StashType,
+} from "db"
 import { useRouter } from "next/router"
 import { ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react"
 import ConfirmDeleteModal from "../ConfirmDeleteModal"
@@ -92,7 +90,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   })[]
   //   | undefined
   // >()
-  const [job, setJob] = useState<(Job & { lineitems: LineItem[] })>()
+  const [job, setJob] = useState<Job & { lineitems: LineItem[] }>()
   // const [job, setJob] = useState<
   //   | (Job & {
   //     lineitems: LineItem[]
@@ -252,15 +250,15 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   )
   useEffect(() => {
     switch (stashType) {
-      case 'Customer':
+      case "Customer":
         setCustomerStash(customerStashes.find(({ id }) => id === stashId))
-        break;
-      case 'Location':
+        break
+      case "Location":
         setLocationStash(locationStashes.find(({ id }) => id === stashId))
-        break;
-      case 'Job':
+        break
+      case "Job":
         setJobStash(jobStashes.find(({ id }) => id === stashId))
-        break;
+        break
       default:
         setCustomerStash(undefined)
         setLocationStash(undefined)
@@ -290,10 +288,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
     : deletingLocation
-      ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
-      : deletingJob
-        ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
-        : ""
+    ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
+    : deletingJob
+    ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
+    : ""
 
   return (
     <Provider
