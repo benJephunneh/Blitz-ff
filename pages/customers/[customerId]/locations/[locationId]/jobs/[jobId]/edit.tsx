@@ -28,14 +28,14 @@ export const EditJob = () => {
   return (
     <>
       <Head>
-        <title>Edit Job {job.id}</title>
+        <title>Edit Job {job?.id}</title>
       </Head>
 
       <div>
-        <h1>Edit Job {job.id}</h1>
+        <h1>Edit Job {job?.id}</h1>
         <pre>{JSON.stringify(job, null, 2)}</pre>
 
-        <JobForm
+        {/* <JobForm
           submitText="Update Job"
           // TODO use a zod schema for form validation
           //  - Tip: extract mutation's schema into a shared `validations.ts` file and
@@ -57,7 +57,7 @@ export const EditJob = () => {
               }
             }
           }}
-        />
+        /> */}
       </div>
     </>
   )

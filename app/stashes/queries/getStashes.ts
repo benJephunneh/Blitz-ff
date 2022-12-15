@@ -18,7 +18,9 @@ export default resolver.pipe(
     const locationStashes = await db.locationStash.findMany()
 
     count += await db.jobStash.count()
-    const jobStashes = await db.jobStash.findMany()
+    const jobStashes = await db.jobStash.findMany({
+      include: { lineitems: true },
+    })
 
     // count += await db.jobStash.count()
     // const jobStashes = await db.jobStash.findMany({ where, orderBy })

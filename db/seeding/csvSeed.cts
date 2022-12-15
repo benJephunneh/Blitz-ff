@@ -179,4 +179,5 @@ csvSeed()
     await prisma.$disconnect()
     process.exit(1)
   })
-// export default csvParse
+
+export default csvSeed

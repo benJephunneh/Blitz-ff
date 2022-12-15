@@ -5,7 +5,7 @@ import Link from "next/link"
 
 const ProfilePage: BlitzPage = () => {
   const username = useParam("username", "string")
-  const currentUser = useCurrentUser()
+  const { user: currentUser } = useCurrentUser()
 
   return (
     <VStack spacing={10} alignItems="flex-start" justify="left">

@@ -19,11 +19,11 @@ export const Job = () => {
   return (
     <>
       <Head>
-        <title>Job {job.id}</title>
+        <title>Job {job?.id}</title>
       </Head>
 
       <div>
-        <h1>Job {job.id}</h1>
+        <h1>Job {job?.id}</h1>
         <pre>{JSON.stringify(job, null, 2)}</pre>
 
         {/* <Link href={Routes.EditJobPage({ jobId: job.id })}>
@@ -34,7 +34,7 @@ export const Job = () => {
           type="button"
           onClick={async () => {
             if (window.confirm("This will be deleted")) {
-              await deleteJobMutation({ id: job.id })
+              await deleteJobMutation({ id: job!.id })
               // await router.push(Routes.JobsPage());
             }
           }}

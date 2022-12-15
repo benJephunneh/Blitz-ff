@@ -55,7 +55,7 @@ export default resolver.pipe(
             // notes,
             // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
-            ...customer,
+            ...customer!,
           },
         })
 
@@ -68,21 +68,24 @@ export default resolver.pipe(
             // notes,
             // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
-            ...location,
+            ...location!,
           },
         })
 
         break
       case "Job":
+        const { lineitems, ...jobVals } = job!
+        const lineitemIds: { id: number }[] = [...(lineitems?.map(({ id }) => ({ id })) ?? [])]
         stash = await db.jobStash.create({
           data: {
             // customerId: customerId!,
             // locationId: locationId!,
             stashType,
+            lineitems: { connect: [...lineitemIds] },
             // notes,
             // notes: JSON.stringify(notes),
             userId: ctx.session.userId,
-            ...job,
+            ...jobVals,
           },
         })
 

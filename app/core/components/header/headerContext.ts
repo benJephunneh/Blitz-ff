@@ -40,8 +40,8 @@ export type HeaderContext = {
   // Stash
   customerStashes: CustomerStash[]
   locationStashes: LocationStash[]
-  jobStashes: JobStash[]
-  jobStash?: JobStash
+  jobStashes: (JobStash & { lineitems: LineItem[] })[]
+  jobStash?: JobStash & { lineitems: LineItem[] }
   // invoiceStashes: InvoiceStash[]
   // estimateStashes: EstimateStash[]
   numStashes: number

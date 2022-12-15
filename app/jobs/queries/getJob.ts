@@ -19,6 +19,9 @@ export default resolver.pipe(
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const job = await db.job.findFirst({
       where,
+      include: {
+        lineitems: true,
+      },
     })
 
     // if (!job) throw new NotFoundError();

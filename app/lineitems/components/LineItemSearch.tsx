@@ -1,7 +1,7 @@
 import { useQuery } from "@blitzjs/rpc"
 import { Box, Container, SimpleGrid, Stack } from "@chakra-ui/react"
 import { LineItem } from "@prisma/client"
-import SearchInput from "app/search/searchInput"
+import SearchInput from "app/search/SearchInput"
 import SearchResults from "app/search/SearchResults"
 import { useEffect, useState } from "react"
 import findLineItem from "../queries/findLineItem"

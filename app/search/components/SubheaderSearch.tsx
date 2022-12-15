@@ -7,7 +7,7 @@ import customerContext from "app/customers/contexts/customerContext"
 import Link from "next/link"
 import { useContext, useState } from "react"
 import { FcSearch } from "react-icons/fc"
-import SearchInput from "../searchInput"
+import SearchInput from "../SearchInput"
 
 const SubheaderSearch = () => {
   const { openSearch } = useContext(headerContext) // When the input box is working in the subheader, this will run the search.

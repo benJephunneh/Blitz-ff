@@ -5,14 +5,14 @@ import Link from "next/link"
 import { usePaginatedQuery } from "@blitzjs/rpc"
 import { useRouter } from "next/router"
 import Layout from "app/core/layouts/Layout"
-import getJobs from "app/jobs/queries/getJobs"
+import getPaginatedJobs from "app/jobs/queries/getPaginatedJobs"
 
 const ITEMS_PER_PAGE = 100
 
 export const JobsList = () => {
   const router = useRouter()
   const page = Number(router.query.page) || 0
-  const [{ jobs, hasMore }] = usePaginatedQuery(getJobs, {
+  const [{ jobs, hasMore }] = usePaginatedQuery(getPaginatedJobs, {
     orderBy: { id: "asc" },
     skip: ITEMS_PER_PAGE * page,
     take: ITEMS_PER_PAGE,
