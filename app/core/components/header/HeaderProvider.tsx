@@ -1,3 +1,4 @@
+import { j } from "@blitzjs/auth/dist/index-834e37b5"
 import { Routes, useParam } from "@blitzjs/next"
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import {
@@ -20,6 +21,7 @@ import findCustomer from "app/customers/queries/findCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
 import JobModalForm from "app/jobs/components/JobModalForm"
 import getJobs from "app/jobs/queries/getJobs"
+import { JobType } from "app/jobs/validations"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import LocationSearchResult from "app/locations/components/LocationSearchResult"
 import findLocation from "app/locations/queries/findLocation"
@@ -63,7 +65,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
 
   // Customer
   const customerId = useParam("customerId", "number")
-  const [customer, setCustomer] = useState<Customer>()
+  const [customer, setCustomer] = useState<Customer | null>()
   const [locations, setLocations] = useState<Location[]>()
   // const [locations, setLocations] = useState<
   //   | (Location & {
@@ -83,14 +85,15 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   | undefined
   // >()
   const [locationId, setLocationId] = useState<number>()
-  const [jobs, setJobs] = useState<(Job & { lineitems: LineItem[] })[]>()
+  const [jobs, setJobs] = useState<JobType[]>()
+  const [locationJobs, setLocationJobs] = useState<(Job & { lineitems: LineItem[] })[]>()
   // const [jobs, setJobs] = useState<
   //   | (Job & {
   //     lineitems: LineItem[]
   //   })[]
   //   | undefined
   // >()
-  const [job, setJob] = useState<Job & { lineitems: LineItem[] }>()
+  const [job, setJob] = useState<JobType>()
   // const [job, setJob] = useState<
   //   | (Job & {
   //     lineitems: LineItem[]
@@ -98,6 +101,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   //   | undefined
   // >()
   const [jobId, setJobId] = useState<number>()
+  const [lineitems, setLineitems] = useState<LineItem[]>([])
 
   // const [customerData, { refetch: refetchCustomerData }] = useQuery(
   //   getCustomerData,
@@ -130,17 +134,31 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
       refetchOnWindowFocus: false,
     }
   )
-  const [l, { refetch: refetchLocations }] = useQuery(getLocations, {
-    where: { customerId },
-    orderBy: [{ primary: "desc" }, { zipcode: "asc" }, { city: "asc" }, { house: "asc" }],
-  })
-  const [j, { refetch: refetchJobs }] = useQuery(getJobs, {
-    where: { locationId },
-    orderBy: [{ start: "asc" }, { end: "asc" }, { createdAt: "asc" }],
-  })
+  const [l, { refetch: refetchLocations }] = useQuery(
+    getLocations,
+    {
+      where: { customerId },
+      orderBy: [{ primary: "desc" }, { zipcode: "asc" }, { city: "asc" }, { house: "asc" }],
+    },
+    {
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  )
+  const [j, { refetch: refetchJobs }] = useQuery(
+    getJobs,
+    {
+      where: { customerId },
+      orderBy: [{ start: "asc" }, { end: "asc" }, { createdAt: "asc" }],
+    },
+    {
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  )
 
-  const setPageLoadData = useCallback(() => {
-    setCustomer(c ?? undefined)
+  const setCustomerData = useCallback(() => {
+    setCustomer(c)
     setCustomerPhone(c?.phone)
   }, [c])
 
@@ -153,11 +171,16 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   }, [j])
 
   useEffect(() => {
-    // Get customer data, relevant locations, and relevant jobs.
-    setPageLoadData()
+    setCustomerData()
+  }, [c, setCustomerData])
+
+  useEffect(() => {
     setLocationsData()
+  }, [l, setLocationsData])
+
+  useEffect(() => {
     setJobsData()
-  }, [customerId, setPageLoadData, setLocationsData, setJobsData])
+  }, [j, setJobsData])
 
   useEffect(() => {
     // Set default location, given unrelated id.
@@ -166,8 +189,13 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
 
   useEffect(() => {
     // Set location, given id.
+    if (!!locationId) {
+    }
     if (locations) {
+      const locationMatch = (j: JobType) => j.locationId === locationId
+      const lj = j.filter(locationMatch)
       const l = locations.find(({ id }) => id === locationId)
+      setLocationJobs(lj)
       setLocation(l)
     }
   }, [locationId]) // eslint-disable-line
@@ -180,7 +208,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
     // Set job, given id.
     if (jobs) {
       const j = jobs.find(({ id }) => id === jobId)
+      const lineitems = j?.lineitems ?? []
       setJob(j)
+      setLineitems(lineitems)
     }
   }, [jobId]) // eslint-disable-line
 
@@ -288,10 +318,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
     : deletingLocation
-      ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
-      : deletingJob
-        ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
-        : ""
+    ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
+    : deletingJob
+    ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
+    : ""
 
   return (
     <Provider
@@ -318,9 +348,11 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         deleteJob: () => setDeletingJob(true),
         pickJob: (id) => {
           const temp = jobs?.find((j) => j.id === id)?.id
-          // console.log(`pickJob: ${id}`)
           setJobId(temp)
         },
+
+        lineitems,
+        setLineitems,
 
         editStash: (id, type) => {
           setStashId(id)
@@ -335,6 +367,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         locationIds,
         jobId,
         jobs,
+        locationJobs,
         job,
         customerStashes,
         locationStashes,
@@ -353,7 +386,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         refetchCustomer,
         refetchLocations,
         // refetchJob,
-        // refetchJobs,
+        refetchJobs,
         refetchStashes,
       }}
     >
@@ -361,7 +394,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         <>
           <CustomerModalForm
             // customerId={customerId}
-            customer={editingCustomer ? customer : undefined}
+            customer={editingCustomer ? customer! : undefined}
             customerStash={editingStash ? customerStash : undefined}
             // stashId={editingStash ? stashId : undefined}
             isOpen={
@@ -451,7 +484,9 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               if (job) {
                 if ("stashType" in job) await refetchStashes()
                 else {
+                  await refetchJobs()
                   if (editingStash) {
+                    await refetchStashes()
                     if (job.customerId != customerId) {
                       router
                         .push(Routes.ShowCustomerPage({ customerId: job.customerId }))

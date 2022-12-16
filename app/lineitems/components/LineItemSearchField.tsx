@@ -30,12 +30,12 @@ const LineItemSearchField = forwardRef<HTMLInputElement, LineItemSearchFieldProp
     const { lineitems, setLineitems, lineitemSearchResults } = searchProvider
 
     const onAdd = (lineitemId: number) => {
+      console.log({ ...lineitems })
       if (lineitems.findIndex(({ id }) => id == lineitemId) !== -1) return
 
       const addition = lineitemSearchResults.find(({ id }) => id === lineitemId)
       if (addition) setLineitems([...lineitems, addition])
       onChange([...lineitems])
-      console.log({ ...lineitems })
     }
 
     return (

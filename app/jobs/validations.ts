@@ -20,8 +20,8 @@ const jobValidator = Prisma.validator<Prisma.JobArgs>()({
     lineitems: true,
   },
 })
-export type jobType = Prisma.JobGetPayload<typeof jobValidator>
-export const isJobWithLineitems = (x: any): x is jobType =>
+export type JobType = Prisma.JobGetPayload<typeof jobValidator>
+export const isJobWithLineitems = (x: any): x is JobType =>
   Object.hasOwn(x, "completed") && Object.hasOwn(x, "lineitems")
 
 const jobStashValidator = Prisma.validator<Prisma.JobStashArgs>()({

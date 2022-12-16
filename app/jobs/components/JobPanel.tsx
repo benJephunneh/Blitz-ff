@@ -30,7 +30,7 @@ import { Form as FinalForm } from "react-final-form"
 import { FaChevronDown, FaPlus } from "react-icons/fa"
 import updateJob from "../mutations/updateJob"
 import getJobs from "../queries/getJobs"
-import { textNotes } from "../validations"
+import { JobType, textNotes } from "../validations"
 
 export type Range = [Date | null, Date | null] | Date | null | undefined
 
@@ -38,13 +38,14 @@ const JobPanel = () => {
   const {
     locationId: lId,
     jobId,
-    jobs,
+    locationJobs,
+    job,
     jobStash,
     createJob,
     editJob,
     pickJob,
     refetchCustomer,
-    // refetchJob,
+    refetchJobs,
     refetchStashes,
   } = useContext(headerContext)
   // if (Array.isArray(jobs) && jobs.at(0)!.id > 0) console.table(jobs)
@@ -75,27 +76,28 @@ const JobPanel = () => {
   // console.table({ ...job })
   // console.log({ jobId })
 
-  const [job, setJob] = useState(jobs?.find(({ id }) => id === jobId))
-  const [relatedJobs, setRelatedJobs] = useState<(Job & { lineitems: LineItem[] })[] | undefined>()
+  // const [job, setJob] = useState(jobs?.find(({ id }) => id === jobId))
+  // const [relatedJobs, setRelatedJobs] = useState<JobType[] | undefined>()
   // const job = locationJobs?.find((j) => j.id === jobId)
   const [range, setRange] = useState<Range>([job?.start ?? null, job?.end ?? null])
 
-  useEffect(() => {
-    const filteredJobs = jobs?.filter(({ locationId }) => locationId === lId)
-    setRelatedJobs(filteredJobs)
-  }, [jobs, lId])
+  // useEffect(() => {
+  //   const filteredJobs = jobs?.filter(({ locationId }) => locationId === lId)
+  //   setRelatedJobs(filteredJobs)
+  // }, [jobs, lId])
   useEffect(() => {
     setRange([job?.start ?? null, job?.end ?? null])
   }, [job])
-  useEffect(() => {
-    setJob(jobs?.find(({ id }) => id === jobId))
-  }, [jobs, jobId])
+  // useEffect(() => {
+  //   setJob(jobs?.find(({ id }) => id === jobId))
+  // }, [jobs, jobId])
 
   const headingColor = useColorModeValue("green", "khaki")
   const inactiveJobColor = "gray.400"
 
-  const markComplete = async () => {
-    updateJobMutation({ id: jobId!, completed: true }).catch(console.error)
+  const toggleComplete = async () => {
+    await updateJobMutation({ id: jobId!, completed: !job?.completed })
+    refetchJobs()
     // console.log("submitted on job panel")
   }
 
@@ -119,14 +121,14 @@ const JobPanel = () => {
                     value="all"
                     onClick={() => {
                       pickJob(undefined)
-                      setJob(undefined)
+                      // setJob(undefined)
                     }}
                   >
                     All jobs
                   </MenuItemOption>
                   <MenuDivider />
-                  {relatedJobs?.map((j, ii) => (
-                    <MenuItemOption value={j.id.toString()} key={ii} onClick={() => setJob(j)}>
+                  {locationJobs?.map((j, ii) => (
+                    <MenuItemOption value={j.id.toString()} key={ii} onClick={() => pickJob(j.id)}>
                       {j.title}
                     </MenuItemOption>
                   ))}
@@ -152,10 +154,11 @@ const JobPanel = () => {
           variant="outline"
           bg={useColorModeValue("blackAlpha.200", "blackAlpha.400")}
           borderColor="whiteAlpha.50"
-          onClick={markComplete}
+          onClick={toggleComplete}
           disabled={!jobId}
         >
-          Mark complete
+          {job?.completed ? "Mark incomplete" : "Mark complete"}
+          {/* Mark complete */}
         </Button>
         <ButtonGroup isAttached>
           <Button
@@ -190,10 +193,10 @@ const JobPanel = () => {
       </Flex>
 
       {job && (
-        <>
+        <HStack>
           <Calendar value={range} />
 
-          <Box h={4}>
+          <Box h={8} alignSelf="start">
             <NoteSubmission
               modelType="Job"
               onSuccess={async () => {
@@ -204,22 +207,24 @@ const JobPanel = () => {
             />
           </Box>
           <pre>{JSON.stringify(job, null, 2)}</pre>
-        </>
+        </HStack>
       )}
       {!job && (
         <UnorderedList>
-          {relatedJobs?.map((j, ii) => (
+          {locationJobs?.map((j, ii) => (
             <Tooltip key={ii} label={j.title}>
               <ListItem
                 // key={ii}
                 onClick={() => {
                   pickJob(j.id)
-                  setJob(j)
+                  // setJob(j)
                 }}
                 textColor={isPast(j.start!) ? inactiveJobColor : "initial"}
                 _hover={{ cursor: "pointer" }}
               >
-                {isSameMonth(j.start!, j.end!)
+                {j.start === null
+                  ? `${j.title}: unscheduled`
+                  : isSameMonth(j.start!, j.end!)
                   ? isSameDay(j.start!, j.end!)
                     ? `${j.title}: ${format(j.start!, "HHmm")} - ${format(j.end!, "HHmm, d MMM")}`
                     : `${j.title}: ${format(j.start!, "d")} - ${format(j.end!, "d MMM")}`

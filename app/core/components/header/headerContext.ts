@@ -8,6 +8,7 @@ import {
   LocationStash,
   StashType,
 } from "@prisma/client"
+import { JobType } from "app/jobs/validations"
 import { createContext } from "react"
 
 export type HeaderContext = {
@@ -30,12 +31,17 @@ export type HeaderContext = {
 
   // Job
   jobId?: number
-  job?: Job & { lineitems: LineItem[] }
-  jobs?: (Job & { lineitems: LineItem[] })[]
+  job?: JobType
+  jobs?: JobType[]
+  locationJobs?: JobType[]
   createJob: () => void
   editJob: () => void
   deleteJob: () => void
   pickJob: (id: number | undefined) => void
+
+  // LineItem
+  lineitems: LineItem[]
+  setLineitems: (lineitems: LineItem[]) => void
 
   // Stash
   customerStashes: CustomerStash[]
@@ -58,7 +64,7 @@ export type HeaderContext = {
   refetchCustomer: () => void
   refetchLocations: () => void
   // refetchJob: () => void
-  // refetchJobs: () => void
+  refetchJobs: () => void
   refetchStashes: () => void
 }
 

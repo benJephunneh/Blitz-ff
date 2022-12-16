@@ -5,6 +5,7 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Button,
   Divider,
   Flex,
   FormControl,
@@ -21,13 +22,14 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import getFieldErrorMessage from "app/core/components/forms/helpers/getFieldErrorMessage"
-import { format, formatDistance } from "date-fns"
+import { addDays, format, formatDistance, isFriday } from "date-fns"
 import React, { ComponentPropsWithoutRef, forwardRef, PropsWithoutRef } from "react"
 import { Calendar } from "react-calendar"
 import { useField, UseFieldConfig } from "react-final-form"
 import timeRange9_17 from "../helpers/timeRange9_17"
 
 import "react-calendar/dist/Calendar.css"
+import { Range } from "app/jobs/components/JobPanel"
 
 // const timerange = () => {
 //   const timeArray = Array<number>(17)
@@ -104,9 +106,31 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
     //   ? error.join(', ')
     //   : error || submitError
 
+    const unschedule = () => {
+      onChange([null, null])
+    }
+
+    const scheduleTomorrow = () => {
+      const today = [new Date(), new Date()] as const
+      let nextBusinessDay: Date[]
+
+      if (today.some(isFriday)) nextBusinessDay = today.map((d) => addDays(d!, 3))
+      else nextBusinessDay = today.map((d) => addDays(d!, 1))
+
+      onChange([nextBusinessDay.at(0)?.setHours(9), nextBusinessDay.at(1)?.setHours(17)])
+    }
+
     return (
       <FormControl {...outerProps}>
         {/* <FormLabel {...labelProps}>{label}</FormLabel> */}
+        <HStack spacing={1}>
+          <Button size="sm" borderBottomRadius={0} textColor="Brown" onClick={unschedule}>
+            Unscheduled
+          </Button>
+          <Button size="sm" borderBottomRadius={0} onClick={scheduleTomorrow}>
+            Tomorrow
+          </Button>
+        </HStack>
         <Accordion allowToggle>
           <AccordionItem>
             <Heading>
@@ -123,6 +147,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
               <Calendar
                 showWeekNumbers
                 onChange={(r) => {
+                  console.log({ r })
                   r[0].setHours(9, 0, 0, 0)
                   r[1].setHours(17, 0, 0, 0)
                   onChange(r)
@@ -146,7 +171,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
               <Box alignSelf="end">
                 <Stat>
                   <StatLabel>Start</StatLabel>
-                  {Array.isArray(value) && value.some((v) => v !== undefined) && (
+                  {Array.isArray(value) && value.at(0) && (
                     <>
                       <HStack as={StatNumber}>
                         <Select
@@ -163,7 +188,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
                             </option>
                           ))}
                         </Select>
-                        <Text>{`${format(value.at(0), "EEEE")}`}</Text>
+                        {value.at(0) && <Text>{`${format(value.at(0), "EEEE")}`}</Text>}
                       </HStack>
                       <StatHelpText>{formatDistance(value.at(0), new Date())}</StatHelpText>
                     </>
@@ -173,7 +198,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
               {/* <Spacer /> */}
               <Box alignSelf="center">
                 <Stat>
-                  {Array.isArray(value) && value.some((v) => v !== undefined) && (
+                  {Array.isArray(value) && value.at(0) && (
                     <Text as={StatNumber}>{`${format(value.at(0), "do MMM")}`}</Text>
                   )}
                 </Stat>
@@ -189,7 +214,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
               <Box alignSelf="end">
                 <Stat>
                   <StatLabel>End</StatLabel>
-                  {Array.isArray(value) && value.some((v) => v !== undefined) && (
+                  {Array.isArray(value) && value.at(1) && (
                     <>
                       <HStack as={StatNumber}>
                         <Select
@@ -216,7 +241,7 @@ export const LabeledDateField = forwardRef<HTMLInputElement, LabeledDateFieldPro
               {/* <Spacer /> */}
               <Box alignSelf="center">
                 <Stat>
-                  {Array.isArray(value) && value.some((v) => v !== undefined) && (
+                  {Array.isArray(value) && value.at(1) && (
                     <Text as={StatNumber}>{`${format(value.at(1), "do MMM")}`}</Text>
                   )}
                 </Stat>

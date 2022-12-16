@@ -30,10 +30,11 @@ const JobCard = ({ ...props }: JobCardProps) => {
       for (let ii = 0; ii < j.length; ii++) {
         const job = j.at(ii)!
         const loc = locations.find((l) => l.id === job.locationId)
-        const newJob = Object.assign(job, loc!)
+        const { id, ...filteredLoc } = loc!
+        const newJob = Object.assign(job, filteredLoc)
 
         newJobs.push(newJob)
-        // j.at(ii)!.location = locations?..find(l => l.id === jj?.locationId)
+        // j.at(ii)!.location = locations?.find(l => l.id === jj?.locationId)
         // Object.assign(jj, locations?.find(l => l.id === jj?.locationId))
       }
 

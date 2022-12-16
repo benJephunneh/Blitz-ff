@@ -72,7 +72,8 @@ const JobModalForm = ({
   // handleDrop,
   ...props
 }: JobModalFormProps) => {
-  const { job, jobs, jobStash } = useContext(headerContext)
+  const { job, jobs, jobStash, lineitems, setLineitems } = useContext(headerContext)
+  // console.table(lineitems)
   // const [dragAndDropState, setDragAndDropState] = useState<DragAndDropJob>({ id: jobId, title, lineitems } as Job)
 
   const [createJobMutation] = useMutation(createJob)
@@ -134,12 +135,10 @@ const JobModalForm = ({
 
   const onSubmit = async (values) => {
     console.table({ values })
-    console.log({ locationId })
+    // console.log({ locationId })
     const { stashing, range, ...formSubmission } = values
-    const [start, end] = [...range.map((t) => new Date(t))]
+    const [start, end] = range.map((t) => t)
     // console.log({ start })
-    formSubmission["start"] = start
-    formSubmission["end"] = end
 
     let jobRet
     if (stashing) {
@@ -148,12 +147,22 @@ const JobModalForm = ({
         jobRet = await updateStashMutation({
           id: jobStash.id,
           stashType,
-          job: formSubmission,
+          job: {
+            start,
+            end,
+            ...formSubmission,
+          },
         })
       } else {
         jobRet = await createStashMutation({
           stashType,
-          job: formSubmission,
+          job: {
+            customerId,
+            locationId,
+            start,
+            end,
+            ...formSubmission,
+          },
         })
       }
     } else {
@@ -161,6 +170,8 @@ const JobModalForm = ({
       if (job) {
         jobRet = updateJobMutation({
           id: job.id,
+          start,
+          end,
           ...formSubmission,
         })
       } else {
@@ -169,6 +180,8 @@ const JobModalForm = ({
         jobRet = createJobMutation({
           customerId,
           locationId,
+          start,
+          end,
           ...formSubmission,
         })
         if (jobStash && jobRet) {
@@ -196,7 +209,7 @@ const JobModalForm = ({
   const jobListId = "job-lineitems"
   const searchListId = "search-lineitems"
   const [lineitemId, setLineitemId] = useState<number>()
-  const [lineitems, setLineitems] = useState<LineItem[] | undefined>(job?.lineitems)
+  // const [lineitems, setLineitems] = useState<LineItem[]>(job?.lineitems || {} as LineItem[])
   const [query, setQuery] = useState("")
   const [lineitemSearchResults, { setQueryData: setLineitemSearchData, isLoading }] = useQuery(
     findLineItem,
@@ -211,13 +224,17 @@ const JobModalForm = ({
     isLoading,
     setLineitems,
   }
+
+  // console.table(lineitems)
+
   // const [startDateTime, setStartDateTime] = useState(addDays(new Date().setHours(9, 0, 0, 0), 1))
   // const [endDateTime, setEndDateTime] = useState(addDays(new Date().setHours(17, 0, 0, 0), 1))
-  const start = jobStash?.start || job?.start || addBusinessDays(new Date(), 1).setHours(9, 0, 0, 0)
-  const end = jobStash?.end || job?.end || addBusinessDays(new Date(), 1).setHours(17, 0, 0, 0)
+  const start = jobStash?.start || job?.start // || addBusinessDays(new Date(), 1).setHours(9, 0, 0, 0)
+  const end = jobStash?.end || job?.end // || addBusinessDays(new Date(), 1).setHours(17, 0, 0, 0)
+
   const initialValues = {
     title: jobStash?.title || job?.title || undefined,
-    range: start && end ? [start, end] : undefined,
+    range: [start, end],
     notes: jobStash ? JSON.parse(jobStash.notes) : job?.notes ? JSON.parse(job.notes) : null,
     lineitems: jobStash?.lineitems || job?.lineitems || [],
   }
@@ -230,12 +247,12 @@ const JobModalForm = ({
 
   const onDragEnd = ({ source, destination, draggableId }) => {
     if (!destination) return
-    console.log(source, destination, draggableId)
+    // console.log(source, destination, draggableId)
+    // console.table(lineitems)
 
     const start = source.droppableId
     const end = destination.droppableId
-    const sortOrder = [...lineitems!.map(({ id }) => id)]
-    // const sortOrder = [...dummyArray.map(({ id }) => id)]
+    const sortOrder = lineitems!.map(({ id }) => id)
     // console.log({ sortOrder })
 
     if (start === end) {
@@ -255,7 +272,7 @@ const JobModalForm = ({
     } else {
       // if (lineitems.findIndex(({ id }) => id == draggableId) !== -1) return
       if (lineitems!.includes(draggableId)) return
-      const moving = lineitemSearchResults?.find(({ id }) => id == draggableId)
+      const moving = lineitemSearchResults!.find(({ id }) => id == draggableId)!
       const tempLineitems = lineitems
       tempLineitems!.splice(destination.index, 0, moving!)
       setLineitems(tempLineitems)
@@ -334,7 +351,7 @@ const JobModalForm = ({
                         />
                       ))} */}
                       {/* {dummyArray.map((li, ii) => ( */}
-                      {lineitems?.map((li, ii) => (
+                      {lineitems.map((li, ii) => (
                         <Draggable key={li.id} draggableId={li.id.toString()} index={ii}>
                           {(provided, isDragging: boolean) => (
                             <Box
@@ -358,7 +375,7 @@ const JobModalForm = ({
                                 lineitem={li}
                                 onDelete={onDelete}
                                 itemizing={true}
-                              // draggableIndex={ii}
+                                // draggableIndex={ii}
                               />
                             </Box>
                           )}
@@ -378,9 +395,9 @@ const JobModalForm = ({
                   end={end}
                   // onClickDay={handleDayClick}
                   onClickWeekNumber={handleWeekNumberClick}
-                // console.log({ w })
-                // handleWeekNumberClick(w).catch((e) => console.error(e))
-                // }}
+                  // console.log({ w })
+                  // handleWeekNumberClick(w).catch((e) => console.error(e))
+                  // }}
                 />
               </GridItem>
 

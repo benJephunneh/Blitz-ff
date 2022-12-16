@@ -20,9 +20,9 @@ export default resolver.pipe(
     const lineitemIds: { id: number }[] = [...(lineitems?.map(({ id }) => ({ id })) ?? [])]
     const j = await db.job.findFirst({ where: { id } })
 
-    if (j) console.log({ j })
-    else console.log("not found")
-    return j
+    // if (j) console.log({ j })
+    // else console.log("not found")
+    // return j
 
     const job = await db.job.update({
       where: { id },
@@ -33,7 +33,15 @@ export default resolver.pipe(
         ...data,
       },
     })
-    await db.jobArchive.update({ where: { id }, data })
+    await db.jobArchive.update({
+      where: { id },
+      data: {
+        lineitems: {
+          connect: [...lineitemIds],
+        },
+        ...data,
+      },
+    })
 
     return job
   }

@@ -1,7 +1,7 @@
 import { resolver } from "@blitzjs/rpc"
 import { CustomerSkeleton } from "app/customers/validations"
 import { LocationSkeleton } from "app/locations/validations"
-import { isJobWithLineitems, JobSkeleton, jobStashType, jobType } from "app/jobs/validations"
+import { isJobWithLineitems, JobSkeleton, jobStashType, JobType } from "app/jobs/validations"
 import db, { Job, LineItem, StashType } from "db"
 import { z } from "zod"
 import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"

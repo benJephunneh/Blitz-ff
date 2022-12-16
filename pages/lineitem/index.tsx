@@ -32,7 +32,7 @@ import { Form as FinalForm, Field } from "react-final-form"
 const LineItemPage: BlitzPage = () => {
   const [createLineItemMutation] = useMutation(createLineItem)
   const [updateLineItemMutation] = useMutation(updateLineItem)
-  const [lineItem, setLineItem] = useState<LineItem | undefined>()
+  const [lineItem, setLineItem] = useState<LineItem>()
   const [id, setId] = useState<number>()
   const [name, setName] = useState<string>()
   const [cost, setCost] = useState<number | null>()

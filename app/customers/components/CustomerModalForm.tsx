@@ -23,7 +23,7 @@ type CustomerModalFormProps = {
   onSuccess?: (customer: Customer | CustomerStash | void) => void
   // customerId?: number
   // stashId?: number
-  customer?: Customer // | null
+  customer?: Customer
   customerStash?: CustomerStash
   disableStash?: boolean
   // mutationType?: MutationType
@@ -83,13 +83,16 @@ const CustomerModalForm = ({
   // )
 
   const [user] = useQuery(
-    getUser, {
-    id: customerStash?.userId,
-  }, {
-    // suspense: !!customerStash,
-    enabled: !!customerStash,
-    refetchOnWindowFocus: false,
-  })
+    getUser,
+    {
+      id: customerStash?.userId,
+    },
+    {
+      // suspense: !!customerStash,
+      enabled: !!customerStash,
+      refetchOnWindowFocus: false,
+    }
+  )
 
   const textFootnoteColor = useColorModeValue("red", "cyan.200")
 
