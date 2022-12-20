@@ -49,7 +49,7 @@ const JobCard = ({ ...props }: JobCardProps) => {
     //   setIncompleteJobLocations(l)
     // }
     // setIncompleteJobs(j)
-  }, [jobs])
+  }, [jobs, locations])
 
   return (
     <Flex
