@@ -72,20 +72,21 @@ const JobModalForm = ({
   // handleDrop,
   ...props
 }: JobModalFormProps) => {
-  const { job, jobs, lineitems, setLineitems } = useContext(headerContext)
-  const [stashes] = useQuery(
-    getStash,
-    {
-      id: stashId,
-      stashType: "Job",
-    },
-    {
-      enabled: !!stashId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    }
-  )
-  const jobStash = stashes?.jobStash ?? undefined
+  const { job, jobs, jobStashes, lineitems, setLineitems } = useContext(headerContext)
+  const jobStash = jobStashes.find(({ id }) => id === stashId)
+  // const [stashes] = useQuery(
+  //   getStash,
+  //   {
+  //     id: stashId,
+  //     stashType: "Job",
+  //   },
+  //   {
+  //     enabled: !!stashId,
+  //     staleTime: Infinity,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // )
+  // const jobStash = stashes?.jobStash ?? undefined
   // const [jobStash, setJobStash] = useState(js ? js as JobStash & { lineitems: LineItem[] } : undefined)
   // console.table(lineitems)
   // const [dragAndDropState, setDragAndDropState] = useState<DragAndDropJob>({ id: jobId, title, lineitems } as Job)
