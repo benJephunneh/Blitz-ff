@@ -32,6 +32,8 @@ Router.events.on("routeChangeError", () => {
   document.body.classList.remove("body-page-transition")
 })
 
+import "app/core/styles/index.css"
+
 function RootErrorFallback({ error }: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
     return <div>Error: You are not authenticated</div>
