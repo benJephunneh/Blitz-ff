@@ -69,6 +69,7 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-final-form: 6.5.9_b76tjmhm4bpbaoui6lan2hu4pm
+  superjson: 1.12.1
   tailwindcss: 3.2.4
   zod: 3.20.2
 
