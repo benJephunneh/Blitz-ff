@@ -261,8 +261,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
 
   // Stash
   const [customerStash, setCustomerStash] = useState<CustomerStash>()
-  const [locationStash, setLocationStash] = useState<LocationStash>()
-  const [jobStash, setJobStash] = useState<JobStash & { lineitems: LineItem[] }>()
+  // const [locationStash, setLocationStash] = useState<LocationStash>()
+  // const [jobStash, setJobStash] = useState<JobStash & { lineitems: LineItem[] }>()
   const [
     { customerStashes, locationStashes, jobStashes, count: numStashes },
     { refetch: refetchStashes },
@@ -283,16 +283,16 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
       case "Customer":
         setCustomerStash(customerStashes.find(({ id }) => id === stashId))
         break
-      case "Location":
-        setLocationStash(locationStashes.find(({ id }) => id === stashId))
-        break
-      case "Job":
-        setJobStash(jobStashes.find(({ id }) => id === stashId))
-        break
+      // case "Location":
+      //   setLocationStash(locationStashes.find(({ id }) => id === stashId))
+      //   break
+      // case "Job":
+      //   setJobStash(jobStashes.find(({ id }) => id === stashId))
+      //   break
       default:
         setCustomerStash(undefined)
-        setLocationStash(undefined)
-        setJobStash(undefined)
+      // setLocationStash(undefined)
+      // setJobStash(undefined)
     }
   }, [stashType, stashId]) // eslint-disable-line
 
@@ -346,15 +346,23 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         createJob: () => setCreatingJob(true),
         editJob: () => setEditingJob(true),
         deleteJob: () => setDeletingJob(true),
-        pickJob: (id) => {
-          const temp = jobs?.find((j) => j.id === id)?.id
-          setJobId(temp)
-        },
+        pickJob: setJobId,
 
         lineitems,
         setLineitems,
 
         editStash: (id, type) => {
+          switch (type) {
+            case "Customer":
+              setCustomer(undefined)
+              break
+            case "Location":
+              setLocationId(undefined)
+              break
+            case "Job":
+              setJobId(undefined)
+              break
+          }
           setStashId(id)
           setStashType(type)
           setEditingStash(true)

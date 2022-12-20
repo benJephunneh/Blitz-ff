@@ -160,9 +160,8 @@ const HeaderLoggedIn = () => {
                   justifyContent="space-between"
                 >
                   <Text textOverflow="ellipsis" onClick={() => editStash(l.id, "Location")}>
-                    {l.house} {l.street}: {JSON.parse(l.notes).content[0].content[0].text}
+                    {l.house} {l.street}: {l.notes}
                   </Text>
-                  <Spacer />
                   <Icon
                     as={FcFullTrash}
                     h={5}
@@ -183,9 +182,8 @@ const HeaderLoggedIn = () => {
                   justifyContent="space-between"
                 >
                   <Text textOverflow="ellipsis" onClick={() => editStash(j.id, "Job")}>
-                    {j.title}: {JSON.parse(j.notes).content[0].content[0].text}
+                    {j.title}: {j.notes}
                   </Text>
-                  <Spacer />
                   <Icon
                     as={FcFullTrash}
                     h={5}

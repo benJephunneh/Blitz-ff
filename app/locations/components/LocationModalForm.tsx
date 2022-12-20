@@ -160,7 +160,7 @@ const LocationModalForm = ({
   // }
 
   const onSubmit = async (values) => {
-    // console.log({ values })
+    console.log({ values })
     const { ...formSubmission } = values
 
     let locationRet
@@ -178,7 +178,10 @@ const LocationModalForm = ({
         // console.log("\tcreating stash")
         locationRet = await createStashMutation({
           stashType,
-          location: formSubmission,
+          location: {
+            customerId,
+            ...formSubmission,
+          },
         })
       }
     } else {
@@ -219,10 +222,10 @@ const LocationModalForm = ({
     primary: locationStash
       ? locationStash["primary"]
       : location
-        ? location["primary"]
-        : locationIds && locationIds.length > 0
-          ? false
-          : true,
+      ? location["primary"]
+      : locationIds && locationIds.length > 0
+      ? false
+      : true,
     house: locationStash?.house || location?.house || undefined,
     street: locationStash?.street || location?.street || undefined,
     city: locationStash?.city || location?.city || undefined,
@@ -233,7 +236,7 @@ const LocationModalForm = ({
     lot: locationStash?.lot || location?.lot || undefined,
     parcel: locationStash?.parcel || location?.parcel || undefined,
     locationType: locationStash?.locationType || location?.locationType || "Personal",
-    notes: locationStash?.notes ? JSON.parse(locationStash.notes) : null,
+    notes: locationStash?.notes ? locationStash?.notes : null,
     // customerId,
   }
   // console.log(`initialValues: ${JSON.stringify(initialValues)}`)
@@ -261,10 +264,10 @@ const LocationModalForm = ({
         <>
           <Grid
             templateAreas={`'house street street street street'
-                          'city city state zipcode zipcode'
-                          'block lot parcel parcel parcel'
-                          'phones phones . locationType locationType'
-                          'primary primary primary . .'`}
+                            'city city state zipcode zipcode'
+                            'block lot parcel parcel parcel'
+                            'phones phones . locationType locationType'
+                            'primary primary primary . .'`}
             templateColumns="repeat(5, 1fr)"
             gap={2}
           >

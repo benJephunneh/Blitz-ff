@@ -1,6 +1,6 @@
 import { NotFoundError } from "blitz"
 import { resolver } from "@blitzjs/rpc"
-import db, { LocationStash, Prisma, StashType } from "db"
+import db, { CustomerStash, JobStash, LineItem, LocationStash, Prisma, StashType } from "db"
 import { z } from "zod"
 
 const GetStash = z.object({
@@ -16,22 +16,25 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ id, stashType }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    let stash
+    let customerStash: CustomerStash | null = null
+    let locationStash: LocationStash | null = null
+    let jobStash: (JobStash & { lineitems: LineItem[] }) | null = null
     switch (stashType) {
       case "Customer":
-        stash = await db.customerStash.findFirst({
+        customerStash = await db.customerStash.findFirst({
           where: { id },
         })
 
         break
       case "Location":
-        stash = await db.locationStash.findFirst({
+        locationStash = await db.locationStash.findFirst({
           where: { id },
         })
         break
       case "Job":
-        stash = await db.jobStash.findFirst({
+        jobStash = await db.jobStash.findFirst({
           where: { id },
+          include: { lineitems: true },
         })
         break
       // case "Invoice":
@@ -62,7 +65,10 @@ export default resolver.pipe(
     //   stash,
     //   user,
     // }
-    console.log(JSON.stringify(stash))
-    return stash
+    return {
+      customerStash,
+      locationStash,
+      jobStash,
+    }
   }
 )
