@@ -60,9 +60,6 @@ const UserInfo = () => {
 
 const Home: BlitzPage = () => {
   return (
-    <Layout title="Home">
-      <div className="w-screen h-screen overflow-hidden">
-        <LoginScreen isLoggedOut={isLoggedOut} bgImage={indexState.bgImage} logIn />
     <>
       <Navbar />
       {/* <Layout title="Home">
