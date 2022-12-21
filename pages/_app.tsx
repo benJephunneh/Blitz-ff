@@ -1,9 +1,36 @@
 import { ErrorFallbackProps, ErrorComponent, ErrorBoundary, AppProps } from "@blitzjs/next"
 import { AuthenticationError, AuthorizationError } from "blitz"
 import React from "react"
+import ReactDOM from "react-dom"
+import { createRoot } from "react-dom/client"
 import { withBlitz } from "app/blitz-client"
+import Router from "next/router"
+import PageChange from "app/core/PageChange"
+import Head from "next/head"
 
 import "app/core/styles/index.css"
+import "app/core/styles/tailwind.css"
+import "@fortawesome/fontawesome-free/css/all.min.css"
+
+let container: HTMLElement | null = null
+let root
+Router.events.on("routeChangeStart", (url: string) => {
+  console.log(`Loading ${url}`)
+  if (!container) {
+    container = document.getElementById("page-transition")
+    root = createRoot(container)
+    document.body.classList.add("body-page-transition")
+    root.render(<PageChange path={url} />, document.getElementById("page-transition"))
+  }
+})
+Router.events.on("routeChangeComplete", () => {
+  root.unmount(document.getElementById("page-transition"))
+  document.body.classList.remove("body-page-transition")
+})
+Router.events.on("routeChangeError", () => {
+  root.unmount(document.getElementById("page-transition"))
+  document.body.classList.remove("body-page-transition")
+})
 
 function RootErrorFallback({ error }: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {

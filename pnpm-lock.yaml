@@ -6,6 +6,7 @@ specifiers:
   "@blitzjs/rpc": ^2.0.0-beta.20
   "@emotion/react": ^11.10.5
   "@emotion/styled": ^11.10.5
+  "@fortawesome/fontawesome-free": 6.2.1
   "@next/bundle-analyzer": ^12.3.4
   "@prisma/client": ^4.8.0
   "@testing-library/jest-dom": ^5.16.5
@@ -50,6 +51,7 @@ dependencies:
   "@blitzjs/rpc": 2.0.0-beta.20_2jqnd74f5nplc7yetgeu2qz6ta
   "@emotion/react": 11.10.5_xl5my4wapvq2ctl7qwehtbgorq
   "@emotion/styled": 11.10.5_3djhvnr4jirfvebjqpipo7gthy
+  "@fortawesome/fontawesome-free": 6.2.1
   "@prisma/client": 4.8.0_prisma@4.8.0
   autoprefixer: 10.4.13_postcss@8.4.14
   blitz: 2.0.0-beta.20_cokwja5qapki53uj7zqujc3npa
@@ -3477,6 +3479,15 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@fortawesome/fontawesome-free/6.2.1:
+    resolution:
+      {
+        integrity: sha512-viouXhegu/TjkvYQoiRZK3aax69dGXxgEjpvZW81wIJdxm5Fnvp3VVIP4VHKqX4SvFw6qpmkILkD4RJWAdrt7A==,
+      }
+    engines: { node: ">=6" }
+    requiresBuild: true
+    dev: false
 
   /@humanwhocodes/config-array/0.5.0:
     resolution:
