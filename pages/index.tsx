@@ -1,4 +1,4 @@
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import Layout from "app/core/layouts/Layout"
@@ -14,7 +14,11 @@ import { Routes, BlitzPage } from "@blitzjs/next"
  */
 
 const UserInfo = () => {
-  const currentUser = useCurrentUser()
+  const { user: currentUser, isLoggedIn, isLoggedOut } = useCurrentUser()
+  const [indexState, setIndexState] = useState({
+    isScreenLocked: true,
+    bg_image: "wall-2",
+  })
   const [logoutMutation] = useMutation(logout)
 
   if (currentUser) {
@@ -56,7 +60,8 @@ const UserInfo = () => {
 const Home: BlitzPage = () => {
   return (
     <Layout title="Home">
-      <div className="container">
+      <div className="w-screen h-screen overflow-hidden">
+        <LoginScreen isLoggedOut={isLoggedOut} bgImage={indexState.bgImage} logIn />
         <main>
           <div className="logo">
             <Image src={`${logo.src}`} alt="blitzjs" width="256px" height="118px" layout="fixed" />
