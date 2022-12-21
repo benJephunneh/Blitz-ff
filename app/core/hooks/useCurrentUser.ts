@@ -7,9 +7,7 @@ type UseCurrentUserProps = {
 }
 
 export const useCurrentUser = ({ suspense = true }: UseCurrentUserProps = {}) => {
-  // const { suspense = true } = props
   const [user] = useQuery(getCurrentUser, null, { suspense })
-
   const session = useSession()
   const isLoggedIn = !!session.userId
   const isLoggedOut = !session.userId && !session.isLoading

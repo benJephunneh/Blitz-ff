@@ -1,4 +1,4 @@
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import Layout from "app/core/layouts/Layout"
@@ -15,7 +15,11 @@ import Navbar from "app/core/components/navbar/Navbar"
  */
 
 const UserInfo = () => {
-  const { user: currentUser } = useCurrentUser()
+  const { user: currentUser, isLoggedIn, isLoggedOut } = useCurrentUser()
+  const [indexState, setIndexState] = useState({
+    isScreenLocked: true,
+    bg_image: "wall-2",
+  })
   const [logoutMutation] = useMutation(logout)
 
   if (currentUser) {
@@ -56,6 +60,9 @@ const UserInfo = () => {
 
 const Home: BlitzPage = () => {
   return (
+    <Layout title="Home">
+      <div className="w-screen h-screen overflow-hidden">
+        <LoginScreen isLoggedOut={isLoggedOut} bgImage={indexState.bgImage} logIn />
     <>
       <Navbar />
       {/* <Layout title="Home">
