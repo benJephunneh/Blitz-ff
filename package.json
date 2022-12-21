@@ -11,7 +11,8 @@
     "test:watch": "jest --watch",
     "prepare": "husky install",
     "seedCustomersLocations": "ts-node -r esm db/seeding/csvSeed.cts",
-    "seedLineitems": "ts-node -r esm db/seeding/lineitemSeed.cts"
+    "seedLineitems": "ts-node -r esm db/seeding/lineitemSeed.cts",
+    "preinstall": "npx only-allow pnpm"
   },
   "prisma": {
     "schema": "db/schema.prisma"

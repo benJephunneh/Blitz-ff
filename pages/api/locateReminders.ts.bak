@@ -1,0 +1,15 @@
+import { subDays } from "date-fns"
+import db from "db"
+import { CronJob } from "quirrel/blitz"
+
+export default CronJob("api/locateReminders", "0 9 * * 1-5", async () => {
+  const jobs = await db.job.findMany({
+    where: {
+      updatedAt: {
+        lt: subDays(Date.now(), 30),
+      },
+      locateRequired: true,
+      completed: false,
+    },
+  })
+})

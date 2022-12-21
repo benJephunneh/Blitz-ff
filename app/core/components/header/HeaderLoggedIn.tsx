@@ -28,6 +28,7 @@ import LocationModalForm from "app/locations/components/LocationModalForm"
 import headerContext from "./headerContext"
 import userContext from "app/auth/components/contexts/userContext"
 import StashMenu from "app/stashes/components/StashMenu"
+import LocateMenu from "app/locates/components/LocateMenu"
 
 const HeaderLoggedIn = () => {
   const router = useRouter()
@@ -107,6 +108,7 @@ const HeaderLoggedIn = () => {
 
       <HStack spacing={4}>
         <StashMenu />
+        <LocateMenu />
         <Button
           size="sm"
           variant="outline"
