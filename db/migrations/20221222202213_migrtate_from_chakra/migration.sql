@@ -113,6 +113,7 @@ CREATE TABLE "Job" (
     "start" TIMESTAMP(3),
     "end" TIMESTAMP(3),
     "completed" BOOLEAN NOT NULL DEFAULT false,
+    "locateRequired" BOOLEAN NOT NULL DEFAULT false,
     "notes" TEXT,
     "customerId" INTEGER NOT NULL,
     "locationId" INTEGER NOT NULL,
@@ -229,6 +230,19 @@ CREATE TABLE "LineItemTemplate" (
     "notes" TEXT NOT NULL,
 
     CONSTRAINT "LineItemTemplate_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Locate" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "submitted" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "number" INTEGER NOT NULL,
+    "location" TEXT NOT NULL,
+    "jobId" INTEGER NOT NULL,
+
+    CONSTRAINT "Locate_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -425,6 +439,9 @@ CREATE TABLE "_EstimateArchiveToLineItem" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Locate_jobId_key" ON "Locate"("jobId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
@@ -564,6 +581,9 @@ ALTER TABLE "EstimateStash" ADD CONSTRAINT "EstimateStash_jobId_fkey" FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE "EstimateStash" ADD CONSTRAINT "EstimateStash_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Locate" ADD CONSTRAINT "Locate_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "LocationArchive" ADD CONSTRAINT "LocationArchive_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
