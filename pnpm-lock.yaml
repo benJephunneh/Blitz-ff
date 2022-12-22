@@ -4109,6 +4109,13 @@ packages:
       }
     dev: true
 
+  /@popperjs/core/2.11.6:
+    resolution:
+      {
+        integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==,
+      }
+    dev: false
+
   /@prisma/client/4.8.0_prisma@4.8.0:
     resolution:
       {
@@ -14155,6 +14162,13 @@ packages:
       scheduler: 0.23.0
     dev: false
 
+  /react-fast-compare/3.2.0:
+    resolution:
+      {
+        integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==,
+      }
+    dev: false
+
   /react-final-form/6.5.9_b76tjmhm4bpbaoui6lan2hu4pm:
     resolution:
       {
@@ -14188,6 +14202,23 @@ packages:
         integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==,
       }
     dev: true
+
+  /react-popper/2.3.0_r6q5zrenym2zg7je7hgi674bti:
+    resolution:
+      {
+        integrity: sha512-e1hj8lL3uM+sgSR4Lxzn5h1GxBlpa4CQz0XLF8kx4MDrDRWY0Ena4c97PUeSX9i5W3UAfDP0z0FXCTQkoXUl3Q==,
+      }
+    peerDependencies:
+      "@popperjs/core": ^2.0.0
+      react: ^16.8.0 || ^17 || ^18
+      react-dom: ^16.8.0 || ^17 || ^18
+    dependencies:
+      "@popperjs/core": 2.11.6
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-fast-compare: 3.2.0
+      warning: 4.0.3
+    dev: false
 
   /react-reconciler/0.26.2_react@18.2.0:
     resolution:
@@ -16419,6 +16450,15 @@ packages:
     dependencies:
       makeerror: 1.0.12
     dev: true
+
+  /warning/4.0.3:
+    resolution:
+      {
+        integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==,
+      }
+    dependencies:
+      loose-envify: 1.4.0
+    dev: false
 
   /watchpack/2.1.1:
     resolution:
