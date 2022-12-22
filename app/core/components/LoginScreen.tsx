@@ -18,7 +18,7 @@ const LoginScreen = ({ isLoggedOut, isLoggingIn, bgImage }) => {
       <Image width="400px" src="./public/abst_logo.png" aria-label="Company logo" />
       <div
         className="w-10 h-10 flex justify-center items-center rounded-full outline-none cursor-pointer"
-        onClick={logIn}
+        // onClick={logIn}
       >
         {isLoggedOut ? (
           <div className="bg-white rounded-full flex justify-center items-center w-10 h-10 hover:bg-gray-300">
