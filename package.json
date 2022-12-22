@@ -31,12 +31,14 @@
     "@emotion/styled": "^11.10.5",
     "@prisma/client": "^4.8.0",
     "blitz": "^2.0.0-beta.20",
+    "date-fns": "2.29.3",
     "final-form": "^4.20.7",
     "framer-motion": "^7.10.3",
     "next": "^12.3.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-final-form": "^6.5.9",
+    "superjson": "1.12.1",
     "zod": "^3.20.2"
   },
   "devDependencies": {
