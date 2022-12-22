@@ -1,96 +1,100 @@
 lockfileVersion: 5.4
 
-specifiers:
-  "@blitzjs/auth": ^2.0.0-beta.20
-  "@blitzjs/next": ^2.0.0-beta.20
-  "@blitzjs/rpc": ^2.0.0-beta.20
-  "@emotion/react": ^11.10.5
-  "@emotion/styled": ^11.10.5
-  "@fortawesome/fontawesome-free": 6.2.1
-  "@next/bundle-analyzer": ^12.3.4
-  "@prisma/client": ^4.8.0
-  "@testing-library/jest-dom": ^5.16.5
-  "@types/jest": ^27.5.2
-  "@types/node": ^17.0.45
-  "@types/papaparse": 5.3.5
-  "@types/preview-email": ^2.0.1
-  "@types/react": ^18.0.26
-  "@typescript-eslint/eslint-plugin": ^5.47.0
-  autoprefixer: 10.x
-  blitz: ^2.0.0-beta.20
-  date-fns: 2.29.3
-  eslint: ^7.32.0
-  eslint-config-next: ^12.3.4
-  eslint-config-prettier: ^8.5.0
-  final-form: ^4.20.7
-  framer-motion: ^7.10.3
-  husky: ^7.0.4
-  jest: ^28.1.3
-  jest-environment-jsdom: ^28.1.3
-  lint-staged: ^12.5.0
-  next: ^12.3.4
-  papaparse: 5.3.2
-  postcss: 8.x
-  prettier: ^2.8.1
-  prettier-plugin-prisma: ^3.14.0
-  pretty-quick: ^3.1.3
-  preview-email: ^3.0.7
-  prisma: ^4.8.0
-  react: ^18.2.0
-  react-dom: ^18.2.0
-  react-final-form: ^6.5.9
-  superjson: 1.12.1
-  tailwindcss: 3.x
-  ts-jest: ^28.0.8
-  typescript: ^4.9.4
-  zod: ^3.20.2
-
-dependencies:
-  "@blitzjs/auth": 2.0.0-beta.20_blitz@2.0.0-beta.20
-  "@blitzjs/next": 2.0.0-beta.20_2jqnd74f5nplc7yetgeu2qz6ta
-  "@blitzjs/rpc": 2.0.0-beta.20_2jqnd74f5nplc7yetgeu2qz6ta
-  "@emotion/react": 11.10.5_xl5my4wapvq2ctl7qwehtbgorq
-  "@emotion/styled": 11.10.5_3djhvnr4jirfvebjqpipo7gthy
-  "@fortawesome/fontawesome-free": 6.2.1
-  "@prisma/client": 4.8.0_prisma@4.8.0
-  autoprefixer: 10.4.13_postcss@8.4.14
-  blitz: 2.0.0-beta.20_cokwja5qapki53uj7zqujc3npa
-  date-fns: 2.29.3
-  final-form: 4.20.7
-  framer-motion: 7.10.3_biqbaboplfbrettd7655fr4n2y
-  next: 12.3.4_672uxklweod7ene3nqtsh262ca
-  postcss: 8.4.14
-  react: 18.2.0
-  react-dom: 18.2.0_react@18.2.0
-  react-final-form: 6.5.9_b76tjmhm4bpbaoui6lan2hu4pm
-  superjson: 1.12.1
-  tailwindcss: 3.2.4
-  zod: 3.20.2
-
-devDependencies:
-  "@next/bundle-analyzer": 12.3.4
-  "@testing-library/jest-dom": 5.16.5
-  "@types/jest": 27.5.2
-  "@types/node": 17.0.45
-  "@types/papaparse": 5.3.5
-  "@types/preview-email": 2.0.1
-  "@types/react": 18.0.26
-  "@typescript-eslint/eslint-plugin": 5.47.0_3uvilx5ipg5qewfer2stvdjmwa
-  eslint: 7.32.0
-  eslint-config-next: 12.3.4_yfqovispp7u7jaktymfaqwl2py
-  eslint-config-prettier: 8.5.0_eslint@7.32.0
-  husky: 7.0.4
-  jest: 28.1.3_@types+node@17.0.45
-  jest-environment-jsdom: 28.1.3
-  lint-staged: 12.5.0
-  papaparse: 5.3.2
-  prettier: 2.8.1
-  prettier-plugin-prisma: 3.14.0_prettier@2.8.1
-  pretty-quick: 3.1.3_prettier@2.8.1
-  preview-email: 3.0.7
-  prisma: 4.8.0
-  ts-jest: 28.0.8_oo4cbz6tuksmocgk7ezkti5msm
-  typescript: 4.9.4
+importers:
+  .:
+    specifiers:
+      "@blitzjs/auth": ^2.0.0-beta.20
+      "@blitzjs/next": ^2.0.0-beta.20
+      "@blitzjs/rpc": ^2.0.0-beta.20
+      "@emotion/react": ^11.10.5
+      "@emotion/styled": ^11.10.5
+      "@fortawesome/fontawesome-free": 6.2.1
+      "@next/bundle-analyzer": ^12.3.4
+      "@popperjs/core": 2.11.6
+      "@prisma/client": ^4.8.0
+      "@testing-library/jest-dom": ^5.16.5
+      "@types/jest": ^27.5.2
+      "@types/node": ^17.0.45
+      "@types/papaparse": 5.3.5
+      "@types/preview-email": ^2.0.1
+      "@types/react": ^18.0.26
+      "@typescript-eslint/eslint-plugin": ^5.47.0
+      autoprefixer: 10.x
+      blitz: ^2.0.0-beta.20
+      date-fns: 2.29.3
+      eslint: ^7.32.0
+      eslint-config-next: ^12.3.4
+      eslint-config-prettier: ^8.5.0
+      final-form: ^4.20.7
+      framer-motion: ^7.10.3
+      husky: ^7.0.4
+      jest: ^28.1.3
+      jest-environment-jsdom: ^28.1.3
+      lint-staged: ^12.5.0
+      next: ^12.3.4
+      papaparse: 5.3.2
+      postcss: 8.x
+      prettier: ^2.8.1
+      prettier-plugin-prisma: ^3.14.0
+      pretty-quick: ^3.1.3
+      preview-email: ^3.0.7
+      prisma: ^4.8.0
+      react: ^18.2.0
+      react-dom: ^18.2.0
+      react-final-form: ^6.5.9
+      react-popper: 2.3.0
+      superjson: 1.12.1
+      tailwindcss: 3.x
+      ts-jest: ^28.0.8
+      typescript: ^4.9.4
+      zod: ^3.20.2
+    dependencies:
+      "@blitzjs/auth": 2.0.0-beta.20_blitz@2.0.0-beta.20
+      "@blitzjs/next": 2.0.0-beta.20_2jqnd74f5nplc7yetgeu2qz6ta
+      "@blitzjs/rpc": 2.0.0-beta.20_2jqnd74f5nplc7yetgeu2qz6ta
+      "@emotion/react": 11.10.5_xl5my4wapvq2ctl7qwehtbgorq
+      "@emotion/styled": 11.10.5_3djhvnr4jirfvebjqpipo7gthy
+      "@fortawesome/fontawesome-free": 6.2.1
+      "@popperjs/core": 2.11.6
+      "@prisma/client": 4.8.0_prisma@4.8.0
+      autoprefixer: 10.4.13_postcss@8.4.14
+      blitz: 2.0.0-beta.20_cokwja5qapki53uj7zqujc3npa
+      date-fns: 2.29.3
+      final-form: 4.20.7
+      framer-motion: 7.10.3_biqbaboplfbrettd7655fr4n2y
+      next: 12.3.4_672uxklweod7ene3nqtsh262ca
+      postcss: 8.4.14
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-final-form: 6.5.9_b76tjmhm4bpbaoui6lan2hu4pm
+      react-popper: 2.3.0_r6q5zrenym2zg7je7hgi674bti
+      superjson: 1.12.1
+      tailwindcss: 3.2.4
+      zod: 3.20.2
+    devDependencies:
+      "@next/bundle-analyzer": 12.3.4
+      "@testing-library/jest-dom": 5.16.5
+      "@types/jest": 27.5.2
+      "@types/node": 17.0.45
+      "@types/papaparse": 5.3.5
+      "@types/preview-email": 2.0.1
+      "@types/react": 18.0.26
+      "@typescript-eslint/eslint-plugin": 5.47.0_3uvilx5ipg5qewfer2stvdjmwa
+      eslint: 7.32.0
+      eslint-config-next: 12.3.4_yfqovispp7u7jaktymfaqwl2py
+      eslint-config-prettier: 8.5.0_eslint@7.32.0
+      husky: 7.0.4
+      jest: 28.1.3_@types+node@17.0.45
+      jest-environment-jsdom: 28.1.3
+      lint-staged: 12.5.0
+      papaparse: 5.3.2
+      prettier: 2.8.1
+      prettier-plugin-prisma: 3.14.0_prettier@2.8.1
+      pretty-quick: 3.1.3_prettier@2.8.1
+      preview-email: 3.0.7
+      prisma: 4.8.0
+      ts-jest: 28.0.8_oo4cbz6tuksmocgk7ezkti5msm
+      typescript: 4.9.4
 
 packages:
   /@adobe/css-tools/4.0.1:
@@ -4150,6 +4154,13 @@ packages:
         integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==,
       }
     dev: true
+
+  /@popperjs/core/2.11.6:
+    resolution:
+      {
+        integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==,
+      }
+    dev: false
 
   /@prisma/client/4.8.0_prisma@4.8.0:
     resolution:
@@ -12861,6 +12872,13 @@ packages:
       scheduler: 0.23.0
     dev: false
 
+  /react-fast-compare/3.2.0:
+    resolution:
+      {
+        integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==,
+      }
+    dev: false
+
   /react-final-form/6.5.9_b76tjmhm4bpbaoui6lan2hu4pm:
     resolution:
       {
@@ -12894,6 +12912,23 @@ packages:
         integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==,
       }
     dev: true
+
+  /react-popper/2.3.0_r6q5zrenym2zg7je7hgi674bti:
+    resolution:
+      {
+        integrity: sha512-e1hj8lL3uM+sgSR4Lxzn5h1GxBlpa4CQz0XLF8kx4MDrDRWY0Ena4c97PUeSX9i5W3UAfDP0z0FXCTQkoXUl3Q==,
+      }
+    peerDependencies:
+      "@popperjs/core": ^2.0.0
+      react: ^16.8.0 || ^17 || ^18
+      react-dom: ^16.8.0 || ^17 || ^18
+    dependencies:
+      "@popperjs/core": 2.11.6
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-fast-compare: 3.2.0
+      warning: 4.0.3
+    dev: false
 
   /react-reconciler/0.26.2_react@18.2.0:
     resolution:
@@ -14811,6 +14846,15 @@ packages:
     dependencies:
       makeerror: 1.0.12
     dev: true
+
+  /warning/4.0.3:
+    resolution:
+      {
+        integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==,
+      }
+    dependencies:
+      loose-envify: 1.4.0
+    dev: false
 
   /watchpack/2.1.1:
     resolution:

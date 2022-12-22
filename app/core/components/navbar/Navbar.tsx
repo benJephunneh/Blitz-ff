@@ -1,27 +1,29 @@
 import Link from "next/link"
 import { useState } from "react"
+import IndexMenu from "../menus/IndexMenu"
 
 const Navbar = () => {
-  const [isOpen, toggleNavbar] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const toggleNavbar = () => setIsOpen(!isOpen)
 
   return (
     <>
-      <div className="top-0 fixed z-50 w-screen flex flex-wrap items-center justify-between px-2 py-3 navbar-expand-lg bg-white shadow">
+      <div className="fixed top-0 z-50 w-full flex flex-wrap items-center justify-between px-2 py-1 navbar-expand-lg bg-white shadow">
         <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-          <div className="w-screen relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
-            <Link href="/">
+          <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+            <a href="/">
               <div
-                className="text-blueGray-700 text-sm font-bold leading-relaxed inline-block mr-4 py-2 whitespace-nowrap uppercase"
+                className="text-blueGray-700 text-sm font-bold leading-relaxed inline-block mr-4 py-1 whitespace-nowrap uppercase"
                 id="#pablo"
               >
-                ABST
+                abst
               </div>
-            </Link>
+            </a>
 
             <button
-              className="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
+              className="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block outline-none focus:outline-none lg:hidden"
               type="button"
-              onClick={() => toggleNavbar(!isOpen)}
+              onClick={toggleNavbar}
             >
               <i className="fas fa-bars" />
             </button>
@@ -29,22 +31,40 @@ const Navbar = () => {
 
           <div
             className={
-              "lg:flex flex-grow items-center bg-white lg: bg-opacity-0 lg:shadow-none" + isOpen
-                ? " block"
-                : " hidden"
+              "lg:flex flex-grow items-center bg-white lg:bg-opacity-0 lg:shadow-none" +
+              (isOpen ? " block" : " hidden")
             }
             id="example-navbar-warning"
           >
             <ul className="flex flex-col lg:flex-row list-none mr-auto">
               <li className="flex items-center">
                 <Link
-                  className="hover:text-blueGray-500 text-blueGray-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold cursor-pointer"
+                  className="hover:text-slate-500 text-slate-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
                   href="https://www.creative-tim.com/learning-lab/tailwind/nextjs/overview/notus"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
                   <>
-                    <i className="text-blueGray-400 far fa-file-alt text-lg leading-lg mr-2" /> Docs
+                    <i className="text-slate-600 far fa-file-alt text-lg leading-lg mr-2" /> Docs
+                  </>
+                </Link>
+              </li>
+            </ul>
+
+            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
+              <li className="flex items-center">
+                <IndexMenu />
+              </li>
+              <li className="flex items-center">
+                <Link
+                  className="hover:text-slate-500 text-slate-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
+                  href="https://www.facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <>
+                    <i className="text-slate-400 fab fa-facebook text-lg leading-lg" />
+                    <span className="lg:hidden inline-block ml-2">Share</span>
                   </>
                 </Link>
               </li>
