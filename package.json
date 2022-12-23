@@ -43,7 +43,7 @@
     "@tiptap/starter-kit": "2.0.0-beta.197",
     "@wojtekmaj/react-daterange-picker": "4.0.0",
     "@wojtekmaj/react-timerange-picker": "4.0.0",
-    "blitz": "2.0.0-beta.19",
+    "blitz": "^2.0.0-beta.20",
     "esm": "3.2.25",
     "final-form": "4.20.7",
     "framer-motion": "7.2.0",

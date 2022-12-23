@@ -73,7 +73,7 @@ const csvSeed = async () => {
         locs = locs.replaceAll("False", '"false"')
         locs = locs.replaceAll("\xa0", " ")
         const parsed: LocationModel[] = JSON.parse(locs)
-        console.log(parsed)
+        // console.log(parsed)
         // try {
         //   let asdf: LocationModel[] = JSON.parse(locs)
         //   // JSON.parse(locs, (k, v) => {
