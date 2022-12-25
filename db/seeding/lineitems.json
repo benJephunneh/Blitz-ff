@@ -1,0 +1,350 @@
+[
+  {
+    "name": "Pumpout (PO)",
+    "cost": 350,
+    "quantity": 1,
+    "notes": "Pump out septic tank, both sides if double-chambered.\nClean existing filter.\nCheck structural integrity of the tank."
+  },
+  {
+    "name": "300 Gallon Septic Tank",
+    "cost": 700,
+    "quantity": 1,
+    "notes": "Install new, 300-gallon, concrete, multi-chambered, filtered septic tank."
+  },
+  {
+    "name": "900 Gallon Septic Tank",
+    "cost": 1500,
+    "quantity": 1,
+    "notes": "Install new, 900-gallon, concrete, multi-chambered, filtered septic tank."
+  },
+  {
+    "name": "1050 Gallon Septic Tank",
+    "cost": 1600,
+    "quantity": 1,
+    "notes": "Install new, 1050-gallon, concrete, multi-chambered, filtered septic tank."
+  },
+  {
+    "name": "1350 Gallon Septic Tank",
+    "cost": 1875,
+    "quantity": 1,
+    "notes": "Install new, 1350-gallon, concrete, multi-chambered, filtered septic tank."
+  },
+  {
+    "name": "1650 Gallon Septic Tank",
+    "cost": 2900,
+    "quantity": 1,
+    "notes": "Install new, 1650-gallon, concrete, multi-chambered, filtered septic tank."
+  },
+  {
+    "name": "1050 Gallon Plastic Septic Tank",
+    "cost": 2000,
+    "quantity": 1,
+    "notes": "Install new, 1050-gallon, plastic, multi-chambered, filtered septic tank."
+  },
+  {
+    "name": "C33 Fill Sand",
+    "cost": 300,
+    "quantity": 1,
+    "notes": "Cost per load."
+  },
+  {
+    "name": "New Site Evaluation (SE)",
+    "cost": 300,
+    "quantity": 1,
+    "notes": "Create site plan and estimate for a new OSTDS.\nConduct soil test."
+  },
+  {
+    "name": "Repair Site Evaluation (SE)",
+    "cost": 300,
+    "quantity": 1,
+    "notes": "Create site plan and estimate for OSTDS repairs, modifications, or replacement.\nConduct soil test."
+  },
+  {
+    "name": "Service call",
+    "cost": 150,
+    "quantity": 1,
+    "notes": "Cost per hour."
+  },
+  {
+    "name": "Tightline",
+    "cost": 7,
+    "quantity": 1,
+    "notes": "Cost per linear foot."
+  },
+  {
+    "name": "Pump, 1/2hp",
+    "cost": 575,
+    "quantity": 1,
+    "notes": "Install new 1/2hp pump."
+  },
+  {
+    "name": "Pump, 1/3hp",
+    "cost": 337,
+    "quantity": 1,
+    "notes": "Install new 1/3hp pump."
+  },
+  {
+    "name": "Pump, 1/3hp, Liberty",
+    "cost": 425,
+    "quantity": 1,
+    "notes": "Install new 1/3hp Liberty pump."
+  },
+  {
+    "name": "Pump, 1/3hp, with Float Tree",
+    "cost": 450,
+    "quantity": 1,
+    "notes": "Install new 1/3hp pump.\nInstall float tree."
+  },
+  {
+    "name": "Riser",
+    "cost": 900,
+    "quantity": 1,
+    "notes": "Install riser to grade."
+  },
+  {
+    "name": "Settling Tank, 500 Gallon",
+    "cost": 775,
+    "quantity": 1,
+    "notes": "Install new, 500-gallon, concrete settling tank."
+  },
+  {
+    "name": "Trash Tank, 500 Gallon",
+    "cost": 875,
+    "quantity": 1,
+    "notes": "Install new, 300-gallon, concrete trash tank."
+  },
+  {
+    "name": "Heavy Loading Tank, 300 Gallon",
+    "cost": 675,
+    "quantity": 1,
+    "notes": "Install new, 300-gallon, concrete heavy-loading tank."
+  },
+  {
+    "name": "Heavy Loading Tank, 550 Gallon, Infiltrator",
+    "cost": 1200,
+    "quantity": 1,
+    "notes": "Install new Infiltrator, 550-gallon, concrete heavy-loading tank."
+  },
+  {
+    "name": "Laundry Tank, 500 Gallon",
+    "cost": 975,
+    "quantity": 1,
+    "notes": "Install new, 300-gallon, concrete laundry tank."
+  },
+  {
+    "name": "Drainfield, 315 square feet",
+    "cost": 2600,
+    "quantity": 1,
+    "notes": "Install 315 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 375 square feet",
+    "cost": 2625,
+    "quantity": 1,
+    "notes": "Install 375 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 405 square feet",
+    "cost": 2835,
+    "quantity": 1,
+    "notes": "Install 405 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 420 square feet",
+    "cost": 2940,
+    "quantity": 1,
+    "notes": "Install 420 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 465 square feet",
+    "cost": 3255,
+    "quantity": 1,
+    "notes": "Install 465 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 500 square feet",
+    "cost": 3500,
+    "quantity": 1,
+    "notes": "Install 500 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 510 square feet",
+    "cost": 3570,
+    "quantity": 1,
+    "notes": "Install 510 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 510 square feet, Sand Lined",
+    "cost": 5750,
+    "quantity": 1,
+    "notes": "Install 510 square feet of sand-lined, arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 540 square feet",
+    "cost": 3780,
+    "quantity": 1,
+    "notes": "Install 540 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 555 square feet",
+    "cost": 3885,
+    "quantity": 1,
+    "notes": "Install 555 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 570 square feet",
+    "cost": 3990,
+    "quantity": 1,
+    "notes": "Install 570 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 585 square feet",
+    "cost": 4095,
+    "quantity": 1,
+    "notes": "Install 585 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 600 square feet",
+    "cost": 4200,
+    "quantity": 1,
+    "notes": "Install 600 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 630 square feet",
+    "cost": 4410,
+    "quantity": 1,
+    "notes": "Install 630 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 660 square feet",
+    "cost": 4620,
+    "quantity": 1,
+    "notes": "Install 660 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 705 square feet",
+    "cost": 4935,
+    "quantity": 1,
+    "notes": "Install 705 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 720 square feet",
+    "cost": 5040,
+    "quantity": 1,
+    "notes": "Install 720 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 735 square feet",
+    "cost": 5145,
+    "quantity": 1,
+    "notes": "Install 735 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 750 square feet",
+    "cost": 5250,
+    "quantity": 1,
+    "notes": "Install 750 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 800 square feet",
+    "cost": 5600,
+    "quantity": 1,
+    "notes": "Install 800 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 810 square feet",
+    "cost": 5670,
+    "quantity": 1,
+    "notes": "Install 810 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 870 square feet",
+    "cost": 6090,
+    "quantity": 1,
+    "notes": "Install 870 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 900 square feet",
+    "cost": 6300,
+    "quantity": 1,
+    "notes": "Install 900 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 920 square feet",
+    "cost": 6440,
+    "quantity": 1,
+    "notes": "Install 920 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 930 square feet",
+    "cost": 6510,
+    "quantity": 1,
+    "notes": "Install 930 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Drainfield, 990 square feet",
+    "cost": 6930,
+    "quantity": 1,
+    "notes": "Install 990 square feet of arc-chamber drainfield."
+  },
+  {
+    "name": "Treatment, Bio One",
+    "cost": 50,
+    "quantity": 1,
+    "notes": "Treat system with Bio One septic additive."
+  },
+  {
+    "name": "Treatment, Lenzyme",
+    "cost": 75,
+    "quantity": 1,
+    "notes": "Treat system with Lenzyme septic additive."
+  },
+  {
+    "name": "Polylock Riser Ring, 6 inch",
+    "cost": 65,
+    "quantity": 1,
+    "notes": ""
+  },
+  {
+    "name": "Alarm Box",
+    "cost": 450,
+    "quantity": 1,
+    "notes": ""
+  },
+  {
+    "name": "Permit, New (Franklin Co)",
+    "cost": 360,
+    "quantity": 1,
+    "notes": "Franklin Co fee for a new OSTDS."
+  },
+  {
+    "name": "Permit, Repair (Franklin Co)",
+    "cost": 260,
+    "quantity": 1,
+    "notes": "Franklin Co fee for OSTDS repair."
+  },
+  {
+    "name": "Permit, Amendment Fee (Franklin Co)",
+    "cost": 55,
+    "quantity": 1,
+    "notes": ""
+  },
+  {
+    "name": "Permit, New (Gadsden Co)",
+    "cost": 360,
+    "quantity": 1,
+    "notes": "Gadsden Co fee for a new OSTDS."
+  },
+  {
+    "name": "Permit, Repair (Gadsden Co)",
+    "cost": 235,
+    "quantity": 1,
+    "notes": "Gadsden Co fee for OSTDS repair."
+  },
+  {
+    "name": "ATU Contract",
+    "cost": 800,
+    "quantity": 1,
+    "notes": "Two-year ATU contract.\nSemiannual system inspections.\nCustomer is responsible for county operating-permit fees."
+  }
+]
