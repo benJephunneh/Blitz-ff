@@ -1,5 +1,5 @@
 import { LocationType, StashType } from "@prisma/client"
-// import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
+import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
 import { z } from "zod"
 
 const id = z.number()
@@ -17,8 +17,8 @@ const lot = z.string()
 const parcel = z.string()
 const locationType = z.nativeEnum(LocationType).default("Personal")
 // export const customerId = z.number()
-// const notes = stashContentSchema
-const notes = z.string()
+const notes = stashContentSchema
+export const textNotes = z.string()
 const stashType = z.nativeEnum(StashType)
 
 export const LocationSkeleton = z.object({
@@ -35,15 +35,15 @@ export const LocationSkeleton = z.object({
   locationType,
 })
 export const LocationFormSchema = LocationSkeleton.partial().extend({
-  notes: notes.nullable().optional(),
+  notes: textNotes.nullable().optional(),
 })
 export const CreateLocation = LocationSkeleton.extend({
   customerId,
-  notes: notes.nullable().optional(),
+  notes: textNotes.nullable().optional(),
 })
 export const CreateLocationStash = LocationSkeleton.partial().extend({
   customerId,
-  notes: notes,
+  notes: textNotes,
 })
 
 export const UpdateLocation = CreateLocation.omit({ customerId: true }).extend({

@@ -11,8 +11,7 @@
     "test:watch": "jest --watch",
     "prepare": "husky install",
     "seedCustomersLocations": "ts-node -r esm db/seeding/csvSeed.cts",
-    "seedLineitems": "ts-node -r esm db/seeding/lineitemSeed.cts",
-    "preinstall": "npx only-allow pnpm"
+    "seedLineitems": "ts-node -r esm db/seeding/lineitemSeed.cts"
   },
   "prisma": {
     "schema": "db/schema.prisma"
@@ -27,13 +26,13 @@
     ]
   },
   "dependencies": {
-    "@blitzjs/auth": "^2.0.0-beta.20",
-    "@blitzjs/next": "^2.0.0-beta.20",
-    "@blitzjs/rpc": "^2.0.0-beta.20",
+    "@blitzjs/auth": "2.0.0-beta.20",
+    "@blitzjs/next": "2.0.0-beta.20",
+    "@blitzjs/rpc": "2.0.0-beta.20",
     "@chakra-ui/react": "2.4.1",
     "@emotion/react": "11.10.0",
     "@emotion/styled": "11.10.0",
-    "@prisma/client": "^4.8.0",
+    "@prisma/client": "^4.7.1",
     "@tiptap/extension-focus": "2.0.0-beta.197",
     "@tiptap/extension-image": "2.0.0-beta.197",
     "@tiptap/extension-link": "2.0.0-beta.197",
@@ -43,7 +42,7 @@
     "@tiptap/starter-kit": "2.0.0-beta.197",
     "@wojtekmaj/react-daterange-picker": "4.0.0",
     "@wojtekmaj/react-timerange-picker": "4.0.0",
-    "blitz": "2.0.0-beta.19",
+    "blitz": "2.0.0-beta.20",
     "esm": "3.2.25",
     "final-form": "4.20.7",
     "framer-motion": "7.2.0",
@@ -87,7 +86,7 @@
     "prettier-plugin-prisma": "3.8.0",
     "pretty-quick": "3.1.3",
     "preview-email": "3.0.7",
-    "prisma": "^4.8.0",
+    "prisma": "^4.7.1",
     "react-lorem-ipsum": "1.4.10",
     "ts-jest": "28.0.7",
     "ts-node": "10.9.1",

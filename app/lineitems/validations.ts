@@ -1,10 +1,11 @@
+import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
 import { z } from "zod"
 
 const id = z.number()
 const name = z.string()
 const cost = z.number() // Represent as cents or dollars?
 const quantity = z.number()
-const notes = z.string()
+export const notes = z.string()
 const query = z.string()
 
 export const LineItemSkeleton = z.object({

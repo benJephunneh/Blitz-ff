@@ -4,6 +4,7 @@ import { JobSkeleton } from "app/jobs/validations"
 import { LocationSkeleton } from "app/locations/validations"
 import db, { StashType } from "db"
 import { z } from "zod"
+import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
 import { CreateStash } from "../validations"
 
 // const customerZod = CreateCustomer.partial()
@@ -81,8 +82,6 @@ export default resolver.pipe(
             // locationId: locationId!,
             stashType,
             lineitems: { connect: [...lineitemIds] },
-            // start: start ? new Date(start) : null,
-            // end: end ? new Date(end) : null,
             // notes,
             // notes: JSON.stringify(notes),
             userId: ctx.session.userId,

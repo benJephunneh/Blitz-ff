@@ -102,13 +102,11 @@ model Job {
   start             DateTime?
   end               DateTime?
   completed         Boolean           @default(false)
-  locateRequired    Boolean           @default(false)
   notes             String?
   lineitems         LineItem[]
   customer          Customer          @relation(fields: [customerId], references: [id])
   location          Location          @relation(fields: [locationId], references: [id])
   invoices          Invoice[]
-  locate            Locate?
   invoiceStashes    InvoiceStash[]
   archivedInvoices  InvoiceArchive[]
   estimates         Estimate[]
@@ -235,17 +233,6 @@ model LineItemTemplate {
   cost      Int
   notes     String
   lineItems LineItem[]
-}
-
-model Locate {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  submitted DateTime @default(now())
-  number    Int
-  location  String
-  job       Job      @relation(fields: [jobId], references: [id])
-  jobId     Int      @unique
 }
 
 model CustomerArchive {

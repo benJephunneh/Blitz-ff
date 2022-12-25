@@ -15,6 +15,13 @@ const password = z
 
 const role = z.nativeEnum(UserRole)
 
+export interface IUser {
+  id: number
+  username: string
+  email: string
+  role: UserRole
+}
+
 export const Signup = z.object({
   username,
   email,

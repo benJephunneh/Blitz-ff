@@ -61,7 +61,7 @@ const LocationModalForm = ({
   // mutationType = "New",
   ...props
 }: LocationModalFormProps) => {
-  const { locationIds, locationStashes } = useContext(headerContext)
+  const { locationIds } = useContext(headerContext)
   const [createLocationMutation] = useMutation(createLocation)
   const [updateLocationMutation] = useMutation(updateLocation)
   const [createStashMutation] = useMutation(createStash)
@@ -81,20 +81,19 @@ const LocationModalForm = ({
     }
   )
 
-  const locationStash = locationStashes.find(({ id }) => id === locationId)
-  // const [locationStash] = useQuery(
-  //   getStash,
-  //   {
-  //     id: stashId,
-  //     stashType,
-  //   },
-  //   {
-  //     suspense: !!stashId,
-  //     enabled: !!stashId,
-  //     staleTime: Infinity,
-  //     refetchOnWindowFocus: false,
-  //   }
-  // )
+  const [locationStash] = useQuery(
+    getStash,
+    {
+      id: stashId,
+      stashType,
+    },
+    {
+      suspense: !!stashId,
+      enabled: !!stashId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  )
 
   // const [user] = useQuery(
   //   getUser,
@@ -161,7 +160,7 @@ const LocationModalForm = ({
   // }
 
   const onSubmit = async (values) => {
-    console.log({ values })
+    // console.log({ values })
     const { ...formSubmission } = values
 
     let locationRet
@@ -179,10 +178,7 @@ const LocationModalForm = ({
         // console.log("\tcreating stash")
         locationRet = await createStashMutation({
           stashType,
-          location: {
-            customerId,
-            ...formSubmission,
-          },
+          location: formSubmission,
         })
       }
     } else {
@@ -196,7 +192,7 @@ const LocationModalForm = ({
       } else {
         // console.log("\tcreating location")
         locationRet = await createLocationMutation({
-          customerId: locationStash?.customerId || customerId,
+          customerId: stashId ? locationStash.customerId : customerId,
           ...formSubmission,
         })
         if (locationStash && locationRet) {
@@ -237,7 +233,7 @@ const LocationModalForm = ({
     lot: locationStash?.lot || location?.lot || undefined,
     parcel: locationStash?.parcel || location?.parcel || undefined,
     locationType: locationStash?.locationType || location?.locationType || "Personal",
-    notes: locationStash?.notes || location?.notes || undefined,
+    notes: locationStash?.notes ? JSON.parse(locationStash.notes) : null,
     // customerId,
   }
   // console.log(`initialValues: ${JSON.stringify(initialValues)}`)
@@ -265,10 +261,10 @@ const LocationModalForm = ({
         <>
           <Grid
             templateAreas={`'house street street street street'
-                            'city city state zipcode zipcode'
-                            'block lot parcel parcel parcel'
-                            'phones phones . locationType locationType'
-                            'primary primary primary . .'`}
+                          'city city state zipcode zipcode'
+                          'block lot parcel parcel parcel'
+                          'phones phones . locationType locationType'
+                          'primary primary primary . .'`}
             templateColumns="repeat(5, 1fr)"
             gap={2}
           >
