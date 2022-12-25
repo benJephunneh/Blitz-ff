@@ -1,5 +1,4 @@
 import { resolver } from "@blitzjs/rpc"
-import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
 import db from "db"
 import { z } from "zod"
 import { CreateLocation } from "../validations"

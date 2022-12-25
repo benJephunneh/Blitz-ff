@@ -1,5 +1,4 @@
 import { LineItem, Prisma } from "@prisma/client"
-import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
 import getLineItems from "app/lineitems/queries/getLineItems"
 import { FullLineItem } from "app/lineitems/validations"
 import { z, ZodDate } from "zod"
@@ -12,8 +11,7 @@ export const end = z.date()
 const completed = z.boolean().default(false)
 const customerId = z.number()
 const locationId = z.number()
-const notes = stashContentSchema
-export const textNotes = z.string()
+const notes = z.string()
 
 const jobValidator = Prisma.validator<Prisma.JobArgs>()({
   include: {
@@ -47,17 +45,17 @@ export const JobSkeleton = z.object({
   lineitems: lineitem.array().optional(),
 })
 export const JobFormSchema = JobSkeleton.partial().extend({
-  notes: textNotes.nullable().optional(),
+  notes: notes.nullable().optional(),
 })
 export const CreateJob = JobSkeleton.extend({
   customerId,
   locationId,
-  notes: textNotes.nullable().optional(),
+  notes: notes.nullable().optional(),
 })
 export const CreateJobStash = JobSkeleton.partial().extend({
   customerId,
   locationId,
-  notes: textNotes,
+  notes: notes,
 })
 
 export const UpdateJob = CreateJob.partial().extend({ id })

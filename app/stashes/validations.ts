@@ -1,5 +1,4 @@
 import { StashType } from "@prisma/client"
-import stashContentSchema from "app/core/components/editor/schema/stashContentSchema"
 import { CreateCustomerStash, CustomerSkeleton } from "app/customers/validations"
 import { CreateJobStash } from "app/jobs/validations"
 import { CreateLocationStash, LocationSkeleton } from "app/locations/validations"
@@ -19,8 +18,7 @@ const estimateId = z.number()
 const invoiceId = z.number()
 
 const stashType = z.nativeEnum(StashType)
-const textNotes = z.string()
-const notes = stashContentSchema
+const notes = z.string()
 
 export const CreateStash = z.object({
   stashType,
@@ -34,7 +32,7 @@ export const CreateStash = z.object({
   // estimate: estimateId.partial().optional(),
   // invoiceId: invoiceId.optional(),
   // invoice: invoiceId.partial().optional(),
-  // notes: textNotes, // Since this is in each other stash (e.g. in CreateCustomerStash), do I need this?
+  // notes, // Since this is in each other stash (e.g. in CreateCustomerStash), do I need this?
 })
 
 export const UpdateStash = CreateStash.extend({ id })

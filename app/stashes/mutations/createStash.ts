@@ -4,7 +4,6 @@ import { JobSkeleton } from "app/jobs/validations"
 import { LocationSkeleton } from "app/locations/validations"
 import db, { StashType } from "db"
 import { z } from "zod"
-import stashContentSchema from "../../core/components/editor/schema/stashContentSchema"
 import { CreateStash } from "../validations"
 
 // const customerZod = CreateCustomer.partial()
