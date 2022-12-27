@@ -2,7 +2,7 @@ import Link from "next/link"
 import { useState } from "react"
 import IndexMenu from "../menus/IndexMenu"
 
-const Navbar = () => {
+const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
   const toggleNavbar = () => setIsOpen(!isOpen)
 
@@ -76,4 +76,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Header
