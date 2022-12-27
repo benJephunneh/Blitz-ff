@@ -5,6 +5,7 @@ import logout from "app/auth/mutations/logout"
 import { useMutation } from "@blitzjs/rpc"
 import { Routes, BlitzPage } from "@blitzjs/next"
 import Sidebar from "app/core/components/navbars/Sidebar"
+import Header from "app/core/components/navbars/Header"
 
 /*
  * This file is just for a pleasant getting started page for your new app.
@@ -14,8 +15,8 @@ import Sidebar from "app/core/components/navbars/Sidebar"
 const Home: BlitzPage = () => {
   return (
     <>
-      {/* <Header /> */}
-      <Sidebar />
+      <Header />
+      {/* <Sidebar /> */}
       {/* <Layout title="Home">
       <div className="container">
         <main>

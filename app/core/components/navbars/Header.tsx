@@ -1,6 +1,8 @@
 import Link from "next/link"
 import { useState } from "react"
+import Search from "../inputs/Search"
 import IndexMenu from "../menus/IndexMenu"
+import Menu from "../menus/Menu"
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -8,17 +10,17 @@ const Header = () => {
 
   return (
     <>
-      <div className="fixed top-0 z-50 w-full flex flex-wrap items-center justify-between px-2 py-1 navbar-expand-lg bg-white shadow">
-        <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-          <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
-            <a href="/">
+      <div className="absolute w-full flex flex-wrap items-center justify-between px-2 py-1 navbar-expand-lg bg-white shadow">
+        <div className="w-full px-2 mx-auto flex flex-wrap items-center justify-between">
+          <div className="relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+            <Link href="/">
               <div
-                className="text-blueGray-700 text-sm font-bold leading-relaxed inline-block mr-4 py-1 whitespace-nowrap uppercase"
-                id="#pablo"
+                className="cursor-pointer text-slate-700 text-sm font-bold leading-relaxed inline-block mr-4 py-1 whitespace-nowrap uppercase"
+                id="#home"
               >
                 abst
               </div>
-            </a>
+            </Link>
 
             <button
               className="cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block outline-none focus:outline-none lg:hidden"
@@ -38,15 +40,19 @@ const Header = () => {
           >
             <ul className="flex flex-col lg:flex-row list-none mr-auto">
               <li className="flex items-center">
+                <Search name="customer-search" />
+              </li>
+              <li className="flex items-center">
                 <Link
                   className="hover:text-slate-500 text-slate-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
                   href="https://www.creative-tim.com/learning-lab/tailwind/nextjs/overview/notus"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
-                  <>
-                    <i className="text-slate-600 far fa-file-alt text-lg leading-lg mr-2" /> Docs
-                  </>
+                  <div className="cursor-pointer text-slate-700 text-sm font-bold leading-relaxed inline-block mr-4 py-1 whitespace-nowrap">
+                    <i className="text-slate-600 far fa-file-alt text-lg leading-lg mr-2" />
+                    Docs
+                  </div>
                 </Link>
               </li>
             </ul>
@@ -56,6 +62,9 @@ const Header = () => {
                 <IndexMenu />
               </li>
               <li className="flex items-center">
+                <Menu />
+              </li>
+              <li className="flex items-center">
                 <Link
                   className="hover:text-slate-500 text-slate-700 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold"
                   href="https://www.facebook.com"
@@ -63,7 +72,7 @@ const Header = () => {
                   rel="noopener noreferrer"
                 >
                   <>
-                    <i className="text-slate-400 fab fa-facebook text-lg leading-lg" />
+                    <i className="cursor-pointer text-slate-400 fab fa-facebook text-lg leading-lg" />
                     <span className="lg:hidden inline-block ml-2">Share</span>
                   </>
                 </Link>

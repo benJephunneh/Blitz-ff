@@ -5,6 +5,7 @@ type InputProps = {
   type?: HTMLInputTypeAttribute
   divProps?: string
   span?: string
+  icon?: string
   inputProps?: string
   name: string
   placeholder?: string
@@ -14,6 +15,7 @@ const Input = ({
   type = "text",
   divProps,
   span,
+  icon,
   inputProps,
   name,
   placeholder = "Input...",
@@ -22,23 +24,24 @@ const Input = ({
     // Ex: [http://|<user inputs text, here>]
     // <Input span='http://' placeholder='Input text' />
 
-    <div className={"flex rounded-md shadow-sm " + divProps}>
+    <div className={"relative flex w-full flex-wrap items-stretch " + divProps}>
       <span
         className={
-          "inline-flex items-center rounded-1-md border border-r-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500 " +
-          span
+          "z-10 h-full leading-snug font-normal absolute text-center bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3 text-slate-300 " +
+          (span || icon)
             ? ""
             : "hidden"
         }
       >
         {span}
+        {icon && <i className={icon} />}
       </span>
       <input
         type={type}
         name={name}
         id={name}
         className={
-          "px-3 py-2 h-12 border-1 border-solid border-slate-500 placeholder-slate-300 text-slate-600 bg-white rounded te-base leading-snug shadow-md outline-none focus:outline-none w-full font-normal " +
+          "px-3 py-0 border-1 border-solid border-slate-500 placeholder-slate-300 text-slate-600 bg-white rounded te-base leading-snug shadow-md outline-none focus:outline-none w-full font-normal " +
           inputProps
         }
         placeholder={placeholder}
