@@ -82,8 +82,6 @@ export default resolver.pipe(
             // locationId: locationId!,
             stashType,
             lineitems: { connect: [...lineitemIds] },
-            // start: start ? new Date(start) : null,
-            // end: end ? new Date(end) : null,
             // notes,
             // notes: JSON.stringify(notes),
             userId: ctx.session.userId,

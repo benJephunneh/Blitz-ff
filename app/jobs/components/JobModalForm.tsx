@@ -6,7 +6,7 @@ import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import createJob from "../mutations/createJob"
 import updateJob from "../mutations/updateJob"
-import { Job, JobStash, LineItem, User } from "db"
+import { Job, LineItem, User } from "db"
 import { useContext, useState } from "react"
 import deleteStash from "app/stashes/mutations/deleteStash"
 import createStash from "app/stashes/mutations/createStash"
@@ -72,22 +72,7 @@ const JobModalForm = ({
   // handleDrop,
   ...props
 }: JobModalFormProps) => {
-  const { job, jobs, jobStashes, lineitems, setLineitems } = useContext(headerContext)
-  const jobStash = jobStashes.find(({ id }) => id === stashId)
-  // const [stashes] = useQuery(
-  //   getStash,
-  //   {
-  //     id: stashId,
-  //     stashType: "Job",
-  //   },
-  //   {
-  //     enabled: !!stashId,
-  //     staleTime: Infinity,
-  //     refetchOnWindowFocus: false,
-  //   }
-  // )
-  // const jobStash = stashes?.jobStash ?? undefined
-  // const [jobStash, setJobStash] = useState(js ? js as JobStash & { lineitems: LineItem[] } : undefined)
+  const { job, jobs, jobStash, lineitems, setLineitems } = useContext(headerContext)
   // console.table(lineitems)
   // const [dragAndDropState, setDragAndDropState] = useState<DragAndDropJob>({ id: jobId, title, lineitems } as Job)
 
@@ -149,7 +134,7 @@ const JobModalForm = ({
   // }
 
   const onSubmit = async (values) => {
-    // console.table({ values })
+    console.table({ values })
     // console.log({ locationId })
     const { stashing, range, ...formSubmission } = values
     const [start, end] = range.map((t) => t)
@@ -157,14 +142,14 @@ const JobModalForm = ({
 
     let jobRet
     if (stashing) {
-      // console.log("Stashing...")
+      console.log("Stashing...")
       if (jobStash) {
         jobRet = await updateStashMutation({
           id: jobStash.id,
           stashType,
           job: {
-            start: start ? new Date(start) : null,
-            end: end ? new Date(end) : null,
+            start,
+            end,
             ...formSubmission,
           },
         })
@@ -174,14 +159,14 @@ const JobModalForm = ({
           job: {
             customerId,
             locationId,
-            start: start ? new Date(start) : null,
-            end: end ? new Date(end) : null,
+            start,
+            end,
             ...formSubmission,
           },
         })
       }
     } else {
-      // console.log("Jobbing...")
+      console.log("Jobbing...")
       if (job) {
         jobRet = updateJobMutation({
           id: job.id,
@@ -190,7 +175,7 @@ const JobModalForm = ({
           ...formSubmission,
         })
       } else {
-        // console.log("creating job...")
+        console.log("creating job...")
         console.log({ locationId })
         jobRet = createJobMutation({
           customerId,
@@ -246,13 +231,11 @@ const JobModalForm = ({
   // const [endDateTime, setEndDateTime] = useState(addDays(new Date().setHours(17, 0, 0, 0), 1))
   const start = jobStash?.start || job?.start // || addBusinessDays(new Date(), 1).setHours(9, 0, 0, 0)
   const end = jobStash?.end || job?.end // || addBusinessDays(new Date(), 1).setHours(17, 0, 0, 0)
-  console.log(start, end)
-  console.table(jobStash)
 
   const initialValues = {
     title: jobStash?.title || job?.title || undefined,
     range: [start, end],
-    notes: jobStash?.notes! || job?.notes || undefined,
+    notes: jobStash ? JSON.parse(jobStash.notes) : job?.notes ? JSON.parse(job.notes) : null,
     lineitems: jobStash?.lineitems || job?.lineitems || [],
   }
 
