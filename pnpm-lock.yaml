@@ -24,6 +24,7 @@ specifiers:
   "@types/preview-email": 2.0.1
   "@types/react": 18.0.17
   "@types/react-calendar": 3.5.3
+  "@types/react-dom": 18.0.10
   "@types/wojtekmaj__react-daterange-picker": 3.4.1
   "@typescript-eslint/eslint-plugin": 5.30.5
   "@wojtekmaj/react-daterange-picker": 4.0.0
@@ -63,6 +64,7 @@ specifiers:
   ts-jest: 28.0.7
   ts-node: 10.9.1
   typescript: ^4.9.4
+  usetheform: 3.4.1
   zod: 3.17.3
 
 dependencies:
@@ -111,6 +113,7 @@ devDependencies:
   "@types/preview-email": 2.0.1
   "@types/react": 18.0.17
   "@types/react-calendar": 3.5.3
+  "@types/react-dom": 18.0.10
   "@types/wojtekmaj__react-daterange-picker": 3.4.1
   "@typescript-eslint/eslint-plugin": 5.30.5_zdqoa5yvrbjbsji6ailcmfxryu
   concurrently: 6.5.1
@@ -131,6 +134,7 @@ devDependencies:
   ts-jest: 28.0.7_5nxfe52mr3nt3seysf23btgksi
   ts-node: 10.9.1_7sak53jwjus25uapklwmvnhtbm
   typescript: 4.9.4
+  usetheform: 3.4.1_react@18.2.0
 
 packages:
   /@ampproject/remapping/2.2.0:
@@ -6294,6 +6298,15 @@ packages:
       }
     dependencies:
       "@types/react": 18.0.17
+
+  /@types/react-dom/18.0.10:
+    resolution:
+      {
+        integrity: sha512-E42GW/JA4Qv15wQdqJq8DL4JhNpB3prJgjgapN3qJT9K2zO5IIAQh4VXvCEDupoqAwnz0cY4RlXeC/ajX5SFHg==,
+      }
+    dependencies:
+      "@types/react": 18.0.17
+    dev: true
 
   /@types/react-redux/7.1.24:
     resolution:
@@ -16125,7 +16138,6 @@ packages:
     engines: { node: ">=0.10.0" }
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /readable-stream/2.3.7:
     resolution:
@@ -18274,6 +18286,17 @@ packages:
       execa: 1.0.0
       mem: 4.3.0
     dev: false
+
+  /usetheform/3.4.1_react@18.2.0:
+    resolution:
+      {
+        integrity: sha512-hunYtVoBjfwk7D7RdIcs3CntYGQrRtRHE2tZp5ZhzkOmuJ+YZYcpdhoovIOY4A/m/c0HTvBSuCzNOQJkLvllzg==,
+      }
+    peerDependencies:
+      react: ">=16.8.0"
+    dependencies:
+      react: 18.2.0
+    dev: true
 
   /util-deprecate/1.0.2:
     resolution:

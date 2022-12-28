@@ -22,7 +22,7 @@ export interface LabeledTextFieldProps extends ComponentPropsWithoutRef<typeof I
 }
 
 export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldProps>(
-  ({ name, label, type, outerProps, fieldProps, labelProps, ...props }, ref) => {
+  ({ name, label, type = "text", outerProps, fieldProps, labelProps, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting },
@@ -31,7 +31,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
         props.type === "number"
           ? (Number as any)
           : // Converting `""` to `null` ensures empty values will be set to null in the DB
-          (v) => (v === "" ? null : v),
+            (v) => (v === "" ? null : v),
       ...fieldProps,
     })
 
@@ -46,7 +46,8 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
         </FormLabel>
         {/* {type === "price" && ( */}
         <InputGroup>
-          {type === "price" && <InputLeftAddon children="$" bg="green.200" />}{/* eslint-disable-line */}
+          {type === "price" && <InputLeftAddon children="$" bg="green.200" />}
+          {/* eslint-disable-line */}
           <Input
             {...input}
             disabled={submitting}

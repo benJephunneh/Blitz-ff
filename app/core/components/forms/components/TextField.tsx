@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Input,
   InputGroup,
@@ -16,12 +17,14 @@ type TextFieldProps = ComponentPropsWithoutRef<typeof Input> & {
   name: string
   label: string
   type?: "text" | "password" | "email" | "number"
+  isRequired?: boolean
   icon?: JSX.Element
   suffix?: JSX.Element
+  footer?: JSX.Element
 }
 
 const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
-  ({ name, label, icon, suffix, ...props }, ref) => {
+  ({ name, label, isRequired = true, icon, suffix, footer, ...props }, ref) => {
     const { input, meta } = useField(name, {
       parse:
         props.type === "number"
@@ -32,7 +35,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     const error = getFieldErrorMessage(meta)
 
     return (
-      <FormControl isInvalid={meta.touched && error}>
+      <FormControl isInvalid={meta.touched && error} isRequired={isRequired}>
         {label && <FormLabel>{label}</FormLabel>}
 
         <InputGroup>
@@ -41,6 +44,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           {suffix && <InputRightAddon>{suffix}</InputRightAddon>}
         </InputGroup>
 
+        {footer && <FormHelperText>{footer}</FormHelperText>}
         <FormErrorMessage>{error}</FormErrorMessage>
       </FormControl>
     )
