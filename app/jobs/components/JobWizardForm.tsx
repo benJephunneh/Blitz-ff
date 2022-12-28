@@ -19,6 +19,7 @@ type JobWizardFormProps = {
   isOpen: boolean
   onClose: () => void
   onSuccess?: (job: Job) => void
+  onSubmit: () => void
 }
 
 type Values = {
@@ -30,7 +31,16 @@ type Values = {
   lineitems?: LineItem[]
 }
 
-const JobWizardForm = ({ customerId, locationId, jobId, stashId, disableStash, isOpen, onClose, onSuccess }: JobWizardFormProps) => {
+const JobWizardForm = ({
+  customerId,
+  locationId,
+  jobId,
+  stashId,
+  disableStash,
+  isOpen,
+  onClose,
+  onSuccess,
+}: JobWizardFormProps) => {
   const { jobs } = useContext(headerContext)
   const [page, setPage] = useState(0)
   const [job, setJob] = useState<Job>()
@@ -59,7 +69,7 @@ const JobWizardForm = ({ customerId, locationId, jobId, stashId, disableStash, i
   // let lineitems: LineItem[]
   const { title, start, end, notes } = job
     ? job
-    : { title: '', start: null, end: null, notes: null }
+    : { title: "", start: null, end: null, notes: null }
   // console.log(title, start, end, notes, lineitems)
 
   // return (
