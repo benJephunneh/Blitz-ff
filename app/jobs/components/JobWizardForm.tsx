@@ -40,6 +40,7 @@ const JobWizardForm = ({
   isOpen,
   onClose,
   onSuccess,
+  onSubmit,
 }: JobWizardFormProps) => {
   const { jobs } = useContext(headerContext)
   const [page, setPage] = useState(0)
