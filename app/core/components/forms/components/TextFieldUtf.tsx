@@ -2,6 +2,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormHelperText,
+  FormLabel,
   Input,
   InputGroup,
   InputLeftElement,
@@ -23,7 +24,7 @@ type TextFieldUtfProps = ComponentPropsWithoutRef<typeof Input> & {
   prefix?: JSX.Element
   suffix?: JSX.Element
   footer?: JSX.Element
-  error?: boolean
+  error?: string
 }
 
 const TextFieldUtf = forwardRef<HTMLInputElement, TextFieldUtfProps>(
@@ -33,29 +34,34 @@ const TextFieldUtf = forwardRef<HTMLInputElement, TextFieldUtfProps>(
       name,
     })
     const hasError = error !== undefined
-    // console.log({ ...status })
-    // console.log({ ...validation })
     // console.log({ ...fieldProps })
-    console.log({ ...props })
-    console.log({ error })
+    // console.log({ ...props })
 
     return (
       <FormControl isRequired={isRequired}>
+        {label && <FormLabel>{label}</FormLabel>}
+
         <InputGroup>
-          {prefix && (
-            <InputLeftElement bg="gray.100" minW="fit-content" px={2}>
-              {prefix}
-            </InputLeftElement>
-          )}
-          <Input type="text" {...props} {...fieldProps} ref={ref} />
+          {/* {prefix && (
+                        <InputLeftElement bg="gray.100" minW="fit-content" px={2}>
+                            {prefix}
+                        </InputLeftElement>
+                    )} */}
+          <Input
+            type="text"
+            {...props}
+            {...fieldProps}
+            ref={ref}
+            borderColor={error ? "red" : "inherit"}
+          />
           {suffix && <InputRightAddon>{suffix}</InputRightAddon>}
         </InputGroup>
 
-        {!hasError ? (
-          footer && <FormHelperText>{footer}</FormHelperText>
-        ) : (
+        {error ? (
           <FormErrorMessage>{error}</FormErrorMessage>
-        )}
+        ) : footer ? (
+          <FormHelperText>asdf</FormHelperText>
+        ) : null}
       </FormControl>
     )
   }
