@@ -5,7 +5,7 @@ import {
   FormLabel,
   Input,
   InputGroup,
-  InputLeftElement,
+  InputLeftAddon,
   InputRightAddon,
 } from "@chakra-ui/react"
 import type { ComponentPropsWithoutRef } from "react"
@@ -38,29 +38,19 @@ const TextFieldUtf = forwardRef<HTMLInputElement, TextFieldUtfProps>(
     // console.log({ ...props })
 
     return (
-      <FormControl isRequired={isRequired}>
+      <FormControl isRequired={isRequired} isInvalid={hasError}>
         {label && <FormLabel>{label}</FormLabel>}
 
         <InputGroup>
-          {/* {prefix && (
-                        <InputLeftElement bg="gray.100" minW="fit-content" px={2}>
-                            {prefix}
-                        </InputLeftElement>
-                    )} */}
-          <Input
-            type="text"
-            {...props}
-            {...fieldProps}
-            ref={ref}
-            borderColor={error ? "red" : "inherit"}
-          />
+          {prefix && <InputLeftAddon>{prefix}</InputLeftAddon>}
+          <Input {...props} {...fieldProps} ref={ref} borderColor={error ? "red" : "inherit"} />
           {suffix && <InputRightAddon>{suffix}</InputRightAddon>}
         </InputGroup>
 
         {error ? (
           <FormErrorMessage>{error}</FormErrorMessage>
         ) : footer ? (
-          <FormHelperText>asdf</FormHelperText>
+          <FormHelperText>{footer}</FormHelperText>
         ) : null}
       </FormControl>
     )
