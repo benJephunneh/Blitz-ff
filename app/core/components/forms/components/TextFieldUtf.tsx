@@ -16,7 +16,7 @@ import getFieldErrorMessage from "../helpers/getFieldErrorMessage"
 
 type TextFieldUtfProps = ComponentPropsWithoutRef<typeof Input> & {
   name: string
-  label: string
+  label?: string
   // touched: boolean
   // validators?: any
   // variant: ComponentPropsWithoutRef<typeof Input>
