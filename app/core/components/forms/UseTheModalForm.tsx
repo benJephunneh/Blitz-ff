@@ -13,9 +13,10 @@ type UseTheModalFormProps = {
     submitText?: string
     disableStash?: boolean
 
-    // schema: AnyZodObject
+    schema: AnyZodObject
     // initialValues: z.infer<typeof JobFormSchema>
     // onSubmit,
+    validator: (v: any) => any
     children?: ReactNode
 }
 
@@ -28,11 +29,13 @@ const UseTheModalForm: FormComponent<UseTheModalFormProps> = ({
     disableStash,
 
     schema,
-    initialValues,
-    onSubmit,
+    // initialValues,
+    // onSubmit,
     render,
+    validator,
     children
 }) => {
+    const schemaKeys = Object.keys(schema)
     const validateForm = v => {
         try {
             schema?.parse(v)
