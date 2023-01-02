@@ -131,7 +131,7 @@ const Home: BlitzPage = () => {
         </Box>
         <Box>
           <p>
-            <strong>Congrats!</strong> Your app is ready, including user sign-up and log-in.
+            <strong>Kongrats!</strong> Your app is ready, including user sign-up and log-in.
           </p>
           <p>
             <strong>

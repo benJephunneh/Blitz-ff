@@ -161,24 +161,24 @@ const LocationModalForm = ({
 
   const onSubmit = async (values) => {
     // console.log({ values })
-    const { ...formSubmission } = values
+    const { stashing, ...location } = values
 
     let locationRet
-    if (values.stashing) {
+    if (stashing) {
       // console.log("stashing")
       if (locationStash) {
         // console.log("\tupdating stash")
         locationRet = await updateStashMutation({
           id: locationStash.id,
           stashType,
-          location: formSubmission,
+          location,
         })
         // refetchStash().catch((e) => console.log(`Location update error: ${e}`))
       } else {
         // console.log("\tcreating stash")
         locationRet = await createStashMutation({
           stashType,
-          location: formSubmission,
+          location,
         })
       }
     } else {
@@ -187,13 +187,13 @@ const LocationModalForm = ({
         // console.log("\tupdating location")
         locationRet = await updateLocationMutation({
           id: location.id,
-          ...values,
+          ...location,
         })
       } else {
         // console.log("\tcreating location")
         locationRet = await createLocationMutation({
           customerId: stashId ? locationStash.customerId : customerId,
-          ...formSubmission,
+          ...location,
         })
         if (locationStash && locationRet) {
           await deleteStashMutation({
@@ -219,10 +219,10 @@ const LocationModalForm = ({
     primary: locationStash
       ? locationStash["primary"]
       : location
-      ? location["primary"]
-      : locationIds && locationIds.length > 0
-      ? false
-      : true,
+        ? location["primary"]
+        : locationIds && locationIds.length > 0
+          ? false
+          : true,
     house: locationStash?.house || location?.house || undefined,
     street: locationStash?.street || location?.street || undefined,
     city: locationStash?.city || location?.city || undefined,
