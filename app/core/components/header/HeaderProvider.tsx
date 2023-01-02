@@ -273,8 +273,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
       // enabled: isLoggedIn,
       // staleTime: Infinity,
       refetchOnWindowFocus: false,
-      // refetchInterval: 5000,
-      // refetchIntervalInBackground: true,
+      refetchInterval: 5000,
+      refetchIntervalInBackground: true,
     }
   )
   useEffect(() => {
@@ -317,10 +317,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
     : deletingLocation
-    ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
-    : deletingJob
-    ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
-    : ""
+      ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
+      : deletingJob
+        ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
+        : ""
 
   return (
     <Provider
