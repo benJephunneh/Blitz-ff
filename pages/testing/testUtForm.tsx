@@ -51,6 +51,14 @@ const TestUtForm: BlitzPage = () => {
     console.log("On submit: ", e)
   }
 
+  const [wizardPage, setPage] = useState(1)
+  const next = () => setPage((p) => ++p)
+  const prev = () => setPage((p) => --p)
+
+  const [{ error, isValid }, validation] = useValidation([validator])
+  const [getWizardState, wizard] = useMultipleForm((s) => updateJson(s))
+  const [wizardState, updateJson] = useState({})
+
   const schemas = [CustomerFormSchema, LocationFormSchema, JobFormSchema]
 
   const validateForm = (v) => {
@@ -66,10 +74,10 @@ const TestUtForm: BlitzPage = () => {
     }
   }
 
-  const [{ error: errors }, validation] = useValidation([validateForm])
-  const firstnameError = errors?.["firstname"] || errors?.["all"]
-  const lastnameError = errors?.["lastname"] || errors?.["all"]
-  const emailError = errors?.["email"] || errors?.["all"]
+  // const [{ error: errors }, validation] = useValidation([validateForm])
+  // const firstnameError = errors?.["firstname"] || errors?.["all"]
+  // const lastnameError = errors?.["lastname"] || errors?.["all"]
+  // const emailError = errors?.["email"] || errors?.["all"]
   // console.log({ firstnameError }) // E.g. 'Required'
   // console.log({ lastnameError })
   // console.log({ emailError }) // E.g. 'Invalid email'
@@ -100,9 +108,9 @@ const TestUtForm: BlitzPage = () => {
         {/* <TextFieldUtf isRequired type='text' name="firstname" label='First name' prefix="First name" error={firstnameError} />
         <TextFieldUtf isRequired type='text' name="lastname" label='Last name' prefix="Last name" error={lastnameError} />
         <TextFieldUtf isRequired type='text' name="email" label='Email' prefix="Email" error={emailError} /> */}
-        <Input isRequired type="text" name="firstname" label="First name" error={firstnameError} />
-        <Input isRequired type="text" name="lastname" label="Last name" error={lastnameError} />
-        <Input isRequired type="text" name="email" label="Email" error={emailError} />
+        <Input isRequired type="text" name="firstname" label="First name" />
+        <Input isRequired type="text" name="lastname" label="Last name" />
+        <Input isRequired type="text" name="email" label="Email" />
         {/* <TextFieldUtf isRequired name="firstname" prefix="First name" error={firstnameError} />
                 <TextFieldUtf isRequired name="lastname" prefix="Last name" error={lastnameError} />
                 <TextFieldUtf isRequired name="email" prefix="Email" error={emailError} /> */}

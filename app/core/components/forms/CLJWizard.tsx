@@ -7,6 +7,11 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Customer, CustomerStash, Job, JobStash, Location, LocationStash } from "@prisma/client"
@@ -93,6 +98,7 @@ const CLJWizard: FC<CLJWizardProps> = ({
   const next = () => setPage((p) => ++p)
   const prev = () => setPage((p) => --p)
 
+  const [{ error, isValid }, validation] = useValidation([validator])
   const [getWizardState, wizard] = useMultipleForm((s) => updateJson(s))
   const [wizardState, updateJson] = useState({})
 
@@ -105,8 +111,6 @@ const CLJWizard: FC<CLJWizardProps> = ({
 
     return { ...s, tp }
   }
-
-  const [{ error, isValid }, validation] = useValidation([validator])
 
   // Location errors
   const houseError = error?.["house"] || error?.["all"]
@@ -127,8 +131,8 @@ const CLJWizard: FC<CLJWizardProps> = ({
 
   const initialState = {
     customer,
-    location,
-    job,
+    // location,
+    // job,
     // title: jobStash ? jobStash.title : job ? job.title : undefined,
     // start: jobStash?.start ?? job?.start ?? addDays(new Date(), 1).setHours(9),
     // end: jobStash?.end ?? job?.end ?? addDays(new Date(), 1).setHours(17),
@@ -155,17 +159,42 @@ const CLJWizard: FC<CLJWizardProps> = ({
         <ModalCloseButton />
 
         <ModalBody bg={bgColor}>
-          {wizardPage === 1 && (
-            <Form
-              touched
-              initialState={initialState}
-              onSubmit={() => onSubmit(getWizardState)}
-              reducers={[reduceTotalPrice]}
-            >
-              <CustomerUTForm />
-              {/* {children} */}
-            </Form>
-          )}
+          <Tabs>
+            <TabList>
+              <Tab>Customer</Tab>
+              <Tab>Location</Tab>
+              <Tab>Job</Tab>
+            </TabList>
+
+            <TabPanels>
+              {page === 1 && (
+                <TabPanel>
+                  <Input isRequired type="text" name="firstname" prefix="First name" />
+                </TabPanel>
+              )}
+              {page === 2 && (
+                <TabPanel>
+                  <p>Location</p>
+                </TabPanel>
+              )}
+              {page === 3 && (
+                <TabPanel>
+                  <p>Job</p>
+                </TabPanel>
+              )}
+            </TabPanels>
+          </Tabs>
+          {/* {wizardPage === 1 && (
+                        // <Form
+                        //     touched
+                        //     initialState={initialState.customer}
+                        //     onSubmit={() => onSubmit(getWizardState)}
+                        //     reducers={[reduceTotalPrice]}
+                        // >
+                            <CustomerUTForm />
+                            {/* {children}
+                        // </Form>
+                    )} */}
         </ModalBody>
       </ModalContent>
     </Modal>
