@@ -271,10 +271,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
     {
       suspense: true,
       // enabled: isLoggedIn,
-      // staleTime: Infinity,
-      refetchOnWindowFocus: false,
-      refetchInterval: 5000,
-      refetchIntervalInBackground: true,
+      staleTime: Infinity,
+      refetchOnWindowFocus: true,
+      // refetchInterval: 5000,
+      // refetchIntervalInBackground: true,
     }
   )
   useEffect(() => {
