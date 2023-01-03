@@ -14,47 +14,57 @@ import { useField, useValidation } from "usetheform"
 import { ZodSchema } from "zod"
 import getFieldErrorMessage from "../helpers/getFieldErrorMessage"
 
-type TextFieldUtfProps = ComponentPropsWithoutRef<typeof Input> & {
+interface TextFieldUtfProps extends ComponentPropsWithoutRef<typeof Input> {
   name: string
+  type?: "text" | "email" | "password" | "tel" | "url"
   label?: string
   // touched: boolean
   // validators?: any
   // variant: ComponentPropsWithoutRef<typeof Input>
   isRequired?: boolean
-  prefix?: JSX.Element
-  suffix?: JSX.Element
-  footer?: JSX.Element
+  prefix?: string
+  suffix?: string
+  footer?: string
   error?: string
 }
 
-const TextFieldUtf = forwardRef<HTMLInputElement, TextFieldUtfProps>(
-  ({ name, label, isRequired = true, prefix, suffix, footer, error, ...props }, ref) => {
-    const fieldProps = useField({
-      type: "text",
-      name,
-    })
-    const hasError = error !== undefined
-    // console.log({ ...fieldProps })
-    // console.log({ ...props })
+const TextFieldUtf = ({
+  name,
+  type = "text",
+  label,
+  isRequired = true,
+  prefix,
+  suffix,
+  footer,
+  error,
+  ...props
+}: TextFieldUtfProps) => {
+  const fieldProps = useField({
+    type,
+    name,
+  })
+  const hasError = error !== undefined
+  // console.log({ ...fieldProps })
+  // console.log({ ...props })
+  // console.log({ error })
 
-    return (
-      <FormControl isRequired={isRequired} isInvalid={hasError}>
-        {label && <FormLabel>{label}</FormLabel>}
+  return (
+    <FormControl isRequired={isRequired} isInvalid={hasError}>
+      {label && <FormLabel>{label}</FormLabel>}
 
-        <InputGroup>
-          {prefix && <InputLeftAddon>{prefix}</InputLeftAddon>}
-          <Input {...props} {...fieldProps} ref={ref} borderColor={error ? "red" : "inherit"} />
-          {suffix && <InputRightAddon>{suffix}</InputRightAddon>}
-        </InputGroup>
+      <InputGroup my={2}>
+        {prefix && <InputLeftAddon bg="blackAlpha.300">{prefix}</InputLeftAddon>}
+        <Input {...props} {...fieldProps} borderColor={error ? "red" : "inherit"} />
+        {suffix && <InputRightAddon>{suffix}</InputRightAddon>}
+      </InputGroup>
 
-        {error ? (
-          <FormErrorMessage>{error}</FormErrorMessage>
-        ) : footer ? (
-          <FormHelperText>{footer}</FormHelperText>
-        ) : null}
-      </FormControl>
-    )
-  }
-)
+      {error ? (
+        <FormErrorMessage>{error}</FormErrorMessage>
+      ) : footer ? (
+        <FormHelperText>{footer}</FormHelperText>
+      ) : null}
+    </FormControl>
+  )
+}
 
 export default TextFieldUtf

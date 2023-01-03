@@ -4,21 +4,22 @@ import { useEffect } from "react"
 import getCustomer from "../queries/getCustomer"
 
 interface UseCustomerProps
-  extends Pick<Prisma.CustomerFindFirstArgs, "where" | "include" | "orderBy"> {
-  customerId?: number
+  extends Pick<Prisma.CustomerFindFirstArgs, "where" | "select" | "orderBy"> {
+  // customerId?: number
 }
 
-const useCustomer = ({ customerId, where, include, orderBy }: UseCustomerProps) => {
+const useCustomer = ({ where, select, orderBy }: UseCustomerProps) => {
   const [customer, { refetch }] = useQuery(
     getCustomer,
     {
       where,
-      include,
+      select,
     },
     {
       refetchOnWindowFocus: false,
       staleTime: Infinity,
-      enabled: !!customerId,
+      suspense: true,
+      // enabled: !!customerId,
     }
   )
 

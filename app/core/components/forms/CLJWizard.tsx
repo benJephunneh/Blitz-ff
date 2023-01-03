@@ -159,7 +159,7 @@ const CLJWizard: FC<CLJWizardProps> = ({
         <ModalCloseButton />
 
         <ModalBody bg={bgColor}>
-          <Tabs>
+          {/* <Tabs>
             <TabList>
               <Tab>Customer</Tab>
               <Tab>Location</Tab>
@@ -183,18 +183,18 @@ const CLJWizard: FC<CLJWizardProps> = ({
                 </TabPanel>
               )}
             </TabPanels>
-          </Tabs>
-          {/* {wizardPage === 1 && (
-                        // <Form
-                        //     touched
-                        //     initialState={initialState.customer}
-                        //     onSubmit={() => onSubmit(getWizardState)}
-                        //     reducers={[reduceTotalPrice]}
-                        // >
-                            <CustomerUTForm />
-                            {/* {children}
-                        // </Form>
-                    )} */}
+          </Tabs> */}
+          {wizardPage === 1 && (
+            // <Form
+            //     touched
+            //     initialState={initialState.customer}
+            //     onSubmit={() => onSubmit(getWizardState)}
+            //     reducers={[reduceTotalPrice]}
+            // >
+            <CustomerUTForm />
+            // {children}
+            // </Form>
+          )}
         </ModalBody>
       </ModalContent>
     </Modal>
