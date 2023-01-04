@@ -136,7 +136,7 @@ const JobModalForm = ({
   const onSubmit = async (values) => {
     console.table({ values })
     // console.log({ locationId })
-    const { stashing, range, ...job } = values
+    const { stashing, range, ...newJob } = values
     const [start, end] = range.map((t) => t)
     // console.log({ start })
 
@@ -148,18 +148,18 @@ const JobModalForm = ({
           id: jobStash.id,
           stashType,
           job: {
-            start,
-            end,
-            ...job,
+            start: new Date(start),
+            end: new Date(end),
+            ...newJob,
           },
         })
       } else {
         jobRet = await createStashMutation({
           stashType,
           job: {
-            start,
-            end,
-            ...job,
+            start: new Date(start),
+            end: new Date(end),
+            ...newJob,
           },
         })
       }
@@ -168,9 +168,9 @@ const JobModalForm = ({
       if (job) {
         jobRet = updateJobMutation({
           id: job.id,
-          start,
-          end,
-          ...job,
+          start: new Date(start),
+          end: new Date(end),
+          ...newJob,
         })
       } else {
         console.log("creating job...")
@@ -178,9 +178,9 @@ const JobModalForm = ({
         jobRet = createJobMutation({
           customerId,
           locationId,
-          start,
-          end,
-          ...job,
+          start: new Date(start),
+          end: new Date(end),
+          ...newJob,
         })
         if (jobStash && jobRet) {
           await deleteStashMutation({

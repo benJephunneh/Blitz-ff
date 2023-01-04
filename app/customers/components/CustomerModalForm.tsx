@@ -16,6 +16,8 @@ import TextAreaField from "app/core/components/forms/components/TextAreaField"
 import LabeledListField from "app/core/components/forms/LabeledListField"
 import { Field } from "react-final-form"
 import LabeledSelectField from "app/core/components/forms/LabeledSelectField"
+import { useContext } from "react"
+import headerContext from "app/core/components/header/headerContext"
 
 type CustomerModalFormProps = {
   isOpen: boolean
@@ -128,7 +130,7 @@ const CustomerModalForm = ({
     // console.log(`values.stashing: ${values.stashing}`)
 
     // const formSubmission = (({ firstname, lastname, companyname, email }) => ({ firstname, lastname, companyname, email }))(values)
-    const { stashing, ...customer } = values
+    const { stashing, ...newCustomer } = values
 
     let customerRet
     if (stashing) {
@@ -138,7 +140,7 @@ const CustomerModalForm = ({
         customerRet = await updateStashMutation({
           id: customerStash.id,
           stashType,
-          customer,
+          customer: newCustomer,
           // notes,
         })
         // await refetchStash()
@@ -146,21 +148,21 @@ const CustomerModalForm = ({
         // console.log("\t\tcreate stash")
         customerRet = await createStashMutation({
           stashType,
-          customer,
+          customer: newCustomer,
           // notes,
         })
       }
     } else {
       // console.log("\tnot stashing")
       if (customer) {
-        // console.log("\t\tupdating customer")
+        console.log("\t\tupdating customer")
         customerRet = await updateCustomerMutation({
           id: customer.id,
-          ...customer,
+          ...newCustomer,
         })
       } else {
-        // console.log("\t\tcreating customer")
-        customerRet = await createCustomerMutation(customer)
+        console.log("\t\tcreating customer")
+        customerRet = await createCustomerMutation(newCustomer)
         if (customerStash && customerRet)
           await deleteStashMutation({
             id: customerStash.id,

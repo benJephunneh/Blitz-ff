@@ -411,8 +411,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               if (customer) {
                 if ("stashType" in customer) await refetchStashes()
                 else {
-                  if (creatingCustomer)
+                  if (creatingCustomer) {
+                    console.log('Going to new customer page.')
                     await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
+                  }
 
                   // await setCustomerQueryData(customer)
                   creatingCustomer && setLocationId(undefined)

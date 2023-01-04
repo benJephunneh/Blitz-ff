@@ -206,7 +206,7 @@ const JobPanel = () => {
               }}
             />
           </Box>
-          <pre>{JSON.stringify(job, null, 2)}</pre>
+          {/* <pre>{JSON.stringify(job, null, 2)}</pre> */}
         </HStack>
       )}
       {!job && (
@@ -225,10 +225,10 @@ const JobPanel = () => {
                 {j.start === null
                   ? `${j.title}: unscheduled`
                   : isSameMonth(j.start!, j.end!)
-                  ? isSameDay(j.start!, j.end!)
-                    ? `${j.title}: ${format(j.start!, "HHmm")} - ${format(j.end!, "HHmm, d MMM")}`
-                    : `${j.title}: ${format(j.start!, "d")} - ${format(j.end!, "d MMM")}`
-                  : `${j.title}: ${format(j.start!, "d MMM")} - ${format(j.end!, "d MMM")}`}
+                    ? isSameDay(j.start!, j.end!)
+                      ? `${j.title}: ${format(j.start!, "HHmm")} - ${format(j.end!, "HHmm, d MMM")}`
+                      : `${j.title}: ${format(j.start!, "d")} - ${format(j.end!, "d MMM")}`
+                    : `${j.title}: ${format(j.start!, "d MMM")} - ${format(j.end!, "d MMM")}`}
               </ListItem>
             </Tooltip>
           ))}
