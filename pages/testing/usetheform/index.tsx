@@ -24,24 +24,11 @@ import { zipObject } from "lodash"
 import useCustomer from "app/customers/hooks/useCustomer"
 import NoteFieldUtf from "app/core/components/forms/components/NoteFieldUtf"
 
-const schemas = [CustomerFormSchema, LocationFormSchema, JobFormSchema]
-
-// const validateForm = (v) => {
-//   try {
-//     fieldSchema.parse(v)
-//   } catch (e) {
-//     // console.log({ e })
-//     if (e.errors[0].path === "") {
-//       return { all: e.errors[0].message }
-//     } else {
-//       return e.errors.reduce((acc, errObj) => {
-//         const namefield = errObj.path[0]
-//         acc = { ...acc, [namefield]: errObj.message }
-//         return acc
-//       }, {})
-//     }
-//   }
-// }
+const schemas = [
+  { customer: CustomerFormSchema },
+  { location: LocationFormSchema },
+  { job: JobFormSchema },
+] as const
 
 const TestUtForm: BlitzPage = () => {
   const { customer } = useCustomer({
@@ -63,13 +50,14 @@ const TestUtForm: BlitzPage = () => {
 
   const initialState = useMemo(() => {
     return {
-      customer: {
-        firstname: undefined,
-        lastname: undefined,
-        email: undefined,
-        phone: undefined,
-        notes: undefined,
-      },
+      customer,
+      // : {
+      //   firstname: undefined,
+      //   lastname: undefined,
+      //   email: undefined,
+      //   phone: undefined,
+      //   notes: undefined,
+      // },
       location: {
         house: undefined,
         street: undefined,
@@ -103,9 +91,10 @@ const TestUtForm: BlitzPage = () => {
     // console.log({ v })
     // console.log(schemas.at(wizardPage - 1)?.shape)
     try {
-      schemas.at(wizardPage - 1)!.parse(v)
+      const [schema] = Object.keys(schemas.at(wizardPage - 1)!)
+      schemas.at(wizardPage - 1)![schema!].parse(v[schema!])
     } catch ({ errors }) {
-      console.log({ ...errors })
+      // console.log({ ...errors })
       if (errors[0].path === "") return { all: errors[0].message }
       else
         return errors.reduce((acc, errObj) => {
@@ -117,7 +106,7 @@ const TestUtForm: BlitzPage = () => {
   }
 
   const [{ error: errors, isValid }, validation] = useValidation([validateForm])
-  console.log("errors", errors)
+  // console.log("errors", errors)
   // console.log({ ...validation })
 
   // const firstnameError = errors?.["firstname"] || errors?.["all"]
@@ -130,7 +119,7 @@ const TestUtForm: BlitzPage = () => {
   const [headerText, setHeaderText] = useState("Create customer")
   const bgColor = "white"
   const headerTextColor = "black"
-  const bgGradient = "linear(to-r, white, blackAlpha.600)"
+  const bgGradient = "linear(to-r, white, blackAlpha.400)"
 
   const onInit = useCallback(
     (s) => {
@@ -166,7 +155,7 @@ const TestUtForm: BlitzPage = () => {
         size={{ sm: "md", lg: "xl" }}
         scrollBehavior="inside"
       >
-        <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px) invert(10%)" />
+        <ModalOverlay bg="blackAlpha.200" backdropFilter="blur(2px) invert(10%)" />
 
         <ModalContent bg={bgColor}>
           <ModalHeader
@@ -184,44 +173,50 @@ const TestUtForm: BlitzPage = () => {
                 touched
                 onSubmit={onSubmit}
                 onChange={onChange}
-                onInit={onInit}
+                onInit={onChange}
+                onReset={onChange}
                 initialState={initialState}
                 {...validation}
               >
                 <Collection object name="customer">
                   <TextFieldUtf
                     isRequired
+                    type="text"
                     name="firstname"
                     prefix="First name"
                     error={errors?.["firstname"] || errors?.["all"]}
-                    colorScheme="red"
                   />
                   <TextFieldUtf
                     isRequired
+                    type="text"
                     name="lastname"
                     prefix="Last name"
                     error={errors?.["lastname"] || errors?.["all"]}
                   />
                   <TextFieldUtf
                     isRequired
+                    type="text"
                     name="companyname"
                     prefix="Company name"
                     error={errors?.["companyname"] || errors?.["all"]}
                   />
                   <TextFieldUtf
                     isRequired
+                    type="text"
                     name="email"
                     prefix="Email"
                     error={errors?.["email"] || errors?.["all"]}
                   />
                   <TextFieldUtf
                     isRequired
+                    type="text"
                     name="phone"
                     prefix="Phone"
                     error={errors?.["phone"] || errors?.["all"]}
                   />
                   <NoteFieldUtf
                     name="notes"
+                    type="text"
                     label="Notes"
                     error={errors?.["notes"] || errors?.["all"]}
                   />

@@ -8,10 +8,10 @@ const companyname = z.string()
 export const email = z.string().email()
 const phone = z
   .string()
-  .min(7, "Minimum seven-character phone number length")
-  .max(10, "Maximum ten-character phone number length")
-const notes = stashContentSchema
-export const textNotes = z.string()
+  .length(7, "Only seven- or ten-character phone number length")
+  .or(z.string().length(10, "Only seven- or ten-character phone number length"))
+// const notes = stashContentSchema
+const notes = z.string()
 // .refine((query) => useQuery(checkUniquity, { query }, { suspense: true }), {
 // checkUniquity({ email }).catch((e) => console.log(`checkUniquity error: ${e}`)),
 // message: "Email is not unique.",
@@ -28,7 +28,7 @@ export const CustomerFormSchema = CustomerSkeleton.extend({
   firstname: firstname.nullable().optional(),
   lastname: lastname.nullable().optional(),
   companyname: companyname.nullable().optional(),
-  notes: textNotes.nullable().optional(),
+  notes: notes.nullable().optional(),
 })
 
 export const CreateCustomer = CustomerFormSchema
@@ -36,7 +36,7 @@ export const CreateCustomerStash = CustomerSkeleton.extend({
   firstname: firstname.nullable().optional(),
   lastname: lastname.nullable().optional(),
   companyname: companyname.nullable().optional(),
-  notes: textNotes,
+  notes: notes,
 })
 
 export const UpdateCustomer = CreateCustomer.extend({ id })
