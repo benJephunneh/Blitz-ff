@@ -7,10 +7,10 @@ export default resolver.pipe(
   resolver.authorize(),
 
   async ({ id, notes, ...values }) => {
-    const lineItem = db.lineItem.update({
+    const lineItem = await db.lineItem.update({
       where: { id },
       data: {
-        notes: notes && JSON.stringify(notes),
+        notes,
         ...values,
       },
     })
