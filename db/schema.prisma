@@ -261,10 +261,10 @@ model Locate {
   submitted DateTime @default(now())
   number    Int
   location  String
-  job       Job      @relation(fields: [jobId], references: [id])
+  job       Job?      @relation(fields: [jobId], references: [id])
   archivedJob JobArchive? @relation(fields: [jobarchiveId], references: [id])
-  jobId     Int      @unique
-  jobarchiveId     Int      @unique
+  jobId     Int? @unique
+  jobarchiveId     Int? @unique
 }
 
 model CustomerArchive {
