@@ -147,6 +147,8 @@ model Task {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   title String
+  completed Boolean @default(false)
+  needBy DateTime
   notes String
   customer Customer? @relation(fields: [customerId], references: [id])
   location Location? @relation(fields: [locationId], references: [id])
