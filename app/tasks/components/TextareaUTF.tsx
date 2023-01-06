@@ -1,22 +1,44 @@
-import { TextArea, useValidation } from "usetheform"
+import {
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Textarea,
+} from "@chakra-ui/react"
+import { ComponentPropsWithoutRef } from "react"
+import { TextArea, useField, useValidation } from "usetheform"
+
+interface TextAreaUtfProps extends ComponentPropsWithoutRef<typeof Textarea> {
+  name: string
+  label?: string
+  // touched: boolean
+  // validators?: any
+  // variant: ComponentPropsWithoutRef<typeof Input>
+  isRequired?: boolean
+  error?: string
+}
 
 const minLength = (l) => (val) => val && val.length < l ? "Textarea error.  Add a note." : undefined
 
-const TextareaUTF = () => {
-  const [{ error }, validation] = useValidation([minLength(1)])
+const TextareaUtf = ({ name, label, isRequired = true, error, ...props }: TextAreaUtfProps) => {
+  const fieldProps = useField({
+    type: "text",
+    name,
+  })
+  const hasError = error !== undefined
+  // console.log({ ...fieldProps })
+  // console.log({ ...props })
+  // console.log({ error })
 
   return (
-    <>
-      <TextArea
-        touched
-        name="notes"
-        data-testid="textarea"
-        placeholder="Task notes..."
-        {...validation}
-      />
-      {error && <label>{error}</label>}
-    </>
+    <FormControl isRequired={isRequired} isInvalid={hasError}>
+      {label && <FormLabel>{label}</FormLabel>}
+
+      <Textarea {...props} {...fieldProps} borderColor={error ? "red" : "inherit"} />
+
+      {error && <FormErrorMessage>{error}</FormErrorMessage>}
+    </FormControl>
   )
 }
 
-export default TextareaUTF
+export default TextareaUtf

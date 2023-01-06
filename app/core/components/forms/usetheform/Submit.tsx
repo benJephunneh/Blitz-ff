@@ -6,7 +6,7 @@ type SubmitProps = {
   children?: ReactNode
 }
 
-const Submit = ({ children, ...props }) => {
+const Submit = ({ children, ...props }: SubmitProps) => {
   const { isValid, pristine } = useForm()
 
   return (

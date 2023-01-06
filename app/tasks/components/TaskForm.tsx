@@ -18,6 +18,7 @@ import { TaskFormSchema } from "../validations"
 import { Form, Input, useValidation } from "usetheform"
 import TextareaUTF from "./TextareaUTF"
 import Submit from "app/core/components/forms/usetheform/Submit"
+import InputUtf from "app/core/components/forms/usetheform/components/InputUtf"
 
 type TaskFormProps = {
   isOpen: boolean
@@ -93,8 +94,9 @@ const TaskForm = ({
             {...validation}
           >
             <Flex direction="column">
-              <Input type="text" name="title" placeholder="Task name" />
-              <TextareaUTF />
+              {/* <Input type="text" name="title" placeholder="Task name" /> */}
+              <InputUtf type="text" name="title" label="Task name" />
+              <TextareaUTF name="notes" label="Task notes" />
             </Flex>
 
             <Submit>Submit</Submit>
