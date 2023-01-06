@@ -40,13 +40,13 @@ const InputUtf = ({
     type,
     name,
   })
-  const hasError = error !== undefined
-  // console.log({ ...fieldProps })
+  const isInvalid = error !== undefined
+  console.log("fieldprops", fieldProps)
   // console.log({ ...props })
-  console.log({ hasError })
+  // console.log({ hasError })
 
   return (
-    <FormControl isRequired={isRequired} isInvalid={hasError}>
+    <FormControl isRequired={isRequired} isInvalid={isInvalid}>
       {label && <FormLabel>{label}</FormLabel>}
 
       <InputGroup my={2}>
@@ -55,7 +55,7 @@ const InputUtf = ({
         {suffix && <InputRightAddon>{suffix}</InputRightAddon>}
       </InputGroup>
 
-      {error ? (
+      {isInvalid ? (
         <FormErrorMessage>{error}</FormErrorMessage>
       ) : footer ? (
         <FormHelperText>{footer}</FormHelperText>

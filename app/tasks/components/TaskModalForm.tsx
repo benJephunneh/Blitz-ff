@@ -34,7 +34,7 @@ const validateForm = (v) => {
   }
 }
 
-type TaskFormProps = {
+type TaskModalFormProps = {
   isOpen: boolean
   onClose: () => void
   size?: ModalProps["size"]
@@ -46,7 +46,7 @@ type TaskFormProps = {
   onSuccess?: (task: Task) => void
 }
 
-const TaskForm = ({
+const TaskModalForm = ({
   isOpen,
   onClose,
   size,
@@ -55,7 +55,7 @@ const TaskForm = ({
   children,
   onSubmit,
   onSuccess,
-}: TaskFormProps) => {
+}: TaskModalFormProps) => {
   // const { user: currentUser } = useCurrentUser()
   const [createTaskMutation] = useMutation(createTask)
   const [updateTaskMutation] = useMutation(updateTask)
@@ -108,4 +108,4 @@ const TaskForm = ({
   )
 }
 
-export default TaskForm
+export default TaskModalForm

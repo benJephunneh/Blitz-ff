@@ -1,6 +1,6 @@
 import { BlitzPage } from "@blitzjs/next"
 import { Button, Flex, useDisclosure } from "@chakra-ui/react"
-import TaskForm from "app/tasks/components/TaskForm"
+import TaskModalForm from "app/tasks/components/TaskModalForm"
 
 const TaskFormTest: BlitzPage = () => {
   const { isOpen, onClose, onToggle } = useDisclosure()
@@ -11,7 +11,7 @@ const TaskFormTest: BlitzPage = () => {
         Open form
       </Button>
 
-      <TaskForm
+      <TaskModalForm
         isOpen={isOpen}
         onClose={onClose}
         size="md"
