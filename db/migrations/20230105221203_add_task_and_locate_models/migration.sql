@@ -31,10 +31,10 @@ CREATE TABLE "Customer" (
     "lastname" TEXT,
     "companyname" TEXT,
     "displayname" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
     "notes" TEXT,
     "userId" INTEGER NOT NULL,
-    "phone" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
 
     CONSTRAINT "Customer_pkey" PRIMARY KEY ("id")
 );
@@ -48,11 +48,11 @@ CREATE TABLE "CustomerStash" (
     "lastname" TEXT,
     "companyname" TEXT,
     "displayname" TEXT,
-    "notes" TEXT NOT NULL,
-    "userId" INTEGER NOT NULL,
-    "stashType" "StashType" NOT NULL DEFAULT 'Customer',
-    "phone" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "phone" TEXT NOT NULL,
+    "notes" TEXT NOT NULL,
+    "stashType" "StashType" NOT NULL DEFAULT 'Customer',
+    "userId" INTEGER NOT NULL,
 
     CONSTRAINT "CustomerStash_pkey" PRIMARY KEY ("id")
 );
@@ -72,9 +72,9 @@ CREATE TABLE "Location" (
     "block" TEXT,
     "lot" TEXT,
     "parcel" TEXT,
+    "notes" TEXT,
     "locationType" "LocationType" NOT NULL DEFAULT 'Personal',
     "customerId" INTEGER NOT NULL,
-    "notes" TEXT,
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "Location_pkey" PRIMARY KEY ("id")
@@ -95,11 +95,11 @@ CREATE TABLE "LocationStash" (
     "block" TEXT,
     "lot" TEXT,
     "parcel" TEXT,
-    "locationType" "LocationType" NOT NULL DEFAULT 'Personal',
-    "customerId" INTEGER NOT NULL,
-    "stashType" "StashType" NOT NULL DEFAULT 'Location',
-    "userId" INTEGER NOT NULL,
     "notes" TEXT NOT NULL,
+    "locationType" "LocationType" NOT NULL DEFAULT 'Personal',
+    "stashType" "StashType" NOT NULL DEFAULT 'Location',
+    "customerId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
 
     CONSTRAINT "LocationStash_pkey" PRIMARY KEY ("id")
 );
@@ -112,11 +112,12 @@ CREATE TABLE "Job" (
     "title" TEXT NOT NULL,
     "start" TIMESTAMP(3),
     "end" TIMESTAMP(3),
-    "locationId" INTEGER NOT NULL,
-    "notes" TEXT,
-    "userId" INTEGER NOT NULL,
     "completed" BOOLEAN NOT NULL DEFAULT false,
+    "locateRequired" BOOLEAN NOT NULL DEFAULT false,
+    "notes" TEXT,
     "customerId" INTEGER NOT NULL,
+    "locationId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
 
     CONSTRAINT "Job_pkey" PRIMARY KEY ("id")
 );
@@ -129,11 +130,11 @@ CREATE TABLE "JobStash" (
     "title" TEXT,
     "start" TIMESTAMP(3),
     "end" TIMESTAMP(3),
-    "locationId" INTEGER NOT NULL,
-    "stashType" "StashType" NOT NULL DEFAULT 'Job',
-    "userId" INTEGER NOT NULL,
     "notes" TEXT NOT NULL,
+    "stashType" "StashType" NOT NULL DEFAULT 'Job',
     "customerId" INTEGER NOT NULL,
+    "locationId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
 
     CONSTRAINT "JobStash_pkey" PRIMARY KEY ("id")
 );
@@ -144,11 +145,11 @@ CREATE TABLE "Invoice" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
-    "jobId" INTEGER NOT NULL,
-    "userId" INTEGER NOT NULL,
-    "notes" TEXT,
     "paid" BOOLEAN NOT NULL DEFAULT false,
     "sent" BOOLEAN NOT NULL DEFAULT false,
+    "notes" TEXT,
+    "jobId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
     "jobArchiveId" INTEGER,
 
     CONSTRAINT "Invoice_pkey" PRIMARY KEY ("id")
@@ -160,10 +161,10 @@ CREATE TABLE "InvoiceStash" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
-    "jobId" INTEGER NOT NULL,
-    "userId" INTEGER NOT NULL,
     "notes" TEXT NOT NULL,
     "stashType" "StashType" NOT NULL DEFAULT 'Invoice',
+    "jobId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
 
     CONSTRAINT "InvoiceStash_pkey" PRIMARY KEY ("id")
 );
@@ -174,8 +175,8 @@ CREATE TABLE "Estimate" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
-    "jobId" INTEGER NOT NULL,
     "total" INTEGER NOT NULL DEFAULT 0,
+    "jobId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "Estimate_pkey" PRIMARY KEY ("id")
@@ -187,10 +188,10 @@ CREATE TABLE "EstimateStash" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
-    "jobId" INTEGER NOT NULL,
     "total" INTEGER NOT NULL DEFAULT 0,
-    "userId" INTEGER NOT NULL,
     "stashType" "StashType" NOT NULL DEFAULT 'Estimate',
+    "jobId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
 
     CONSTRAINT "EstimateStash_pkey" PRIMARY KEY ("id")
 );
@@ -232,6 +233,20 @@ CREATE TABLE "LineItemTemplate" (
 );
 
 -- CreateTable
+CREATE TABLE "Locate" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "submitted" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "number" INTEGER NOT NULL,
+    "location" TEXT NOT NULL,
+    "jobId" INTEGER,
+    "jobarchiveId" INTEGER,
+
+    CONSTRAINT "Locate_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "CustomerArchive" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -241,8 +256,8 @@ CREATE TABLE "CustomerArchive" (
     "companyname" TEXT,
     "displayname" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "notes" TEXT,
     "phone" TEXT NOT NULL,
+    "notes" TEXT,
 
     CONSTRAINT "CustomerArchive_pkey" PRIMARY KEY ("id")
 );
@@ -262,9 +277,9 @@ CREATE TABLE "LocationArchive" (
     "block" TEXT,
     "lot" TEXT,
     "parcel" TEXT,
-    "customerId" INTEGER,
-    "locationType" "LocationType" NOT NULL DEFAULT 'Personal',
     "notes" TEXT,
+    "locationType" "LocationType" NOT NULL DEFAULT 'Personal',
+    "customerId" INTEGER,
     "customerArchiveId" INTEGER,
 
     CONSTRAINT "LocationArchive_pkey" PRIMARY KEY ("id")
@@ -278,12 +293,13 @@ CREATE TABLE "JobArchive" (
     "title" TEXT NOT NULL,
     "start" TIMESTAMP(3),
     "end" TIMESTAMP(3),
-    "locationId" INTEGER,
+    "completed" BOOLEAN NOT NULL DEFAULT false,
     "notes" TEXT,
     "customerId" INTEGER,
-    "completed" BOOLEAN NOT NULL DEFAULT false,
     "customerArchiveId" INTEGER,
+    "locationId" INTEGER,
     "locationArchiveId" INTEGER,
+    "locateId" INTEGER,
 
     CONSTRAINT "JobArchive_pkey" PRIMARY KEY ("id")
 );
@@ -294,10 +310,10 @@ CREATE TABLE "InvoiceArchive" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "title" TEXT NOT NULL,
+    "paid" BOOLEAN NOT NULL,
+    "notes" TEXT,
     "jobId" INTEGER,
     "jobArchiveId" INTEGER,
-    "notes" TEXT,
-    "paid" BOOLEAN NOT NULL,
 
     CONSTRAINT "InvoiceArchive_pkey" PRIMARY KEY ("id")
 );
@@ -350,12 +366,26 @@ CREATE TABLE "Token" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "hashedToken" TEXT NOT NULL,
-    "type" "TokenType" NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,
     "sentTo" TEXT NOT NULL,
+    "type" "TokenType" NOT NULL,
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "Token_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Task" (
+    "id" SERIAL NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "title" TEXT NOT NULL,
+    "notes" TEXT NOT NULL,
+    "customerId" INTEGER,
+    "locationId" INTEGER,
+    "jobId" INTEGER,
+
+    CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -423,6 +453,12 @@ CREATE TABLE "_EstimateArchiveToLineItem" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Locate_jobId_key" ON "Locate"("jobId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Locate_jobarchiveId_key" ON "Locate"("jobarchiveId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
@@ -566,6 +602,12 @@ ALTER TABLE "EstimateStash" ADD CONSTRAINT "EstimateStash_jobId_fkey" FOREIGN KE
 ALTER TABLE "EstimateStash" ADD CONSTRAINT "EstimateStash_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Locate" ADD CONSTRAINT "Locate_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Locate" ADD CONSTRAINT "Locate_jobarchiveId_fkey" FOREIGN KEY ("jobarchiveId") REFERENCES "JobArchive"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "LocationArchive" ADD CONSTRAINT "LocationArchive_customerArchiveId_fkey" FOREIGN KEY ("customerArchiveId") REFERENCES "CustomerArchive"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -600,6 +642,15 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 
 -- AddForeignKey
 ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Task" ADD CONSTRAINT "Task_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "Customer"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Task" ADD CONSTRAINT "Task_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Task" ADD CONSTRAINT "Task_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "Location"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_JobToLineItem" ADD CONSTRAINT "_JobToLineItem_A_fkey" FOREIGN KEY ("A") REFERENCES "Job"("id") ON DELETE CASCADE ON UPDATE CASCADE;

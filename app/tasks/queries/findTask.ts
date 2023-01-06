@@ -1,21 +1,21 @@
 import { resolver } from "@blitzjs/rpc"
 import db from "db"
-import { FindLocate } from "../validations"
+import { FindTask } from "../validations"
 
 export default resolver.pipe(
-  resolver.zod(FindLocate),
+  resolver.zod(FindTask),
   resolver.authorize(),
 
   async ({ query }) => {
     if (!query) return []
-
     const search = query.trim().split(" ").join(" | ")
-    const locates = await db.locate.findMany({
+
+    const task = await db.task.findFirst({
       where: {
-        OR: [{ title: { search } }],
+        OR: [{ title: { search, mode: "insensitive" } }],
       },
     })
 
-    return locates
+    return task
   }
 )
