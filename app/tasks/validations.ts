@@ -11,6 +11,7 @@ export const TaskSkeleton = z.object({
 })
 
 export const FullTask = TaskSkeleton.extend({ id })
+export const TaskFormSchema = TaskSkeleton
 export const CreateTask = TaskSkeleton
 export const UpdateTask = TaskSkeleton.partial().extend({ id })
 export const DeleteTask = z.object({ id })
