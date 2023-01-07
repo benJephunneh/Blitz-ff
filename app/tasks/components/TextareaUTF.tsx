@@ -36,7 +36,7 @@ const TextareaUtf = ({ name, label, isRequired = true, error, ...props }: TextAr
 
       <Textarea {...props} {...fieldProps} borderColor={error ? "red" : "inherit"} />
 
-      {error && <FormErrorMessage>{error}</FormErrorMessage>}
+      {hasError && <FormErrorMessage>{error}</FormErrorMessage>}
     </FormControl>
   )
 }

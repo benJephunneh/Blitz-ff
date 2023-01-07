@@ -41,9 +41,10 @@ const InputUtf = ({
     name,
   })
   const isInvalid = error !== undefined
-  console.log("fieldprops", fieldProps)
+  // console.log("fieldprops", fieldProps)
   // console.log({ ...props })
   // console.log({ hasError })
+  // console.log({ error })
 
   return (
     <FormControl isRequired={isRequired} isInvalid={isInvalid}>

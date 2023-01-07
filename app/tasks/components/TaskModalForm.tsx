@@ -24,13 +24,15 @@ const validateForm = (v) => {
   try {
     TaskFormSchema.parse(v)
   } catch ({ errors }) {
-    if (errors[0].path === "") return { all: errors[0].message }
-    else
+    if (errors[0].path === "") {
+      return { all: errors[0].message }
+    } else {
       return errors.reduce((acc, errObj) => {
         const namefield = errObj.path[0]
         acc = { ...acc, [namefield]: errObj.message }
         return acc
-      })
+      }, {})
+    }
   }
 }
 
@@ -96,8 +98,14 @@ const TaskModalForm = ({
           >
             <Flex direction="column">
               {/* <Input type="text" name="title" placeholder="Task name" /> */}
-              <InputUtf type="text" name="title" label="Task name" error={titleError} />
-              <TextareaUTF name="notes" label="Task notes" error={notesError} />
+              <InputUtf
+                isRequired={true}
+                type="text"
+                name="title"
+                label="Task name"
+                error={titleError}
+              />
+              <TextareaUTF isRequired={true} name="notes" label="Task notes" error={notesError} />
             </Flex>
 
             <Submit>Submit</Submit>
