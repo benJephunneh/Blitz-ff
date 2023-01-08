@@ -123,21 +123,39 @@ model Job {
 }
 
 model JobStash {
-  id         Int        @id @default(autoincrement())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   title      String?
   start      DateTime?
   end        DateTime?
   notes      String
-  stashType  StashType  @default(Job)
+  stashType  StashType @default(Job)
   customerId Int
   locationId Int
   userId     Int
-  customer   Customer   @relation(fields: [customerId], references: [id])
-  location   Location   @relation(fields: [locationId], references: [id])
-  user       User       @relation(fields: [userId], references: [id])
-  lineitems  LineItem[] @relation("JobStashToLineItem")
+  customer   Customer  @relation(fields: [customerId], references: [id])
+  location   Location  @relation(fields: [locationId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+  customerId Int
+  locationId Int
+  userId     Int
+}
+
+model Task {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  title      String
+  completed  Boolean   @default(false)
+  needBy     DateTime
+  notes      String
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  location   Location? @relation(fields: [locationId], references: [id])
+  job        Job?      @relation(fields: [jobId], references: [id])
+  customerId Int?
+  locationId Int?
+  jobId      Int?
 }
 
 model Invoice {
