@@ -16,7 +16,7 @@ import updateTask from "app/tasks/mutations/updateTask"
 import { ReactNode } from "react"
 import { TaskFormSchema } from "../validations"
 import { Form, Input, useValidation } from "usetheform"
-import TextareaUTF from "./TextareaUTF"
+import TextareaUTF from "../../core/components/forms/usetheform/components/TextareaUTF"
 import Submit from "app/core/components/forms/usetheform/Submit"
 import InputUtf from "app/core/components/forms/usetheform/components/InputUtf"
 

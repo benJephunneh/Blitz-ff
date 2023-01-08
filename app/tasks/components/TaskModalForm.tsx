@@ -10,15 +10,14 @@ import {
   ModalProps,
 } from "@chakra-ui/react"
 import { Task } from "@prisma/client"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import createTask from "app/tasks/mutations/createTask"
 import updateTask from "app/tasks/mutations/updateTask"
 import { ReactNode } from "react"
 import { TaskFormSchema } from "../validations"
 import { Form, Input, useValidation } from "usetheform"
-import TextareaUTF from "./TextareaUTF"
 import Submit from "app/core/components/forms/usetheform/Submit"
 import InputUtf from "app/core/components/forms/usetheform/components/InputUtf"
+import TextareaUTF from "app/core/components/forms/usetheform/components/TextareaUTF"
 
 const validateForm = (v) => {
   try {
