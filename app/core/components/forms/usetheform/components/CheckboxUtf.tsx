@@ -1,4 +1,5 @@
 import {
+  Checkbox,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -11,33 +12,31 @@ import {
 import { ComponentPropsWithoutRef, HTMLInputTypeAttribute } from "react"
 import { useField } from "usetheform"
 
-interface InputUtfProps extends ComponentPropsWithoutRef<typeof Input> {
+interface CheckboxUtfProps extends ComponentPropsWithoutRef<typeof Input> {
   name: string
-  type?: HTMLInputTypeAttribute // "text" | "email" | "password" | "tel" | "url"
+  // type?: HTMLInputTypeAttribute // "text" | "email" | "password" | "tel" | "url"
   label?: string
   // touched: boolean
   // validators?: any
   // variant: ComponentPropsWithoutRef<typeof Input>
-  isRequired?: boolean
   prefix?: string
   suffix?: string
   footer?: string
   error?: string
 }
 
-const InputUtf = ({
+const CheckboxUtf = ({
   name,
-  type = "text",
+  // type = "text",
   label,
-  isRequired = true,
   prefix,
   suffix,
   footer,
   error,
   ...props
-}: InputUtfProps) => {
+}: CheckboxUtfProps) => {
   const fieldProps = useField({
-    type,
+    type: "checkbox",
     name,
   })
   const isInvalid = error !== undefined
@@ -49,12 +48,7 @@ const InputUtf = ({
   return (
     <FormControl isInvalid={isInvalid}>
       {label && <FormLabel>{label}</FormLabel>}
-
-      <InputGroup my={2}>
-        {prefix && <InputLeftAddon bg="blackAlpha.300">{prefix}</InputLeftAddon>}
-        <Input {...props} {...fieldProps} borderColor={error ? "red" : "inherit"} />
-        {suffix && <InputRightAddon>{suffix}</InputRightAddon>}
-      </InputGroup>
+      <Checkbox {...props} {...fieldProps} borderColor={error ? "red" : "inherit"} />
 
       {isInvalid ? (
         <FormErrorMessage>{error}</FormErrorMessage>
@@ -65,4 +59,4 @@ const InputUtf = ({
   )
 }
 
-export default InputUtf
+export default CheckboxUtf

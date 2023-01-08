@@ -26,7 +26,7 @@ const TextareaUtf = ({ name, label, isRequired = true, error, ...props }: TextAr
     name,
   })
   const hasError = error !== undefined
-  // console.log({ ...fieldProps })
+  // console.log('fp', fieldProps)
   // console.log({ ...props })
   // console.log({ error })
 

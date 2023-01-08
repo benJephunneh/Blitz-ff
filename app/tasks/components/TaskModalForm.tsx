@@ -1,6 +1,8 @@
 import { useMutation } from "@blitzjs/rpc"
 import {
+  Box,
   Flex,
+  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -18,10 +20,12 @@ import { Form, Input, useValidation } from "usetheform"
 import Submit from "app/core/components/forms/usetheform/Submit"
 import InputUtf from "app/core/components/forms/usetheform/components/InputUtf"
 import TextareaUTF from "app/core/components/forms/usetheform/components/TextareaUTF"
+import CheckboxUtf from "app/core/components/forms/usetheform/components/CheckboxUtf"
+import { format } from "date-fns"
 
 const validateForm = (v) => {
   try {
-    TaskFormSchema.parse(v)
+    TaskFormSchema.omit({ completed: true, needBy: true }).parse(v)
   } catch ({ errors }) {
     if (errors[0].path === "") {
       return { all: errors[0].message }
@@ -63,10 +67,14 @@ const TaskModalForm = ({
 
   const [{ error }, validation] = useValidation([validateForm])
   const titleError = error?.["title"] || error?.["all"]
+  const completedError = error?.["completed"] || error?.["all"]
+  const needbyError = error?.["needBy"] || error?.["all"]
   const notesError = error?.["notes"] || error?.["all"]
 
   const initialState = {
     title: task?.title ?? undefined,
+    completed: task?.completed ?? false,
+    needBy: task?.needBy ?? format(new Date(), "yyyy-MM-dd"),
     notes: task?.notes ?? undefined,
   }
 
@@ -104,6 +112,24 @@ const TaskModalForm = ({
                 label="Task name"
                 error={titleError}
               />
+              <HStack justifyContent="space-between">
+                <InputUtf
+                  isRequired={false}
+                  type="date"
+                  name="needBy"
+                  label="Due by"
+                  // error={needbyError}
+                />
+                <Box minW="fit-content">
+                  <CheckboxUtf
+                    isRequired={false}
+                    type="checkbox"
+                    name="completed"
+                    label="Task complete?"
+                    // error={completedError}
+                  />
+                </Box>
+              </HStack>
               <TextareaUTF isRequired={true} name="notes" label="Task notes" error={notesError} />
             </Flex>
 
