@@ -511,6 +511,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
                 if ("stashType" in job) await refetchStashes()
                 else {
                   await refetchJobs()
+                  await refetchTasks()
+
                   if (editingStash) {
                     await refetchStashes()
                     if (job.customerId != customerId) {
