@@ -206,7 +206,7 @@ const JobPanel = () => {
               }}
             />
           </Box>
-          <pre>{JSON.stringify(job, null, 2)}</pre>
+          {/* <pre>{JSON.stringify(job, null, 2)}</pre> */}
         </HStack>
       )}
       {!job && (

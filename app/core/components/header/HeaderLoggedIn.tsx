@@ -27,21 +27,29 @@ import deleteStash from "app/stashes/mutations/deleteStash"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import headerContext from "./headerContext"
 import userContext from "app/auth/components/contexts/userContext"
+import deleteTask from "app/tasks/mutations/deleteTask"
 
 const HeaderLoggedIn = () => {
   const router = useRouter()
   const { logOut } = useContext(userContext)
   const {
     createCustomer,
-    editStash,
-    refetchStashes,
     customerStashes,
     locationStashes,
     jobStashes,
     numStashes,
+    editStash,
+    refetchStashes,
+    tasks,
+    createTask,
+    pickTask,
+    refetchTasks,
   } = useContext(headerContext)
 
   const [deleteStashMutation] = useMutation(deleteStash)
+  const [deleteTaskMutation] = useMutation(deleteTask)
+
+  const numTasks = tasks.length
 
   const stashKeyframes = keyframes`
     from { background-color: ${useColorModeValue("red", "cyan")}; color: ${useColorModeValue(
@@ -53,6 +61,17 @@ const HeaderLoggedIn = () => {
     "cyan"
   )} }`
   const stashAnimation = `${stashKeyframes} 1s alternate infinite`
+
+  //   const taskKeyframes = keyframes`
+  //     from { background-color: ${useColorModeValue("orange", "yellow")}; color: ${useColorModeValue(
+  //     "white",
+  //     "black"
+  //   )} }
+  //       to { background-color: ${useColorModeValue("white", "#4a5568")}; color: ${useColorModeValue(
+  //     "orange",
+  //     "yellow"
+  //   )} }`
+  //   const taskAnimation = `${taskKeyframes} 1s alternate infinite`
 
   // const parsed = JSON.parse(customerStashes[0]!.notes)
   // console.log(parsed.content[0].content[0].text)
@@ -110,12 +129,73 @@ const HeaderLoggedIn = () => {
             <Button
               as={MenuButton}
               size="sm"
+              colorScheme={numTasks ? "orange" : "blue"}
+              //   animation={numTasks && taskAnimation}
+              variant={numTasks ? "outline" : "ghost"}
+              bgColor={numTasks ? "orange.100" : "inherit"}
+              opacity={numTasks ? "1" : "0.5"}
+            >
+              {numTasks ? `${numTasks}` : "T"}
+            </Button>
+            <MenuList>
+              <MenuItem
+                fontWeight="semibold"
+                onKeyDownCapture={(e) => {
+                  e.preventDefault()
+                  e.key === "Enter" && createTask()
+                }}
+                justifyContent="space-between"
+              >
+                <Text textOverflow="ellipsis" onClick={createTask}>
+                  New task
+                </Text>
+                <Icon
+                  as={FaPlus}
+                  color="orange"
+                  // h={5}
+                  // w={5}
+                  onClick={createTask}
+                />
+              </MenuItem>
+              {tasks?.map((t, ii) => (
+                <>
+                  <MenuItem
+                    key={ii}
+                    fontWeight="semibold"
+                    onKeyDownCapture={(e) => {
+                      e.preventDefault()
+                      e.key === "Enter" && pickTask(t.id)
+                    }}
+                    justifyContent="space-between"
+                  >
+                    <Text textOverflow="ellipsis" onClick={() => pickTask(t.id)}>
+                      {t.title}: {t.notes}
+                    </Text>
+                    <Icon
+                      as={FcFullTrash}
+                      h={5}
+                      w={5}
+                      onClick={async () => {
+                        deleteTaskMutation({ id: t.id })
+                          .then(() => refetchTasks())
+                          .catch(console.error)
+                      }}
+                    />
+                  </MenuItem>
+                </>
+              ))}
+            </MenuList>
+          </Menu>
+          <Menu isLazy closeOnSelect={false}>
+            <Button
+              as={MenuButton}
+              size="sm"
               colorScheme={numStashes ? "red" : "blue"}
               animation={numStashes && stashAnimation}
               variant={numStashes ? "solid" : "ghost"}
               opacity={numStashes ? "1" : "0.5"}
             >
-              {`${numStashes} stashed`}
+              {numStashes ? `${numStashes}` : "S"}
             </Button>
             <MenuList>
               {customerStashes?.map((c, ii) => (

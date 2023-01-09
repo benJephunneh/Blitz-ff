@@ -3,9 +3,9 @@ import { NotFoundError } from "blitz"
 import db, { Location, Prisma } from "db"
 import { z } from "zod"
 
-const GetLocation = z.object({
-  id: z.number().optional(),
-})
+// const GetLocation = z.object({
+//   id: z.number().optional(),
+// })
 
 interface GetLocationProps extends Pick<Prisma.LocationFindFirstArgs, "where" | "select"> {}
 

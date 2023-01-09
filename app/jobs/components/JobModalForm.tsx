@@ -1,7 +1,17 @@
 import { useMutation, useQuery } from "@blitzjs/rpc"
 import { FORM_ERROR } from "final-form"
 import { JobFormSchema } from "../validations"
-import { Box, Flex, Grid, GridItem, Heading, Text, useColorModeValue } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  GridItem,
+  Heading,
+  HStack,
+  Text,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import ModalForm from "app/core/components/forms/ModalForm"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import createJob from "../mutations/createJob"
@@ -14,7 +24,7 @@ import updateStash from "app/stashes/mutations/updateStash"
 import { LabeledDateField } from "app/calendar/components/LabeledDateField"
 import getStash from "app/stashes/queries/getStash"
 import TextAreaField from "app/core/components/forms/components/TextAreaField"
-import { addBusinessDays, getWeek } from "date-fns"
+import { addBusinessDays, addDays, getDay, getWeek, isFriday } from "date-fns"
 import WeekView from "app/calendar/components/WeekView"
 import headerContext from "app/core/components/header/headerContext"
 import LineItemSearchField from "app/lineitems/components/LineItemSearchField"
@@ -25,6 +35,8 @@ import dragAndDropListItemContext, {
 import LineItemCard from "app/lineitems/components/LineItemCard"
 import findLineItem from "app/lineitems/queries/findLineItem"
 import LineItemMiniCard from "app/lineitems/components/LineItemMiniCard"
+import createTask from "app/tasks/mutations/createTask"
+import { FcCheckmark } from "react-icons/fc"
 
 // const handleDayClick = async (d: Date) => {
 //   const dayBefore = subDays(d, 1)
@@ -47,7 +59,6 @@ type JobModalFormProps = {
   stashId?: number
   // jobStash?: JobStash
   disableStash?: boolean
-  // locationId?: number
   isOpen: boolean
   onClose: () => void
   onSuccess?: (job: Job) => void
@@ -65,7 +76,6 @@ const JobModalForm = ({
   // job,
   // jobStash,
   disableStash,
-  // locationId,
   isOpen,
   onClose,
   onSuccess,
@@ -81,9 +91,21 @@ const JobModalForm = ({
   const [createStashMutation] = useMutation(createStash)
   const [updateStashMutation] = useMutation(updateStash)
   const [deleteStashMutation] = useMutation(deleteStash)
+  const [createTaskMutation] = useMutation(createTask)
+
+  const [needsEstimate, setNeedsEstimate] = useState(false)
+  const [needsInvoice, setNeedsInvoice] = useState(true)
+  const [turnInPermit, setTurnInPermit] = useState(false)
+  const [needsPermitPack, setNeedsPermitPack] = useState(false)
+
   const [user, setUser] = useState<User>()
   const [calendarValue, onCalendarChange] = useState(new Date())
   const [calendarView, setCalendarView] = useState(<WeekView />)
+
+  // const needsEstimate = () => {
+  //   const needBy = addDays(new Date(), 3)
+  //   const notes = ''
+  // }
 
   const stashType = "Job"
   const stashFootnoteColor = useColorModeValue("red", "cyan.200")
@@ -136,7 +158,7 @@ const JobModalForm = ({
   const onSubmit = async (values) => {
     console.table({ values })
     // console.log({ locationId })
-    const { stashing, range, ...job } = values
+    const { stashing, range, ...newJob } = values
     const [start, end] = range.map((t) => t)
     // console.log({ start })
 
@@ -148,18 +170,18 @@ const JobModalForm = ({
           id: jobStash.id,
           stashType,
           job: {
-            start,
-            end,
-            ...job,
+            start: new Date(start),
+            end: new Date(end),
+            ...newJob,
           },
         })
       } else {
         jobRet = await createStashMutation({
           stashType,
           job: {
-            start,
-            end,
-            ...job,
+            start: new Date(start),
+            end: new Date(end),
+            ...newJob,
           },
         })
       }
@@ -168,9 +190,9 @@ const JobModalForm = ({
       if (job) {
         jobRet = updateJobMutation({
           id: job.id,
-          start,
-          end,
-          ...job,
+          start: new Date(start),
+          end: new Date(end),
+          ...newJob,
         })
       } else {
         console.log("creating job...")
@@ -178,9 +200,9 @@ const JobModalForm = ({
         jobRet = createJobMutation({
           customerId,
           locationId,
-          start,
-          end,
-          ...job,
+          start: new Date(start),
+          end: new Date(end),
+          ...newJob,
         })
         if (jobStash && jobRet) {
           await deleteStashMutation({
@@ -283,13 +305,59 @@ const JobModalForm = ({
     // console.log({ ...newLineitems })
   }
 
+  const submitTasks = async (j: Job) => {
+    const completed = false
+    const today = new Date()
+
+    if (needsEstimate) {
+      let needBy = addDays(today, 3)
+      if (getDay(today) >= 3) addDays(needBy, 2)
+
+      const title = `Need estimate // ${j.title}`
+      const notes = `jobId: ${j.id}`
+      await createTaskMutation({ title, needBy, notes, completed })
+    }
+
+    if (needsInvoice) {
+      let needBy = addDays(today, 1)
+      if (getDay(today) >= 5) addDays(needBy, 2)
+
+      const title = `Need invoice // ${j.title}`
+      const notes = `jobId: ${j.id}`
+      await createTaskMutation({ title, needBy, notes, completed })
+    }
+
+    if (needsPermitPack) {
+      let needBy = addDays(today, 1)
+      if (getDay(today) >= 5) addDays(needBy, 2)
+
+      const title = `Need permit pack // ${j.title}`
+      const notes = `jobId: ${j.id}`
+      await createTaskMutation({ title, needBy, notes, completed })
+    }
+
+    if (turnInPermit) {
+      let needBy = addDays(today, 1)
+      if (getDay(today) >= 5) addDays(needBy, 2)
+
+      const title = `Turn in permit // ${j.title}`
+      const notes = `jobId: ${j.id}`
+      await createTaskMutation({ title, needBy, notes, completed })
+    }
+  }
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       {/* <DragAndDropProvider value={props}> */}
       <ModalForm
         size="full"
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={() => {
+          setNeedsEstimate(false)
+          setNeedsInvoice(false)
+          setTurnInPermit(false)
+          onClose()
+        }}
         disableStash={disableStash}
         schema={JobFormSchema}
         title={job ? "Edit job" : "New job"}
@@ -299,7 +367,12 @@ const JobModalForm = ({
           // console.log({ ...lineitems })
           values.lineitems = lineitems
           // console.log({ ...values })
-          onSubmit(values).then(onSuccess).catch(handleError)
+          onSubmit(values)
+            .then(async (j) => {
+              onSuccess?.(j)
+              await submitTasks(j)
+            })
+            .catch(handleError)
         }}
         render={() => (
           <>
@@ -373,7 +446,7 @@ const JobModalForm = ({
                                 lineitem={li}
                                 onDelete={onDelete}
                                 itemizing={true}
-                              // draggableIndex={ii}
+                                // draggableIndex={ii}
                               />
                             </Box>
                           )}
@@ -393,9 +466,9 @@ const JobModalForm = ({
                   end={end}
                   // onClickDay={handleDayClick}
                   onClickWeekNumber={handleWeekNumberClick}
-                // console.log({ w })
-                // handleWeekNumberClick(w).catch((e) => console.error(e))
-                // }}
+                  // console.log({ w })
+                  // handleWeekNumberClick(w).catch((e) => console.error(e))
+                  // }}
                 />
               </GridItem>
 
@@ -439,9 +512,44 @@ const JobModalForm = ({
                 Stashed by {user?.username}
               </Text>
             )}
+            <HStack>
+              <Button
+                variant="outline"
+                borderColor="blue.100"
+                rightIcon={<FcCheckmark opacity={needsEstimate ? "1" : "0.3"} />}
+                onClick={() => setNeedsEstimate(!needsEstimate)}
+              >
+                Needs estimate
+              </Button>
+              <Button
+                variant="outline"
+                borderColor="green.100"
+                rightIcon={<FcCheckmark opacity={needsInvoice ? "1" : "0.3"} />}
+                onClick={() => setNeedsInvoice(!needsInvoice)}
+              >
+                Needs invoice
+              </Button>
+              <Button
+                variant="outline"
+                borderColor="orange.200"
+                rightIcon={<FcCheckmark opacity={turnInPermit ? "1" : "0.3"} />}
+                onClick={() => setTurnInPermit(!turnInPermit)}
+              >
+                Turn in permit
+              </Button>
+              <Button
+                variant="outline"
+                borderColor="red.100"
+                rightIcon={<FcCheckmark opacity={needsPermitPack ? "1" : "0.3"} />}
+                onClick={() => setNeedsPermitPack(!needsPermitPack)}
+              >
+                Nededs permit pack
+              </Button>
+            </HStack>
           </>
         )}
       />
+
       {/* </DragAndDropProvider> */}
     </DragDropContext>
   )

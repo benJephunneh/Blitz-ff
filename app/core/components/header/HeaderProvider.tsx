@@ -28,6 +28,8 @@ import getLocations from "app/locations/queries/getLocations"
 import SearchInput from "app/search/SearchInput"
 import SearchResults from "app/search/SearchResults"
 import getStashes from "app/stashes/queries/getStashes"
+import TaskModalForm from "app/tasks/components/TaskModalForm"
+import getTasks from "app/tasks/queries/getTasks"
 import db, {
   Customer,
   CustomerStash,
@@ -37,6 +39,7 @@ import db, {
   Location,
   LocationStash,
   StashType,
+  Task,
 } from "db"
 import { useRouter } from "next/router"
 import { ReactNode, useCallback, useContext, useEffect, useRef, useState } from "react"
@@ -295,6 +298,20 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
     }
   }, [stashType, stashId]) // eslint-disable-line
 
+  // Task
+  const [creatingTask, setCreatingTask] = useState(false)
+  const [editingTask, setEditingTask] = useState(false)
+  const [taskId, setTaskId] = useState<number>()
+  const [tasks, { refetch: refetchTasks }] = useQuery(
+    getTasks,
+    {},
+    {
+      suspense: true,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  )
+
   // Search
   const { isOpen: searchIsOpen, onOpen: openSearch, onClose: closeSearch } = useDisclosure()
   const searchField = useRef<any>()
@@ -317,10 +334,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
     : deletingLocation
-      ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
-      : deletingJob
-        ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
-        : ""
+    ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
+    : deletingJob
+    ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
+    : ""
 
   return (
     <Provider
@@ -359,6 +376,13 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
           setEditingStash(true)
         },
 
+        createTask: () => setCreatingTask(true),
+        pickTask: (id) => {
+          setTaskId(id)
+          setEditingTask(true)
+        },
+        refetchTasks,
+
         customerId,
         customer,
         locations,
@@ -374,6 +398,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
         // estimateStashes,
         // invoiceStashes,
         numStashes,
+        tasks,
 
         // openSearch: () => setSearching(true),
         // search: (q: string) => setQuery(q),
@@ -411,8 +436,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               if (customer) {
                 if ("stashType" in customer) await refetchStashes()
                 else {
-                  if (creatingCustomer)
+                  if (creatingCustomer) {
+                    console.log("Going to new customer page.")
                     await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
+                  }
 
                   // await setCustomerQueryData(customer)
                   creatingCustomer && setLocationId(undefined)
@@ -484,6 +511,8 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
                 if ("stashType" in job) await refetchStashes()
                 else {
                   await refetchJobs()
+                  await refetchTasks()
+
                   if (editingStash) {
                     await refetchStashes()
                     if (job.customerId != customerId) {
@@ -508,6 +537,27 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
               creatingJob && setCreatingJob(false)
               editingJob && setEditingJob(false)
               editingStash && setEditingStash(false)
+            }}
+          />
+
+          <TaskModalForm
+            taskId={taskId}
+            title={(creatingTask ? "New " : "Edit ") + "task"}
+            isOpen={creatingTask || editingTask}
+            onClose={() => {
+              creatingTask && setCreatingTask(false)
+              editingTask && setEditingTask(false)
+              editingTask && setTaskId(undefined)
+            }}
+            onSuccess={async (task) => {
+              // console.log('task: ', task)
+              if (task) {
+                await refetchTasks()
+              }
+
+              creatingTask && setCreatingTask(false)
+              editingTask && setEditingTask(false)
+              editingTask && setTaskId(undefined)
             }}
           />
 

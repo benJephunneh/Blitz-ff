@@ -130,14 +130,30 @@ model JobStash {
   start      DateTime?
   end        DateTime?
   notes      String
+  lineitems  LineItem[]
   stashType  StashType  @default(Job)
-  customerId Int
-  locationId Int
-  userId     Int
   customer   Customer   @relation(fields: [customerId], references: [id])
   location   Location   @relation(fields: [locationId], references: [id])
   user       User       @relation(fields: [userId], references: [id])
-  lineitems  LineItem[] @relation("JobStashToLineItem")
+  customerId Int
+  locationId Int
+  userId     Int
+}
+
+model Task {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  title      String
+  completed  Boolean   @default(false)
+  needBy     DateTime
+  notes      String
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  location   Location? @relation(fields: [locationId], references: [id])
+  job        Job?      @relation(fields: [jobId], references: [id])
+  customerId Int?
+  locationId Int?
+  jobId      Int?
 }
 
 model Invoice {
@@ -223,7 +239,7 @@ model LineItem {
   invoiceStashes    InvoiceStash[]     @relation("InvoiceStashToLineItem")
   invoices          Invoice[]          @relation("InvoiceToLineItem")
   archivedJobs      JobArchive[]       @relation("JobArchiveToLineItem")
-  jobStashes        JobStash[]         @relation("JobStashToLineItem")
+  jobStashes        JobStash[]
   jobs              Job[]              @relation("JobToLineItem")
   lineItemTemplates LineItemTemplate[] @relation("LineItemToLineItemTemplate")
 }
@@ -389,20 +405,6 @@ model Token {
   user        User      @relation(fields: [userId], references: [id])
 
   @@unique([hashedToken, type])
-}
-
-model Task {
-  id         Int       @id @default(autoincrement())
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt()
-  title      String
-  notes      String
-  customerId Int?
-  locationId Int?
-  jobId      Int?
-  Customer   Customer? @relation(fields: [customerId], references: [id])
-  Job        Job?      @relation(fields: [jobId], references: [id])
-  Location   Location? @relation(fields: [locationId], references: [id])
 }
 
 enum CustomerType {
