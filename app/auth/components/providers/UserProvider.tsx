@@ -39,7 +39,9 @@ const UserProvider = ({ children }: UserProviderProps) => {
         isOpen={signingUp}
         onClose={() => setSigningUp(false)}
         onSuccess={async () => {
-          const next = router.query.next ? decodeURIComponent(router.query.next as string) : "/"
+          const next = router.query.next
+            ? decodeURIComponent(router.query.next as string)
+            : "/dashboard"
           await router.push(next)
           // await router.push(Routes.Dashboard())
         }}
@@ -49,7 +51,9 @@ const UserProvider = ({ children }: UserProviderProps) => {
         isOpen={loggingIn}
         onClose={() => setLoggingIn(false)}
         onSuccess={async () => {
-          const next = router.query.next ? decodeURIComponent(router.query.next as string) : "/"
+          const next = router.query.next
+            ? decodeURIComponent(router.query.next as string)
+            : "/dashboard"
           await router.push(next)
           // await router.push(Routes.Dashboard())
         }}

@@ -7,6 +7,7 @@ import { Signup } from "../validations"
 import { useRouter } from "next/router"
 import LabeledTextField from "app/core/components/forms/LabeledTextField"
 import LabeledSelectField from "app/core/components/forms/LabeledSelectField"
+import { useToast } from "@chakra-ui/react"
 
 type NewUserModalFormProps = {
   isOpen: boolean

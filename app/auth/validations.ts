@@ -34,6 +34,13 @@ export const Login = z.object({
   password,
 })
 
+export const ValidatedUser = z.object({
+  id,
+  username,
+  email,
+  role,
+})
+
 export const ForgotPassword = z.object({
   email,
 })
