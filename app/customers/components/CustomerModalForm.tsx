@@ -16,6 +16,8 @@ import TextAreaField from "app/core/components/forms/components/TextAreaField"
 import LabeledListField from "app/core/components/forms/LabeledListField"
 import { Field } from "react-final-form"
 import LabeledSelectField from "app/core/components/forms/LabeledSelectField"
+import { useContext } from "react"
+import headerContext from "app/core/components/header/headerContext"
 
 type CustomerModalFormProps = {
   isOpen: boolean
@@ -153,14 +155,14 @@ const CustomerModalForm = ({
     } else {
       // console.log("\tnot stashing")
       if (customer) {
-        // console.log("\t\tupdating customer")
+        console.log("\t\tupdating customer")
         customerRet = await updateCustomerMutation({
           id: customer.id,
           ...newCustomer,
         })
       } else {
-        // console.log("\t\tcreating customer")
-        customerRet = await createCustomerMutation(customer)
+        console.log("\t\tcreating customer")
+        customerRet = await createCustomerMutation(newCustomer)
         if (customerStash && customerRet)
           await deleteStashMutation({
             id: customerStash.id,

@@ -170,8 +170,8 @@ const JobModalForm = ({
           id: jobStash.id,
           stashType,
           job: {
-            start,
-            end,
+            start: new Date(start),
+            end: new Date(end),
             ...newJob,
           },
         })
@@ -179,8 +179,8 @@ const JobModalForm = ({
         jobRet = await createStashMutation({
           stashType,
           job: {
-            start,
-            end,
+            start: new Date(start),
+            end: new Date(end),
             ...newJob,
           },
         })
@@ -190,8 +190,8 @@ const JobModalForm = ({
       if (job) {
         jobRet = updateJobMutation({
           id: job.id,
-          start,
-          end,
+          start: new Date(start),
+          end: new Date(end),
           ...newJob,
         })
       } else {
@@ -200,8 +200,8 @@ const JobModalForm = ({
         jobRet = createJobMutation({
           customerId,
           locationId,
-          start,
-          end,
+          start: new Date(start),
+          end: new Date(end),
           ...newJob,
         })
         if (jobStash && jobRet) {
