@@ -82,7 +82,7 @@ const JobModalForm = ({
   // handleDrop,
   ...props
 }: JobModalFormProps) => {
-  const { job, jobs, jobStash, lineitems, setLineitems } = useContext(headerContext)
+  const { job, jobs, jobStash, lineitems, setLineitems, refetchTasks } = useContext(headerContext)
   // console.table(lineitems)
   // const [dragAndDropState, setDragAndDropState] = useState<DragAndDropJob>({ id: jobId, title, lineitems } as Job)
 
@@ -344,6 +344,8 @@ const JobModalForm = ({
       const notes = `jobId: ${j.id}`
       await createTaskMutation({ title, needBy, notes, completed })
     }
+
+    await refetchTasks()
   }
 
   return (
