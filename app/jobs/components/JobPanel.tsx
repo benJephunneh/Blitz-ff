@@ -44,6 +44,7 @@ const JobPanel = () => {
     createJob,
     editJob,
     pickJob,
+    deleteJob,
     refetchCustomer,
     refetchJobs,
     refetchStashes,
@@ -193,21 +194,26 @@ const JobPanel = () => {
       </Flex>
 
       {job && (
-        <HStack>
-          <Calendar value={range} />
+        <>
+          <HStack>
+            <Calendar value={range} />
 
-          <Box h={8} alignSelf="start">
-            <NoteSubmission
-              modelType="Job"
-              onSuccess={async () => {
-                refetchCustomer()
-                // await refetchJob()
-                // await refetchJobs()
-              }}
-            />
-          </Box>
-          {/* <pre>{JSON.stringify(job, null, 2)}</pre> */}
-        </HStack>
+            <Box h={8} alignSelf="start">
+              <NoteSubmission
+                modelType="Job"
+                onSuccess={async () => {
+                  refetchCustomer()
+                  // await refetchJob()
+                  // await refetchJobs()
+                }}
+              />
+            </Box>
+            {/* <pre>{JSON.stringify(job, null, 2)}</pre> */}
+          </HStack>
+          <Button size="xs" colorScheme="red" onClick={deleteJob}>
+            Delete job
+          </Button>
+        </>
       )}
       {!job && (
         <UnorderedList>
