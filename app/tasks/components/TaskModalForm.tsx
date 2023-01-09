@@ -10,11 +10,13 @@ import {
   ModalHeader,
   ModalOverlay,
   ModalProps,
+  Tag,
+  TagLabel,
 } from "@chakra-ui/react"
 import { Task } from "@prisma/client"
 import createTask from "app/tasks/mutations/createTask"
 import updateTask from "app/tasks/mutations/updateTask"
-import { ReactNode, useContext } from "react"
+import { ReactNode, useCallback, useContext, useState } from "react"
 import { TaskFormSchema } from "../validations"
 import { Form, Input, useValidation } from "usetheform"
 import Submit from "app/core/components/forms/usetheform/Submit"
@@ -25,6 +27,7 @@ import { addHours, format } from "date-fns"
 import headerContext from "app/core/components/header/headerContext"
 import getTask from "../queries/getTask"
 import getLocation from "app/locations/queries/getLocation"
+import SwitchUtf from "app/core/components/forms/usetheform/components/SwitchUtf"
 
 const validateForm = (v) => {
   try {
@@ -63,11 +66,11 @@ const TaskModalForm = ({
   onSuccess,
 }: TaskModalFormProps) => {
   // const { user: currentUser } = useCurrentUser()
-  const { tasks } = useContext(headerContext)
+  // const { tasks } = useContext(headerContext)
   const [createTaskMutation] = useMutation(createTask)
   const [updateTaskMutation] = useMutation(updateTask)
 
-  const [task] = useQuery(
+  const [task, { refetch: refetchTask }] = useQuery(
     getTask,
     {
       where: { id: taskId },
@@ -78,49 +81,55 @@ const TaskModalForm = ({
       refetchOnWindowFocus: false,
     }
   )
-
   const [{ error }, validation] = useValidation([validateForm])
   const titleError = error?.["title"] || error?.["all"]
-  const completedError = error?.["completed"] || error?.["all"]
-  const needbyError = error?.["needBy"] || error?.["all"]
   const notesError = error?.["notes"] || error?.["all"]
-
-  console.log({ ...task })
+  const [completed, setCompleted] = useState(task ? task.completed : false)
 
   const initialState = {
-    title: task?.title ?? undefined,
-    completed: task?.completed ?? false,
+    title: task ? task.title : undefined,
+    completed,
     needBy: task ? format(task.needBy, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
-    notes: task?.notes ?? undefined,
+    notes: task ? task.notes : undefined,
   }
-  // console.log({ initialState })
 
   const bgColor = "white"
   const headerGradient = "linear(to-r, white, blackAlpha.200)"
 
   const onSubmit = async (v) => {
-    const { id, needBy: d, ...newTask } = v
-    // console.log('onSubmit:', v)
+    // console.log('v', v)
+    const { id, needBy: d, completed: trash, ...newTask } = v
     const offset = new Date().getTimezoneOffset()
-    // console.log('offset', offset)
     const needBy = addHours(new Date(d), offset / 60)
-    // console.log('needBy', needBy)
 
     let taskRet
     if (task) {
       taskRet = await updateTaskMutation({
         id: task.id,
+        completed,
         needBy,
         ...newTask,
       })
     } else {
       taskRet = await createTaskMutation({
+        completed,
         needBy,
         ...newTask,
       })
     }
 
+    await refetchTask()
     return taskRet
+  }
+
+  const [formState, setFormState] = useState(initialState)
+  // const updateJSON = useCallback(state => {
+  //   console.log('formState', state)
+  //   setFormState(state)
+  // }, [])
+
+  const switchChange = () => {
+    setCompleted(!completed)
   }
 
   return (
@@ -140,11 +149,10 @@ const TaskModalForm = ({
             onSubmit={(v) => {
               onSubmit(v).then(onSuccess).catch(console.error)
             }}
-            onChange={console.log}
+            // onChange={updateJSON}
             {...validation}
           >
             <Flex direction="column" mb={2}>
-              {/* <Input type="text" name="title" placeholder="Task name" /> */}
               <InputUtf
                 isRequired={true}
                 type="text"
@@ -152,23 +160,14 @@ const TaskModalForm = ({
                 label="Task name"
                 error={titleError}
               />
-              <HStack justifyContent="space-between">
-                <InputUtf
-                  isRequired={false}
-                  type="date"
-                  name="needBy"
-                  label="Due by"
-                  // error={needbyError}
-                />
-                <Box minW="fit-content">
-                  <CheckboxUtf
-                    isRequired={false}
-                    type="checkbox"
-                    name="completed"
-                    label="Task complete?"
-                    // error={completedError}
-                  />
-                </Box>
+              <HStack justifyContent="space-between" alignItems="center">
+                <InputUtf isRequired={false} type="date" name="needBy" label="Due by" />
+                <HStack minW="fit-content" align="end">
+                  <Tag colorScheme="blue" flexShrink={0}>
+                    <TagLabel>Completed?</TagLabel>
+                  </Tag>
+                  <SwitchUtf name="completed" onChange={switchChange} />
+                </HStack>
               </HStack>
               <TextareaUTF isRequired={true} name="notes" label="Task notes" error={notesError} />
             </Flex>
