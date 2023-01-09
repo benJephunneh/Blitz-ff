@@ -1,4 +1,4 @@
-import { useMutation } from "@blitzjs/rpc"
+import { useMutation, useQuery } from "@blitzjs/rpc"
 import {
   Box,
   Flex,
@@ -14,14 +14,17 @@ import {
 import { Task } from "@prisma/client"
 import createTask from "app/tasks/mutations/createTask"
 import updateTask from "app/tasks/mutations/updateTask"
-import { ReactNode } from "react"
+import { ReactNode, useContext } from "react"
 import { TaskFormSchema } from "../validations"
 import { Form, Input, useValidation } from "usetheform"
 import Submit from "app/core/components/forms/usetheform/Submit"
 import InputUtf from "app/core/components/forms/usetheform/components/InputUtf"
 import TextareaUTF from "app/core/components/forms/usetheform/components/TextareaUTF"
 import CheckboxUtf from "app/core/components/forms/usetheform/components/CheckboxUtf"
-import { format } from "date-fns"
+import { addHours, format } from "date-fns"
+import headerContext from "app/core/components/header/headerContext"
+import getTask from "../queries/getTask"
+import getLocation from "app/locations/queries/getLocation"
 
 const validateForm = (v) => {
   try {
@@ -45,9 +48,8 @@ type TaskModalFormProps = {
   size?: ModalProps["size"]
   title: string
 
-  task?: Task
+  taskId?: number
   children?: ReactNode
-  onSubmit: () => void
   onSuccess?: (task: Task) => void
 }
 
@@ -56,14 +58,26 @@ const TaskModalForm = ({
   onClose,
   size,
   title,
-  task,
+  taskId,
   children,
-  onSubmit,
   onSuccess,
 }: TaskModalFormProps) => {
   // const { user: currentUser } = useCurrentUser()
+  const { tasks } = useContext(headerContext)
   const [createTaskMutation] = useMutation(createTask)
   const [updateTaskMutation] = useMutation(updateTask)
+
+  const [task] = useQuery(
+    getTask,
+    {
+      where: { id: taskId },
+    },
+    {
+      enabled: !!taskId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    }
+  )
 
   const [{ error }, validation] = useValidation([validateForm])
   const titleError = error?.["title"] || error?.["all"]
@@ -71,25 +85,49 @@ const TaskModalForm = ({
   const needbyError = error?.["needBy"] || error?.["all"]
   const notesError = error?.["notes"] || error?.["all"]
 
+  console.log({ ...task })
+
   const initialState = {
     title: task?.title ?? undefined,
     completed: task?.completed ?? false,
-    needBy: task?.needBy ?? format(new Date(), "yyyy-MM-dd"),
+    needBy: task ? format(task.needBy, "yyyy-MM-dd") : format(new Date(), "yyyy-MM-dd"),
     notes: task?.notes ?? undefined,
   }
+  // console.log({ initialState })
 
   const bgColor = "white"
   const headerGradient = "linear(to-r, white, blackAlpha.200)"
 
-  const handleSubmit = (v) => {
-    console.log({ v })
+  const onSubmit = async (v) => {
+    const { id, needBy: d, ...newTask } = v
+    // console.log('onSubmit:', v)
+    const offset = new Date().getTimezoneOffset()
+    // console.log('offset', offset)
+    const needBy = addHours(new Date(d), offset / 60)
+    // console.log('needBy', needBy)
+
+    let taskRet
+    if (task) {
+      taskRet = await updateTaskMutation({
+        id: task.id,
+        needBy,
+        ...newTask,
+      })
+    } else {
+      taskRet = await createTaskMutation({
+        needBy,
+        ...newTask,
+      })
+    }
+
+    return taskRet
   }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside">
       <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px) invert(10%)" />
 
-      <ModalContent>
+      <ModalContent pb={1}>
         <ModalHeader borderBottom="1px solid" bgGradient={headerGradient}>
           {title}
         </ModalHeader>
@@ -99,11 +137,13 @@ const TaskModalForm = ({
           <Form
             touched
             initialState={initialState}
-            onSubmit={console.log}
+            onSubmit={(v) => {
+              onSubmit(v).then(onSuccess).catch(console.error)
+            }}
             onChange={console.log}
             {...validation}
           >
-            <Flex direction="column">
+            <Flex direction="column" mb={2}>
               {/* <Input type="text" name="title" placeholder="Task name" /> */}
               <InputUtf
                 isRequired={true}

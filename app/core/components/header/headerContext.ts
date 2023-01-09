@@ -7,6 +7,7 @@ import {
   Location,
   LocationStash,
   StashType,
+  Task,
 } from "@prisma/client"
 import { JobType } from "app/jobs/validations"
 import { createContext } from "react"
@@ -52,6 +53,11 @@ export type HeaderContext = {
   // estimateStashes: EstimateStash[]
   numStashes: number
   editStash: (id: number | undefined, type: StashType | undefined) => void
+
+  tasks: Task[]
+  createTask: () => void
+  pickTask: (id: number) => void
+  refetchTasks: () => void
 
   // Search
   // Test with only customer searches:

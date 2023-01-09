@@ -136,7 +136,7 @@ const JobModalForm = ({
   const onSubmit = async (values) => {
     console.table({ values })
     // console.log({ locationId })
-    const { stashing, range, ...job } = values
+    const { stashing, range, ...newJob } = values
     const [start, end] = range.map((t) => t)
     // console.log({ start })
 
@@ -150,7 +150,7 @@ const JobModalForm = ({
           job: {
             start,
             end,
-            ...job,
+            ...newJob,
           },
         })
       } else {
@@ -159,7 +159,7 @@ const JobModalForm = ({
           job: {
             start,
             end,
-            ...job,
+            ...newJob,
           },
         })
       }
@@ -170,7 +170,7 @@ const JobModalForm = ({
           id: job.id,
           start,
           end,
-          ...job,
+          ...newJob,
         })
       } else {
         console.log("creating job...")
@@ -180,7 +180,7 @@ const JobModalForm = ({
           locationId,
           start,
           end,
-          ...job,
+          ...newJob,
         })
         if (jobStash && jobRet) {
           await deleteStashMutation({
@@ -373,7 +373,7 @@ const JobModalForm = ({
                                 lineitem={li}
                                 onDelete={onDelete}
                                 itemizing={true}
-                              // draggableIndex={ii}
+                                // draggableIndex={ii}
                               />
                             </Box>
                           )}
@@ -393,9 +393,9 @@ const JobModalForm = ({
                   end={end}
                   // onClickDay={handleDayClick}
                   onClickWeekNumber={handleWeekNumberClick}
-                // console.log({ w })
-                // handleWeekNumberClick(w).catch((e) => console.error(e))
-                // }}
+                  // console.log({ w })
+                  // handleWeekNumberClick(w).catch((e) => console.error(e))
+                  // }}
                 />
               </GridItem>
 

@@ -128,7 +128,7 @@ const CustomerModalForm = ({
     // console.log(`values.stashing: ${values.stashing}`)
 
     // const formSubmission = (({ firstname, lastname, companyname, email }) => ({ firstname, lastname, companyname, email }))(values)
-    const { stashing, ...customer } = values
+    const { stashing, ...newCustomer } = values
 
     let customerRet
     if (stashing) {
@@ -138,7 +138,7 @@ const CustomerModalForm = ({
         customerRet = await updateStashMutation({
           id: customerStash.id,
           stashType,
-          customer,
+          customer: newCustomer,
           // notes,
         })
         // await refetchStash()
@@ -146,7 +146,7 @@ const CustomerModalForm = ({
         // console.log("\t\tcreate stash")
         customerRet = await createStashMutation({
           stashType,
-          customer,
+          customer: newCustomer,
           // notes,
         })
       }
@@ -156,7 +156,7 @@ const CustomerModalForm = ({
         // console.log("\t\tupdating customer")
         customerRet = await updateCustomerMutation({
           id: customer.id,
-          ...customer,
+          ...newCustomer,
         })
       } else {
         // console.log("\t\tcreating customer")

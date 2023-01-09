@@ -14,8 +14,6 @@ export default resolver.pipe(
 
   async ({ where, orderBy }: GetLocationsInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const locations = await db.location.findMany({ where, orderBy })
-
-    return locations
+    return await db.location.findMany({ where, orderBy })
   }
 )
