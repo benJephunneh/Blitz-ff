@@ -304,7 +304,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [taskId, setTaskId] = useState<number>()
   const [tasks, { refetch: refetchTasks }] = useQuery(
     getTasks,
-    {},
+    { where: { completed: false } },
     {
       suspense: true,
       staleTime: Infinity,

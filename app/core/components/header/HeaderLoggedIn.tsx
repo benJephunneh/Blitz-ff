@@ -158,31 +158,29 @@ const HeaderLoggedIn = () => {
                 />
               </MenuItem>
               {tasks?.map((t, ii) => (
-                <>
-                  <MenuItem
-                    key={ii}
-                    fontWeight="semibold"
-                    onKeyDownCapture={(e) => {
-                      e.preventDefault()
-                      e.key === "Enter" && pickTask(t.id)
+                <MenuItem
+                  key={ii}
+                  fontWeight="semibold"
+                  onKeyDownCapture={(e) => {
+                    e.preventDefault()
+                    e.key === "Enter" && pickTask(t.id)
+                  }}
+                  justifyContent="space-between"
+                >
+                  <Text textOverflow="ellipsis" onClick={() => pickTask(t.id)}>
+                    {t.title}: {t.notes}
+                  </Text>
+                  <Icon
+                    as={FcFullTrash}
+                    h={5}
+                    w={5}
+                    onClick={async () => {
+                      deleteTaskMutation({ id: t.id })
+                        .then(() => refetchTasks())
+                        .catch(console.error)
                     }}
-                    justifyContent="space-between"
-                  >
-                    <Text textOverflow="ellipsis" onClick={() => pickTask(t.id)}>
-                      {t.title}: {t.notes}
-                    </Text>
-                    <Icon
-                      as={FcFullTrash}
-                      h={5}
-                      w={5}
-                      onClick={async () => {
-                        deleteTaskMutation({ id: t.id })
-                          .then(() => refetchTasks())
-                          .catch(console.error)
-                      }}
-                    />
-                  </MenuItem>
-                </>
+                  />
+                </MenuItem>
               ))}
             </MenuList>
           </Menu>
