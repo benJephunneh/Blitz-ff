@@ -19,10 +19,12 @@ import deleteCustomer from "app/customers/mutations/deleteCustomer"
 import findCustomer from "app/customers/queries/findCustomer"
 import getCustomer from "app/customers/queries/getCustomer"
 import JobModalForm from "app/jobs/components/JobModalForm"
+import deleteJob from "app/jobs/mutations/deleteJob"
 import getJobs from "app/jobs/queries/getJobs"
 import { JobType } from "app/jobs/validations"
 import LocationModalForm from "app/locations/components/LocationModalForm"
 import LocationSearchResult from "app/locations/components/LocationSearchResult"
+import deleteLocation from "app/locations/mutations/deleteLocation"
 import findLocation from "app/locations/queries/findLocation"
 import getLocations from "app/locations/queries/getLocations"
 import SearchInput from "app/search/SearchInput"
@@ -242,12 +244,14 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const [deletingLocation, setDeletingLocation] = useState(false)
   const [locationIds, setLocationIds] = useState<{ id: number }[]>()
   // const [updateLocationMutation] = useMutation(updateLocation)
+  const [deleteLocationMutation] = useMutation(deleteLocation)
 
   // Job
   const [creatingJob, setCreatingJob] = useState(false)
   const [editingJob, setEditingJob] = useState(false)
   const [deletingJob, setDeletingJob] = useState(false)
   // const [updateJobMutation] = useMutation(updateJob)
+  const [deleteJobMutation] = useMutation(deleteJob)
 
   // Calendar
   // const [weekNumber, setWeekNumber] = useState<number>()
@@ -317,10 +321,10 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
   const deleteDescription = deletingCustomer
     ? "Are you sure you want to delete this customer and related history?  All associated locations, jobs, invoices, and estimates will also be deleted."
     : deletingLocation
-      ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
-      : deletingJob
-        ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
-        : ""
+    ? "Are you sure you want to delete this location and related history?  All associated jobs, invoices, and estimates will also be deleted."
+    : deletingJob
+    ? "Are you sure you want to delete this job and related history?  All associated invoices, and estimates will also be deleted."
+    : ""
 
   return (
     <Provider
@@ -344,7 +348,12 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
 
         createJob: () => setCreatingJob(true),
         editJob: () => setEditingJob(true),
-        deleteJob: () => setDeletingJob(true),
+        deleteJob: async () => {
+          setDeletingJob(true)
+          // refetchJobs()
+          //   .then(() => setJobId(undefined))
+          //   .catch(console.error)
+        },
         pickJob: (id) => {
           const temp = jobs?.find((j) => j.id === id)?.id
           setJobId(temp)
@@ -412,7 +421,7 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
                 if ("stashType" in customer) await refetchStashes()
                 else {
                   if (creatingCustomer) {
-                    console.log('Going to new customer page.')
+                    console.log("Going to new customer page.")
                     await router.push(Routes.ShowCustomerPage({ customerId: customer.id }))
                   }
 
@@ -514,18 +523,42 @@ const HeaderProvider = ({ children }: HeaderProviderProps) => {
           />
 
           <ConfirmDeleteModal
-            title={`Delete ${customer?.firstname} ${customer?.lastname} ? `}
+            title={
+              deletingCustomer
+                ? `Delete ${customer?.firstname} ${customer?.lastname} ? `
+                : deletingLocation
+                ? `Delete ${location?.house} ${location?.street}, ${location?.city}  ${location?.zipcode}`
+                : deletingJob
+                ? `Delete ${job?.title}`
+                : ""
+            }
             description={deleteDescription}
-            isOpen={deletingCustomer}
+            isOpen={deletingCustomer || deletingLocation || deletingJob}
             onClose={() => {
               deletingCustomer && setDeletingCustomer(false)
               deletingLocation && setDeletingLocation(false)
               deletingJob && setDeletingJob(false)
             }}
             onConfirm={async () => {
-              await deleteCustomerMutation({ id: customer!.id })
-              await refetchStashes()
-              await router.push(Routes.CustomersPage())
+              deletingCustomer &&
+                deleteCustomerMutation({ id: customer!.id })
+                  .then(() => refetchStashes())
+                  .then(() => router.push(Routes.CustomersPage()))
+                  .catch(console.error)
+              deletingLocation &&
+                deleteLocationMutation({ id: locationId! })
+                  .then(() => refetchStashes())
+                  .then(() => refetchLocations())
+                  .catch(console.error)
+              deletingJob &&
+                deleteJobMutation({ id: jobId! })
+                  .then(() => refetchStashes())
+                  .then(() => refetchJobs())
+                  .catch(console.error)
+
+              deletingCustomer && setDeletingCustomer(false)
+              deletingLocation && setDeletingLocation(false)
+              deletingJob && setDeletingJob(false)
             }}
           />
 
