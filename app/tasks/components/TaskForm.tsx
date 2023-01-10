@@ -17,7 +17,7 @@ import { ReactNode } from "react"
 import { TaskFormSchema } from "../validations"
 import { Form, Input, useValidation } from "usetheform"
 import TextareaUTF from "../../core/components/forms/usetheform/components/TextareaUTF"
-import Submit from "app/core/components/forms/usetheform/Submit"
+import Submit from "app/core/components/forms/usetheform/components/Submit"
 import InputUtf from "app/core/components/forms/usetheform/components/InputUtf"
 
 const validateForm = (v) => {

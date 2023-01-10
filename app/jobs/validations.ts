@@ -46,7 +46,7 @@ export const JobSkeleton = z.object({
   completed,
   lineitems: lineitem.array().optional(),
 })
-export const JobFormSchema = JobSkeleton.partial().extend({
+export const JobFormSchema = JobSkeleton.extend({
   notes: textNotes.nullable().optional(),
 })
 export const CreateJob = JobSkeleton.extend({

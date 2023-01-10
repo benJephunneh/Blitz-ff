@@ -1,11 +1,12 @@
 import {
+  ButtonProps,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   Textarea,
 } from "@chakra-ui/react"
-import { ComponentPropsWithoutRef } from "react"
+import { ComponentPropsWithoutRef, ReactNode } from "react"
 import { TextArea, useField, useValidation } from "usetheform"
 
 interface TextAreaUtfProps extends ComponentPropsWithoutRef<typeof Textarea> {
