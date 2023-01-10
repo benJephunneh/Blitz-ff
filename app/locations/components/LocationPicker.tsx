@@ -14,13 +14,10 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import headerContext from "app/core/components/header/headerContext"
-import customerContext from "app/customers/contexts/customerContext"
-import Link from "next/link"
 import { useContext } from "react"
 import { IconType } from "react-icons"
 import { FaChevronDown } from "react-icons/fa"
-import { FcHome } from "react-icons/fc"
-import getLocations from "../queries/getLocations"
+import { FcFile, FcHome } from "react-icons/fc"
 
 type LocationPickerProps = {
   icon: IconType
@@ -57,9 +54,11 @@ const LocationPicker = ({ icon }: LocationPickerProps) => {
         <MenuButton
           as={Button}
           size="sm"
-          variant="ghost"
+          variant="solid"
           px={1}
           rightIcon={<Icon pr={1} as={FaChevronDown} />}
+          bg="gray.100"
+          _hover={{ bg: "white" }}
         >
           <HStack>
             <Icon as={icon} w={5} h={5} />

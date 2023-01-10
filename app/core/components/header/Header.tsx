@@ -21,6 +21,7 @@ import { useContext, useEffect } from "react"
 import { useState } from "react"
 import { FcPhone, FcTimeline } from "react-icons/fc"
 import { GiMoon, GiSun } from "react-icons/gi"
+import FilePicker from "../FilePicker"
 import phoneDisplay from "../methods/phoneDisplay"
 import HeaderActions from "./HeaderActions"
 import headerContext from "./headerContext"
@@ -115,6 +116,7 @@ const Header = ({ children }: HeaderProps) => {
               </Box>
 
               {customerId && <LocationPicker icon={FcTimeline} />}
+              {customerId && <FilePicker />}
             </HStack>
             {isLoggedOut && <HeaderLoggedOut />}
             {isLoggedIn && <HeaderLoggedIn />}

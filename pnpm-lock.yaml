@@ -56,6 +56,7 @@ specifiers:
   react-beautiful-dnd: 13.1.1
   react-calendar: 3.9.0
   react-dom: 18.2.0
+  react-dropzone: 14.2.3
   react-final-form: 6.5.9
   react-icons: 4.7.1
   react-lorem-ipsum: 1.4.10
@@ -97,6 +98,7 @@ dependencies:
   react-beautiful-dnd: 13.1.1_biqbaboplfbrettd7655fr4n2y
   react-calendar: 3.9.0_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
+  react-dropzone: 14.2.3_react@18.2.0
   react-final-form: 6.5.9_b76tjmhm4bpbaoui6lan2hu4pm
   react-icons: 4.7.1_react@18.2.0
   superjson: 1.10.0
@@ -4968,7 +4970,7 @@ packages:
       "@motionone/easing": 10.15.1
       "@motionone/types": 10.15.1
       "@motionone/utils": 10.15.1
-      tslib: 2.4.0
+      tslib: 2.4.1
     dev: false
 
   /@motionone/dom/10.13.1:
@@ -4982,7 +4984,7 @@ packages:
       "@motionone/types": 10.15.1
       "@motionone/utils": 10.15.1
       hey-listen: 1.0.8
-      tslib: 2.4.0
+      tslib: 2.4.1
     dev: false
 
   /@motionone/easing/10.15.1:
@@ -4992,7 +4994,7 @@ packages:
       }
     dependencies:
       "@motionone/utils": 10.15.1
-      tslib: 2.4.0
+      tslib: 2.4.1
     dev: false
 
   /@motionone/generators/10.15.1:
@@ -5003,7 +5005,7 @@ packages:
     dependencies:
       "@motionone/types": 10.15.1
       "@motionone/utils": 10.15.1
-      tslib: 2.4.0
+      tslib: 2.4.1
     dev: false
 
   /@motionone/types/10.15.1:
@@ -5021,7 +5023,7 @@ packages:
     dependencies:
       "@motionone/types": 10.15.1
       hey-listen: 1.0.8
-      tslib: 2.4.0
+      tslib: 2.4.1
     dev: false
 
   /@mrleebo/prisma-ast/0.2.6:
@@ -7453,6 +7455,14 @@ packages:
         integrity: sha512-kNOjDqAh7px0XWNI+4QbzoiR/nTkHAWNud2uvnJquD1/x5a7EQZMJT0AczqK0Qn67oY/TTQ1LbUKajZpp3I9tQ==,
       }
     engines: { node: ">=8.0.0" }
+    dev: false
+
+  /attr-accept/2.2.2:
+    resolution:
+      {
+        integrity: sha512-7prDjvt9HmqiZ0cl5CRjtS84sEyhsHP2coDkaZKRKVfCDo9s7iw7ChVmar78Gu9pC4SoR/28wFu/G5JJhTnqEg==,
+      }
+    engines: { node: ">=4" }
     dev: false
 
   /auto-bind/4.0.0:
@@ -10828,6 +10838,16 @@ packages:
     dependencies:
       flat-cache: 3.0.4
     dev: true
+
+  /file-selector/0.6.0:
+    resolution:
+      {
+        integrity: sha512-QlZ5yJC0VxHxQQsQhXvBaC7VRJ2uaxTf+Tfpu4Z/OcVQJVpZO+DGU0rkoVW5ce2SccxugvpBJoMvUs59iILYdw==,
+      }
+    engines: { node: ">= 12" }
+    dependencies:
+      tslib: 2.4.1
+    dev: false
 
   /filelist/1.0.4:
     resolution:
@@ -16257,6 +16277,21 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+    dev: false
+
+  /react-dropzone/14.2.3_react@18.2.0:
+    resolution:
+      {
+        integrity: sha512-O3om8I+PkFKbxCukfIR3QAGftYXDZfOE2N1mr/7qebQJHs7U+/RSL/9xomJNpRg9kM5h9soQSdf0Gc7OHF5Fug==,
+      }
+    engines: { node: ">= 10.13" }
+    peerDependencies:
+      react: ">= 16.8 || 18.0.0"
+    dependencies:
+      attr-accept: 2.2.2
+      file-selector: 0.6.0
+      prop-types: 15.8.1
+      react: 18.2.0
     dev: false
 
   /react-fast-compare/3.2.0:
