@@ -1,0 +1,11 @@
+const authCode = {
+  clientId: "AB66IGVNi2BliheRdbDrCDrQ3xnAiMyrsPj7v8GusbMDPZAjI7",
+  clientSecret: "LeAsF0nJ0OFlClAywdAU5uuF4wqoYsJEp98Z7gCa",
+
+  // com.intuit.quickbooks.accounting, com.intuit.quickbooks.payment, openid, profile
+}
+
+const oAuth2Code = {
+  authCode: "AB11673363257ZeyHxlhEdjG7KQdC9dI0gbukOGQS2odT3Ioqx",
+  realmId: "4620816365265723600",
+}
