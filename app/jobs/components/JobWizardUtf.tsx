@@ -1,23 +1,13 @@
 import { useMutation } from "@blitzjs/rpc"
 import {
-  Button,
-  ButtonGroup,
   Flex,
-  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   ModalProps,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Job, LineItem } from "@prisma/client"
@@ -31,11 +21,7 @@ import { useContext, useState } from "react"
 import createJob from "../mutations/createJob"
 import updateJob from "../mutations/updateJob"
 import { Form, useMultipleForm } from "usetheform"
-import InputUtf from "app/core/components/forms/usetheform/components/InputUtf"
-import TextareaUtf from "app/core/components/forms/usetheform/components/TextareaUTF"
 import JobWhiz1 from "./usetheform/JobWhiz1"
-import Submit from "app/core/components/forms/usetheform/components/Submit"
-import Reset from "app/core/components/forms/usetheform/components/Reset"
 import JobWhiz2 from "./usetheform/JobWhiz2"
 import JobWhiz3 from "./usetheform/JobWhiz3"
 
@@ -47,6 +33,9 @@ type JobWizardFormProps = {
   locationId?: number
   jobId?: number
   stashId?: number
+
+  jobject?: {}
+  onChange: (n: any) => void
 
   disableStash?: boolean
   isOpen: boolean
@@ -70,6 +59,8 @@ const JobWizardForm = ({
   locationId,
   jobId,
   stashId,
+  jobject = {},
+  onChange,
   disableStash,
   isOpen,
   onClose,
@@ -92,24 +83,22 @@ const JobWizardForm = ({
   const next = () => setPage((p) => ++p)
   const prev = () => setPage((p) => --p)
 
-  const initialState = {
-    title: job?.title ?? "",
-    start: job?.start ?? null,
-    end: job?.start ?? null,
-    completed: job?.completed ?? false,
-    locateRequired: job?.locateRequired ?? false,
-    notes: job?.notes ?? null,
-  }
-  const [wizardState, updateJSON] = useState(initialState)
+  // const initialState = {
+  //   title: job?.title ?? "",
+  //   start: job?.start ?? null,
+  //   end: job?.start ?? null,
+  //   completed: job?.completed ?? false,
+  //   locateRequired: job?.locateRequired ?? false,
+  //   notes: job?.notes ?? null,
+  // }
+  // const [wizardState, updateJSON] = useState(jobject)
   const [getWizardState, wizard] = useMultipleForm((s) => {
-    console.log("s", s)
-    updateJSON({
-      ...wizardState,
+    onChange({
+      ...jobject,
       ...s,
     })
   })
   const onSubmitWizard = () => console.log(getWizardState())
-  console.log({ ...wizardState })
   // console.log('getWS', getWizardState()) // Changes at submits.
 
   const headerGradient = useColorModeValue(

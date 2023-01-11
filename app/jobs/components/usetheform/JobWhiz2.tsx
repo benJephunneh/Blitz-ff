@@ -26,6 +26,7 @@ import findLineItem from "app/lineitems/queries/findLineItem"
 import { useQuery } from "@blitzjs/rpc"
 import { useContext, useState } from "react"
 import headerContext from "app/core/components/header/headerContext"
+import SearchSelectUtf from "app/core/components/forms/usetheform/components/SearchSelectUtf"
 
 type JobWhiz2Props = {
   job?: Job
@@ -105,29 +106,18 @@ const JobWhiz2 = ({ job, next, prev, ...props }: JobWhiz2Props) => {
       {...validation}
       {...props}
     >
-      <Flex direction="column">
-        <Menu>
-          {/* <Input
-            as={Button}
-            isActive={isOpen}
-            placeholder="Enter line item description..."
-            border='1px solid'
-            borderColor='blackAlpha.100'
-            onChange={onOpen}
-          /> */}
-          <MenuButton isActive={isOpen} as={Button}>
-            <Input placeholder="Enter line item description..." />
-          </MenuButton>
-          <MenuList>
-            <MenuItem>asdf</MenuItem>
-            <MenuItem>ojfwef</MenuItem>
-            <MenuItem>0e0wef</MenuItem>
-            <MenuItem>asdfjweon</MenuItem>
-          </MenuList>
-        </Menu>
+      <Flex direction="column" mb={3} minH="fit-content">
+        <SearchSelectUtf />
       </Flex>
 
-      <Button variant="solid" bg="blackAlpha.200" type="button" onClick={prev}>
+      <Button
+        variant="outline"
+        border="1px solid"
+        borderColor="red.300"
+        size="sm"
+        type="button"
+        onClick={prev}
+      >
         Previous
       </Button>
       <Reset />
