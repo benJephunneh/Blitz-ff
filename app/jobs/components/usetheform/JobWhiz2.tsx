@@ -1,8 +1,9 @@
-import { BoxProps, ButtonGroup, Flex, ModalBody, ModalFooter, Text } from "@chakra-ui/react"
+import { BoxProps, Button, ButtonGroup, Flex, ModalBody, ModalFooter, Text } from "@chakra-ui/react"
 import { Job } from "@prisma/client"
 import InputUtf from "app/core/components/forms/usetheform/components/InputUtf"
 import TextareaUtf from "app/core/components/forms/usetheform/components/TextareaUTF"
 import Submit from "app/core/components/forms/usetheform/components/Submit"
+import Reset from "app/core/components/forms/usetheform/components/Reset"
 import { Form, useValidation } from "usetheform"
 import { z } from "zod"
 import { JobFormSchema } from "app/jobs/validations"
@@ -93,7 +94,10 @@ const JobWhiz2 = ({ job, next, prev, ...props }: JobWhiz2Props) => {
         <Text>Drag box</Text>
       </Flex>
 
-      <Submit onClick={prev}>Next</Submit>
+      <Submit type="button" onClick={prev}>
+        Previous
+      </Submit>
+      <Reset />
       <Submit onClick={next}>Next</Submit>
     </Form>
   )

@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react"
-import { ButtonHTMLAttributes, HTMLInputTypeAttribute, ReactNode } from "react"
+import { ReactNode } from "react"
 import { useForm } from "usetheform"
 
 type ResetProps = {

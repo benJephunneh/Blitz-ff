@@ -61,7 +61,7 @@ const JobWhiz1 = ({ job, next, ...props }: JobWhiz1Props) => {
         <TextareaUtf isRequired={false} name="notes" label="Job notes" />
       </Flex>
 
-      <Submit onClick={next}>Next</Submit>
+      <Submit>Next</Submit>
     </Form>
   )
 }

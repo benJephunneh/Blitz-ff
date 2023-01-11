@@ -88,9 +88,8 @@ const JobWizardForm = ({
   const [calendarView, setCalendarView] = useState(<WeekView />)
 
   const [page, setPage] = useState(1)
-  const next = () => setPage((p) => (p === 3 ? p : ++p)) // Alternatively, make check for button, disabling click on Next/Prev.
-  const prev = () => setPage((p) => (p === 1 ? p : --p))
-  const reset = () => setPage(1)
+  const next = () => setPage((p) => ++p)
+  const prev = () => setPage((p) => --p)
 
   const initialState = {
     title: job?.title ?? "",
@@ -101,8 +100,16 @@ const JobWizardForm = ({
     notes: job?.notes ?? null,
   }
   const [wizardState, updateJSON] = useState(initialState)
-  const [getWizardState, wizard] = useMultipleForm((s) => updateJSON(s))
+  const [getWizardState, wizard] = useMultipleForm((s) => {
+    console.log("s", s)
+    updateJSON({
+      ...wizardState,
+      ...s,
+    })
+  })
   const onSubmitWizard = () => console.log(getWizardState())
+  console.log({ ...wizardState })
+  // console.log('getWS', getWizardState()) // Changes at submits.
 
   const headerGradient = useColorModeValue(
     "linear(to-r, white, blackAlpha.200)",
@@ -157,7 +164,7 @@ const JobWizardForm = ({
               page === 1 ? (
                 <JobWhiz1 name="job1" {...wizard} onSubmit={next} />
               ) : page === 2 ? (
-                <JobWhiz2 name="job2" {...wizard} onSubmit={next} />
+                <JobWhiz2 name="job2" {...wizard} prev={prev} onSubmit={next} />
               ) : (
                 <Text onSubmit={onSubmitWizard}>page {page}</Text>
               )
