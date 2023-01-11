@@ -1,4 +1,19 @@
-import { BoxProps, Button, ButtonGroup, Flex, ModalBody, ModalFooter, Text } from "@chakra-ui/react"
+import {
+  BoxProps,
+  Button,
+  ButtonGroup,
+  Flex,
+  Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  ModalBody,
+  ModalFooter,
+  Select,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react"
 import { Job } from "@prisma/client"
 import InputUtf from "app/core/components/forms/usetheform/components/InputUtf"
 import TextareaUtf from "app/core/components/forms/usetheform/components/TextareaUTF"
@@ -46,6 +61,7 @@ const validateForm = (f) => {
 
 const JobWhiz2 = ({ job, next, prev, ...props }: JobWhiz2Props) => {
   const { lineitems, setLineitems } = useContext(headerContext)
+  const { isOpen, onClose, onOpen } = useDisclosure()
   const [{ error }, validation] = useValidation([validateForm])
   const [query, setQuery] = useState("")
   const [lineitemSearchResults, { setQueryData: setLineitemSearchData, isLoading }] = useQuery(
@@ -90,13 +106,30 @@ const JobWhiz2 = ({ job, next, prev, ...props }: JobWhiz2Props) => {
       {...props}
     >
       <Flex direction="column">
-        <Text>Search with lineitem cards</Text>
-        <Text>Drag box</Text>
+        <Menu>
+          {/* <Input
+            as={Button}
+            isActive={isOpen}
+            placeholder="Enter line item description..."
+            border='1px solid'
+            borderColor='blackAlpha.100'
+            onChange={onOpen}
+          /> */}
+          <MenuButton isActive={isOpen} as={Button}>
+            <Input placeholder="Enter line item description..." />
+          </MenuButton>
+          <MenuList>
+            <MenuItem>asdf</MenuItem>
+            <MenuItem>ojfwef</MenuItem>
+            <MenuItem>0e0wef</MenuItem>
+            <MenuItem>asdfjweon</MenuItem>
+          </MenuList>
+        </Menu>
       </Flex>
 
-      <Submit type="button" onClick={prev}>
+      <Button variant="solid" bg="blackAlpha.200" type="button" onClick={prev}>
         Previous
-      </Submit>
+      </Button>
       <Reset />
       <Submit onClick={next}>Next</Submit>
     </Form>

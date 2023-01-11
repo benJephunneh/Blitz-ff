@@ -37,6 +37,7 @@ import JobWhiz1 from "./usetheform/JobWhiz1"
 import Submit from "app/core/components/forms/usetheform/components/Submit"
 import Reset from "app/core/components/forms/usetheform/components/Reset"
 import JobWhiz2 from "./usetheform/JobWhiz2"
+import JobWhiz3 from "./usetheform/JobWhiz3"
 
 type JobWizardFormProps = {
   formTitle: string
@@ -149,7 +150,15 @@ const JobWizardForm = ({
     //     </TabPanel>
     //   </TabPanels>
     // </Tabs>
-    <Modal isOpen={isOpen} onClose={onClose} size={size} scrollBehavior="inside">
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        setPage(1)
+        onClose()
+      }}
+      size={size}
+      scrollBehavior="inside"
+    >
       <ModalOverlay bg="blackAlpha.400" backdropFilter="blur(2px) invert(10%)" />
 
       <ModalContent pb={1}>
@@ -166,7 +175,7 @@ const JobWizardForm = ({
               ) : page === 2 ? (
                 <JobWhiz2 name="job2" {...wizard} prev={prev} onSubmit={next} />
               ) : (
-                <Text onSubmit={onSubmitWizard}>page {page}</Text>
+                <JobWhiz3 name="job3" {...wizard} prev={prev} onSubmit={onSubmitWizard} />
               )
               // : <></>
             }

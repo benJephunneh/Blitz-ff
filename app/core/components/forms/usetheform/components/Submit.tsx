@@ -12,7 +12,16 @@ const Submit = ({ type = "submit", children, onClick, ...props }: SubmitProps) =
   const { isValid, pristine } = useForm()
 
   return (
-    <Button disabled={!isValid || pristine} type={type} onClick={onClick} bg="blue.200" {...props}>
+    <Button
+      disabled={!isValid || pristine}
+      type={type}
+      onClick={onClick}
+      variant="outline"
+      border="1px solid"
+      borderColor="blue.200"
+      size="sm"
+      {...props}
+    >
       {children ?? "Submit"}
     </Button>
   )

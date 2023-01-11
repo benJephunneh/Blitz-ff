@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react"
+import { Button, Flex, Text } from "@chakra-ui/react"
 import { Job } from "@prisma/client"
 import InputUtf from "app/core/components/forms/usetheform/components/InputUtf"
 import TextareaUtf from "app/core/components/forms/usetheform/components/TextareaUTF"
@@ -6,10 +6,11 @@ import Submit from "app/core/components/forms/usetheform/components/Submit"
 import { Form, useValidation } from "usetheform"
 import { JobFormSchema } from "app/jobs/validations"
 import { useState } from "react"
+import Reset from "app/core/components/forms/usetheform/components/Reset"
 
-type JobWhiz1Props = {
+type JobWhiz3Props = {
   job?: Job
-  next: () => void
+  prev: () => void
 }
 
 const validateForm = (f) => {
@@ -34,7 +35,7 @@ const validateForm = (f) => {
   }
 }
 
-const JobWhiz1 = ({ job, next, ...props }: JobWhiz1Props) => {
+const JobWhiz3 = ({ job, prev, ...props }: JobWhiz3Props) => {
   const [{ error }, validation] = useValidation([validateForm])
   const titleError = error?.["title"] || error?.["all"]
 
@@ -57,13 +58,18 @@ const JobWhiz1 = ({ job, next, ...props }: JobWhiz1Props) => {
       {...props}
     >
       <Flex direction="column" mb={3}>
-        <InputUtf isRequired={true} type="text" name="title" label="Job title" error={titleError} />
-        <TextareaUtf isRequired={false} name="notes" label="Job notes" />
+        <Text>asdf</Text>
+        {/* <InputUtf isRequired={true} type="text" name="title" label="Job title" error={titleError} />
+        <TextareaUtf isRequired={false} name="notes" label="Job notes" /> */}
       </Flex>
 
-      <Submit>Next</Submit>
+      <Button variant="solid" bg="blackAlpha.200" type="button" onClick={prev}>
+        Previous
+      </Button>
+      <Reset />
+      <Submit>Submit</Submit>
     </Form>
   )
 }
 
-export default JobWhiz1
+export default JobWhiz3
