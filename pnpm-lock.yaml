@@ -59,6 +59,7 @@ specifiers:
   react-final-form: 6.5.9
   react-icons: 4.7.1
   react-lorem-ipsum: 1.4.10
+  react-select: 5.7.0
   superjson: 1.10.0
   tippy.js: 6.3.7
   ts-jest: 28.0.7
@@ -99,6 +100,7 @@ dependencies:
   react-dom: 18.2.0_react@18.2.0
   react-final-form: 6.5.9_b76tjmhm4bpbaoui6lan2hu4pm
   react-icons: 4.7.1_react@18.2.0
+  react-select: 5.7.0_s2llar2sbu6jkvfqbbhgyplfnm
   superjson: 1.10.0
   tippy.js: 6.3.7
   zod: 3.17.3
@@ -4587,6 +4589,22 @@ packages:
       - utf-8-validate
     dev: false
 
+  /@floating-ui/core/1.1.0:
+    resolution:
+      {
+        integrity: sha512-zbsLwtnHo84w1Kc8rScAo5GMk1GdecSlrflIbfnEBJwvTSj1SL6kkOYV+nHraMCPEy+RNZZUaZyL8JosDGCtGQ==,
+      }
+    dev: false
+
+  /@floating-ui/dom/1.1.0:
+    resolution:
+      {
+        integrity: sha512-TSogMPVxbRe77QCj1dt8NmRiJasPvuc+eT5jnJ6YpLqgOD2zXc5UA3S1qwybN+GVCDNdKfpKy1oj8RpzLJvh6A==,
+      }
+    dependencies:
+      "@floating-ui/core": 1.1.0
+    dev: false
+
   /@humanwhocodes/config-array/0.5.0:
     resolution:
       {
@@ -6574,6 +6592,15 @@ packages:
       "@types/react": 18.0.17
       hoist-non-react-statics: 3.3.2
       redux: 4.2.0
+    dev: false
+
+  /@types/react-transition-group/4.4.5:
+    resolution:
+      {
+        integrity: sha512-juKD/eiSM3/xZYzjuzH6ZwpP+/lejltmiS3QEzV/vmb/Q8+HfDmxu+Baga8UEMGBqV88Nbg4l2hY/K2DkyaLLA==,
+      }
+    dependencies:
+      "@types/react": 18.0.17
     dev: false
 
   /@types/react/18.0.17:
@@ -9360,6 +9387,16 @@ packages:
         integrity: sha512-8o+oVqLQZoruQPYy3uAAQtc6YbtSiRq5aPJBhJ82YTJRHvI6ofhYAkC81WmjFTnfUbqg6T3aCglIpU9p/5e7Cw==,
       }
     dev: true
+
+  /dom-helpers/5.2.1:
+    resolution:
+      {
+        integrity: sha512-nRCa7CK3VTrM2NmGkIy4cbK7IZlgBE/PYMn55rrXefr5xXDP0LdtfPnblFDoVdcAfslJ7or6iqAUnx0CCGIWQA==,
+      }
+    dependencies:
+      "@babel/runtime": 7.20.7
+      csstype: 3.1.1
+    dev: false
 
   /dom-serializer/1.4.1:
     resolution:
@@ -14123,6 +14160,13 @@ packages:
       }
     dev: false
 
+  /memoize-one/6.0.0:
+    resolution:
+      {
+        integrity: sha512-rkpe71W0N0c0Xz6QD0eJETuWAJGnJ9afsl1srmwPrI+yBCkge5EycXXbYRyvL29zZVUWQCY7InPRCv3GDXuZNw==,
+      }
+    dev: false
+
   /merge-class-names/1.4.2:
     resolution:
       {
@@ -16436,6 +16480,31 @@ packages:
       use-sidecar: 1.1.2_ug65io7jkbhmo4fihdmbrh3ina
     dev: false
 
+  /react-select/5.7.0_s2llar2sbu6jkvfqbbhgyplfnm:
+    resolution:
+      {
+        integrity: sha512-lJGiMxCa3cqnUr2Jjtg9YHsaytiZqeNOKeibv6WF5zbK/fPegZ1hg3y/9P1RZVLhqBTs0PfqQLKuAACednYGhQ==,
+      }
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      "@babel/runtime": 7.20.7
+      "@emotion/cache": 11.10.5
+      "@emotion/react": 11.10.0_pte3zt6n5zgo5uk2zhqp2inzau
+      "@floating-ui/dom": 1.1.0
+      "@types/react-transition-group": 4.4.5
+      memoize-one: 6.0.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-transition-group: 4.4.5_biqbaboplfbrettd7655fr4n2y
+      use-isomorphic-layout-effect: 1.1.2_ug65io7jkbhmo4fihdmbrh3ina
+    transitivePeerDependencies:
+      - "@babel/core"
+      - "@types/react"
+    dev: false
+
   /react-style-singleton/2.2.1_ug65io7jkbhmo4fihdmbrh3ina:
     resolution:
       {
@@ -16475,6 +16544,23 @@ packages:
       react-dom: 18.2.0_react@18.2.0
       react-fit: 1.4.0_biqbaboplfbrettd7655fr4n2y
       update-input-width: 1.2.2
+    dev: false
+
+  /react-transition-group/4.4.5_biqbaboplfbrettd7655fr4n2y:
+    resolution:
+      {
+        integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==,
+      }
+    peerDependencies:
+      react: ">=16.6.0"
+      react-dom: ">=16.6.0"
+    dependencies:
+      "@babel/runtime": 7.20.7
+      dom-helpers: 5.2.1
+      loose-envify: 1.4.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react/18.2.0:
@@ -18583,6 +18669,22 @@ packages:
       "@types/react": 18.0.17
       react: 18.2.0
       tslib: 2.4.1
+    dev: false
+
+  /use-isomorphic-layout-effect/1.1.2_ug65io7jkbhmo4fihdmbrh3ina:
+    resolution:
+      {
+        integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==,
+      }
+    peerDependencies:
+      "@types/react": "*"
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    peerDependenciesMeta:
+      "@types/react":
+        optional: true
+    dependencies:
+      "@types/react": 18.0.17
+      react: 18.2.0
     dev: false
 
   /use-memo-one/1.1.3_react@18.2.0:
